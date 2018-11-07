@@ -1,0 +1,28 @@
+title: WILD6900
+#url: http://rushinglab.github.io/WILD3810
+template:
+  params:
+    bootswatch: slate
+
+reference:
+
+navbar:
+  left:
+    - icon: fa-home
+      href: index.html
+  right:
+    - text: "Syllabus"
+      icon: fas fa-book
+      href: articles/syllabus.html
+    - text: "Schedule"
+      icon: fas fa-calendar
+      href: articles/schedule.html
+    - text: "Lectures"
+      icon: fa-question-circle-o
+      menu:
+        - text: "Lecture 1: Introduction to WILD6900"
+          href: articles/lecture1.html
+    - icon: fas fa-desktop
+      text: "Labs"
+      href: Labs/Lab1.html
+

@@ -1,0 +1,246 @@
+---
+title: "Syllabus"
+subtitle: "WILD 6900: Applied Bayesian Analysis of Ecological Data"
+author: "Spring 2019"
+output: 
+  rmarkdown::html_vignette:
+    keep_md: yes
+vignette: >
+  %\VignetteIndexEntry{Syllabus}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# LOGISTICS
+
+**Lecture**: Tuesday and Thursday 1:30-2:45  
+**Location**: BNR 113   
+**Credits**: 3  
+
+# INSTRUCTOR
+Dr. Clark Rushing  
+clark.rushing@usu.edu  
+Office: NR 146  
+Office hours: Monday and Wednesday 1:00-2:30
+
+
+# COURSE DESCRIPTION
+
+Quantitative models play a central role in linking data to inferences about ecological processes. Traditionally, biostatistics courses have focused on teaching procedures rather than principles: if your data is of type x, then you should use method y. Unfortunately, given the complexity of most ecological systems, researchers often encounter data that do not nicely fit within one of the limited number of procedures they have been taught in introductory statistics courses. In these cases, many researchers resort to bending their data to fit model assumptions, using inappropriate statistical methods, or limiting the questions they ask in the first place.   
+
+Many of the methods used in wildlife and ecology have common underlying principles. This course aims to provide students with a firm understanding of these principles and their application, with a particular focus on Bayesian methods. By building from common principles to more specific procedures, students will be better equipped to tailor analyses to their specific data and questions, ultimately leading to deeper and more robust understanding of the ecological systems they study. Concepts discussed during lectures will be reinforced through lab exercises focused on implementing statistical models using modern software tools (e.g. R, JAGS, and git). 
+
+
+# COURSE OBJECTIVES
+
+The primary objective of this course is to give you the tools to tackle your research questions using rigorous statistical models appropriate for your data. In particular, you will leave this course with:   
+
+* A firm understanding of the foundational principles underlying common ecological models  
+* The ability to express mathematical and theoretical models as they apply to common ecological datasets  
+* The ability to convert those models into working code for Bayesian data analysis  
+* The confidence needed to design, analyze, and report original ecological research using sound quantitative approaches
+
+A secondary objective of this course is to provide you with tools and best practices for storing, manipulating, and analyzing ecological data and developing reproducible code for analyses. In my experience, most graduate students are well trained in methods for data collection and, to a degree, data analysis. However, most students do not receive formal training on the steps between data collection and reporting results from statistical models (e.g., proofing, storing, and formatting data; developing well-documented, reproducible analyses; preparing reports). Advancing the field of ecology also requires a scientific community capable of judging the quality of the code, interpretation, reporting of quantitative models. Graduate students often get few opportunities to critically review the work of their peers or to get constructive feedback on their reviews. The lab portion of this course is specifically designed to provide you with hands on experience with:  
+
+* Best practices for cleaning, formatting, and storing data using R
+* Generating reproducible analyses and reports using R and R Markdown
+* Version control and collaboration using git and GitHub
+* Providing critical peer review of scientific code and reports
+
+# LEARNING OUTCOMES
+
+1)	Understand common deterministic and stochastic models used to analyze ecological data
+2)	Understand key principles of linear models, including design matrices, linear predictors, and model interpretations
+3)	Understand key principles of Bayesian statistics, including Bayes theorem, Markov Chain Monte Carlo methods, prior distributions, and posterior sampling
+4)	Understand the concepts underlying Bayesian hierarchical models, including fixed vs. random effects, hyperparameters, and shrinkage 
+5)	Develop custom Bayesian models using MCMC software (e.g., JAGS) to estimate parameter values and derived quantities of interest for common ecological processes
+6)	Be able to evaluate model convergence/fit of Bayesian models
+7)	Be able to prepare reproducible reports using R and R Markdown
+
+# PREREQUISITES
+
+Students should have at least one semester of both basic ecology and introductory statistics. Although we will thoroughly cover the foundational principles of common statistical models, a basic understanding of ecological theory and statistical inference will be very helpful.  
+ 
+All lab activities for this course will rely heavily on the statistical programming language R (and associated software, including RStudio, JAGS, and git). During the first few weeks of lab, each session will begin with a tutorial on these tools so students are not expected to be experts prior to the course. However, we will quickly move into activities that require some degree of R proficiency so I highly recommend that you have a basic understanding of programming in R (e.g., importing/exporting & manipulating data objects, visualizing data) prior to this course. If you find yourself struggling with any aspects of using R, please seek individual help during office hours. The earlier we can get you up to speed, the more painless the remainder of the semester will be.  
+
+# COURSE FORMAT
+
+This course will be taught using a combined lecture/lab structure. During each class, I will provide a brief lecture to introduce students to the concepts we will be learning during that class. Lab activities will be designed to reinforce and clarify lecture topics, allowing students to spend most of their time manipulating, analyzing, and visualizing. All class materials, including lecture slides, computer code, lab documents, and data, will be posted on the course website prior to class. 
+
+# COURSE RESOURCES
+
+## Textbooks
+
+Although there are many excellent texts covering various aspects of ecological modeling, the lectures for this course will closely follow two: 
+
+> Hobbs, N.T. and M.B. Hooten, 2015. *Bayesian Models: A Statistical Primer for Ecologists* (available [here](https://www.amazon.com/Bayesian-Models-Statistical-Primer-Ecologists/dp/0691159289/ref=sr_1_1?s=books&ie=UTF8&qid=1459363878&sr=1-1&keywords=bayesian+models+a+statistical+primer+for+ecologists))
+
+> Kéry, M. and M. Schaub, 2011. *Bayesian population analysis using WinBUGS: A hierarchical perspective* (available [here](https://www.amazon.com/Bayesian-Population-Analysis-using-WinBUGS/dp/0123870208)). 
+
+Weekly readings will be assigned from these books so I highly recommend all students purchase them prior to the start of the semester. The Kéry & Schaub book also contains a wealth of useful code that, although optional, students are encouraged to implement as they read the text. Chapters from these books may occasionally be supplemented with primary journal articles. When applicable PDF’s of these articles will be posted on the course website. 
+
+Material for labs will be provided as HTML and PDF files on the course webpage. These materials will include step-by-step tutorials for all lab exercises as well as links to additional online resources, problem sets, and homework assignments. Given the large number of resources available for all things R, git, and JAGS, I do not feel that any additional texts are necessary for lab. However, if students need additional help with lab activities, I am always available during office hours or by appointment to work through technical or conceptual challenges.
+
+Although the two text books and lab materials are sufficient for mastering the material presented in this course, a number of other excellent books are available and students may find some/all of these books helpful. The following books are 100% optional for this course but I have found helpful for learning this material:
+
+> Kéry, M., 2010. *Introduction to WinBUGS for ecologists: Bayesian approach to regression, ANOVA, mixed models and related analyses*. Academic Press.
+
+> Williams, B.K., Nichols, J.D., Conroy, M.J., 2001. *Analysis and management of animal populations*. Academic Press.
+
+> Bolker, B.M., 2008. *Ecological models and data in R*. Princeton University Press.
+
+
+## Software
+
+All lab computers will have R and RStudio installed on them so students are not required to install software on their own computers. However, students are free to use their own laptops during lab and having R and RStudio installed will make it easier to complete lab assignments outside of class. Any students wishing to use their own computers **should have both R and RStudio installed and running prior to the first lab**. Detailed instructions for installing both programs can be found [here](http://stat545.com/block000_r-rstudio-install.html). If you plan to use your own computer, be sure to test that you have everything installed correctly by doing the following: 
+
+1) Launch RStudio
+
+2) Put the cursor in the window labelled `Console`. Type the following code followed by enter or return: `x <- 2 * 4`. Next type `x` followed by enter or return. You should see the value 8 print to screen. If yes, you’ve succeeded in installing R and RStudio.
+
+If you encounter any problems with the previous steps, please contact me prior to the first lab. 
+
+
+# COURSE POLICIES
+
+## Assignments
+
+Emphasis will be based on critical thinking. Thus, lab exercises will consist of problem solving, short answers, and essays.  
+
+All lab assignments must be turned in on time.  **Late assignments are docked 25% of the grade for each day late.**   
+
+## Attendance 
+
+As graduate students who willingly signed up for this course, I presume that you are eager to learn the material and are self-motivated enough to put in the required effort. For this reason, I do not set a formal attendance policy. However, we will cover a lot of material over the course of the semester and each topic will build on concepts from previous weeks. As a result, missing even a few lectures or labs will make it difficult for you to fully master the learning outcomes described above. If you know you will be missing any lectures or labs, please contact me in advance so we can make sure you do not get too far behind on the material. 
+
+# GRADING
+
+Your grade in the course will be based on a total of 200 possible points. Twenty five percent of your grade (50 points) will come from 5 homework assignments that will be graded by your peers. Ten percent of your grade (20 points) will be based on the quality of the peer reviews you provide on your classmates’ homework assignments. Twenty five percent of your grade (50 points) will come from a midterm exam covering the topics we discuss in lecture during the first half of the semester. The final 40% (80 points) will be based on an individual project due at the end of the semesters.
+ 
+The 5 homework assignments will build on concepts and skills that we cover in lecture and lab. Specific objectives and tasks for each assignment, along with any necessary data, will be posted on the course website. In general, students will be provided with ‘raw’ data and will need to clean/prepare (and document!) data prior to analysis. Each assignment will be due before lab the week after the assignment is posted. All assignments must be prepared as R Markdown files that include all text, code, model output, and figures necessary to fully document your work and conclusions (we will spend the first several labs going over preparation of reports using R Markdown so, again, no previous experience is necessary). 
+
+Your score on these assignments will be based on scores provided by two peer reviewers. Each reviewer will score the assignment using a standardized rubric that will be provided along with the homework assignment. The rubric will provide five specific criteria and reviewers will score each criterion as a 0 (inadequate), 1 (fair), or 2 (adequate) and provide a brief rationale for each score. The sum of the two reviewer scores will determine the final grade for the assignment (10 possible points/review × 2 reviews = 20 points). Late assignments will have 1 point deducted from the final grade for each day the assignment is not turned in. After all peer reviews have been submitted, I will check each one for adequacy. Scores from reviews that are deemed inadequate will be dismissed and I will re-grade the original homework. 
+
+After peer reviews are submitted, I will assess their quality and give each a score of 0 (inadequate), 0.5 (adequate), or 1 (excellent). Each student will be responsible for reviewing homework assignments from two peers, thus each review assignment is worth a total of 2 points. In addition to scoring each review, I will provide students with a brief rationale for their score. Peer reviews turned in late will automatically be given a score of 0. 
+
+Individual projects may address an ecological question of your choosing, but must be approved by me during the first half of the semester. You are free to use any data you have access to, including data from your own projects, published datasets, or even simulated data. Once the project topic and data are approved, you are expected to develop statistical models using the tools and skill gained during the semester to gain insights into the ecological processes that generated your data. Once completed, a final report should be prepared as if you were submitting the results to a scientific journal. Additionally, you will give a short oral presentation of your results during the final week of class as if you were presenting at a professional conference. 
+
+
+# GRADING SCALE
+
+```{r grading, echo=FALSE}
+library(kableExtra)
+grades <- data.frame(Grade = c("A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "F"),
+                       Percent = c("93-100%", "90-92.9%", 
+                                   "87-89.9%", "83-86.9%", "80-82.9%", 
+                                   "77-79.9%", "73-76.9%", "70-72.9%",
+                                   "67-69.9%", "60-66.9%", "59.9% and below"),
+                       Points = c("930-1000", "900-929", 
+                                   "870-899", "830-869", "800-829", 
+                                   "770-799", "730-769", "700-729",
+                                   "670-699", "600-669", "0-599"))
+
+grades %>%
+  kable("html", col.names = c("GRADE", "% RANGE", "POINT RANGE"), align = 'c') %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE)
+
+```
+
+
+# LIBRARY SERVICES
+
+All USU students attending classes in Logan, at our Regional Campuses, or online can access all databases, e-journals, and e-books regardless of location. Additionally, the library will mail printed books to students, at no charge to them. Students can also borrow books from any Utah academic library. Take advantage of all library services and learn more at [libguides.usu.edu/rc](libguides.usu.edu/rc).
+
+
+# CLASSROOM CIVILILY
+
+Utah State University supports the principle of freedom of expression for both faculty and students. The University respects the rights of faculty to teach and students to learn. Maintenance of these rights requires classroom conditions that do not impede the learning process. Disruptive classroom behavior will not be tolerated. An individual engaging in such behavior may be subject to disciplinary action. Read [Student Code Article V Section V-3](https://studentconduct.usu.edu/studentcode/article5) for more information.
+
+# UNIVERSITY POLICIES & PROCEDURES
+
+## Academic Freedom and Professional Responsibilities
+
+Academic freedom is the right to teach, study, discuss, investigate, discover, create, and publish freely. Academic freedom protects the rights of faculty members in teaching and of students in learning. Freedom in research is fundamental to the advancement of truth. Faculty members are entitled to full freedom in teaching, research, and creative activities, subject to the limitations imposed by professional responsibility. Faculty Code Policy #403 further defines academic freedom and professional responsibilities.
+
+## Academic Integrity – "The Honor System"
+
+Each student has the right and duty to pursue his or her academic experience free of dishonesty. To enhance the learning environment at Utah State University and to develop student academic integrity, each student agrees to the following Honor Pledge:
+
+> "*I pledge, on my honor, to conduct myself with the foremost level of academic integrity*."
+
+A student who lives by the Honor Pledge is a student who does more than not cheat, falsify, or plagiarize. A student who lives by the Honor Pledge:
+
+* Espouses academic integrity as an underlying and essential principle of the Utah State University community;
+* Understands that each act of academic dishonesty devalues every degree that is awarded by this institution; and
+* Is a welcomed and valued member of Utah State University.
+
+## Academic dishonesty
+
+The instructor of this course will take appropriate actions in response to Academic Dishonesty, as defined the University’s Student Code.  Acts of academic dishonesty include but are not limited to:
+
+* **Cheating**: using, attempting to use, or providing others with any unauthorized assistance in taking quizzes, tests, examinations, or in any other academic exercise or activity.  Unauthorized assistance includes:
+  +   Working in a group when the instructor has designated that the quiz, test, examination, or any other academic exercise or activity be done “individually;”
+  +   Depending on the aid of sources beyond those authorized by the instructor in writing papers, preparing reports, solving problems, or carrying out other assignments;
+  +   Substituting for another student, or permitting another student to substitute for oneself, in taking an examination or preparing academic work;
+  +   Acquiring tests or other academic material belonging to a faculty member, staff member, or another student without express permission;
+  +   Continuing to write after time has been called on a quiz, test, examination, or any other academic exercise or activity;
+  +   Submitting substantially the same work for credit in more than one class, except with prior approval of the instructor; or engaging in any form of research fraud.
+*  **Falsification**: altering or fabricating any information or citation in an academic exercise or activity.
+*  **Plagiarism**: representing, by paraphrase or direct quotation, the published or unpublished work of another person as one‘s own in any academic exercise or activity without full and clear acknowledgment. It also includes using materials prepared by another person or by an agency engaged in the sale of term papers or other academic materials.
+
+For additional information go to: [ARTICLE VI. University Regulations Regarding Academic Integrity](https://studentconduct.usu.edu/studentcode/article6)
+
+## Sexual Harassment/Title IX
+
+Utah State University is committed to creating and maintaining an environment free from acts of sexual misconduct and discrimination and to fostering respect and dignity for all members of the USU community. Title IX and USU Policy 339 address sexual harassment in the workplace and academic setting.
+
+The university responds promptly upon learning of any form of possible discrimination or sexual misconduct.  Any individual may contact USU’s [Affirmative Action/Equal Opportunity (AA/EO) Office](http://aaeo.usu.edu/) for available options and resources or clarification.  The university has established a complaint procedure to handle all types of discrimination complaints, including sexual harassment ([USU Policy 305](http://www.usu.edu/policies/305/)), and has designated the AA/EO Director/Title IX Coordinator as the official responsible for receiving and investigating complaints of sexual harassment. 
+
+## Assumption of Risk
+
+All classes, programs, and extracurricular activities within the University involve some risk, and certain ones involve travel. The University provides opportunities to participate in these programs on a voluntary basis. Therefore, students should not participate in them if they do not care to assume the risks. Students can ask the respective program leaders/sponsors about the possible risks a program may generate, and if students are not willing to assume the risks, they should not select that program. By voluntarily participating in classes, programs, and extracurricular activities, a student does so at his or her own risk. General information about University Risk Management policies, insurance coverage, vehicle use policies, and risk management forms can be found at: [http://www.usu.edu/riskmgt/](http://www.usu.edu/riskmgt/)
+
+## Withdrawal Policy and "I" Grade Policy
+
+Students are required to complete all courses for which they are registered by the end of the semester. In some cases, a student may be unable to complete all of the coursework because of extenuating circumstances, but not due to poor performance or to retain financial aid. The term ‘extenuating’ circumstances includes: (1) incapacitating illness which prevents a student from attending classes for a minimum period of two weeks, (2) a death in the immediate family, (3) financial responsibilities requiring a student to alter a work schedule to secure employment, (4) change in work schedule as required by an employer, or (5) other emergencies deemed appropriate by the instructor.
+
+## Students with Disabilities
+
+USU welcomes students with disabilities. If you have, or suspect you may have, a physical, mental health, or learning disability that may require accommodations in this course, please contact the [Disability Resource Center (DRC)](http://www.usu.edu/drc/) as early in the semester as possible (University Inn # 101, (435) 797‐2444, drc@usu.edu). All disability related accommodations must be approved by the DRC.  Once approved, the DRC will coordinate with faculty to provide accommodations.
+
+## Diversity Statement
+
+Regardless of intent, careless or ill-informed remarks can be offensive and hurtful to others and detract from the learning climate. If you feel uncomfortable in a classroom due to offensive language or actions by an instructor or student(s) regarding ethnicity, gender, or sexual orientation, contact:
+
+* [Division of Student Affairs](https://studentaffairs.usu.edu): (435) 797-1712, studentservices@usu.edu, TSC 220
+* [Student Legal Services](https://ususa.usu.edu/student-association/student-advocacy/legal-services): (435) 797-2912, TSC 326,
+* [Access and Diversity](http://accesscenter.usu.edu): (435) 797-1728, access@usu.edu; TSC 315
+* [Multicultural Programs](http://accesscenter.usu.edu/multiculture): (435) 797-1728, TSC 315
+* [LGBTQA Programs](http://accesscenter.usu.edu/lgbtqa): (435) 797-1728, TSC 3145
+* [Provost‘s Office Diversity Resources](https://www.usu.edu/provost/diversity): (435) 797-8176
+
+You can learn about your student rights by visiting [The Code of Policies and Procedures for Students at Utah State University](https://studentconduct.usu.edu/studentcode)
+
+## Grievance Process
+
+Students who feel they have been unfairly treated may file a grievance through the channels and procedures described in the Student Code: [Article VII](https://studentconduct.usu.edu/studentcode/article7).
+
+## Full details for USU Academic Policies and Procedures can be found at:
+
+* [Student Conduct](https://studentconduct.usu.edu/)
+* [Student Code](https://studentconduct.usu.edu/studentcode/)
+* [Academic Integrity](https://studentconduct.usu.edu/studentcode/article6)
+* [USU Selected Academic Policies and Procedures](http://www.usu.edu/provost/faculty-life/syllabus.cfm)
+* [USU Academic Policies and Procedures](http://catalog.usu.edu/content.php?catoid=4&navoid=546)
+* [Academic Freedom and Professional Responsibility Policy](https://www.usu.edu/policies/403/)
+
+## Emergency Procedures
+
+In the case of a drill or real emergency, classes will be notified to evacuate the building by the sound of the fire/emergency alarm system or by a building representative. In the event of a disaster that may interfere with either notification, evacuate as the situation dictates (i.e., in an earthquake when shaking ceases or immediately when a fire is discovered). Turn off computers and take any personal items with you. Elevators should not be used; instead, use the closest stairs.

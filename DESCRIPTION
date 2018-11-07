@@ -2,11 +2,11 @@ Package: WILD6900
 Type: Package
 Title: Course materials for WILD6900: Applied Bayesian Analysis for Ecological Data
 Version: 0.1.0
-Authors@R: person("Clark", "S.", "Rushing", role = c("aut", "cre"), email = "clark.rushing@usu.edu")
+Authors@R: person("Clark", "Rushing", role = c("aut", "cre"), email = "clark.rushing@usu.edu")
 Maintainer: Clark Rushing <clark.rushing@usu.edu>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
-License: MIT + file LICENSE
+License: CC0
 Encoding: UTF-8
 LazyData: true
 Suggests: 
@@ -18,3 +18,4 @@ Imports:
     tidyr,
     ggplot2,
     jagsUI
+RoxygenNote: 6.1.0
