@@ -1,0 +1,88 @@
+---
+title: "Lecture 1: Introduction to WILD6900"
+subtitle: "WILD6900"
+date: "updated `r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# REVIEW SYLLABUS
+
+## Course objectives
+
+## Format
+
+## Policies
+
+## Grades
+
+*General philosophy* - You are voluntarily in grad school. You are voluntarily taking this course. Therefore, I assume you want to learn this material and I do not need to use punative measures to force you to learn. My objective is not to give a specific grade distribution. My goal is for you to learn. If you put in the time, you will be able to master the material. If you do, you will be an A. 
+
+
+# STATISTICAL MODELING IN ECOLOGY
+
+## What are we modeling? 
+### Process models
+Process models provide a mathematical description of the *state-variables* we are interested in and how they change over space and time. These represent the **true** value of our state variables at any given point in space or time. 
+
+*State-variables* are the ecological quantities of interest in our model (e.g., $N$, $z$). *Parameters* determine how state-variables change over space or time (e.g., $r$, $K$, $\psi$)  
+
+Process models are deterministic - they describe our hypothesis about how the system works; i.e., they describe the state of the system and the parameters that influence it. 
+
+Process models are abstractions - they inherently leave out a lot of details about the system in order to focus on the processes that we are most interested in or think are most important. We treat all the other sources of variation as a source of *uncertainty* - that is, unexplained variation in the state of the system. We can represent these uncertainty stochastically by defining a parameter $\sigma_p$ (p is for process) that subsumes all of the unmodeled sources of variation in the system. This allows us to model the *probability distribution* of the state-parameters  
+
+
+### Sampling models
+To obtain probability distributions about our state-variables and parameters, we need data. Data are samples of the true state. This introduces another source of uncertainty because our sample will not perfectly represent the true state of the system. 
+### Observation models
+
+### Parameter models
+
+## Uncertainty 
+Uncertainty enters every part of our inferences. Critical to acknowlege where it enters and what type of uncertainty it is
+
+
+## Types of modeling
+### Theoretical
+
+### Empirical
+
+### Simulation
+
+## 
+# WHY BAYESIAN? 
+
+### Philosophical advantages
+
+1) Probabilistic treatment of all unknown quantities
+
+2) Coherent framework for incorporating prior knowledge into analysis
+
+3) Proper accouting of uncertainty
+
+4) Ease of estimating latent variables (and uncertainty)
+
+### Practical advantages
+
+1) "Easy" to fit relatively complex models
+
+2) Many statistical concepts (e.g., random effects) make more sense (no blackbox)
+
+3) Expaned "toolkit" for quantitative analysis
+
+4) Ability to keep up with the literature
+
+5) Ability to review manuscripts/proposals that use Bayesian methods
+
+6) Mentor students who do use Bayesian methods
+
+### Disadvantages
+
+1) Computational intensive
+
+2) Few (no?) "canned" software
+
+# REPRODUCIBLE RESEARCH 
