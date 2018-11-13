@@ -33,10 +33,7 @@ Office hours: Monday and Wednesday 1:00-2:30
 
 # COURSE DESCRIPTION
 
-Quantitative models play a central role in linking data to inferences about ecological processes. Traditionally, biostatistics courses have focused on teaching procedures rather than principles: if your data is of type x, then you should use method y. Unfortunately, given the complexity of most ecological systems, researchers often encounter data that do not nicely fit within one of the limited number of procedures they have been taught in introductory statistics courses. In these cases, many researchers resort to bending their data to fit model assumptions, using inappropriate statistical methods, or limiting the questions they ask in the first place.   
-
-Many of the methods used in wildlife and ecology have common underlying principles. This course aims to provide students with a firm understanding of these principles and their application, with a particular focus on Bayesian methods. By building from common principles to more specific procedures, students will be better equipped to tailor analyses to their specific data and questions, ultimately leading to deeper and more robust understanding of the ecological systems they study. Concepts discussed during lectures will be reinforced through lab exercises focused on implementing statistical models using modern software tools (e.g. R, JAGS, and git). 
-
+Quantitative models play a central role in linking data to inferences about ecological processes. Although quantitative ecological modeling involves a diverse array of questions and techniques, many of the most common modeling frameworks are based on a set of general underlying principles. This course aims to provide students with a firm understanding of these principles and their application, with a particular focus on modeling the dynamics of plant and animal populations using Bayesian methods. By building from common principles to more specific procedures, students will be better equipped to tailor analyses to their specific data and questions, ultimately leading to deeper and more robust understanding of the ecological systems they study. Concepts discussed during lectures will be reinforced through lab exercises focused on implementing statistical models using modern software tools (e.g. R, JAGS, and git). 
 
 # COURSE OBJECTIVES
 
@@ -51,7 +48,6 @@ A secondary objective of this course is to provide you with tools and best pract
 
 * Best practices for cleaning, formatting, and storing data using R
 * Generating reproducible analyses and reports using R and R Markdown
-* Version control and collaboration using git and GitHub
 * Providing critical peer review of scientific code and reports
 
 # LEARNING OUTCOMES
@@ -72,7 +68,7 @@ All lab activities for this course will rely heavily on the statistical programm
 
 # COURSE FORMAT
 
-This course will be taught using a combined lecture/lab structure. During each class, I will provide a brief lecture to introduce students to the concepts we will be learning during that class. Lab activities will be designed to reinforce and clarify lecture topics, allowing students to spend most of their time manipulating, analyzing, and visualizing. All class materials, including lecture slides, computer code, lab documents, and data, will be posted on the course website prior to class. 
+This course will be taught using a combined lecture/lab structure. During each class, I will provide a brief lecture to introduce students to the concepts we will be learning during that class. Lab activities will be designed to reinforce and clarify lecture topics, allowing students to spend most of their time manipulating, analyzing, and visualizing data. All class materials, including lecture slides, computer code, lab documents, and data, will be posted on the course website prior to class. 
 
 # COURSE RESOURCES
 
@@ -86,9 +82,9 @@ Although there are many excellent texts covering various aspects of ecological m
 
 Weekly readings will be assigned from these books so I highly recommend all students purchase them prior to the start of the semester. The Kéry & Schaub book also contains a wealth of useful code that, although optional, students are encouraged to implement as they read the text. Chapters from these books may occasionally be supplemented with primary journal articles. When applicable PDF’s of these articles will be posted on the course website. 
 
-Material for labs will be provided as HTML and PDF files on the course webpage. These materials will include step-by-step tutorials for all lab exercises as well as links to additional online resources, problem sets, and homework assignments. Given the large number of resources available for all things R, git, and JAGS, I do not feel that any additional texts are necessary for lab. However, if students need additional help with lab activities, I am always available during office hours or by appointment to work through technical or conceptual challenges.
-
 Although the two text books and lab materials are sufficient for mastering the material presented in this course, a number of other excellent books are available and students may find some/all of these books helpful. The following books are 100% optional for this course but I have found helpful for learning this material:
+
+> Kéry, M. & Royle, J.A. 2016. *Applied Hierarchical Modeling in Ecology: Analysis of distribution, abundance, and species richness in R and BUGS*. Academic Press.
 
 > Kéry, M., 2010. *Introduction to WinBUGS for ecologists: Bayesian approach to regression, ANOVA, mixed models and related analyses*. Academic Press.
 
@@ -96,6 +92,9 @@ Although the two text books and lab materials are sufficient for mastering the m
 
 > Bolker, B.M., 2008. *Ecological models and data in R*. Princeton University Press.
 
+## Lab materials
+
+Material for labs will be provided as HTML and R Markdown files on the course webpage. These materials will include step-by-step tutorials for all lab exercises as well as links to additional online resources, problem sets, and homework assignments. 
 
 ## Software
 
@@ -124,13 +123,13 @@ As graduate students who willingly signed up for this course, I presume that you
 
 Your grade in the course will be based on a total of 200 possible points. Twenty five percent of your grade (50 points) will come from 5 homework assignments that will be graded by your peers. Ten percent of your grade (20 points) will be based on the quality of the peer reviews you provide on your classmates’ homework assignments. Twenty five percent of your grade (50 points) will come from a midterm exam covering the topics we discuss in lecture during the first half of the semester. The final 40% (80 points) will be based on an individual project due at the end of the semesters.
  
-The 5 homework assignments will build on concepts and skills that we cover in lecture and lab. Specific objectives and tasks for each assignment, along with any necessary data, will be posted on the course website. In general, students will be provided with ‘raw’ data and will need to clean/prepare (and document!) data prior to analysis. Each assignment will be due before lab the week after the assignment is posted. All assignments must be prepared as R Markdown files that include all text, code, model output, and figures necessary to fully document your work and conclusions (we will spend the first several labs going over preparation of reports using R Markdown so, again, no previous experience is necessary). 
+The 5 homework assignments will build on concepts and skills that we cover in lecture and lab. Specific objectives and tasks for each assignment, along with any necessary data, will be posted on the course website. In general, students will be provided with ‘raw’ data and will need to clean/prepare (and document!) data prior to analysis. Each assignment will be due before class the week after the assignment is posted. All assignments must be prepared as R Markdown files that include all text, code, model output, and figures necessary to fully document your work and conclusions (we will spend the first several labs going over preparation of reports using R Markdown so, again, no previous experience is necessary). 
 
 Your score on these assignments will be based on scores provided by two peer reviewers. Each reviewer will score the assignment using a standardized rubric that will be provided along with the homework assignment. The rubric will provide five specific criteria and reviewers will score each criterion as a 0 (inadequate), 1 (fair), or 2 (adequate) and provide a brief rationale for each score. The sum of the two reviewer scores will determine the final grade for the assignment (10 possible points/review × 2 reviews = 20 points). Late assignments will have 1 point deducted from the final grade for each day the assignment is not turned in. After all peer reviews have been submitted, I will check each one for adequacy. Scores from reviews that are deemed inadequate will be dismissed and I will re-grade the original homework. 
 
 After peer reviews are submitted, I will assess their quality and give each a score of 0 (inadequate), 0.5 (adequate), or 1 (excellent). Each student will be responsible for reviewing homework assignments from two peers, thus each review assignment is worth a total of 2 points. In addition to scoring each review, I will provide students with a brief rationale for their score. Peer reviews turned in late will automatically be given a score of 0. 
 
-Individual projects may address an ecological question of your choosing, but must be approved by me during the first half of the semester. You are free to use any data you have access to, including data from your own projects, published datasets, or even simulated data. Once the project topic and data are approved, you are expected to develop statistical models using the tools and skill gained during the semester to gain insights into the ecological processes that generated your data. Once completed, a final report should be prepared as if you were submitting the results to a scientific journal. Additionally, you will give a short oral presentation of your results during the final week of class as if you were presenting at a professional conference. 
+Individual projects may address an ecological question of your choosing, but must be approved by me during the first half of the semester. You are free to use any data you have access to, including data from your own projects, published datasets, or even simulated data. Once the project topic and data are approved, you are expected to develop statistical models using the tools and skill gained during the semester to gain insights into the ecological processes that generated your data. Once completed, a final report should be prepared as if you were submitting the results to a scientific journal. Additionally, you will give a short oral presentation of your results during the final week of class as if you were presenting at a professional conference. Later in the semester, I will provide a rubric for how the written and oral reports will be assessed. 
 
 
 # GRADING SCALE
@@ -142,10 +141,10 @@ grades <- data.frame(Grade = c("A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+"
                                    "87-89.9%", "83-86.9%", "80-82.9%", 
                                    "77-79.9%", "73-76.9%", "70-72.9%",
                                    "67-69.9%", "60-66.9%", "59.9% and below"),
-                       Points = c("930-1000", "900-929", 
-                                   "870-899", "830-869", "800-829", 
-                                   "770-799", "730-769", "700-729",
-                                   "670-699", "600-669", "0-599"))
+                       Points = c("186-200", "180-185", 
+                                   "174-179", "166-173", "160-165", 
+                                   "154-159", "146-153", "140-145",
+                                   "134-139", "126-133", "0-125"))
 
 grades %>%
   kable("html", col.names = c("GRADE", "% RANGE", "POINT RANGE"), align = 'c') %>%

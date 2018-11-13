@@ -23,27 +23,57 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 # STATISTICAL MODELING IN ECOLOGY
+## A quick note on notation
+
+In this course, I will try to follow the notation used in *Hobbs and Hooten*. Deterministic functions will be denoted using a lowercase letter followed by parentheses:
+$$g()$$
+with arguments specific to that function in the parentheses. Remember that these are *deterministic*, meaning that when we put in specific values and data, we will always get the same answer. There is no uncertainty. Deterministic functions are used in virtually all ecological modeling, usually to represent our hypothesis about how our system works.
+
+In many cases, the outcome of a certain process cannot be perfectly predicted. There is uncertainty (e.g., a coin flip). Although we cannot predict the outcome of these *stochastic* processes with certainty, we can describe them probabilistically. A *random variable* is a quantity that can take on values due to chance. The change of each value is governed by a probability distribution. Probability distributions will be denoted using square brackets:
+
+$$[a|b,c]$$
+which means $a$ is a random variable conditional on the parameters $b$ and $c$. We will discuss what $|$ (read "conditional on") later so don't worry if that is a bit confusing right now.
 
 ## What are we modeling? 
-### Process models
+
+All of us use models to make inferences about the state of some ecological process that we are interested in and why it changes across space, time, individuals, or populations. To understand these processes, we form hypotheses and then collect data. Data collection involves sampling from our population of interest and collected observations of the system state(s).  
+
+Uncertainty enters every part of this process. Decreasing uncertainty is always our objective - that is what science seeks to do. It is critical to acknowlege where it enters our inference and what type of uncertainty it is because not all uncertainties behave the same way.  
+
+To understand where uncertainty enters the scientific process, it is useful to break down the modeling process into distinct components. This is not usually the way we are taught to approach ecological modeling but as you will hopefully see throughout the semester, thinking this way will improve not just the way your approach analyzing your data, but also how you plan your studies and communicate your results. 
+
+### Process models  (add example here)
 Process models provide a mathematical description of the *state-variables* we are interested in and how they change over space and time. These represent the **true** value of our state variables at any given point in space or time. 
 
 *State-variables* are the ecological quantities of interest in our model (e.g., $N$, $z$). *Parameters* determine how state-variables change over space or time (e.g., $r$, $K$, $\psi$)  
 
 Process models are deterministic - they describe our hypothesis about how the system works; i.e., they describe the state of the system and the parameters that influence it. 
 
-Process models are abstractions - they inherently leave out a lot of details about the system in order to focus on the processes that we are most interested in or think are most important. We treat all the other sources of variation as a source of *uncertainty* - that is, unexplained variation in the state of the system. We can represent these uncertainty stochastically by defining a parameter $\sigma_p$ (p is for process) that subsumes all of the unmodeled sources of variation in the system. This allows us to model the *probability distribution* of the state-parameters  
+Process models are abstractions - they inherently leave out a lot of details about the system in order to focus on the processes that we are most interested in or think are most important. We treat all the other sources of variation as a source of *uncertainty* - that is, unexplained variation in the state of the system. We can represent these uncertainty stochastically by defining a parameter $\sigma^2_p$ (p is for process) that subsumes all of the unmodeled sources of variation in the system. This allows us to model the *probability distribution* of the state-parameters:
+
+$$[z|g(\Theta_p, x), \sigma^2_p]$$
+
+Process uncertainty ($\sigma^2_p$) is a measure of how well our process model fits reality - the smaller $\sigma^2_p$, the better our model represents the system. So to minimize process uncetainty, we need *a better model*. This is critical. No amount of additional data collection will lower $\sigma^2_p$. 
 
 
 ### Sampling models
-To obtain probability distributions about our state-variables and parameters, we need data. Data are samples of the true state. This introduces another source of uncertainty because our sample will not perfectly represent the true state of the system. 
+To obtain probability distributions about our state-variables and parameters, we need data. Data are samples of the true population. This introduces another source of uncertainty because our sample will not perfectly represent the true state of the system. As for the process model, we can represent sampling uncertainty $\sigma_s$ stochastically using a probability model:
+
+$$[u_i|z, \sigma^2_s]$$
+
+Separating $\sigma^2_s$ from $\sigma^2_p$ is important because we *can* lower $\sigma^2_s$ by collecting larger sample sizes, increasing replication (i.e., doing a better job of sampling the population).
+
 ### Observation models
+In addition to sampling uncertainty, we often do not even observe the unit of observation perfectly. For example, in count-based studies, we don't always count every individual that is in our sample. In occupancy models, we don't know if a site is truly unoccupied or if we failed to detect our study species. When we take morphological measurements, our instruments have some error that prevents us from knowing the true size of an individual. 
+
+$$[y_i|d(\Theta_o,u_i), \sigma^2_o]$$
+Including an observation model is needed to correct for bias. If we assume that the observed value equals the true value when in fact it doesn't, than we will get biased estimates of $z$.  
 
 ### Parameter models
+In a Bayesian world, there is one additional level of modeling (this is probably true in frequentist analyses too we just don't explicitly acknowledge it). Parameter models express what we know about our parameters *prior to* collecting data. For this reason, parameter models are more commonly referred to as *priors*. Every parameter in our model requires a probability distribution describing the prior probability we place of different values the parameter could take. 
 
-## Uncertainty 
-Uncertainty enters every part of our inferences. Critical to acknowlege where it enters and what type of uncertainty it is
-
+$$[\theta_p][\theta_o][\sigma^2_p][\sigma^2_s][\sigma^2_o]$$
+These distributions can provide a lot or a little information about the potential value of each parameter. We will talk more about priors in the coming weeks.  
 
 ## Types of modeling
 ### Theoretical
