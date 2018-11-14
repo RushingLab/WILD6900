@@ -64,11 +64,12 @@ A secondary objective of this course is to provide you with tools and best pract
 
 Students should have at least one semester of both basic ecology and introductory statistics. Although we will thoroughly cover the foundational principles of common statistical models, a basic understanding of ecological theory and statistical inference will be very helpful.  
  
-All lab activities for this course will rely heavily on the statistical programming language R (and associated software, including RStudio, JAGS, and git). During the first few weeks of lab, each session will begin with a tutorial on these tools so students are not expected to be experts prior to the course. However, we will quickly move into activities that require some degree of R proficiency so I highly recommend that you have a basic understanding of programming in R (e.g., importing/exporting & manipulating data objects, visualizing data) prior to this course. If you find yourself struggling with any aspects of using R, please seek individual help during office hours. The earlier we can get you up to speed, the more painless the remainder of the semester will be.  
+All lab activities for this course will rely heavily on the statistical programming language R (and associated software, including RStudio, JAGS, and git). During the first few weeks, each lab session will begin with a tutorial on these tools so students are not expected to be experts prior to the course. However, we will quickly move into activities that require some degree of R proficiency so I highly recommend that you have a basic understanding of programming in R (e.g., importing/exporting & manipulating data objects, visualizing data) prior to this course. If you find yourself struggling with any aspects of using R, please seek individual help during office hours. The earlier we can get you up to speed, the more painless the remainder of the semester will be.  
+
 
 # COURSE FORMAT
 
-This course will be taught using a combined lecture/lab structure. During each class, I will provide a brief lecture to introduce students to the concepts we will be learning during that class. Lab activities will be designed to reinforce and clarify lecture topics, allowing students to spend most of their time manipulating, analyzing, and visualizing data. All class materials, including lecture slides, computer code, lab documents, and data, will be posted on the course website prior to class. 
+This course will be taught using a combined lecture/lab structure. During each class, I will provide a brief lecture to introduce important concepts. At the beginning of the semester, lectures will likely take up the majority of class time as we go over the basics of ecological modeling and Bayesian methods. As the semester progresses and we move towards implementing these concepts to fit ecological models, class time will include more "lab" activities. These activities will be designed to reinforce and clarify lecture topics, allowing students to get hands on experience manipulating, analyzing, and visualizing data. All class materials, including lecture slides, computer code, lab documents, and data, will be posted on the course website prior to class. 
 
 # COURSE RESOURCES
 
@@ -94,42 +95,45 @@ Although the two text books and lab materials are sufficient for mastering the m
 
 ## Lab materials
 
-Material for labs will be provided as HTML and R Markdown files on the course webpage. These materials will include step-by-step tutorials for all lab exercises as well as links to additional online resources, problem sets, and homework assignments. 
+Materials for labs will be provided as HTML and R Markdown files on the course webpage. These materials will include step-by-step tutorials for all lab exercises as well as links to additional online resources, problem sets, and homework assignments. 
 
 ## Software
 
-All lab computers will have R and RStudio installed on them so students are not required to install software on their own computers. However, students are free to use their own laptops during lab and having R and RStudio installed will make it easier to complete lab assignments outside of class. Any students wishing to use their own computers **should have both R and RStudio installed and running prior to the first lab**. Detailed instructions for installing both programs can be found [here](http://stat545.com/block000_r-rstudio-install.html). If you plan to use your own computer, be sure to test that you have everything installed correctly by doing the following: 
+All lab computers will have R and RStudio installed on them so students are not required to install software on their own computers. However, students are free to use their own laptops during lab and having R and RStudio installed will make it easier to complete lab assignments outside of class. Any students wishing to use their own computers **should have R, RStudio, and JAGS installed and running prior to the first lab**. Detailed instructions for installing R and RStudio can be found [here](http://stat545.com/block000_r-rstudio-install.html). JAGS can be downloaded [here](https://sourceforge.net/projects/mcmc-jags/files/). 
+
+If you plan to use your own computer, **be sure you have the most recent versions of all three software programs installed**. This will greatly decrease the chances of running to issue running the code I will provide in lab. Prior to the start of the semester, test that you have R and RStudio installed correctly by doing the following: 
 
 1) Launch RStudio
 
 2) Put the cursor in the window labelled `Console`. Type the following code followed by enter or return: `x <- 2 * 4`. Next type `x` followed by enter or return. You should see the value 8 print to screen. If yes, you’ve succeeded in installing R and RStudio.
 
-If you encounter any problems with the previous steps, please contact me prior to the first lab. 
+If you encounter any problems with the previous steps, please contact me prior to the first class. We will diagnose issues running JAGS in class but for now, make sure you have the most up-to-date R packages installed by running the following:
+
+```{r, eval = FALSE}
+remove.packages(c('coda','rjags', 'devtools', 'tidyverse'))
+install.packages(c('coda','rjags', 'devtools', 'tidyverse'))
+
+library(devtools)
+install_github("kenkellner/jagsUI")
+```
 
 
-# COURSE POLICIES
 
-## Assignments
-
-Emphasis will be based on critical thinking. Thus, lab exercises will consist of problem solving, short answers, and essays.  
-
-All lab assignments must be turned in on time.  **Late assignments are docked 25% of the grade for each day late.**   
-
-## Attendance 
+# ATTENDANCE
 
 As graduate students who willingly signed up for this course, I presume that you are eager to learn the material and are self-motivated enough to put in the required effort. For this reason, I do not set a formal attendance policy. However, we will cover a lot of material over the course of the semester and each topic will build on concepts from previous weeks. As a result, missing even a few lectures or labs will make it difficult for you to fully master the learning outcomes described above. If you know you will be missing any lectures or labs, please contact me in advance so we can make sure you do not get too far behind on the material. 
 
+### A note on fieldwork
+
+I realize that many students have field work obligations during the spring semester. If you need to take this course but know in advance that you will be in the field for a portion of the semester, please let me know ASAP so we can discuss whether field work will be a barrier to taking the course or merely an inconvenience. This distinction will mainly be a function of how long and when you will miss class. If these absences are relatively few, taking the course may still be an option. I will do my best to record lectures and make them available via Canvas. Students will still be expected to complete and turn in any assignments they miss. If you are going to miss too many classes or will be unable to complete the assignments while you're in the field, it may be better to take the class at a time when your field commitments are smaller. 
+
 # GRADING
 
-Your grade in the course will be based on a total of 200 possible points. Twenty five percent of your grade (50 points) will come from 5 homework assignments that will be graded by your peers. Ten percent of your grade (20 points) will be based on the quality of the peer reviews you provide on your classmates’ homework assignments. Twenty five percent of your grade (50 points) will come from a midterm exam covering the topics we discuss in lecture during the first half of the semester. The final 40% (80 points) will be based on an individual project due at the end of the semesters.
+Your grade in the course will be based on a total of 200 possible points. Twenty five percent of your grade (70 points) will come from 7 homework assignments. Twenty five percent of your grade (50 points) will come from a midterm exam covering the topics we discuss in lecture during the first half of the semester. The final 40% (80 points) will be based on an individual project due at the end of the semesters.
  
-The 5 homework assignments will build on concepts and skills that we cover in lecture and lab. Specific objectives and tasks for each assignment, along with any necessary data, will be posted on the course website. In general, students will be provided with ‘raw’ data and will need to clean/prepare (and document!) data prior to analysis. Each assignment will be due before class the week after the assignment is posted. All assignments must be prepared as R Markdown files that include all text, code, model output, and figures necessary to fully document your work and conclusions (we will spend the first several labs going over preparation of reports using R Markdown so, again, no previous experience is necessary). 
+The 7 homework assignments will build on concepts and skills that we cover in lecture and lab. Specific objectives and tasks for each assignment, along with any necessary data, will be posted on the course website. In general, students will be provided with ‘raw’ data and will need to clean/prepare (and document!) data prior to analysis. Each assignment will be due before class the week after the assignment is posted. All assignments must be prepared as R Markdown files that include all text, code, model output, and figures necessary to fully document your work and conclusions (we will spend the first several labs going over preparation of reports using R Markdown so, again, no previous experience is necessary). 
 
-Your score on these assignments will be based on scores provided by two peer reviewers. Each reviewer will score the assignment using a standardized rubric that will be provided along with the homework assignment. The rubric will provide five specific criteria and reviewers will score each criterion as a 0 (inadequate), 1 (fair), or 2 (adequate) and provide a brief rationale for each score. The sum of the two reviewer scores will determine the final grade for the assignment (10 possible points/review × 2 reviews = 20 points). Late assignments will have 1 point deducted from the final grade for each day the assignment is not turned in. After all peer reviews have been submitted, I will check each one for adequacy. Scores from reviews that are deemed inadequate will be dismissed and I will re-grade the original homework. 
-
-After peer reviews are submitted, I will assess their quality and give each a score of 0 (inadequate), 0.5 (adequate), or 1 (excellent). Each student will be responsible for reviewing homework assignments from two peers, thus each review assignment is worth a total of 2 points. In addition to scoring each review, I will provide students with a brief rationale for their score. Peer reviews turned in late will automatically be given a score of 0. 
-
-Individual projects may address an ecological question of your choosing, but must be approved by me during the first half of the semester. You are free to use any data you have access to, including data from your own projects, published datasets, or even simulated data. Once the project topic and data are approved, you are expected to develop statistical models using the tools and skill gained during the semester to gain insights into the ecological processes that generated your data. Once completed, a final report should be prepared as if you were submitting the results to a scientific journal. Additionally, you will give a short oral presentation of your results during the final week of class as if you were presenting at a professional conference. Later in the semester, I will provide a rubric for how the written and oral reports will be assessed. 
+Individual projects may address an ecological question of your choosing, but must be approved by me during the first half of the semester. You are free to use any data you have access to, including data from your own projects, published datasets, or even simulated data. Once the project topic and data are approved, you are expected to develop statistical models using the tools and skill gained during the semester to gain insights into the ecological processes that generated your data. Once completed, a final report should be prepared as if you were submitting the results to a short-format scientific journal. Additionally, you will give a short oral presentation of your results during the final week of class as if you were presenting at a professional conference. Later in the semester, I will provide a rubric for how the written and oral reports will be assessed. 
 
 
 # GRADING SCALE
