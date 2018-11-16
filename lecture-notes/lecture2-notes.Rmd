@@ -1,0 +1,106 @@
+---
+title: "Lecture 2: Probability models and stochasticity"
+subtitle: "WILD6900"
+date: "updated `r Sys.Date()`"
+output: pdf_document
+
+usepackage:
+  - mathtools
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Stochasticity and uncertainty in ecological models
+
+In lecture 1, we learned about the different levels of models we typically encounter in ecological studies. Recall that for each level, we differentiated between a deterministic portion of the model $g()$ and a stochastic portion $[a|b,c]$. The determinstic portion of the model contains no uncertainty - given a certain input, it will always return the same answer. 
+
+*Stochastic* processes are different - given an input, the model will not always return the same answer. So stochastic processes are ones where the output is uncertain. However, even though stochastic processes are inherently uncertain, that does not mean they are unpredictable.   
+
+We also learned in the last lecture that what makes a model *Bayesian* is that all unobserved quantity is treated as a random variable, that is one tha tcan take on different values due to chance. Each random variable in our models is governed by a probabilty distribution. Our goal is to use our data to learn about those distributions. Because probability distributions for the basis of Bayesian methods, a good understanding of probability is critical to everything that will follow. 
+
+# Probability
+
+We said earlier than uncertain events are not necessarily unpredictable. In most cases, we can summarise the how likely each possible value of a random variable is to occur. This is the essence of *probability*.  
+
+## Sample space
+
+For any given random variable, we can define the *sample space* $S$, which includes all of the possible values the variable can take. For example, for a coin flip $S$ would be heads and tails. For a 6-sided dice, $S \in [1,2,3,4,5,6]$.  
+
+**insert figure**
+
+The sum of the probabilities of all possible outcomes $A_i$ must equal 1: $\sum_{i=1}^n Pr(A_i) = 1$
+
+As an example, let's imagine an animal that reproduces twice during it's life time and can have either 1 or 2 offspring per litter. The sample space of lifetime reproductive success is:
+
+$$LRS=[(1,1), (1,2), (2,1), (2,2)]$$
+
+## Probability of single events
+
+Within the sample space, we can define a smaller polygon $A$ which represents one possible outcome. $A$ is smaller than $S$ because it does not contain all possible outcomes, just one. 
+
+We can define the probability that $A$ will occur as the area of $A$ divided by the area of $S$. 
+
+$$Pr(A) = \frac{area\; of\; A}{area\; of \;S}$$
+
+In our example, there are four possible outcomes for $LRS$. Assuming all litter sizes are equally likely, what is the probability of having two offspring? Since there is only one way for that to occur: $LRS_2= \frac{1}{4} = 0.25$
+
+What is the probability that $A$ does not occur? It's the area outside of $A$:
+
+$$Pr(not \; A) = \frac{area\; of \;S - area\; of\; A}{area\; of \;S} = 1 - \frac{area\; of\; A}{area\; of \;S}$$
+
+## Disjoint events
+
+In most cases, we are interested in the probability of multiple events happening. In some cases, this is relatively straightforward. If the area of the two events does not overlap, the events are called *disjoint*. This means that knowing that event $A$ happened means that event $B$ did not happen. 
+
+**insert figure**
+
+If events are disjoint, we can estimate the probability of event $A$ *or* event $B$ by summing the probabilities:
+
+$$Pr(A \cup B) = Pr(A) + Pr(B)$$
+
+
+
+In our example, each outcome is disjoint - knowing that an individual had $(1,1)$ means that they did not have any other of the possible outcoes. What is the probability of 3 offspring? In this case, there are two ways to get this outcome so the area of $A$ is bigger: $LRS_3= \frac{1}{4} + \frac{1}{4} = 0.5$
+
+## Conditional events
+
+In many cases, outcomes are not disjoint - it may be possible for both $A$ and $B$ to occur. In these cases, we often want to know what is the probability of both $A$ *and* $B$. For example, what is the probability that both species 1 and species 2 occur at the same location?  
+
+
+
+In some instances, knowing whether event $A$ has happened does not tell us anything about whether event $B$ happened. In this is true, the events are said to be *independent*. Let's use our LRS example to clarify.  
+
+What if we want to know the probability of having 1 offspring in the first litter and 1 offspring in the second litter? The probability of having 1 offspring in first litter is 50% because there are two equally possible pathways to this outcome (out of 4). 
+
+
+## Conditional probabilities
+
+Let's add another event called $B$. In this case, we know that $B$ overlaps with $A$ and for the moment, let's say we know that $A$ has already occured. Knowing that $A$ has already occurred does two things:
+
+1) It shrinks the possible range of sample space (if $A$ occured, everything outside of $A$ did not occur)
+
+2) It effectively shrinks the area $B$ - we know that the area of $B$ outside of $A$ didn't occur
+
+So the $Pr(B|A)$ (read, probability of $B$ conditional on $A$) is the area shared by the two events divided by the area of $A$ (not $S$!)
+
+$$Pr(B|A) = \frac{area\; shared\; by\; A\; and\; B}{area\; of \;A} = \frac{Pr(A\; \cap\; B)}{Pr(A)}$$
+
+*$\cap$ means "intersection" and it is the area shared by both $A$ and $B$*
+
+likewise, 
+
+$$Pr(A|B) = \frac{Pr(A\; \cap\; B)}{Pr(B)}$$
+
+but note that $Pr(A|B) \neq Pr(B|A)$
+
+## Joint probability
+
+What is the probability that both $A$ and $B$ occur? This is referred to as the *joint* probability and it is defined as:
+
+$$Pr(A,B) = Pr(B|A)Pr(A) = Pr(A|B)Pr(B)$$
+
+
+
+
