@@ -22,37 +22,65 @@ We also learned in the last lecture that what makes a model *Bayesian* is that a
 
 # Probability
 
-We said earlier than uncertain events are not necessarily unpredictable. In most cases, we can summarise the how likely each possible value of a random variable is to occur. This is the essence of *probability*.  
+We said earlier than uncertain events are not necessarily unpredictable. In most cases, we can summarise how likely each possible value of a random variable is to occur. This is the essence of *probability*.  
 
 ## Sample space
 
-For any given random variable, we can define the *sample space* $S$, which includes all of the possible values the variable can take. For example, for a coin flip $S$ would be heads and tails. For a 6-sided dice, $S \in [1,2,3,4,5,6]$.  
+For any given random variable, we can define the *sample space* $S$, which includes all of the possible values the variable can take. For example, for a coin flip $S$ would be heads and tails. For a 6-sided dice, $S = [1,2,3,4,5,6]$.  
 
 **insert figure**
 
-The sum of the probabilities of all possible outcomes $A_i$ must equal 1: $\sum_{i=1}^n Pr(A_i) = 1$
+The sum of the probabilities of all possible outcomes $A_i$ must equal 1: $\sum_{i=1}^n Pr(A_i) = 1$ (we'll return to this in a bit)
 
-As an example, let's imagine an animal that reproduces twice during it's life time and can have either 1 or 2 offspring per litter. The sample space of lifetime reproductive success is:
+As an example, let's imagine an animal that reproduces twice during it's life time and can have either 0, 1 or 2 offspring per litter. The sample space of lifetime reproductive output (denoted $R$) is:
 
-$$LRS=[(1,1), (1,2), (2,1), (2,2)]$$
+$$R=[(1,1), (1,2), (2,1), (2,2)]$$
 
 ## Probability of single events
 
-Within the sample space, we can define a smaller polygon $A$ which represents one possible outcome. $A$ is smaller than $S$ because it does not contain all possible outcomes, just one. 
+Within the sample space, we can define a smaller polygon $A$ which represents one possible outcome. $A$ is smaller than $S$ because it does not contain all possible outcomes, just a subset. 
 
 We can define the probability that $A$ will occur as the area of $A$ divided by the area of $S$. 
 
 $$Pr(A) = \frac{area\; of\; A}{area\; of \;S}$$
 
-In our example, there are four possible outcomes for $LRS$. Assuming all litter sizes are equally likely, what is the probability of having two offspring? Since there is only one way for that to occur: $LRS_2= \frac{1}{4} = 0.25$
+In our example, there are four possible outcomes for $R$. Assuming all litter sizes are equally likely, what is the probability of having two offspring? Since there is only one way for that to occur (out of four possible pathways): $R_2= \frac{1}{4} = 0.25$
 
 What is the probability that $A$ does not occur? It's the area outside of $A$:
 
-$$Pr(not \; A) = \frac{area\; of \;S - area\; of\; A}{area\; of \;S} = 1 - \frac{area\; of\; A}{area\; of \;S}$$
+$$Pr(not \; A) = \frac{area\; of \;S - area\; of\; A}{area\; of \;S} = 1 - \frac{area\; of\; A}{area\; of \;S} = 1 - Pr(A)$$
 
-## Disjoint events
+## Probability of multiple events
 
-In most cases, we are interested in the probability of multiple events happening. In some cases, this is relatively straightforward. If the area of the two events does not overlap, the events are called *disjoint*. This means that knowing that event $A$ happened means that event $B$ did not happen. 
+In many cases, we are interested in the probability of multiple events happening rather than just a single event. The way we estimated the probability of multiple events depends on how the events are related to each other and whether one (or more) events have already happened. 
+
+To start, let's add a new event $B$ to our conceptual example. Event $B$ overlaps with event $A$, meaning that it is possible for both $A$ and $B$ to occur. In the reproductive example, $A$ might be the probability of having 1 offspring in the first litter and having 3 offspring total (not the area of $B$ has been made a bit smaller than it really is so you can see that the box includes both $A$ and $B$).  
+
+What is the probability of both occuring? We'll denote this probability as $Pr(A,B)$. 
+
+### Conditional probability
+
+To estimate $Pr(A,B)$, let's assume we know that the individual has already had 1 offspring in the first litter (we know the probability of that was $Pr(R_{(1,)}) = 0.5$). Without that piece of information, the probability of three offspring $Pr(R_3) = 0.5$. However, knowing that $A$ already occurred does two things: 
+
+1) It shrinks the possible range of sample space (if $A$ occured, everything outside of $A$ did not occur). So now $S = A$. In our case, we know the bottom two panels cannot occur.
+
+2) It effectively shrinks the area $B$ - we know that the area of $B$ outside of $A$ didn't occur
+
+So the $Pr(B|A)$ (read, probability of $B$ conditional on $A$) is the area shared by the two events divided by the area of $A$ (not $S$!):
+
+$$Pr(B|A) = \frac{area\; shared\; by\; A\; and\; B}{area\; of \;A} = \frac{Pr(A\; \cap\; B)}{Pr(A)}$$
+
+For our example, 
+
+$$Pr(R_3|R_{(1,)}) = \frac{0.25}{0.5}=0.5$$
+Mutiple events can be divided into *complex* events, which are composites of multiple single events ($A$ and $B$)
+
+## Complex and shared events
+
+I
+
+
+In some cases, this is relatively straightforward. If the area of the two events does not overlap, the events are called *disjoint*. This means that knowing that event $A$ happened means that event $B$ did not happen. 
 
 **insert figure**
 
