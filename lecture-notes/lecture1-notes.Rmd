@@ -32,7 +32,7 @@ which means $a$ is a random variable conditional on the parameters $b$ and $c$. 
 
 ## What are we modeling? 
 
-All of us use models to make inferences about the state of some ecological process that we are interested in and why it changes across space, time, individuals, or populations. To understand these processes, we form hypotheses and then collect data. Data collection involves sampling from our population of interest and collecting observations of the system state(s).  
+All of us use models to make inferences about the state of some ecological process that we are interested in and why it changes across space, time, individuals, or populations. To understand these processes, we form hypotheses and then collect data. Our goal is to understand processes that we **cannot directly observe** based on quantities that we *can* observe. Data collection involves sampling from our population of interest and collecting observations of the system state(s).  
 
 Uncertainty enters every part of this process. Decreasing uncertainty is always our objective - that is what science seeks to do. However, to decrease uncertainty we must acknowlege where it enters our inference and what type of uncertainty it is. Not all uncertainties behave the same way and the tools that we can use to reduce uncertainty depend on what type of uncertainty it is.   
 

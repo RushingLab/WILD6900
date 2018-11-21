@@ -117,8 +117,7 @@ Office hours: Monday and Wednesday 1:00-2:30</p>
 <div id="course-description" class="section level1">
 <h1 class="hasAnchor">
 <a href="#course-description" class="anchor"></a>COURSE DESCRIPTION</h1>
-<p>Quantitative models play a central role in linking data to inferences about ecological processes. Traditionally, biostatistics courses have focused on teaching procedures rather than principles: if your data is of type x, then you should use method y. Unfortunately, given the complexity of most ecological systems, researchers often encounter data that do not nicely fit within one of the limited number of procedures they have been taught in introductory statistics courses. In these cases, many researchers resort to bending their data to fit model assumptions, using inappropriate statistical methods, or limiting the questions they ask in the first place.</p>
-<p>Many of the methods used in wildlife and ecology have common underlying principles. This course aims to provide students with a firm understanding of these principles and their application, with a particular focus on Bayesian methods. By building from common principles to more specific procedures, students will be better equipped to tailor analyses to their specific data and questions, ultimately leading to deeper and more robust understanding of the ecological systems they study. Concepts discussed during lectures will be reinforced through lab exercises focused on implementing statistical models using modern software tools (e.g. R, JAGS, and git).</p>
+<p>Quantitative models play a central role in linking data to inferences about ecological processes. Although quantitative ecological modeling involves a diverse array of questions and techniques, many of the most common modeling frameworks are based on a set of general underlying principles. This course aims to provide students with a firm understanding of these principles and their application, with a particular focus on modeling the dynamics of plant and animal populations using Bayesian methods. By building from common principles to more specific procedures, students will be better equipped to tailor analyses to their specific data and questions, ultimately leading to deeper and more robust understanding of the ecological systems they study. Concepts discussed during lectures will be reinforced through lab exercises focused on implementing statistical models using modern software tools (e.g. R, JAGS, and git).</p>
 </div>
 <div id="course-objectives" class="section level1">
 <h1 class="hasAnchor">
@@ -137,7 +136,6 @@ Office hours: Monday and Wednesday 1:00-2:30</p>
 <ul>
 <li>Best practices for cleaning, formatting, and storing data using R</li>
 <li>Generating reproducible analyses and reports using R and R Markdown</li>
-<li>Version control and collaboration using git and GitHub</li>
 <li>Providing critical peer review of scientific code and reports</li>
 </ul>
 </div>
@@ -158,47 +156,16 @@ Office hours: Monday and Wednesday 1:00-2:30</p>
 <h1 class="hasAnchor">
 <a href="#prerequisites" class="anchor"></a>PREREQUISITES</h1>
 <p>Students should have at least one semester of both basic ecology and introductory statistics. Although we will thoroughly cover the foundational principles of common statistical models, a basic understanding of ecological theory and statistical inference will be very helpful.</p>
-<p>All lab activities for this course will rely heavily on the statistical programming language R (and associated software, including RStudio, JAGS, and git). During the first few weeks of lab, each session will begin with a tutorial on these tools so students are not expected to be experts prior to the course. However, we will quickly move into activities that require some degree of R proficiency so I highly recommend that you have a basic understanding of programming in R (e.g., importing/exporting &amp; manipulating data objects, visualizing data) prior to this course. If you find yourself struggling with any aspects of using R, please seek individual help during office hours. The earlier we can get you up to speed, the more painless the remainder of the semester will be.</p>
+<p>All lab activities for this course will rely heavily on the statistical programming language R (and associated software, including RStudio, JAGS, and git). During the first few weeks, each lab session will begin with a tutorial on these tools so students are not expected to be experts prior to the course. However, we will quickly move into activities that require some degree of R proficiency so I highly recommend that you have a basic understanding of programming in R (e.g., importing/exporting &amp; manipulating data objects, visualizing data) prior to this course. If you find yourself struggling with any aspects of using R, please seek individual help during office hours. The earlier we can get you up to speed, the more painless the remainder of the semester will be.</p>
 </div>
-<div id="course-activities" class="section level1">
+<div id="course-format" class="section level1">
 <h1 class="hasAnchor">
-<a href="#course-activities" class="anchor"></a>COURSE ACTIVITIES</h1>
-<div id="lectures" class="section level2">
-<h2 class="hasAnchor">
-<a href="#lectures" class="anchor"></a>Lectures</h2>
-</div>
-<div id="labs" class="section level2">
-<h2 class="hasAnchor">
-<a href="#labs" class="anchor"></a>Labs</h2>
-<p>Labs will consist primarily of computer-oriented sessions designed to help solidify the topics presented in lecture. All computer-based lab activities will use the free programming language <a href="https://cran.r-project.org/">R</a>. In addition, we will run R using <a href="https://www.rstudio.com/">RStudio</a>, a powerful <em>integrated development environment</em> (IDE) for R. Labs will meet in Quinney Library 304, but some students may need to spill over into 306 depending on enrollment. You are welcome to use your own personal laptop computer (see below for instructions for installing R and RStudio if you plan to use your own computer). Much of the demonstration of how demography and population dynamics are monitored and assessed in the field will be covered in WILD 2400 and WILD 4750.</p>
-<p>No previous experience with R is expected for this course. Lab activities, particularly those early in the semester, will be specifically designed to reinforce lecture topics as well as to introduce students to manipulating, analyzing, and visualizing data using R.</p>
-<p>During lab, students will work through pre-written code with the help of instructors. These activities will involve analyzing and visualizing data to deepen understanding of concepts presented in lecture. Graded lab assignments will involve a combination of:</p>
-<ul>
-<li>Short-answer questions based on the results of lab activities;</li>
-<li>Changing/writing code to answer new questions not addressed in lab activities; and,</li>
-<li>Short essays that link lab results to applied management/conservation issues</li>
-</ul>
-<p>In many cases, these assignments can be completed during lab. In other cases, students will be expected to take the results from their lab activities and complete assignments outside of class.</p>
-</div>
-<div id="quizzes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#quizzes" class="anchor"></a>Quizzes</h2>
-<p>Each week, students will be given a 10-question electronic quiz consisting of multiple choice, fill-in-the-blank, matching, or TRUE/FALSE questions. Quizzes will be posted to Canvas and must be completed within one week of posting. Students may use lecture notes, textbooks, or the internet to answer questions but you must take the quiz yourself. <strong>Students may not work together on quizzes.</strong></p>
-</div>
-<div id="exams" class="section level2">
-<h2 class="hasAnchor">
-<a href="#exams" class="anchor"></a>Exams</h2>
-</div>
+<a href="#course-format" class="anchor"></a>COURSE FORMAT</h1>
+<p>This course will be taught using a combined lecture/lab structure. During each class, I will provide a brief lecture to introduce important concepts. At the beginning of the semester, lectures will likely take up the majority of class time as we go over the basics of ecological modeling and Bayesian methods. As the semester progresses and we move towards implementing these concepts to fit ecological models, class time will include more “lab” activities. These activities will be designed to reinforce and clarify lecture topics, allowing students to get hands on experience manipulating, analyzing, and visualizing data. All class materials, including lecture slides, computer code, lab documents, and data, will be posted on the course website prior to class.</p>
 </div>
 <div id="course-resources" class="section level1">
 <h1 class="hasAnchor">
 <a href="#course-resources" class="anchor"></a>COURSE RESOURCES</h1>
-<div id="lecture-and-lab-materials" class="section level2">
-<h2 class="hasAnchor">
-<a href="#lecture-and-lab-materials" class="anchor"></a>Lecture and lab materials</h2>
-<p>PDF copies of each lecture will be posted on Canvas prior to class. Students are encouraged to download/print lectures ahead of class to aid notetaking. Please note, however, that lecture slides will not contain all of the details that will be discussed during lecture. Therefore, reviewing the slides is <em>not</em> a substitute for attending class.</p>
-<p>Lab materials will also be distributed through Canvas prior to each lab. These materials will consist of files containing data and code. These materials can be downloaded prior to or at the beginning of lab.</p>
-</div>
 <div id="textbooks" class="section level2">
 <h2 class="hasAnchor">
 <a href="#textbooks" class="anchor"></a>Textbooks</h2>
@@ -210,8 +177,10 @@ Office hours: Monday and Wednesday 1:00-2:30</p>
 <p>Kéry, M. and M. Schaub, 2011. <em>Bayesian population analysis using WinBUGS: A hierarchical perspective</em> (available <a href="https://www.amazon.com/Bayesian-Population-Analysis-using-WinBUGS/dp/0123870208">here</a>).</p>
 </blockquote>
 <p>Weekly readings will be assigned from these books so I highly recommend all students purchase them prior to the start of the semester. The Kéry &amp; Schaub book also contains a wealth of useful code that, although optional, students are encouraged to implement as they read the text. Chapters from these books may occasionally be supplemented with primary journal articles. When applicable PDF’s of these articles will be posted on the course website.</p>
-<p>Material for labs will be provided as HTML and PDF files on the course webpage. These materials will include step-by-step tutorials for all lab exercises as well as links to additional online resources, problem sets, and homework assignments. Given the large number of resources available for all things R, git, and JAGS, I do not feel that any additional texts are necessary for lab. However, if students need additional help with lab activities, I am always available during office hours or by appointment to work through technical or conceptual challenges.</p>
 <p>Although the two text books and lab materials are sufficient for mastering the material presented in this course, a number of other excellent books are available and students may find some/all of these books helpful. The following books are 100% optional for this course but I have found helpful for learning this material:</p>
+<blockquote>
+<p>Kéry, M. &amp; Royle, J.A. 2016. <em>Applied Hierarchical Modeling in Ecology: Analysis of distribution, abundance, and species richness in R and BUGS</em>. Academic Press.</p>
+</blockquote>
 <blockquote>
 <p>Kéry, M., 2010. <em>Introduction to WinBUGS for ecologists: Bayesian approach to regression, ANOVA, mixed models and related analyses</em>. Academic Press.</p>
 </blockquote>
@@ -222,40 +191,44 @@ Office hours: Monday and Wednesday 1:00-2:30</p>
 <p>Bolker, B.M., 2008. <em>Ecological models and data in R</em>. Princeton University Press.</p>
 </blockquote>
 </div>
+<div id="lab-materials" class="section level2">
+<h2 class="hasAnchor">
+<a href="#lab-materials" class="anchor"></a>Lab materials</h2>
+<p>Materials for labs will be provided as HTML and R Markdown files on the course webpage. These materials will include step-by-step tutorials for all lab exercises as well as links to additional online resources, problem sets, and homework assignments.</p>
+</div>
 <div id="software" class="section level2">
 <h2 class="hasAnchor">
 <a href="#software" class="anchor"></a>Software</h2>
-<p>All lab computers will have R and RStudio installed on them so students are not required to install software on their own computers. However, students are free to use their own laptops during lab and having R and RStudio installed will make it easier to complete lab assignments outside of class. Any students wishing to use their own computers <strong>should have both R and RStudio installed and running prior to the first lab</strong>. Detailed instructions for installing both programs can be found <a href="http://stat545.com/block000_r-rstudio-install.html">here</a>. If you plan to use your own computer, be sure to test that you have everything installed correctly by doing the following:</p>
+<p>All lab computers will have R and RStudio installed on them so students are not required to install software on their own computers. However, students are free to use their own laptops during lab and having R and RStudio installed will make it easier to complete lab assignments outside of class. Any students wishing to use their own computers <strong>should have R, RStudio, and JAGS installed and running prior to the first lab</strong>. Detailed instructions for installing R and RStudio can be found <a href="http://stat545.com/block000_r-rstudio-install.html">here</a>. JAGS can be downloaded <a href="https://sourceforge.net/projects/mcmc-jags/files/">here</a>.</p>
+<p>If you plan to use your own computer, <strong>be sure you have the most recent versions of all three software programs installed</strong>. This will greatly decrease the chances of running to issue running the code I will provide in lab. Prior to the start of the semester, test that you have R and RStudio installed correctly by doing the following:</p>
 <ol style="list-style-type: decimal">
 <li><p>Launch RStudio</p></li>
 <li><p>Put the cursor in the window labelled <code>Console</code>. Type the following code followed by enter or return: <code>x &lt;- 2 * 4</code>. Next type <code>x</code> followed by enter or return. You should see the value 8 print to screen. If yes, you’ve succeeded in installing R and RStudio.</p></li>
 </ol>
-<p>If you encounter any problems with the previous steps, please contact me prior to the first lab.</p>
+<p>If you encounter any problems with the previous steps, please contact me prior to the first class. We will diagnose issues running JAGS in class but for now, make sure you have the most up-to-date R packages installed by running the following:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">remove.packages</span>(<span class="kw">c</span>(<span class="st">'coda'</span>,<span class="st">'rjags'</span>, <span class="st">'devtools'</span>, <span class="st">'tidyverse'</span>))</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">install.packages</span>(<span class="kw">c</span>(<span class="st">'coda'</span>,<span class="st">'rjags'</span>, <span class="st">'devtools'</span>, <span class="st">'tidyverse'</span>))</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">library</span>(devtools)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw"><a href="http://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"kenkellner/jagsUI"</span>)</a></code></pre></div>
 </div>
 </div>
-<div id="course-policies" class="section level1">
+<div id="attendance" class="section level1">
 <h1 class="hasAnchor">
-<a href="#course-policies" class="anchor"></a>COURSE POLICIES</h1>
-<div id="assignments" class="section level2">
-<h2 class="hasAnchor">
-<a href="#assignments" class="anchor"></a>Assignments</h2>
-<p>Emphasis will be based on critical thinking. Thus, lab exercises will consist of problem solving, short answers, and essays.</p>
-<p>All lab assignments must be turned in on time. <strong>Late assignments are docked 25% of the grade for each day late.</strong></p>
-</div>
-<div id="attendance" class="section level2">
-<h2 class="hasAnchor">
-<a href="#attendance" class="anchor"></a>Attendance</h2>
+<a href="#attendance" class="anchor"></a>ATTENDANCE</h1>
 <p>As graduate students who willingly signed up for this course, I presume that you are eager to learn the material and are self-motivated enough to put in the required effort. For this reason, I do not set a formal attendance policy. However, we will cover a lot of material over the course of the semester and each topic will build on concepts from previous weeks. As a result, missing even a few lectures or labs will make it difficult for you to fully master the learning outcomes described above. If you know you will be missing any lectures or labs, please contact me in advance so we can make sure you do not get too far behind on the material.</p>
+<div id="a-note-on-fieldwork" class="section level3">
+<h3 class="hasAnchor">
+<a href="#a-note-on-fieldwork" class="anchor"></a>A note on fieldwork</h3>
+<p>I realize that many students have field work obligations during the spring semester. If you need to take this course but know in advance that you will be in the field for a portion of the semester, please let me know ASAP so we can discuss whether field work will be a barrier to taking the course or merely an inconvenience. This distinction will mainly be a function of how long and when you will miss class. If these absences are relatively few, taking the course may still be an option. I will do my best to record lectures and make them available via Canvas. Students will still be expected to complete and turn in any assignments they miss. If you are going to miss too many classes or will be unable to complete the assignments while you’re in the field, it may be better to take the class at a time when your field commitments are smaller.</p>
 </div>
 </div>
 <div id="grading" class="section level1">
 <h1 class="hasAnchor">
 <a href="#grading" class="anchor"></a>GRADING</h1>
-<p>Your grade in the course will be based on a total of 200 possible points. Twenty five percent of your grade (50 points) will come from 5 homework assignments that will be graded by your peers. Ten percent of your grade (20 points) will be based on the quality of the peer reviews you provide on your classmates’ homework assignments. Twenty five percent of your grade (50 points) will come from a midterm exam covering the topics we discuss in lecture during the first half of the semester. The final 40% (80 points) will be based on an individual project due at the end of the semesters.</p>
-<p>The 5 homework assignments will build on concepts and skills that we cover in lecture and lab. Specific objectives and tasks for each assignment, along with any necessary data, will be posted on the course website. In general, students will be provided with ‘raw’ data and will need to clean/prepare (and document!) data prior to analysis. Each assignment will be due before lab the week after the assignment is posted. All assignments must be prepared as R Markdown files that include all text, code, model output, and figures necessary to fully document your work and conclusions (we will spend the first several labs going over preparation of reports using R Markdown so, again, no previous experience is necessary).</p>
-<p>Your score on these assignments will be based on scores provided by two peer reviewers. Each reviewer will score the assignment using a standardized rubric that will be provided along with the homework assignment. The rubric will provide five specific criteria and reviewers will score each criterion as a 0 (inadequate), 1 (fair), or 2 (adequate) and provide a brief rationale for each score. The sum of the two reviewer scores will determine the final grade for the assignment (10 possible points/review × 2 reviews = 20 points). Late assignments will have 1 point deducted from the final grade for each day the assignment is not turned in. After all peer reviews have been submitted, I will check each one for adequacy. Scores from reviews that are deemed inadequate will be dismissed and I will re-grade the original homework.</p>
-<p>After peer reviews are submitted, I will assess their quality and give each a score of 0 (inadequate), 0.5 (adequate), or 1 (excellent). Each student will be responsible for reviewing homework assignments from two peers, thus each review assignment is worth a total of 2 points. In addition to scoring each review, I will provide students with a brief rationale for their score. Peer reviews turned in late will automatically be given a score of 0.</p>
-<p>Individual projects may address an ecological question of your choosing, but must be approved by me during the first half of the semester. You are free to use any data you have access to, including data from your own projects, published datasets, or even simulated data. Once the project topic and data are approved, you are expected to develop statistical models using the tools and skill gained during the semester to gain insights into the ecological processes that generated your data. Once completed, a final report should be prepared as if you were submitting the results to a scientific journal. Additionally, you will give a short oral presentation of your results during the final week of class as if you were presenting at a professional conference.</p>
+<p>Your grade in the course will be based on a total of 200 possible points. Twenty five percent of your grade (70 points) will come from 7 homework assignments. Twenty five percent of your grade (50 points) will come from a midterm exam covering the topics we discuss in lecture during the first half of the semester. The final 40% (80 points) will be based on an individual project due at the end of the semesters.</p>
+<p>The 7 homework assignments will build on concepts and skills that we cover in lecture and lab. Specific objectives and tasks for each assignment, along with any necessary data, will be posted on the course website. In general, students will be provided with ‘raw’ data and will need to clean/prepare (and document!) data prior to analysis. Each assignment will be due before class the week after the assignment is posted. All assignments must be prepared as R Markdown files that include all text, code, model output, and figures necessary to fully document your work and conclusions (we will spend the first several labs going over preparation of reports using R Markdown so, again, no previous experience is necessary).</p>
+<p>Individual projects may address an ecological question of your choosing, but must be approved by me during the first half of the semester. You are free to use any data you have access to, including data from your own projects, published datasets, or even simulated data. Once the project topic and data are approved, you are expected to develop statistical models using the tools and skill gained during the semester to gain insights into the ecological processes that generated your data. Once completed, a final report should be prepared as if you were submitting the results to a short-format scientific journal. Additionally, you will give a short oral presentation of your results during the final week of class as if you were presenting at a professional conference. Later in the semester, I will provide a rubric for how the written and oral reports will be assessed.</p>
 </div>
 <div id="grading-scale" class="section level1">
 <h1 class="hasAnchor">
@@ -281,7 +254,7 @@ A
 93-100%
 </td>
 <td style="text-align:center;">
-930-1000
+186-200
 </td>
 </tr>
 <tr>
@@ -292,7 +265,7 @@ A-
 90-92.9%
 </td>
 <td style="text-align:center;">
-900-929
+180-185
 </td>
 </tr>
 <tr>
@@ -303,7 +276,7 @@ B+
 87-89.9%
 </td>
 <td style="text-align:center;">
-870-899
+174-179
 </td>
 </tr>
 <tr>
@@ -314,7 +287,7 @@ B
 83-86.9%
 </td>
 <td style="text-align:center;">
-830-869
+166-173
 </td>
 </tr>
 <tr>
@@ -325,7 +298,7 @@ B-
 80-82.9%
 </td>
 <td style="text-align:center;">
-800-829
+160-165
 </td>
 </tr>
 <tr>
@@ -336,7 +309,7 @@ C+
 77-79.9%
 </td>
 <td style="text-align:center;">
-770-799
+154-159
 </td>
 </tr>
 <tr>
@@ -347,7 +320,7 @@ C
 73-76.9%
 </td>
 <td style="text-align:center;">
-730-769
+146-153
 </td>
 </tr>
 <tr>
@@ -358,7 +331,7 @@ C-
 70-72.9%
 </td>
 <td style="text-align:center;">
-700-729
+140-145
 </td>
 </tr>
 <tr>
@@ -369,7 +342,7 @@ D+
 67-69.9%
 </td>
 <td style="text-align:center;">
-670-699
+134-139
 </td>
 </tr>
 <tr>
@@ -380,7 +353,7 @@ D
 60-66.9%
 </td>
 <td style="text-align:center;">
-600-669
+126-133
 </td>
 </tr>
 <tr>
@@ -391,7 +364,7 @@ F
 59.9% and below
 </td>
 <td style="text-align:center;">
-0-599
+0-125
 </td>
 </tr>
 </tbody>
@@ -529,27 +502,15 @@ F
       <li><a href="#course-objectives">COURSE OBJECTIVES</a></li>
       <li><a href="#learning-outcomes">LEARNING OUTCOMES</a></li>
       <li><a href="#prerequisites">PREREQUISITES</a></li>
-      <li>
-<a href="#course-activities">COURSE ACTIVITIES</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#lectures">Lectures</a></li>
-      <li><a href="#labs">Labs</a></li>
-      <li><a href="#quizzes">Quizzes</a></li>
-      <li><a href="#exams">Exams</a></li>
-      </ul>
-</li>
+      <li><a href="#course-format">COURSE FORMAT</a></li>
       <li>
 <a href="#course-resources">COURSE RESOURCES</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#lecture-and-lab-materials">Lecture and lab materials</a></li>
-      <li><a href="#textbooks">Textbooks</a></li>
+<li><a href="#textbooks">Textbooks</a></li>
+      <li><a href="#lab-materials">Lab materials</a></li>
       <li><a href="#software">Software</a></li>
       </ul>
 </li>
-      <li>
-<a href="#course-policies">COURSE POLICIES</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#assignments">Assignments</a></li>
-      <li><a href="#attendance">Attendance</a></li>
-      </ul>
-</li>
+      <li><a href="#attendance">ATTENDANCE</a></li>
       <li><a href="#grading">GRADING</a></li>
       <li><a href="#grading-scale">GRADING SCALE</a></li>
       <li><a href="#library-services">LIBRARY SERVICES</a></li>

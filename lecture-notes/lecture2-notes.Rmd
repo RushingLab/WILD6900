@@ -12,6 +12,8 @@ usepackage:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+**Warning: The material presented in this lecture is tedious. But the concepts in this lecture are critical to everything that will follow in this course. So push through and try your best to understand these topics. You do not need to be an expert in probability at the end of this lecture - we will reinforce these concepts over and over again throughout the semester - but getting the gist now will help you grasp other topics as we move forward.**  
+
 # Stochasticity and uncertainty in ecological models
 
 In lecture 1, we learned about the different levels of models we typically encounter in ecological studies. Recall that for each level, we differentiated between a deterministic portion of the model $g()$ and a stochastic portion $[a|b,c]$. The determinstic portion of the model contains no uncertainty - given a certain input, it will always return the same answer. 
@@ -26,15 +28,15 @@ We said earlier than uncertain events are not necessarily unpredictable. In most
 
 ## Sample space
 
-For any given random variable, we can define the *sample space* $S$, which includes all of the possible values the variable can take. For example, for a coin flip $S$ would be heads and tails. For a 6-sided dice, $S = [1,2,3,4,5,6]$.  
+For any given random variable, we can define the *sample space* $S$, which includes all of the possible values the variable can take. For example, for an single-species occupancy model, $S$ would be present or absent. For a model of species abundance, $S$ would be ${0,1,2,3,...,\infty}$.  
 
 **insert figure**
 
-The sum of the probabilities of all possible outcomes $A_i$ must equal 1: $\sum_{i=1}^n Pr(A_i) = 1$ (we'll return to this in a bit)
+For our random process to truly be a probability, the sum of the probabilities of all must equal 1: $\sum_{i=1}^n Pr(A_i) = 1$ (if the outcomes are continous we have to take the intergral instead of the sum).
 
-As an example, let's imagine an animal that reproduces twice during it's life time and can have either 0, 1 or 2 offspring per litter. The sample space of lifetime reproductive output (denoted $R$) is:
+As an example, let's imagine an occupancy model in which we want to know if species $x$ is present at a given location. We will denote the occupancy status $z_x$ and the sample space includes just two possible values:
 
-$$R=[(1,1), (1,2), (2,1), (2,2)]$$
+$$S_{z_x}=\{0, 1\}$$
 
 ## Probability of single events
 
@@ -44,91 +46,334 @@ We can define the probability that $A$ will occur as the area of $A$ divided by 
 
 $$Pr(A) = \frac{area\; of\; A}{area\; of \;S}$$
 
-In our example, there are four possible outcomes for $R$. Assuming all litter sizes are equally likely, what is the probability of having two offspring? Since there is only one way for that to occur (out of four possible pathways): $R_2= \frac{1}{4} = 0.25$
-
 What is the probability that $A$ does not occur? It's the area outside of $A$:
 
 $$Pr(not \; A) = \frac{area\; of \;S - area\; of\; A}{area\; of \;S} = 1 - \frac{area\; of\; A}{area\; of \;S} = 1 - Pr(A)$$
 
+In our example, let's say that the probability of occupancy for species $x$ is $Pr(z_x = 1) = 0.4$. This means that the probability that the site in not occupied is $Pr(z_x = 0) =1-0.4=0.6$. 
+
 ## Probability of multiple events
 
-In many cases, we are interested in the probability of multiple events happening rather than just a single event. The way we estimated the probability of multiple events depends on how the events are related to each other and whether one (or more) events have already happened. 
+Often, we are not interested in the probability of a single event happening but instead of more than one events. The *joint* probability refers to the probability that two or more events occur and is usually denoted $Pr(A,B)$. Estimating joint probabilities is more challenging than estimating the probability of single events but is critical to understanding the logic behind Bayesian methods.  
 
-To start, let's add a new event $B$ to our conceptual example. Event $B$ overlaps with event $A$, meaning that it is possible for both $A$ and $B$ to occur. In the reproductive example, $A$ might be the probability of having 1 offspring in the first litter and having 3 offspring total (not the area of $B$ has been made a bit smaller than it really is so you can see that the box includes both $A$ and $B$).  
+To extend our simple example, let's imagine we are interested in the occupancy status of two species - $x$ and $y$. Our sample space is now:
 
-What is the probability of both occuring? We'll denote this probability as $Pr(A,B)$. 
+$$S_{z_x,z_y} = \{(0,0), (0,1), (1,0), (1,1)\}$$
+
+The question we want to know now is: what is the probability that a site is occupied by both species, $Pr(z_x = 1, z_y = 1)$ (which can shorten to $Pr(z_x, z_y)$)
+
+The answer to that question depends on the relationship between $Pr(z_x)$ and $Pr(z_y)$
 
 ### Conditional probability
 
-To estimate $Pr(A,B)$, let's assume we know that the individual has already had 1 offspring in the first litter (we know the probability of that was $Pr(R_{(1,)}) = 0.5$). Without that piece of information, the probability of three offspring $Pr(R_3) = 0.5$. However, knowing that $A$ already occurred does two things: 
+In some cases, knowing the status of one random variable tells us something about the status of another random variable.  
 
-1) It shrinks the possible range of sample space (if $A$ occured, everything outside of $A$ did not occur). So now $S = A$. In our case, we know the bottom two panels cannot occur.
+Let's say we know that species $x$ is present, that is $z_x=1$. Knowing that $z_x=1$ does two things:
 
-2) It effectively shrinks the area $B$ - we know that the area of $B$ outside of $A$ didn't occur
+1) It shrinks the possible range of sample space (if $z_x=1$ occured, the remainder of our sample space (in this case $z_x=0$) did not occur)
 
-So the $Pr(B|A)$ (read, probability of $B$ conditional on $A$) is the area shared by the two events divided by the area of $A$ (not $S$!):
+2) It effectively shrinks the area $z_y$ - we know that the area of $z_y$ outside of $z_x$ didn't occur
 
-$$Pr(B|A) = \frac{area\; shared\; by\; A\; and\; B}{area\; of \;A} = \frac{Pr(A\; \cap\; B)}{Pr(A)}$$
+So the $Pr(z_y|z_x)$ (read, probability of $z_y$ conditional on $z_x$) is the area shared by the two events divided by the area of $z_y$ (not $S$!)
 
-For our example, 
-
-$$Pr(R_3|R_{(1,)}) = \frac{0.25}{0.5}=0.5$$
-Mutiple events can be divided into *complex* events, which are composites of multiple single events ($A$ and $B$)
-
-## Complex and shared events
-
-I
-
-
-In some cases, this is relatively straightforward. If the area of the two events does not overlap, the events are called *disjoint*. This means that knowing that event $A$ happened means that event $B$ did not happen. 
-
-**insert figure**
-
-If events are disjoint, we can estimate the probability of event $A$ *or* event $B$ by summing the probabilities:
-
-$$Pr(A \cup B) = Pr(A) + Pr(B)$$
-
-
-
-In our example, each outcome is disjoint - knowing that an individual had $(1,1)$ means that they did not have any other of the possible outcoes. What is the probability of 3 offspring? In this case, there are two ways to get this outcome so the area of $A$ is bigger: $LRS_3= \frac{1}{4} + \frac{1}{4} = 0.5$
-
-## Conditional events
-
-In many cases, outcomes are not disjoint - it may be possible for both $A$ and $B$ to occur. In these cases, we often want to know what is the probability of both $A$ *and* $B$. For example, what is the probability that both species 1 and species 2 occur at the same location?  
-
-
-
-In some instances, knowing whether event $A$ has happened does not tell us anything about whether event $B$ happened. In this is true, the events are said to be *independent*. Let's use our LRS example to clarify.  
-
-What if we want to know the probability of having 1 offspring in the first litter and 1 offspring in the second litter? The probability of having 1 offspring in first litter is 50% because there are two equally possible pathways to this outcome (out of 4). 
-
-
-## Conditional probabilities
-
-Let's add another event called $B$. In this case, we know that $B$ overlaps with $A$ and for the moment, let's say we know that $A$ has already occured. Knowing that $A$ has already occurred does two things:
-
-1) It shrinks the possible range of sample space (if $A$ occured, everything outside of $A$ did not occur)
-
-2) It effectively shrinks the area $B$ - we know that the area of $B$ outside of $A$ didn't occur
-
-So the $Pr(B|A)$ (read, probability of $B$ conditional on $A$) is the area shared by the two events divided by the area of $A$ (not $S$!)
-
-$$Pr(B|A) = \frac{area\; shared\; by\; A\; and\; B}{area\; of \;A} = \frac{Pr(A\; \cap\; B)}{Pr(A)}$$
+$$Pr(z_y|z_x) = \frac{area\; shared\; by\; z_x\; and\; z_y}{area\; of \;z_x} = \frac{Pr(z_x\; \cap\; z_y)}{Pr(z_x)}$$
 
 *$\cap$ means "intersection" and it is the area shared by both $A$ and $B$*
 
 likewise, 
 
-$$Pr(A|B) = \frac{Pr(A\; \cap\; B)}{Pr(B)}$$
+$$Pr(z_x|z_y) = \frac{Pr(z_x\; \cap\; z_y)}{Pr(z_y)}$$
 
-but note that $Pr(A|B) \neq Pr(B|A)$
+For conditional events, the joint probability is:
 
-## Joint probability
+$$Pr(z_y, z_x) = Pr(z_y|z_x)Pr(z_x) = Pr(z_x|z_y)Pr(z_y)$$
 
-What is the probability that both $A$ and $B$ occur? This is referred to as the *joint* probability and it is defined as:
+### Probability of independent events
 
-$$Pr(A,B) = Pr(B|A)Pr(A) = Pr(A|B)Pr(B)$$
+In some cases, the probability of one event occuring is *independent* of whether or not the other event occurs. For example, the probability of a coin flip being heads is not dependent on whether or not the previous flip was heads. In our example, the occupancy of the two species may be totally unrelated so if they occur together, it happens by complete chance (this maybe unlikely since even if they don't interact with each other, habitat preferences alone might lead to non-independence but we'll discuss that in a more detail shortly). In this case, knowing that $z_x=1$ gives us no new information about the probability of $z_y=1$. Mathmatically, this means that:
 
+$$Pr(z_y|z_x) = Pr(z_y)$$
+
+and
+
+$$Pr(z_x|z_y) = Pr(z_x)$$
+
+Thus, 
+
+$$Pr(z_x,z_y) = Pr(z_x)Pr(z_y)$$
+Note that this equation *only* applies to events that are statistically independent.
+
+### Disjoint events
+
+A special case of condtional probability is when events are *disjoint*. In our case, let's say that species $x$ and species $y$ **never** occur together (maybe they are such fierce competitors that they will exclude each other from their territories). In this case, knowing that $z_x = 1$ means that $z_y = 0$. In other words,
+
+$$Pr(z_y|z_x) = Pr(z_x|z_y) = 0$$
+>>>>>>> 3db29a4504a4a6f2213b3ea1e250ac09d3b763cc
+
+**insert figure**
+
+### Probability of one event or the other
+
+In some cases, we might want to know the probability that one event *or* the other occurs. For example, what is the probability that species $x$ or species $y$ is present but not both. This is the area in $z_x$ and $z_y$ not including the area of overlap:
+
+$$Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y) - Pr(z_x,z_y)$$
+
+When $z_x$ and $z_y$ are independent, 
+
+$$Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y) - Pr(z_x)Pr(z_y)$$
+
+If they are conditional,
+
+$$Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y) - Pr(z_x|z_y)Pr(z_y) = Pr(z_x) + Pr(z_y) - Pr(z_y|z_x)Pr(z_x)$$
+
+If they are disjoint,
+
+$$Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y)$$
+
+## Marginal probability
+
+Now let's imagine that our occupancy model includes the effect of 3 different habitats on the occupancy probability of species $x$, so:
+
+$$Pr(z_x|H_i) = \frac{Pr(z_x \cap H_i)}{Pr(H_i)}$$
+
+What is the overall probability that species $x$ occurs regardless of habitat type? That is, $Pr(z_x)$? 
+
+In this case, we *marginalize* over the different habitat types by summing the conditional probabilities weighted by probability of each $H_i$:
+
+$$Pr(z_x) = \sum_{i=1}^3 Pr(z_x|H_i)Pr(H_i)$$
+
+Think of this as a weighted average - the probability that $z_x=1$ in each habitat type weighted by the probability that each habitat type occurrs.
+
+# Complex joint probabilities
+
+## Bayesian networks
+
+Bayesian networks graphically display the dependences among random variables. 
+
+Random variables are *nodes*. Arrows point from *parents* to *children* 
+
+Networks allow us to factor comples joint probabilities into a series of more simple conditional probabilities
+
+## Factoring joint probabilities
+
+We already saw that:
+
+$$Pr(A, B) = Pr(A|B)Pr(B)$$
+
+We can generalize this to more than two events, which we will call $z_1, z_2,...,z_n$:
+
+$$Pr(z_1, z_2,...,z_n) = Pr(z_n|z_{n-1},...,z_1)...Pr(z_3|z_2, z_1)Pr(z_2|z_1)Pr(z_1)$$
+
+# Properties of probability distributions
+
+Because all unobserved quantities are treated as random variables governed by probability distributions, using and understanding Bayesian methods requires understanding probability distributions. 
+
+As ecologists, there are a number of very common probability distributions that we encounter and use regularly (normal, Poisson, binomial, gamma, etc.). We are not going to go over the properties of each of these distributions in lecture today. Instead, I will talk about specific distributions as they come up in examples. 
+
+Even though I will discuss specific distributions as they come up, I highly recommend you read the chapter of *Hobbs & Hooten* on probability functions to familiarize yourself with the distributions we'll use throughout the semester. If you don't have that book, just google each distribution and read the wikipedia page. 
+
+## Discrete vs. continuous distributions
+
+Before discussing the properties of probability distributions, we must first distinguish between discrete and continuous random variables. *Continuous* random variables are those that can take on an infinite number of values on a specific interval. The most familiar continous distribution is the normal, which allows any value from $-\infty$ to $\infty$. Other ranges are possible. For example, a random variable could take any value between $0$ and $1$ or any value > $0$. Aside from the normal distribution, common continuous distributions include the uniform, gamma, beta, and exponential. 
+
+*Discrete* random variables are those that take on distinct values, usually (but not always) integers. In ecology, we usually encounter discrete variables in the form of counts (the number of individuals can only be postive integers, you can't have 4.234 individuals) or categories (alive vs. dead, present in location A vs. B vs. C). Common probability distributions for discrete variables include Poisson, binomial, negative binomial, and multinomial. 
+
+We will encounter all of these distributions throughout the semester. 
+
+## Probability functions
+
+Very often we want to know the probability that a random variable will take a specific value $z$. Answering this question requires the use of probability functions, which we will denote $[z]$. So probability functions tell us $[z]=Pr(z)$. 
+
+Probability functions differ between *continuous* and *discrete* distributions so we will discuss these separately. Probability functions for discrete variables are a little easier to understand so we will start with them. 
+
+### Probability mass functions
+
+For *discrete* random variables, the probability that the variable will take a specific value $z$ is defined by the *probability mass function*. 
+
+All pmf's share two properties:
+
+$$0 \leq [z] \leq 1$$
+$$\sum_{z \in S}[z]=1$$
+
+where $S$ is the set of all $z$ for which $[z] > 0$ (the range of possible values of $z$). 
+
+As an example, let's assume a random variable that follows a Poisson distribution. Poisson random variables can take any integer value > 0 ($0, 1, 2,...$). This could be the number of individuals at a site or the number of seeds produced by a flower. 
+
+The shape of the Poisson distribution is determined by 1 parameter called $\lambda$ (greek lambda). We'll discuss this more in a minute but $\lambda$ is the expected value (the most likely value) of a random variable generated from the Poisson distribution. So larger $\lambda$ means larger values of the variable. 
+
+Let's say that for our example distribution $\lambda = 10$. What is the probability that $z$ will equal exactly 10? Or 8? Or 15? In R, probabitity mass is estimating using the `dpois()` function (or the equivalent for other discrete distributions), which takes two arguments: the value we are interested in estimating the probability of ($z$) and the expected value of our distribution ($\lambda$): `dpois(x = 10, lambda = 10)`. R will let us put in a vector of values so we can also do the following to estimate the probability of all values from 0 to 25: `dpois(x = seq(0, 25), lambda = 10)`
+
+```{r}
+library(WILD3810)
+pois_df <- data.frame(z = seq(0,25),
+                      pr_z = dpois(x = seq(0, 25), lambda = 10))
+
+ggplot(pois_df, aes(x = z, y = pr_z)) + geom_point(color = "grey50") +
+  scale_y_continuous("[z]=Probability of z")
+```
+
+
+### Probability density functions
+
+Probability mass functions provide the probability that a discrete random variable takes on a specific value $z$. For continuous variables, estimating probabilities is a little trickier. This is because $Pr(z) = 0$ for any specific value $z$. Why is this?
+
+Let's look at the probability distribution for a normal random variable with mean $=0$ and standard deviation $=3$:
+
+```{r}
+norm_df <- data.frame(z = seq(from = -10, to = 10, by = 0.1),
+                       pr_z = dnorm(x = seq(from = -10, to = 10, by = 0.1), 0, 3))
+
+ggplot(norm_df, aes(x = z, y = pr_z)) + geom_path(color = "grey50") +
+  scale_y_continuous("[z]=Probability of z")
+```
+
+The *probability density* is the area under the curve for an interval between $a$ and $b$, which we'll call $\Delta_z$ ($=a-b$).. For example, the shaded area below shows the probability density $Pr(-2 \leq z \leq -1$ for our normal distribution:
+
+```{r}
+ggplot(norm_df, aes(x = z, y = pr_z)) + geom_path(color = "grey50") +
+  scale_y_continuous("[z]=Probability of z") +
+  scale_x_continuous(breaks = c(-10, -5, -2, -1, 0, 5, 10)) +
+  geom_area(data=data.frame(z=seq(-2,-1,len=100),
+                            pr_z = dnorm(seq(-2,-1,len=100), 0, 3)),
+                aes(x=z, y=pr_z, color=NULL),
+                fill="red", alpha = 0.3)
+```
+
+This area can be approximated by multiplying the width times the (average) height of the rectangle: 
+
+$$Pr(a \leq z \leq b) \approx \Delta_z [(a + b)/2]$$ 
+
+By making the range $\Delta_z =a-b$ smaller and smaller, we get closer to $Pr(z)$:
+
+```{r}
+ggplot(norm_df, aes(x = z, y = pr_z)) + geom_path(color = "grey50") +
+  scale_y_continuous("[z]=Probability of z") +
+  scale_x_continuous(breaks = c(-10, -5, -1.45, 0, 5, 10)) +
+  geom_area(data=data.frame(z=seq(-1.5,-1.4,len=100),
+                            pr_z = dnorm(seq(-1.5,-1.4,len=100), 0, 3)),
+                aes(x=z, y=pr_z, color=NULL),
+                fill="red", alpha = 0.3)
+```
+
+However, at $z$, $\Delta_z =0$, thus $[z] = 0$. However, we can use calculus to estimate the height of the line ($[z]$) as $\Delta_z$ approaches 0. 
+
+So for continuous random variables, the *probability density* of $z$ is the area under the curve between $a \leq z \leq b$ as $\Delta_z$ approaches zero. Estimating probability density in R is the same as for discrete variables: `dnorm()`. Now you know why the function starts with `d`!
+
+## Moments
+
+Every probability distribution we will use in the course can be described by its *moments*. We will mostly use the first and second moments of each distribution so this is what we will focus on here.
+
+### Expected value (i.e., the mean)
+
+The first moment of a distribution describes its central tendency (denoted $\mu$) or *expected value* (denoted $E(z)$. This is the most probable value of $z$. Think of this as a weighted average - the mean of all possible values of $z$ weighted by the probability mass or density of each value ($[z]$). For discrete variables, the first moment can be calculated as
+
+$$\mu = E(z) = \sum_{z \in S} z[z]$$
+
+For continous variables, we need to use an integral instead of a sum:
+
+$$\mu = E(z) = \int_{-\infty}^{\infty} z[z]dz$$
+
+### Variance
+
+The second moment of a distribution describes the *variance* - that is, the spread of the distribution around its mean. In other words, on average how far is a random value drawn from the distribution from the mean of the distribution. For discrete variables, variance can be estimated as the weighted average of the squared difference (squared to prevent negative values) between each value $z$ and the mean $\mu$ of the distribution:
+
+$$\sigma^2 = E((z - \mu)^2) = \sum_{z \in S} (z - \mu)^2[z]$$
+
+and for continous variables:
+
+$$\sigma^2 = E((z - \mu)^2) = \int_{-\infty}^{\infty} (z - \mu)^2[z]dz$$
+
+
+### Exercise: Estimating moments using *Monte Carlo integration*
+
+One way to estimate moments is by simulating a large number of values from a probability distribution and then using these samples to calculate the first and second moments. This is a useful approach to understand because it is very similar to how we learn about parameter distributions in Bayesian analyses. It's also very easy to do in `R` using the `r` class of functions (e.g., `rnorm()`, `rpois()`, etc.). These functions generate specified number of random draws (`r` for random) from a given probability distribution. 
+
+For example, let's estimate the first and second moments of a gamma distribution. The gamma distribution is continuous probability distribution that produces non-negative random variables. The shape of the distribution is governed by two parameters, $\alpha$ (refered to as the shape) and $\beta$ (referred to as the rate or sometimes the scale). Both \alpha$ and $\beta$ must be $>0$. In `R`, we can generate and visualize a large number (e.g., 10000) random draws from the gamma distribution using the following code:
+
+```{r}
+n <- 10000 # Sample size
+
+samp <- rgamma(n, shape = 0.5, rate = 2)
+hist(samp)
+```
+
+Now let's use these sample to estimate the first moment (the mean) and the second moment (the variance) of these samples. We estimate the first moment by taking the arithmetic mean of our samples ($\frac{1}{n}{\sum_{i=1}^{n}z_i}$) and the variance as ($\frac{1}{n}{\sum_{i=1}^{n}(z_i-\mu)^2}$):
+
+```{r}
+mu <- sum(samp)/n # mean of the sample
+sigma2 <- sum((samp - mu)^2)/n # variance of the sample
+```
+
+How close are these values to the true moments? For the gamma distribution: $\mu = \frac{\alpha}{\beta}$ and $\sigma^2 = \frac{\alpha}{\beta^1}$. For our distribution:
+
+```{r}
+mu # Estimated mean
+0.5/2 # True mean
+
+sigma2 # Estimated variance
+0.5/2^2
+```
+
+Pretty close. Try this on your own - simulate data from a Poisson distribution and see if the moments you estimate from the sample are close to the true moments. **hint** - the poisson distribution has a single parameter $\lambda$, which is both the mean and the variance of the distribution. Change both $\lambda$ and $n$. *Does varying these values change how well your sample estimates the moments?*
+
+**Question** - in the above simulations, we use the arithmetic mean to estimate the first moment of the distribution. But in the definition of the moment, we defined the mean as the weighted average of the $z$'s. Why don't we have to take the weighted average of our sample? 
+
+
+### Moment matching
+
+For the normal distribution, it is relatively easy to understand moments because the parameters of the distribution (mean and standard deviation) *are* the first and second moments. In addition to being intuitive, the normal distribution has an interesting (though maybe not obvious) property - you can change the first moment (the mean) without changing the second moment (the variance)
+
+```{r}
+norm1 <- data.frame(z = seq(-10, 10, by = 0.1),
+                    pr_z = dnorm(seq(-10, 10, by = 0.1), 0 , 3))
+
+norm2 <- data.frame(z = seq(-5, 15, by = 0.1),
+                    pr_z = dnorm(seq(-5, 15, by = 0.1), 5 , 3))
+
+norm3 <- data.frame(z = seq(0, 20, by = 0.1),
+                    pr_z = dnorm(seq(0, 20, by = 0.1), 10 , 3))
+
+
+ggplot() +
+  geom_path(data = norm1, aes(z, pr_z), color = "grey50") +
+  geom_path(data = norm2, aes(z, pr_z), color = "red") +
+  geom_path(data = norm3, aes(z, pr_z), color = "blue") +
+  geom_vline(xintercept = c(0, 5, 10), linetype = "longdash", 
+             color = c("grey50", "red", "blue"))
+
+
+```
+
+This is not true of all probability distributions. For example, the beta distribution is a continuous distribution with values between 0 and 1. This makes it useful for modeling random variables that are probabilities (e.g., detection probability in an occupancy model). The shape of the Beta distribution is governed by two parameters $\alpha$ and $\beta$ and its first and second moments are:
+
+$$\mu = \frac{\alpha}{\alpha + \beta}$$
+
+$$\sigma^2 = \frac{\alpha\beta}{(\alpha + \beta)^2 (\alpha + \beta + 1)}$$
+If you know $\alpha$ and $\beta$, it's easy to estimate the mean and variance using these formulas. But what is I tell you that species $x$ has an estimated mean detection probability of 0.3 and variance of 0.1. How do you translate those into the relevant beta distribution? We need another set of equations:
+
+$$\alpha = \bigg(\frac{1-\mu}{\sigma^2}- \frac{1}{\mu} \bigg)\mu^2$$
+
+$$\beta = \alpha \bigg(\frac{1}{\mu}-1\bigg)$$
+
+For our ouccupancy probability, that means:
+
+```{r}
+(alpha <- ( (1 - 0.3)/0.1 - (1/0.3) )*0.3^2)
+
+(beta <- alpha * ( (1/0.3) - 1))
+```
+
+Let's use our simulation method to check that our estimates are correct:
+
+```{r}
+samp <- rbeta(n, alpha, beta)
+
+(mu <- sum(samp)/n)
+
+(sigma <- sum((samp-mu)^2)/n)
+```
+
+This process of converting between parameters and moments is called *moment matching*. It's a very important process becasue often we have the mean and variance of distributions but need to convert those summaries into the parameters of the underlying distribution (if this is not obvious right now, don't worry. You'll see why later in the semester as we work through examples). Of course, this does not mean you need to memorize the moment equations - that's what google is for. 
 
 
 
