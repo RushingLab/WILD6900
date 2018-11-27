@@ -96,7 +96,7 @@ y <- 42
 y_probs <- data.frame(lambda = 15:65,
                       pr_y = dpois(y, lambda = 15:65))
 
-(lik_profile <- ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD3810_colors$value[WILD3810_colors$name == "secondary"]) +
+(lik_profile <- ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD3810_colors$value[WILD3810_colors$name == "dark"]) +
   scale_y_continuous(expression(paste("L(", lambda, "|y=42)"))) +
   scale_x_continuous(expression(lambda)))
 
@@ -110,11 +110,11 @@ This distinction between likelihood profiles and probability distributions is on
 
 ```{r, include = FALSE, echo = FALSE}
 
-ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD3810_colors$value[WILD3810_colors$name == "secondary"]) +
+ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD3810_colors$value[WILD3810_colors$name == "dark"]) +
   scale_y_continuous(expression(paste("L(", lambda, "|y=42)"))) +
   scale_x_continuous(expression(lambda)) +
-  geom_segment(aes(x = 42, xend =42, y = 0, yend = max(y_probs$pr_y)), linetype = "longdash", color = WILD3810_colors$value[WILD3810_colors$name == "secondary"]) +
-  annotate("text", x = 42, y = max(y_probs$pr_y) + 0.00625, label = "MLE", color = WILD3810_colors$value[WILD3810_colors$name == "secondary"], size = 6)
+  geom_segment(aes(x = 42, xend =42, y = 0, yend = max(y_probs$pr_y)), linetype = "longdash", color = WILD3810_colors$value[WILD3810_colors$name == "dark"]) +
+  annotate("text", x = 42, y = max(y_probs$pr_y) + 0.00625, label = "MLE", color = WILD3810_colors$value[WILD3810_colors$name == "dark"], size = 6)
 
 ```
 
@@ -187,12 +187,53 @@ joint <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
 To convert the joint distribution into a true probability distribution, we have to divide it by the total area under the joint distribution curve. The demoninator of eq. 1 ($[y]$) is called the marginal distribution of the data - that is, the probability distribution of our data $y$ across all possible values of $\theta$. Remember from our previous lecture that:
 
 $$[y] = \int [y|\theta][\theta]d\theta$$
+```{r, include = FALSE}
 
-Estimating the marginal distribution of the data is one of a major challenges of Bayesian inference. How can we know  and will be discussed 
+joint <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
+                    jnt_dist = dgamma(seq(from = 15, to = 65, by = 0.25), 40^2/6, 40/6) * dpois(42, seq(from = 15, to = 65, by = 0.25)))
+
+(prior_lik_joint <- prior_lik_joint + geom_area(data = joint, aes(x = lambda, y = jnt_dist), linetype = "dashed",
+  fill = WILD3810_colors$value[WILD3810_colors$name=="secondary"]))
+
+```
+
+For some simple models, $[y]$ can be estimated analytically. But in many cases, particularly in models with a moderate to large number of parameters, this is very hard to do. In fact, the difficulty of computing the marginal distribution is one of the reasons that it look a long time for Bayesian methods to be applied in practice (Bayes theorem was proven in 1763, long before the frequentist methods you are used to using were invented). For most of the models you will need to fit as an ecologist, estimating the marginal distribution of the data is one of a major challenges of Bayesian inference. We will return to this topic later 
+
 ## The posterior distribution
+
+The LHS of equation is known as the posterior distribution and it is what we want to know: What is the probability distribuiton of $\theta$ given our data? The posterior distribution tells us everything we know about $\theta$ given our data (and possibly prior knowledge). 
+
+```{r, include = FALSE}
+
+post <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
+                   post_dist = joint$jnt_dist/sum(joint$jnt_dist))
+
+
+(post_prior_lik_joint <- prior_lik_joint + geom_path(data = post, aes(x = lambda, y = post_dist),
+  color = WILD3810_colors$value[WILD3810_colors$name=="dark"]))
+
+```
+
+
+The posterior allows to make statements like:
+> The most probable value of $\theta$ is $x$
+
+> There is a 95% probability that $y < \theta < z$
+
+> There is a 96% probability that $\theta <0$$
+
+It's important to realize that before we collect data, $y$ is a random variable governed by the marginal distribution. However, *after* we collect data, it is not longer random and $[y]$ becomes a *fixed* quantity. That means that:
+
+$$[\theta|y] \propto [y|\theta][\theta]$$
+
+In other words, because the demoninator is a constant, the posterior distribution is proportional to the joint distribution. This proportionality is important because it's easy to estimate the joint distribution (unlike the marginal distribution). This means we can *learn* about the shape of the posterior distribution from the joint distribution even if we can't compute $[y]$. This is a central concept for applying modern tools for Bayesian analysis and one we will make use of shortly.  
 
 One of the cool things about Bayesian methods is that we don't get a point estimate of $\theta$, we get an entire probability distribution! Although this may seem like a minor point right now, it has some really practical advantages, namely that we can easily quantify uncertainty in our parameter estimates and we can summarise the distribution is whatever way we want (mean, median, mode, 95% quantiles, 50% quantiles, etc.). 
 
 These advantages will be come clear as we move towards applications of these methods but as a quick example, let's say we are estimating the abundance of two populations (we'll call them $N_1$ and $N_2$) and determining the probability that $N_1 > N_2$. In a frequentist framework, it relatively straightforward to get point estimates of $N_1$ and $N_2$ (assuming we have data that is adequate to estimate these state variables). Saying that $N_1 > N_2$ is the same as saying $N_1 - N_2 = \Delta_N > 0$ so to answer our question we could also estimate this difference as the difference between our point estimates. Answering the question of whether $\Delta_n > 0$ requires knowing not only the magnitude of this difference but also how certain we are in the value. We know there is uncertainty in $N_1$ and $N_2$ (and thus in the difference) but how do we estimate the uncertainty of our new derived variable? That's not easy in a frequentist world and will require application of the [delta method](https://en.wikipedia.org/wiki/Delta_method). 
 
-In a Bayesian world, we can actually estimate 
+In a Bayesian world, we can actually estimate the entire posterior distribution of $\Delta_N$, which makes it trivially easy to estimate confidence intervals or specific probabilities (e.g., $Pr(\Delta_N > 0)$). If nothing else turns you into a Bayesian, it's probably this point. 
+
+# More about prior distributions
+
+
