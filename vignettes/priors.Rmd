@@ -1,0 +1,73 @@
+---
+title: "Developing informative priors from previously published studies"
+subtitle: "WILD6900"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{priors}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Given the practical and philosophical advantages of inforamative priors, why aren't they more common in ecological models? As already discussed, one issue is cultural - many researchers are simply uncomfortable with the *idea* of informative priors. *"If we can choose any prior we want and that choice influences our inferences, doesn't that make the entire process too subjective?" "Shouldn't we let the data speak for itself?"* If one of these scientists is your advisor or the reviewer of your manuscript, you may be forced to use uninformative priors. You may even be tempted to use uninformative priors in the first place to avoid this problem. 
+
+But another obstacle to using informative priors is that they can be hard to formulate. How do we translate our domain expertise into a probability distribution? How do we take a published estimate(s) of the parameter value and turn it (or them) into a probability distribution? The skills needed to translate prior knowledge into informative priors are not generally taught in the statistics classes taken by most ecologists. 
+
+In this activity, we'll work through a few examples of ways to create informative priors from a variety of types of information. 
+
+## Question and model development
+
+As an example of approaches to developing informative priors, we will *h/t to Nathan Hostettler, a USGS researcher for this approach as well as example code and data to implement these ideas.* 
+
+For this example, let's say we want to estimate annual survival of adult female polar bears. 
+
+
+
+
+
+## Example 1: Domain expertise
+
+Even if we have no previous estimates of polar bear survival, we are not completely ignorant about survival of this species. We can use our *domain expertise* to develop a prior that improves upon the non-informative option.  
+
+Polar bears are a large, long-lived carnivorewith a life expectancy of about 20-25 years (Ramsay & Stirling 1988). This simple fact suggests that annual survival must be pretty high - even with an annual survival probability of $95\%$, an individual would only have a `r round((0.95^20),2)*100`% probability of surviving 20 years. So survival probabilities much less than $\sim 90\%$ would be pretty surprising and we would be pretty suspicious of estimates less than $\sim 80\%$ (which would imply $1\%$ of female polar bears make it to 20 years of age). 
+
+Of course, polar bear populations in many areas are declining pretty quickly, suggesting that maybe adult survival rates could be lower than historical levels. So although we can be pretty sure that survival is pretty high (e.g., $>80\%$), we're not super confident about the actual survival rate. With regards to our prior, this suggests we want a prior that puts most of the weight $>80\%$ but is wide enough to reflect our uncertainty about the actual survival rates.
+
+### Turning our expertise into a prior
+
+When modeling a continous random variable that must be between 0 and 1 (i.e., a probability), the beta distribution is a natural choice. The shape of the beta distribution is governed by two parameters, $\alpha$ and $\beta$
+
+```{r}
+phi <- seq(0, 1, by = 0.01)
+
+alpha <- c(5,1,2,2)
+beta <- c(1,3,2,5)
+
+dist <- paste("alpha = ", alpha, ", beta = ", beta)
+beta_df <- data.frame(phi = phi,
+                      density = c(dbeta(phi, alpha[1], beta[1]),
+                                  dbeta(phi, alpha[2], beta[2]),
+                                  dbeta(phi, alpha[3], beta[3]),
+                                  dbeta(phi, alpha[4], beta[4])),
+                      dist = rep(dist, each = length(phi)))
+
+ggplot(beta_df, aes(x = phi, y = density, color = dist)) + geom_path() +
+  scale_x_continuous(expression(phi)) +
+  scale_color_manual(values = WILD3810_colors$value[WILD3810_colors$name %in% c("primary", "success", "warning", "danger")])
+```
+
+
+
+
+## References
+
+Ramsay, M.A. and Stirling, I., 1988. Reproductive biology and ecology of female polar bears (*Ursus maritimus*). *Journal of Zoology*, 214(4), pp.601-633.
+
+Regehr, E.V., Hostetter, N.J., Wilson, R.R., Rode, K.D., Martin, M.S. and Converse, S.J., 2018. Integrated population modeling provides the first empirical estimates of vital rates and abundance for polar bears in the Chukchi Sea. *Scientific reports*, 8(1), p.16780.

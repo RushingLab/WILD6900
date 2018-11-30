@@ -18,4 +18,4 @@ Imports:
     tidyr,
     ggplot2,
     jagsUI
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1

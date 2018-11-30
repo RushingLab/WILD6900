@@ -1,0 +1,193 @@
+---
+title: "Improving your workflow through projects"
+subtitle: "WILD6900"
+date: "updated on `r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+Everything that follows in this tutorial should be a viewed as *suggestions* for how to organize your data, code, and results. These suggestions are based on hard-won lessons from my own work as well as advice from people who spend a lot of time thinking about efficient and reproducible workflows. The lessons below are unabashedly R/RStudio focused. However, they are just suggestions. There are many other ways of accomplishing these objectives so you are free to use whatever workflow works best for you. Even if you choose to use different workflows or tools that are not as R-focused, hopefully the concepts presented here will help make your process more efficient and organized.
+
+# Common workflows and their problems
+
+A common workflow used by many novice R users goes something like this:
+
+1) Open base R or maybe RStudio
+
+2) Create a script and save it as `analysis_for_my_project.R`
+
+3) Start the script with:
+
+```{r, eval = FALSE}
+rm(list = ls())
+setwd("C:\Users\crushing\path\that\only\I\have")
+
+library(package1)
+library(package2)
+```
+
+4) Create a bunch of objects and do stuff to them:
+```{r, eval = FALSE}
+x <- 1:10
+y <- "blah"
+```
+
+5) Realize you need to be working on your dissertation instead of this side project so open another script you started earlier
+
+6) Get confused about what objects in your current environment were created by which script
+
+7) `rm(list = ls())` to start from scratch
+
+8) Rinse and repeat
+
+
+## What's wrong with this?
+
+Remember that when you open R (or RStudio), you create a *global workspace*. This is where all of the objects you create get stored. If you type `ls()` you can see everything that is currently stored in your workspace. If you are working on different analyses in the same global environment, it is *very* easy to accidently create different objects with the same name, write code that depends on other code that happens to have been run previously during one R session (for example, you loaded a needed package in one script so didn't add `library(package)` to your next script. What happens when you try to run this code the next time? This often called a "hidden dependency" and can make your life very pretty miserable), and many other confusing behaviors.  
+
+This workflow also makes it very difficult to share your work. Remember that R will default to looking for in/saving to the current working directory. To control this behavior, most people are taught to use `setwd()`. The problem with this is that the path you set using `setwd()` is almost certaintly specific to the computer your used to write that code. If you use a different computer later or send code to your advisor for help, they will not be able to run it without changing the working directory. If you move the files to a new place on your computer, all of your code will break. Got a new computer? Oops, none of your code will work anymore. If you are running mutiple analyses in the same R session, you'll also have to constantly change your working directory, which eventually will lead to confusion and problems rerunning code. Manually setting the working directory seems like a minor annoyance but if you have to do it constantly (for example, an instructor who has to grade a bunch of homework assignments), these minor annoyances add up to a big headache. 
+
+The good news is, there's an easy solution that will make your life (and mine) much easier.
+
+# RStudio Projects 
+
+Experienced programmers learned long ago the problems outlined above. To solve these problems, they typically use a self-contained directory (i.e., folder) for each project. Each directory contains all of the data and code needed to create research output for that project. Notably, the code should not reference *any* data or objects that are found in another directory. This helps ensure portability - you can move the entire project and still be able to rerun all code.  
+
+RStudio makes is very easy to create Projects (for clarity, I will use "Project" when referring specifically to RStudio Projects and "project" to refer to generic research projects, i.e., a chapter of your dissertation). I highly recommend that you create a new Project for each project that are working on. There are several ways to do this but the easiest way is to:
+
+1) Open RStudio
+
+2) Click on `File -> New Project` then click `New Directory` (if you already have a folder associate with the project, you can click `Existing Directory` and then navigate to that folder)
+
+3) Click `New Project` then choose a name and a location for the Project (tip - don't include spaces in the project name). For now we will not worry about creating a git repository or using packrat
+
+4) Click `Create Project` at the bottom. RStudio will create a new directory with the same name as your Project and a file called `project_name.Rproj` inside of that directory. 
+
+A new RStudio window should open when you create the new project. In the future, when you want to work on this Project, just double click the `project_name.Rproj` file and it will open a new instance of RStudio.  
+
+## What's so special about RStudio projects?
+
+Projects solve two of the big problems we discussed earlier. First, each project opens a fresh instance of R so the global environment of projects is self-contained. That means you can you have mutiple projects open at once but each one will behave independently. This means no more `rm(list = ls())` because the only objects in your environment should be the ones associated with that project (this doesn't totally resolve the problem of hidden dependencies but we'll talk more about that below).  
+
+Second, RStudio will automatically set the working directory to the root directory associate with the Project. This means that whatever folder the `.Rproj` file is in will automatically be set as the working directory when you open the project. You can check this by typing `getwd()` in the console of your new project. This setting avoids the need to use `setwd()` which makes your code much more portable. You can move or send the entire directory, double-click the `.Rproj` file and pick up right where you left off. 
+
+## A note on saving your workspace to `.RData`
+
+Another common mistake made by many novice (and not so novice) R users is to save your current workspace to `.RData` each time you quit R or RStudio. On the surface, this seems like a really convenient shortcut. The next time you open R, all of the objects you created previously are right there waiting for you to keep going!  
+
+The problem is that, again, this creates hidden dependencies. The `.RData` file does not re-load packages that you were using in your previous session. It does not re-set options that you may have set in your previous session (`setwd()`, `stringsAsFactors = FALSE`). Some objects needed for, e.g., making a figure may be loaded by others may not be. This means that even if you saved your workspace, you will still end up needing to re-run some chunks of code to get back to where you left off previously. Which chunks? Who knows. You probably think you'll remember but you won't. 
+
+A better workflow is to start every R session with an empty workspace. This means you go into each session with the mindset that you will need to re-run all code from scratch everytime. Although this seems like a pain, I promise it will make your life easier. It is a way of *ensuring* that at a minimum, you can reproduce all of your analyses anytime you need to.  
+
+In RStudio, you can enforce this workflow by going to `RStudio -> Preferences` and then in the `General` tab setting `Save workspace to .Rdata on exit` to `Never`. Do it. Trust me.  
+
+What about re-running code that is very time consuming? Do you really need to re-run the code the cleans your raw data every time you need to reanalyze it? Of course not. You can always save those objects (along with the scripts you used to create them!) so that the next time you need them, they can just be re-read into R and you can do everything downstream of those steps without a problem. We'll see example of this as we work through data cleaning and analysis scripts throughout the semester. 
+
+One of the benefits of this workflow is that it treats your raw data and code as the only *real* objects in your workflow. These should be the only objects that if you lose them, you would be in big trouble (you're computer is backed up, right?). Cleaned data that you created from your raw data isn't real. You can just re-run the code and create those objects again (this is why we use R scripts instead of manipulating raw data in excel. See below for more details). Your workspace isn't real - as we just discussed, it can (and should) disappear at any time. Results and figures are not real because you can re-create them from the code whenever you need to. Once you get into this mindset of treating raw data and code as the only real objects, your workflow will automatically become more organized and reproducible. (Manuscripts are also real so save them and back them up!)  
+
+# Organizing your project directories
+
+As we already saw, the `.Rproj` file treats the directory that it is in as the working directory for that project. This means that you can read files from this location and write files to this location without changing any settings. For example, you can stick a filled called `data.csv` in this directory and the following code will work:
+
+```{r, eval = FALSE}
+data <- read.csv("data.csv")
+```
+
+A natural instinct for those of use that are inclined to be less-than organized might be to put all of our files associated the project in this directory:
+
+```
+my_proj/
+|─── data.csv
+|─── script_that_does_everything.R
+|─── test_script_that_does_something_else.R
+|─── Figure1.png
+|─── manuscript_v1.doc
+|─── manuscript_v2.doc
+.
+.
+.
+|─── manuscript_final_v2-4.doc
+```
+
+There is nothing inherently wrong with this but for most project, you will end up with a very big directory that is hard to navigate when you need to find specific files. A better idea is to put files in intuitive subdirectories. You can pick whatever structure makes most sense to you, but I generally use something like:
+
+```
+my_proj/
+|─── data-raw/
+      |─── data.csv
+      |─── data_cleaning_script.R
+|─── data/
+      |─── clean_data.rds
+|─── R/
+      |─── function1.R
+      |─── function2.R
+|─── figs/
+      |─── fig1.png
+      |─── fig2.png
+|─── doc/
+      |─── manuscript.Rmd
+|─── output/
+      |─── model_results.rds
+|─── scripts/
+      |─── analysis.R
+      |─── figures.R
+```
+
+* `data-raw/` contains my, you guessed it, raw data files and R script that reads the raw data in, cleans it, and saves the clean data to `data/`
+
+* `data/` contains the cleaned data files that are ready to go straight into the analysis
+
+* `R/` contains scripts that have custom functions that I will use for data cleaning, analysis, or making figures (we'll talk more about this later)
+
+* `figs/` contains figure files
+
+* `doc/` contains files for reports or manuscripts related to the projects
+
+* `output/` includes output from the analysis, for example results from fitting a model in JAGS
+
+* `scripts/` contains R scripts used to analyze data, make figures, whatever. These could be put in the subdirectory related to the function of the script (as I did for `data_cleaning_script.R`) if that makes more sense to you. Or you can lump all of the different scripts into a single script if you prefer. That's up to you.  
+
+## Reading/writing from subdirectories
+
+Because RStudio treats the project root directory as the working directory, you could not do the following if, for example, your data is stored in a subdirectory:
+
+```{r, eval = FALSE}
+data <- read.csv("data.csv")
+```
+
+Instead, you need to use relative paths. Remember that everything is relative to your working directory:
+
+```{r, eval = FALSE}
+data <- read.csv("data-raw/data.csv")
+```
+
+If you prefer, you can have as many layers of subdirectories as you want. The important thing is that as long as you move the entire project directory, these relative paths will still work.  
+
+
+## A note of handling raw data  
+
+Raw data is sacred. If you purposely or accidentally change your raw data, everything that comes downstream (analysis, results, reports) will also change. To maintain the integrity of your work, get in the habit of **never** making changes to your raw data files after you have entered the data.   
+
+One of the great things about using scripts to manipulate your data is that you can leave your raw data untouched and have a paper trail of every change you made to prepare your data for analysis. That means adding new variables that are composites of the raw data (e.g., `temp_c <- (temp_f -32)*(5/9)`), removing outliers, joinging different data sets together, whatever. *All of this is done in R after you've read in the raw data rather than in Excel!*    
+
+Just as important, you don't save these new data objects over the raw data or even in the same directory. Those files go in `data/`. This means you can only read from the `data-raw/` and you cannot write to it. R will, of course, allow you to write to `data-raw/`, this is just a suggestion to help you maintain a firewall that will keep you raw data in it's raw form. 
+
+# Additional resources
+
+[RStudio Project webpage](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects)  
+
+[Nice R Code](https://nicercode.github.io/blog/2013-04-05-projects/)  
+
+[Jenny Bryan's 🔥 take on `setwd()` and `rm(list=ls())`](https://www.tidyverse.org/articles/2017/12/workflow-vs-script/)  
+
+[STAT545's tutorial on workspaces and projects](http://stat545.com/block002_hello-r-workspace-wd-project.html#workspace-and-working-directory)  

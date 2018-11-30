@@ -2,7 +2,7 @@ title: WILD6900
 #url: http://rushinglab.github.io/WILD3810
 template:
   params:
-    bootswatch: slate
+    bootswatch: spacelab
 
 reference:
 
@@ -22,7 +22,13 @@ navbar:
       menu:
         - text: "Lecture 1: Introduction to WILD6900"
           href: articles/lecture1.html
-    - icon: fas fa-desktop
-      text: "Labs"
-      href: Labs/Lab1.html
+    - text: "Labs"
+      icon: fas fa-desktop
+      menu:
+        - text: "Projects and directories"
+          href: articles/projects_and_directories.html
+        - text: "Introduction to R Markdown"
+          href: articles/rmarkdown_intro.html
+        - text: "Developing informative priors"
+          href: articles/priors.html
 

@@ -9,7 +9,7 @@ usepackage:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## From probability to Bayes theorem
@@ -40,7 +40,7 @@ We'll start with the likelihood $[y|\theta]$. The concept of likelihod may be fa
 
 By assuming $\theta$ is fixed and known, we can calculate the probability density of our observation $y$ conditional on $\theta$. For example, let's say we're sampling the number of on sampling plots and that we know the average number of trees/plot is 40. On one plot, we observe 34 trees. What is the probability of $y = 34$? To answer this question. We first need to select a sensible probability distribution for the number of trees on a plot. Because these values have to be positive integers, the Poisson distribution is an obvious choice. Remember that the expected value of a Poisson distribution is governed by the parameter $\lambda$. In this case, we know that $\lambda = 40$. Next, we calculate the probability $Pr(y=34|\lambda = 40)$. We learned last week that we can do this in `R` using `dpois(x = 34, lambda = 40)` which equals `r round(dpois(34,40),3)`. 
 
-On a second plot, we observed 42 trees. What is the probability of that observation? $Pr(y=42|\lambda=40) = $ `r round(dpois(42,40),3)`. What is the joint probability of both observations? Assuming the observations are independent, the joint probability (probability of $y=34$ *and* $y=51$) is the product of the individual probabilities: `r round(dpois(34,40),2)` $\times$ `r round(dpois(42,40),2)` $=$ `r round(dpois(51,40)*dpois(34,40),5)`. 
+On a second plot, we observed 42 trees. What is the probability of that observation? $Pr(y=42|\lambda=40) =$ `r round(dpois(42,40),3)`. What is the joint probability of both observations? Assuming the observations are independent, the joint probability (probability of $y=34$ *and* $y=51$) is the product of the individual probabilities: `r round(dpois(34,40),2)` x `r round(dpois(42,40),2)` = `0.00059`. 
 
 In this example, we start by assuming we know that $\lambda = 40$. That, of course, doesn't make much sense. In our research, we never know $\lambda$ (or to be consistent with eq. 1, $\theta$). We want to estimate $\lambda$ using our data. We do this by using a *likelihood function*:
 
@@ -235,5 +235,205 @@ These advantages will be come clear as we move towards applications of these met
 In a Bayesian world, we can actually estimate the entire posterior distribution of $\Delta_N$, which makes it trivially easy to estimate confidence intervals or specific probabilities (e.g., $Pr(\Delta_N > 0)$). If nothing else turns you into a Bayesian, it's probably this point. 
 
 # More about prior distributions
+
+> As scientists, we should always prefer to use appropriate, well-constructed, informative priors on $\theta$ - Hobbs & Hooten
+
+Selecting priors is one of the more confusing and often contentious topics in Bayesian analyses. It is often confusing because there is no direct counterpart in traditional frequentists statistical training. It is controversial because modifying the prior will potentially modify the posterior. Many scientists are uneasy with the idea that you have to *choose* the prior. This imparts some subjetivity into the modeling workflow, which conflicts with the idea that we should be "objective" and only base our conclusions on what our data tell us. But this view is both philosophically counter to the scientific method and ignores the many benefits of using priors that contain some information about the parameter(s) $\theta$. 
+
+Best pratices for selecting priors is an area of active research in the statistical literature and advice in the ecological literature is changing rapidly. As a result, the following sections may be out-of-date in short order. Nonetheless, understanding how and why to contruct priors will greatly benefit your analyses so we need to spend some time on this topic.
+
+## Non-informative priors
+
+In much of the ecological literature, including some influential textbooks, the standard method of selecting priors is to choose priors that have minimal impact on the posterior distribution, so called "non-informative priors". Using non-informative priors is intuitively appealing because, in theory, they let the data "do the talking". For simple models, non-informative priors also return posteriors that are generally consistent with frequentist-based analyses, which gives folks who are uneasy with the idea of using priors some comfort.
+
+Non-informative priors generally try to be agnostic about the prior probability of $\theta$. For example, in $\theta$ is a probability, $Uniform(0,1)$ gives equal prior probability to all possible values. The $Uniform(0,1)$ is a special case of the beta distribution with $\alpha = \beta = 1$:
+
+```{r}
+beta_df <- data.frame(x = seq(0,1,0.01),
+                      y = dbeta(seq(0,1,0.01), 1, 1))
+
+ggplot(beta_df, aes(x, y)) + geom_area(fill = WILD3810_colors$value[WILD3810_colors$name == "secondary"],  
+                                       color = WILD3810_colors$value[WILD3810_colors$name == "secondary"]) + 
+  scale_x_continuous(expression(theta)) +
+  scale_y_continuous(expression(paste("Probability density of ", theta)), limits = c(0, 1.5)) +
+  labs(subtitle = "Beta(1,1)")
+```
+
+For a parameter that could be any real number, a common choice is a normal prior with very large variance:
+
+
+```{r}
+norm_df <- data.frame(x = seq(-1000,1000,1),
+                      y = dnorm(seq(-1000,1000,1), 0, 100))
+
+ggplot(norm_df, aes(x, y)) + geom_area(fill = WILD3810_colors$value[WILD3810_colors$name == "secondary"],  
+                                       color = WILD3810_colors$value[WILD3810_colors$name == "secondary"]) + 
+  scale_x_continuous(expression(theta)) +
+  scale_y_continuous(expression(paste("Probability density of ", theta))) +
+  labs(subtitle = "Normal(0, 100)")
+```
+Over realistic values of $\theta$, this distribution appears relatively flat:
+
+```{r}
+norm_df <- data.frame(x = seq(-10,10,1),
+                      y = dnorm(seq(-10,10,1), 0, 100))
+
+ggplot(norm_df, aes(x, y)) + geom_area(fill = WILD3810_colors$value[WILD3810_colors$name == "secondary"],  
+                                       color = WILD3810_colors$value[WILD3810_colors$name == "secondary"]) + 
+  scale_x_continuous(expression(theta)) +
+  scale_y_continuous(expression(paste("Probability density of ", theta))) +
+  labs(subtitle = "Normal(0, 100)")
+```
+
+Often ecological models have parameters that can take real values $>0$ (variance or standard deviation, for example). In these cases, uniform priors from 0 to some large number (e.g., 100) are often used or sometimes very diffuse gamma priors ($gamma(0.01, 0.01)$)
+
+Non-informative priors are appealing because they appear to take the subjectivity out of our analysis (assuming we come up with the same vague priors!) and because they "let the data do the talking". However, non-informative priors are often not the best choice for pratcial and philosophical reasons.
+
+### Practical issues with non-informative priors 
+
+Non-informative priors are never "non-informative". The prior always has *some* influence on the posterior and in some cases can actually have quite a bit of influence. For example, let's say we track 10 individuals over a period of time using GPS collars and we want to know the probability that an individual survives from time $t$ to time $t+1$. Our data is a series of $0$'s (dead) and $1$'s (alive) and we will assume 8 individuals died during our study (so two 1's and eight 0's). A natural model for these data is the Bernoulli distribution with probability $p$. Because $p$ is a parameter, it needs a prior and we can choose the $Beta(1,1)$ distribution that we just saw gives equal prior probability to all values of $p$ between 0 and 1. It turns out when we have Bernoulli likelihood and a beta prior, the posterior distribution will also be a beta distribution. This scenario, when the prior and the posterior have the same distribution, occurs when the likelihood and prior are *conjugate* distributions. 
+
+```{r}
+conjugates <- data.frame(Likelihood = c("$y_i \\sim binomial(n, p)$",
+                                        "$y_i \\sim Bernoulli(p)$",
+                                        "$y_i \\sim Poisson(\\lambda)$"),
+                         Prior = c(c("$p \\sim beta(\\alpha, \\beta)$",
+                                        "$p \\sim beta(\\alpha, \\beta)$",
+                                        "$\\lambda \\sim gamma(\\alpha, \\beta)$")),
+                         Posterior = c("$p \\sim beta(\\sum y_i + \\alpha, n -\\sum y_i + \\beta)$",
+                                        "$p \\sim beta(\\sum_{i=1}^n y_i + \\alpha, \\sum_{i=1}^n (1-y_i) + \\beta)$",
+                                        "$\\lambda \\sim gamma(\\alpha \\sum_{i=1}^n y_i, \\beta + n)$"))
+
+kableExtra::kable(conjugates, "latex", align="c", booktabs=TRUE, escape = F, caption = 'A few conjugate distributions')
+```
+
+Conjugate distributions are useful because we can estimate the posterior distribution algebracically. In our case, the posterior distribution for $p$ is:
+
+$$beta(2 + 1, 8 + 1) = beta(3, 9)$$
+Thus, even in this case, the prior had some influence on the posterior. We could make $\alpha$ and $\beta$ much smaller (they must be > 0 for the prior to be a true probability distribution) but:
+
+```{r}
+beta_df <- data.frame(x = seq(0,1,0.01),
+                      y = dbeta(seq(0,1,0.01), 0.001, 0.001))
+
+ggplot(beta_df, aes(x, y)) + geom_area(fill = WILD3810_colors$value[WILD3810_colors$name == "secondary"],  
+                                       color = WILD3810_colors$value[WILD3810_colors$name == "secondary"]) + 
+  scale_x_continuous(expression(theta)) +
+  scale_y_continuous(expression(paste("Probability density of ", theta))) +
+  labs(subtitle = "beta(0.001, 0.001)")
+```
+That's obviously not uninformative! 
+
+The point is, no prior is truly non-informative. As we collect more data, this point will matter less and less (if we tracked 100 individuals and 20 lived, our posterior would be $beta(21, 81)$). With a sample size that big, we could use a pretty informative prior (e.g., $beta(4,1)$) and it doesn't matter too much:
+
+```{r}
+
+beta_df <- data.frame(p = seq(0, 1, 0.01),
+                      value = c(dbeta(seq(0, 1, 0.01), 4, 1), dbinom(2, 10, prob = seq(0, 1, 0.01)), dbeta(seq(0, 1, 0.01), 6, 9)),
+                      dist = rep(c("Prior", "Likelihood", "Posterior"), each = 101))
+
+beta_df2 <- data.frame(p = seq(0, 1, 0.01),
+                      value = c(dbeta(seq(0, 1, 0.01), 4, 1), dbinom(20, 100, prob = seq(0, 1, 0.01)), dbeta(seq(0, 1, 0.01), 24, 81)),
+                      dist = rep(c("Prior", "Likelihood", "Posterior"), each = 101))
+
+p <- ggplot() + geom_path(data = beta_df, aes(x = p, y = value, group = dist, linetype = dist)) +
+  scale_y_continuous("Density") +
+  scale_linetype_manual(values = c("longdash", "solid", "dotted"))
+
+q <- ggplot() + geom_path(data = beta_df2, aes(x = p, y = value, group = dist, linetype = dist)) +
+  scale_y_continuous("") +
+  scale_linetype_manual(values = c("longdash", "solid", "dotted"))
+
+gridExtra::grid.arrange(p, q, nrow = 1)
+```
+
+Another potential issue with non-informative priors is that they are not always non-informative if we have to transform them. For example, let's say instead of modeling $p$ on the probability scale (0-1), we model it on the logit scale. That is:
+
+$$logit(p) \sim Normal(0, \sigma^2)$$
+
+The logit scale transforms the probability to a real number:
+
+```{r}
+
+logit_df <- data.frame(p = seq(0, 1, 0.01),
+                      logit.p = qlogis(seq(0, 1, 0.01)))
+
+ggplot(logit_df, aes(x = p, y = logit.p)) + geom_point() +
+  scale_y_continuous("logit(p)")
+```
+
+This is often useful to model things like probabilty as a function of covariates (which we will learn more about soon). We saw that for real numbers, a "flat" normal prior is often chosen as a non-informative prior. But what happens when we transform those values back into probabilities?
+
+```{r}
+
+ilogit_df <- data.frame(logit.p = seq(-100,100,1),
+                        density = dnorm(seq(-100,100,1), 0, 100))
+
+ilogit_df <- data.frame(logit.p = seq(0,1,0.1),
+                        density = dnorm(seq(-100,100,1), 0, 100))
+```
+
+
+### Philosophical issues with non-informative priors 
+
+Aside from the practical issues, there are several philosophical issues regarding the use of non-informative priors. Many of the justifications for using non-informative priors stem from the idea that we should be aim to *reduce* the influence of the prior so our data do the talking. But even MLE methods are subjective - by choosing the likelihood distribution, we are making assumptions about the data generating process (choose a different distribution, get a different answer). So avoiding Bayesian methods or choosing non-informative priors doesn't make our analyses for "objective". Worse, they often hide these assumptions from view, making our subjective decisions implicit rather than explicit. 
+
+Science advances through the accumulation of facts. If we find a unusual pattern in our data, we would be (and should be) very skeptical about these results. What's more plausible? These data really do contradict what we know about the system or they were generated by chance events related to our finite sample size? We are trained as scientists to be skeptical about results that are at odds with previous information about a system and for good reason. 
+
+Bayesian analysis is powerful because it provides a formal mathmatical framework for combining previous knowledge with newly collected data. In this way, Bayesian methods are a mathmatical representation of the scientific method. Why shouldn't we use this fact to improve our inferences? "Ignoring prior information you have is like selectively throwing away data before an analysis" (Hobbs & Hooten)
+
+So another way to think about the prior is as a *hypothesis* about our system. This hypothesis could be based on previously collected data or our knowledge of the system. If we know a lot, this prior could contain a lot of information (we're pretty sure the probability of getting a heads in 50%). If we don't know much, this prior could contain less information (e.g., we might not have great estimates of survival for our study organism but we know based on ecological theory and observed changes in abundance that it's probably not *really* low). 
+
+```{r}
+p <- seq(0,1,0.01)
+df <- data.frame(p = p, 
+                 Density = c(dbeta(p, 80, 80), dbeta(p, 3,2)),
+                 parameter = rep(c("Pr(heads)", "Pr(survive)"), each = length(p)))
+
+ggplot(df, aes(x = p, y = Density, color = parameter)) + geom_path() +
+  scale_color_manual(values = WILD3810_colors$value[WILD3810_colors$name %in% c("primary", "warning")]) +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+  annotate("text", x = 0.32, y = 9, label = "beta(80,80)", size = 6, color = WILD3810_colors$value[WILD3810_colors$name == "primary"]) +
+  annotate("text", x = 0.75, y = 2.5, label = "beta(3,2)", size = 6, color = WILD3810_colors$value[WILD3810_colors$name == "warning"])
+```
+
+Then we allow our data to update this hypothesis. Strong priors will require larger sample sizes and more informative data to change our beliefs about the system. Less informative priors will require less data. But this is how it should be - if we're really confident in our knowledge of the system, we require very strong evidence to convince us otherwise. 
+
+## Advantages of informative priors
+
+So there are clearly philosophical advantages to using informative priors. But there are also a number of practical advantages:
+
+### Improved parameter estimates when sample sizes are small
+
+Priors are most influential when we have few data. In also turns out that making inferences from small samples sizes is exactly when we expect spurious results and poorly estimated parameters. 
+
+In these cases, bring in additional information about the parameters we are trying to make inferences about can both reduce the chances that we base our conclusions on spurious results. Informative priors can also reduce uncertainty in our parameter estimates and improve estimates of poorly identified parameters. 
+
+Thinking about the beta distribution as previous coin flips, using an informative prior has the same effect as increasing sample size. 
+
+### Stabilizing computational algorithms
+
+As models get more complex, the ratio of parameters to data becomes grows. As a result, we often end up with pathological problems related to parameter *identifiability*. Basically, even with large sample sizes, the model cannot estimate all the parameters in the model. This can cause major problems fitting our model (which we'll explore more later). Informative priors can improve estimation in these cases by providing some structure to the parameter space explored by the fitting algorithm. 
+
+If we have $y \sim Binomial(N, p)$ and the only data we have in $y$ (we don't know $N$), we cannot estimate $N$ and $p$ no matter how much data we have (there are essentially unlimited combinations of $N$ and $p$ that are consistent with our data). Including information about either $N$ or $p$ via an informative prior can help estimate the other other parameter (we'll see this topic come up again when we dicuss estimating abundance from count data)
+
+### Constraining unknown parameters
+
+We'll come back to this idea later but priors can also place constraints on unknown parameters in our model, which can serve as a form of model selection. 
+
+## Advice on priors
+
+1) Use non-informative priors as a starting point - it's fine to use non-informative priors as you develop your model but you should always prefer to use "appropriate, well-contructed informative priors" (Hobbs & Hooten)
+
+2) Think hard - non-informative priors are easy to use because they are the default option. You can usually do better than non-informative priors but it requires thinking hard about the paramters in your model
+
+3) Use your "system knowledge" - we can often come up with weakly informative priors just be knowing something about the range of plausible values of our parameters. 
+
+4) Dive into the literature - find published estimates and use moment matching and other methods to convert published estimates into prior distributions
+
+5) Visualize your prior distribution in terms of the parameters you want to make inferences about (use simulation!)
+
+6) Do a sensitivity analysis - does changing the prior change your posterior inference? If not, don't sweat it. If it does, you'll need to return to point 2 and justify your prior choice 
+
 
 
