@@ -204,9 +204,11 @@ $$Pr(z_y, z_x) = Pr(z_y|z_x)Pr(z_x) = Pr(z_x|z_y)Pr(z_y)$$
 ---
 ## Probability of independent events
 
-In some cases, the probability of one event occuring is *independent* of whether or not the other event occurs  
+In some cases, the probability of one event occuring is *independent* of whether or not the other event occurs$^1$  
 
-In our example, the occupancy of the two species may be totally unrelated so if they occur together, it happens by complete chance (this maybe unlikely since even if they don't interact with each other, habitat preferences alone might lead to non-independence but we'll discuss that in a more detail shortly)  
+In our example, the occupancy of the two species may be totally unrelated  
+
++ if they occur together, it happens by complete chance$^2$  
 
 In this case, knowing that $z_x=1$ gives us no new information about the probability of $z_y=1$  
 
@@ -223,22 +225,27 @@ Thus,
 $$Pr(z_x,z_y) = Pr(z_x)Pr(z_y)$$
 
 ???
-For example, the probability of a coin flip being heads is not dependent on whether or not the previous flip was heads. 
+$^1$For example, the probability of a coin flip being heads is not dependent on whether or not the previous flip was heads. 
 
-Note that this equation *only* applies to events that are statistically independent.
+$^2$This maybe unlikely since even if they don't interact with each other, habitat preferences alone might lead to non-independence but we'll discuss that in a more detail shortly
+
 
 ---
 ## Disjoint events
 
 A special case of condtional probability occurs when events are *disjoint*  
 
-In our example, maybe species $x$ and species $y$ **never** occur together (they are such fierce competitors that they will exclude each other from their territories)  
+In our example, maybe species $x$ and species $y$ **never** occur together$^1$  
 
 In this case, knowing that $z_x = 1$ means that $z_y = 0$. In other words,
 
 $$Pr(z_y|z_x) = Pr(z_x|z_y) = 0$$
 
 **insert figure**
+
+???
+
+$^1$Perhaps they are such fierce competitors that they will exclude each other from their territories  
 
 ---
 ## Probability of one event or the other
@@ -256,14 +263,17 @@ $$Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y) - Pr(z_x,z_y)$$
 
 When $z_x$ and $z_y$ are independent, 
 
+--
 $$Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y) - Pr(z_x)Pr(z_y)$$
 
 If they are conditional,
 
+--
 $$Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y) - Pr(z_x|z_y)Pr(z_y) = Pr(z_x) + Pr(z_y) - Pr(z_y|z_x)Pr(z_x)$$
 
 If they are disjoint,
 
+--
 $$Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y)$$
 
 ---
@@ -310,7 +320,7 @@ $$Pr(z_1, z_2,...,z_n) = Pr(z_n|z_{n-1},...,z_1)...Pr(z_3|z_2, z_1)Pr(z_2|z_1)Pr
 
 Because all unobserved quantities are treated as random variables governed by probability distributions, using and understanding Bayesian methods requires understanding probability distributions. 
 
-As ecologists, there are a number of very common probability distributions that we encounter and use regularly: 
+As ecologists, there are a number of very common probability distributions that we encounter and use regularly$^1$: 
 
 - normal  
 
@@ -322,30 +332,29 @@ As ecologists, there are a number of very common probability distributions that 
 
 ???
 
-We are not going to go over the properties of each of these distributions in lecture. Instead, I will talk about specific distributions as they come up in examples. 
+$^1$We are not going to go over the properties of each of these distributions in lecture. Instead, I will talk about specific distributions as they come up in examples. 
 
 Even though I will discuss specific distributions as they come up, I highly recommend you read the chapter of *Hobbs & Hooten* on probability functions to familiarize yourself with the distributions we'll use throughout the semester. If you don't have that book, just google each distribution and read the wikipedia page. 
 
 ---
 ## Discrete vs. continuous distributions
 
-The major divide that distinguishes probability distributions.  
+--
+**Continuous** random variables can take on an infinite number of values on a specific interval$^1$  
+
+- Normal $(-\infty$ to $\infty)$  
+
+- Gamma (0 to $\infty)$  
+
+- Beta (0 to 1)  
+
+- Uniform (? to ?)  
+
 
 --
-*Continuous* random variables can take on an infinite number of values on a specific interval  
+**Discrete** random variables are those that take on distinct values, usually integers$^2$  
 
-- Normal ($-\infty$ to $\infty$)  
-
-- Gamma (0 to $\infty$)  
-
-- Beta (0 - 1)  
-
-- Uniform  
-
---
-*Discrete* random variables are those that take on distinct values, usually (but not always) integers  
-
-- Poisson (integers $\geq 0$)  
+- Poisson (integers $\geq 0)$  
 
 - Bernouili (0 or 1)  
 
@@ -355,21 +364,23 @@ The major divide that distinguishes probability distributions.
 
 ???
 
-In ecology, we usually encounter discrete variables in the form of counts (the number of individuals can only be postive integers, you can't have 4.234 individuals) or categories (alive vs. dead, present in location A vs. B vs. C)
+$^1$We usually encounter continuous variables in the form of regression coefficients (slope and intercepts), measurements (mass, lengths, etc.), and probabilities  
+
+$^2$We usually encounter discrete variables in the form of counts (the number of individuals can only be postive integers, you can't have 4.234 individuals) or categories (alive vs. dead, present in location A vs. B vs. C)
 
 ---
 ## Probability functions
 
 Very often we want to know the probability that a random variable will take a specific value $z$  
 
-Answering this question requires the use of probability functions, which we will denote $[z]$  
+--
+Answering this question requires the use of probability functions, which we will denote $[z]^1$  
 
+--
 Probability functions differ between *continuous* and *discrete* distributions so we will discuss these separately  
 
 ???
-Probability functions tell us $[z]=Pr(z)$. 
-
-Probability functions for discrete variables are a little easier to understand so we will start with them. 
+$^1$Probability functions tell us $[z]=Pr(z)$  
 
 ---
 ## Probability mass functions
@@ -388,11 +399,12 @@ where $S$ is the set of all $z$ for which $[z] > 0$ (the range of possible value
 
 As an example, let's assume a random variable that follows a Poisson distribution  
 
-- Poisson random variables can take any integer value > 0 ($0, 1, 2,...$)  
+- Poisson random variables can take any integer value > 0 $(0, 1, 2,...)$  
 
 - e.g., the number of individuals at a site or the number of seeds produced by a flower  
 
 
+--
 The shape of the Poisson distribution is determined by 1 parameter called $\lambda$   
 
 - $\lambda$ is the expected value (the most likely value) of a random variable generated from the Poisson distribution  
@@ -408,13 +420,11 @@ What is the probability that $z$ will equal 10? Or 8? Or 15?
 
 In R, probabitity mass is estimating using the `dpois()` function (or the equivalent for other discrete distributions)
 
-- takes two arguments: the value we are interested in estimating the probability of ($z$) and the expected value of our distribution ($\lambda$)
+- takes two arguments: the value we are interested in estimating the probability of $(z)^1$ and the expected value of our distribution $(\lambda)$
 
 - `dpois(x = 10, lambda = 10)`  
 
-R will let us put in a vector of values so we can also do the following to estimate the probability of all values from 0 to 25: `dpois(x = seq(0, 25), lambda = 10)`
-
-```{r, echo=FALSE, fig.align='center', fig.asp=1, fig.width=4}
+```{r, echo=FALSE, fig.align='center', fig.height = 3.5, fig.width = 6 }
 pois_df <- data.frame(z = seq(0,25),
                       pr_z = dpois(x = seq(0, 25), lambda = 10))
 
@@ -422,6 +432,9 @@ ggplot(pois_df, aes(x = z, y = pr_z)) +
   geom_point(color = WILD3810_colors$value[WILD3810_colors$name=="primary"]) +
   scale_y_continuous("[z]=Probability of z")
 ```
+
+???
+$^1$R will let us put in a vector of values so we can also do the following to estimate the probability of all values from 0 to 25: `dpois(x = seq(0, 25), lambda = 10)`  
 
 ---
 ## Probability density functions
@@ -432,7 +445,7 @@ For continuous variables, estimating probabilities is a little trickier because 
 
 Why? Let's look at the probability distribution for a normal random variable with mean $=0$ and standard deviation $=3$:
 
-```{r, echo=FALSE, fig.align='center', fig.asp=1, fig.width=4}
+```{r, echo=FALSE, fig.align='center', fig.height=3.5, fig.width=6}
 norm_df <- data.frame(z = seq(from = -10, to = 10, by = 0.1),
                        pr_z = dnorm(x = seq(from = -10, to = 10, by = 0.1), 0, 3))
 
@@ -444,11 +457,11 @@ ggplot(norm_df, aes(x = z, y = pr_z)) +
 ---
 ## Probability density functions
 
-The *probability density* is the area under the curve for an interval between $a$ and $b$, which we'll call $\Delta_z$ ($=a-b$). 
+The *probability density* is the area under the curve for an interval between $a$ and $b$, which we'll call $\Delta_z$ $=(a-b)$. 
 
 For example, the shaded area below shows the probability density $Pr(-2 \leq z \leq -1)$:
 
-```{r, echo=FALSE, fig.align='center', fig.asp=1, fig.width=4}
+```{r, echo=FALSE, fig.align='center',  fig.height=3.5, fig.width=6}
 ggplot(norm_df, aes(x = z, y = pr_z)) + 
   geom_path(color = WILD3810_colors$value[WILD3810_colors$name=="primary"]) +
   scale_y_continuous("[z]=Probability of z") +
@@ -468,7 +481,7 @@ $$Pr(a \leq z \leq b) \approx \Delta_z [(a + b)/2]$$
 
 By making the range $\Delta_z =a-b$ smaller and smaller, we get closer to $Pr(z)$:
 
-```{r, echo=FALSE, fig.align='center', fig.asp=1, fig.width=4}
+```{r, echo=FALSE, fig.align='center',  fig.height=3.5, fig.width=6}
 ggplot(norm_df, aes(x = z, y = pr_z)) + 
   geom_path(color = WILD3810_colors$value[WILD3810_colors$name=="primary"]) +
   scale_y_continuous("[z]=Probability of z") +
@@ -482,15 +495,17 @@ ggplot(norm_df, aes(x = z, y = pr_z)) +
 ---
 ## Probability density functions
 
-At $z$, $\Delta_z =0$, thus $[z] = 0$. However, we can use calculus to estimate the height of the line ($[z]$) as $\Delta_z$ approaches 0  
+At $z$, $\Delta_z =0$, thus $[z] = 0$  
+
+However, we can use calculus to estimate the height of the line $([z])$ as $\Delta_z$ approaches 0  
 
 So for continuous random variables, the *probability density* of $z$ as the area under the curve between $a \leq z \leq b$ as $\Delta_z$ approaches zero  
 
-Estimating probability density in R is the same as for discrete variables: `dnorm()`
+Estimating probability density in R is the same as for discrete variables: `dnorm()`$^1$
 
 ???
 
-Now you know why the function starts with `d`!
+$^1$Now you know why the function starts with `d`!
 
 ---
 class: inverse, center, middle
@@ -508,7 +523,7 @@ Every probability distribution we will use in the course can be described by its
 
 **insert normal figure w/ mu and sigma labeled**
 
---
+---
 ## Expected value (i.e., the mean)
 
 The first moment of a distribution describes its central tendency (denoted $\mu$) or *expected value* (denoted $E(z)$  
