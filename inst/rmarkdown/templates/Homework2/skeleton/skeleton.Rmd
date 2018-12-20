@@ -1,0 +1,18 @@
+---
+title: "WILD6900"
+subtitle: "Homework 2: Developing informative priors"
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output: 
+  pdf_document:
+    latex_engine: xelatex
+
+mainfont: Arial
+fontsize: 12pt
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+

@@ -203,6 +203,8 @@ For some simple models, $[y]$ can be estimated analytically. But in many cases, 
 
 The LHS of equation is known as the posterior distribution and it is what we want to know: What is the probability distribuiton of $\theta$ given our data? The posterior distribution tells us everything we know about $\theta$ given our data (and possibly prior knowledge). 
 
+$$[\theta|y]$$
+
 ```{r, include = FALSE}
 
 post <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),

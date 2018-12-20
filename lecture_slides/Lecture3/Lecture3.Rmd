@@ -1,0 +1,457 @@
+---
+title: "Lecture 3"
+subtitle: "Principles of Bayesian inference"
+author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "WILD3810.css", "WILD3810-fonts.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include = FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
+library(WILD3810)
+library(gganimate)
+```
+
+## Readings
+
+---
+## From probability to Bayes theorem
+
+Our goal as ecologists is to understand processes that we **cannot directly observe** based on quantities that we *can* observe  
+
+We will refer to the observered processes as $\theta$  
+
+$\theta$ can include parameters of our models or latent states  
+
+- population size  
+
+- occupancy status  
+
+- alive/dead state of individuals 
+
+
+Each of these unobserved processes is governed by a probability distribution $[\theta]$  
+
+---
+## From probability to Bayes theorem
+
+To learn about $\theta$, we take observations $y$  
+<br/>
+
+Before those data are collected, they are *random variables* - the probability of observing $y$ conditional on $\theta$ is governed by a probability distribution $[y|\theta]$  
+<br/>
+
+We want to know the probability distribution of the unobserved $\theta$ conditional on the observed data $y$, that is $[\theta|y]$  
+
+---
+## From probability to Bayes theorem
+
+We know from last week that $^1$:
+<br/>
+
+$$[\theta|y] = \frac{[\theta, y]}{[y]}$$
+
+and $^2$
+
+$$[\theta, y] = [y|\theta][\theta]$$
+
+Through substitution, we get **Bayes theorem** $^3$:
+
+$$[\theta|y] = \frac{[y|\theta][\theta]}{[y]} \tag{1}$$
+
+???
+$^1$ This is the definition of conditional probabilities
+
+$^2$ This is the definition of joint probabilities
+
+$^3$ Although the use of Bayesian methods has historically been somewhat controversial, Bayes theorem is not. It is a simple outcome of basic probability
+
+
+---
+## From probability to Bayes theorem
+
+To understand what Bayes theorem says and why it is such a powerful principle, let's break down each part of equation 1:
+<br/>
+<br/>
+$$\underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[\theta|y]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$
+
+
+---
+class: inverse, center, middle
+
+# The likelihood distribution
+
+---
+## Likelihood
+
+The concept of likelihod may be familiar to you from previous statistics classes because it is the central principle of *frequentist* statistics  
+<br/>
+
+--
+The likelihood allows us to answer the question: 
+
+> what is the probability that we will observe the data if our deterministic model $g(\theta)$ is the true process that gives rise to the data?  
+
+<br/>
+
+
+--
+That is, in likelihood, we treat $\theta$ as *fixed* and *known* rather than a random variable  
+
++ By assuming $\theta$ is fixed and known, we can calculate the probability density of our observation $y$ conditional on $\theta$
+
+---
+## Likelihood
+
+**Example**  
+
+Let's say we're sampling the number of trees on small plots and that we **know** $^1$ the average number of trees/plot is 40  
+<br/>
+
+--
+On one plot, we observe 34 trees. What is the probability of $y = 34$?  
+ <br/>
+ 
+--
+To answer this question, we first need to select a sensible probability distribution for the number of trees on a plot  
+
++ Because these values have to be positive integers, the Poisson distribution is an obvious choice $^2$  
+
+
+--
+Next, we calculate the probability $Pr(y=34|\lambda = 40)$:
+
+```{r echo = TRUE}
+dpois(x = 34, lambda = 40)
+```
+
+???
+
+$^1$ Obviously in real life we would not know this but again, likelihood assumes that this quantify is known  
+
+$^2$ Remember that the expected value of a Poisson distribution is governed by the parameter $\lambda$. In this case, we know that $\lambda = 40$
+
+---
+## Likelihood
+
+**Example**  
+
+On a second plot, we observed 42 trees  
+<br/>
+
+--
+What is the probability of that observation?  
+
++ $Pr(y=42|\lambda=40) =$ `r round(dpois(42,40),3)`  
+<br/>
+
+
+--
+What is the joint probability of both observations?  
+
+<br/>
+--
+Assuming the observations are independent, the joint probability (probability of $y=34$ *and* $y=42$) is the product of the individual probabilities:  
+
++ `r round(dpois(34,40),2)` x `r round(dpois(42,40),2)` = `0.00059`. 
+
+---
+## Likelihood
+
+In this example, we start by assuming we know that $\lambda = 40$  
+<br/>
+
+--
+Of course that doesn't make much sense. In our research, we never know $\lambda$ (or to be consistent with eq. 1, $\theta$). We want to estimate $\lambda$ using our data  
+<br/>
+
+--
+We do this by using a *likelihood function*:
+
+$$\underbrace{L(\theta|y)}_{likelihood\; function} = \underbrace{[y|\theta]}_{likelihood} = \prod_{i=1}^n [y_i|\theta]$$
+
+???
+
+This equation means that the likelihood of $\theta$ given the data $y$ is equal to the probability of the data conditional on $\theta$  
+
+---
+## Likelihood profile
+
+An important distinction between the probability distribution $[y|\theta]$ and a likelihood function $L(\theta|y)$ is:  
+
++ In the probability distribution, we treat the parameter as fixed and the data as random  
+
++ In the likelihood function, we treat the data as fixed and the parameter as variable   
+
+---
+## Likelihood profile
+
+In our example, the tree counts $y$ are random variables - they can take a range of possible values due to chance  
+
+The probability distribution $[y|\theta]$ tells us the probability of each possible value $y$:  
+
+```{r, echo = TRUE, eval = FALSE}
+y_probs <- data.frame(y = 15:65,
+                      pr_y = dpois(15:65, lambda = 40))
+
+ggplot(data = y_probs, aes(x = y, y = pr_y)) + geom_point() +
+  scale_y_continuous(expression(paste("[y|", lambda, "=40]"))) +
+  theme_classic()
+
+```
+
+```{r, fig.width=4, fig.height=2.5}
+y_probs <- data.frame(y = 15:65,
+                      pr_y = dpois(15:65, lambda = 40))
+
+ggplot(data = y_probs, aes(x = y, y = pr_y)) + geom_point(color = WILD3810_colors$value[WILD3810_colors$name == "secondary"]) +
+  scale_y_continuous(expression(paste("[y|", lambda, "=40]")))
+
+```
+
+???
+
+To reiterate, the plot above assumes we know $\lambda = 40$ and that the $y$'s are random variables from a Poisson distribution. Because this is a probability distribution, the area under the curve is 1. 
+
+---
+## Likelihood profile
+
+To create a *likelihood profile*, we flip this around  
+
+We treat our observation as fixed (for simplicity, let's use our observation $y=42$) and estimate the probability as a function of different values of $\lambda$:
+
+```{r, echo = TRUE, eval = FALSE}
+
+y <- 42
+y_probs <- data.frame(lambda = 15:65,
+                      pr_y = dpois(y, lambda = 15:65))
+
+(lik_profile <- ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path() +
+  scale_y_continuous(expression(paste("L(", lambda, "|y=42)"))) +
+  scale_x_continuous(expression(lambda)) +
+  theme_classic())
+
+```
+
+```{r, fig.width=4, fig.height=2.5}
+
+y <- 42
+y_probs <- data.frame(lambda = 15:65,
+                      pr_y = dpois(y, lambda = 15:65))
+
+(lik_profile <- ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD3810_colors$value[WILD3810_colors$name == "dark"]) +
+  scale_y_continuous(expression(paste("L(", lambda, "|y=42)"))) +
+  scale_x_continuous(expression(lambda)))
+
+```
+
+---
+## Likelihood profile
+
+In this plot, the area under the curve does not equal 1 - the likelihood profile is *not* a probability distribution   
+
+```{r, fig.width=8, fig.height=6}
+
+y <- 42
+y_probs <- data.frame(lambda = 15:65,
+                      pr_y = dpois(y, lambda = 15:65))
+
+(lik_profile <- ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD3810_colors$value[WILD3810_colors$name == "dark"]) +
+  scale_y_continuous(expression(paste("L(", lambda, "|y=42)"))) +
+  scale_x_continuous(expression(lambda)))
+
+```
+
+
+---
+## Likelihood profile
+
+Saying that $\lambda$ is not fixed allows us to estimate the likelihood profile by varying the values of $\lambda$  
+
+But this is not the same as saying it's a random variable!  
+<br/>
+
+--
+For something to be a random variable, it must be defined by a probability distribution  
+
++ For the likelihood profile, we have not defined a probability distribution for $\lambda$ (that is $[\lambda]$)  
+<br/>
+
+
+--
+As a result, we vary $\lambda$ but it is not a random variable and likelihood profiles do not define the probability or probability density of $\lambda$  
+
+---
+## Likelihood profile
+
+This distinction between likelihood profiles and probability distributions is one of the reasons that results of likelihood-based methods can be difficult to interpret  
+
+Many of the methods familiar to ecologists use the principle of maximum likelihood to determine the value of $\theta$ that is most supported by our data  
+
+The maximum likelihood estimate is the peak of the likelihood curve $^1$:
+
+```{r, fig.width=6.5, fig.height=4}
+
+ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD3810_colors$value[WILD3810_colors$name == "dark"]) +
+  scale_y_continuous(expression(paste("L(", lambda, "|y=42)"))) +
+  scale_x_continuous(expression(lambda)) +
+  geom_segment(aes(x = 42, xend =42, y = 0, yend = max(y_probs$pr_y)), linetype = "longdash", color = WILD3810_colors$value[WILD3810_colors$name == "dark"]) +
+  annotate("text", x = 42, y = max(y_probs$pr_y) + 0.00625, label = "MLE", color = WILD3810_colors$value[WILD3810_colors$name == "dark"], size = 6)
+
+```
+
+???
+
+$^1$ In a real study we would not base the MLE on a single observation  
+
+---
+## Likelihood profile
+
+But the MLE does not tell us the probability of $\theta$ given our data! 
+
+So although MLE does tell us the value of $\theta$ that is most consistent with our data, we can not say things like:
+
++ "There is a 90% probability that $\theta > 0$" $^1$  
+
++ "There is a 96% probability that $a \geq \theta \geq b$" $^1$
+
+???
+
+$^1$ Even though these are the things we usually want to know!
+
+---
+class: inverse, center, middle
+
+# The prior $^1$
+
+???
+
+$^1$ Choosing prior distributions is a complex topic that is an area of active research in the statistical community. As a result, the cultural norms for using priors in ecological modeling appears to be rapidly changing. For these reasons, we'll spend a good deal of time discussing how to choose priors in the next lecture.
+
+---
+## The prior distribution
+
+As we just learned, $\theta$ is not a random variable in the likelihood function because it is not governed by a probability distribution  
+
+--
+
+$$\underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[\theta|y]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$
+
+In eq. 1, the **prior** distribution is what allows us to treat $\theta$ as a random variable  
+
+--
++ The prior describes what we know about the probability of $\theta$ *before* we collect any data  
+
+--
++ Priors can contain a lot of information about $\theta$ (*informative priors*) or very little (*uninformative priors*)  
+
+--
++ Well-constructed priors can also improve the behavior of our models  
+
+ 
+
+---
+## The prior distribution
+
+The prior distribution provides us with a principled method of incorporating information about $\theta$ into our analysis  
+
+--
+This information could be results from a pilot study or results from previously published studies  
+
+In some cases, the prior could simply reflect our own knowledge about how the system works  
+
+--
+In this way, priors allow us to weigh conclusions drawn from our data against what we already know about our system $^1$  
+
+--
+In the words of Mark Kéry:
+
+>I find it hard not to be impressed by the application of Bayes rule to statistical inference since it so perfectly mimics the way of how we learn in everyday life ! In our guts, we always weigh any observation we make, or new information we get, with what we know to be the case or believe to know.
+
+???
+
+This is a profound property because it is consistent with both the way that science advances (the accumulation of evidence in support of specific hypotheses) as well as how we naturally learn about the world around us
+
+---
+## The prior distribution
+
+**Example**  
+
+Say I tell you that on my way to class, I saw a 6-foot tall man  
+<br/>
+
+You would find this statement both believable and boring because a 6-ft tall man is consistent with what you know about the distribution of human heights  
+<br/>
+<br/>
+
+--
+If I said I saw a 7-ft tall man, you might find this more noteworthy but believable (because your prior tells you this a possible, though rare, occurence)  
+<br/>
+<br/>
+
+--
+If I tell you I saw an 8-fit tall man, you'll question my credibility and require additional evidence because you know it is extremely implausible for someone to be this tall  
+
+---
+## The prior distribution
+
+**Example**
+
+In our example of tree counts, we need to define a prior for $\lambda$, the average number of trees per plot  
+
+To start, we know that $\lambda$ has to be a positive real number (though not necessarily an integer)
+
+--
++ The gamma distribution allows for positive real values
+
+
+--
+In our discussion of likelihood functions, we assumed we know that $\lambda = 40$. Let's relax that assumption a bit
+
++ previous research has shown that the mean number of trees per plot is 40, with a variance of 6
+
+
+---
+## The prior distribution
+
+**Example**
+
+We can use moment matching to turn $\mu = 40$ and $\sigma^2 = 6$ into the two parameters that govern the gamma distribution:  
+
+$$\alpha = \frac{\mu^2}{\sigma^2}$$
+$$\beta = \frac{\mu}{\sigma^2}$$
+
+which in our sample gives $\alpha=$ `r round(40^2/6, 0)` and $\beta =$ `r round(40/6, 0)`  
+
+Now plot that prior alongside our previously define likelihood profile:  
+
+```{r, echo = TRUE, eval = FALSE}
+
+prior <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
+                    pr_lambda = dgamma(seq(from = 15, to = 65, by = 0.25), 40^2/6, 40/6))
+
+(prior_lik <- lik_profile + geom_path(data = prior, aes(x = lambda, y = pr_lambda), linetype = "longdash"))
+
+```
+
+---
+## The prior distribution
+
+**Example**
+
+```{r, fig.width=8, fig.height=6}
+
+prior <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
+                    pr_lambda = dgamma(seq(from = 15, to = 65, by = 0.25), 40^2/6, 40/6))
+
+(prior_lik <- lik_profile + geom_path(data = prior, aes(x = lambda, y = pr_lambda), linetype = "longdash", 
+  color = WILD3810_colors$value[WILD3810_colors$name=="secondary"]))
+
+```

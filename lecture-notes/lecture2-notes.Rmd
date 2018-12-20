@@ -20,7 +20,7 @@ In lecture 1, we learned about the different levels of models we typically encou
 
 *Stochastic* processes are different - given an input, the model will not always return the same answer. So stochastic processes are ones where the output is uncertain. However, even though stochastic processes are inherently uncertain, that does not mean they are unpredictable.   
 
-We also learned in the last lecture that what makes a model *Bayesian* is that all unobserved quantity is treated as a random variable, that is one tha tcan take on different values due to chance. Each random variable in our models is governed by a probabilty distribution. Our goal is to use our data to learn about those distributions. Because probability distributions for the basis of Bayesian methods, a good understanding of probability is critical to everything that will follow. 
+We also learned in the last lecture that what makes a model *Bayesian* is that all unobserved quantity is treated as a random variable, that is one that can take on different values due to chance. Each random variable in our models is governed by a probabilty distribution. Our goal is to use our data to learn about those distributions. Because probability distributions for the basis of Bayesian methods, a good understanding of probability is critical to everything that will follow. 
 
 # Probability
 
