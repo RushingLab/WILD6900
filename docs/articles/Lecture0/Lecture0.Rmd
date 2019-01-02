@@ -1,0 +1,209 @@
+---
+title: "Lecture 0"
+subtitle: "Course overview"
+author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, echo = FALSE, include=FALSE}
+options(htmltools.dir.version = FALSE)
+library(WILD3810)
+# library(gganimate)
+```
+
+# LOGISTICS
+
+**Lecture**: Tuesday and Thursday 1:30-2:45 BNR 113  
+**Credits**: 3  
+
+---
+# INSTRUCTOR
+
+#### Dr. Clark Rushing  
+[clark.rushing@usu.edu](clark.rushing@usu.edu)   
+**Office**: NR 146   
+**Office hours**: Monday and Wednesday 1:00-2:30 (or by appointment)
+
+
+---
+# COURSE FORMAT
+
+Refer to [syllabus](https://rushinglab.github.io/WILD6900/articles/syllabus.html)
+
+---
+class: inverse, center, middle
+
+# WHY BAYESIAN? 
+
+---
+## Why Bayesian?
+
+**Philosophical advantages**  
+<br/>
+--
+1) Probabilistic treatment of all unknown quantities  
+<br/>
+
+--
+2) Coherent framework for incorporating prior knowledge into analysis  
+<br/>
+
+--
+3) Proper accouting of uncertainty  
+<br/>
+
+--
+4) Ease of estimating latent variables (and uncertainty)
+
+---
+## Why Bayesian?
+
+**Practical advantages**  
+<br/>
+--
+1) Ability to develop custom/complex models to suite your needs  
+<br/>
+
+--
+2) Many statistical concepts (e.g., random effects) make more sense (no blackbox)  
+<br/>
+
+--
+3) Expanded "toolkit" for quantitative analysis  
+<br/>
+
+--
+4) Ability to keep up with the literature  
+<br/>
+
+--
+5) Ability to review manuscripts/proposals that use Bayesian methods
+
+
+---
+## Why Bayesian
+
+**Disadvantages**   
+<br/>
+--
+1) Computationally intensive  
+<br/>
+
+--
+2) Few (no?) "canned" software
+
+---
+## Bayesian methods in ecology
+
+The use of Bayesian methods is growing rapidly in ecology, largely due to:  
+
+--
+- powerful computers and the development of accessible software   
+
+--
+- large amount of code online and in books that be used as the starting point for analyses  
+
+--
+
+These developments have led to many people adopting Bayesian methods even if they don't fully understand what they're doing. They also led to some ecologists becoming full-on Bayesians and then a preditable backlash from those that view these methods as needlessly complex and overly trendy (i.e., statistical machismo)    
+
+The methods you'll learn about in this class, just like all statistical methods, are *tools* to help you answer questions  
+
+Your job as a researcher is to choose the tools that best suite your question and your data. The goal of this course is to **expand your toolbox**  
+
+---
+class: inverse, center, middle
+
+## Why are you interested in learning Bayesian methods?
+
+
+---
+class: inverse, center, middle
+
+# REPRODUCIBLE RESEARCH 
+
+---
+## Reproducible research
+
+**What makes research "reproducible"?**  
+
+Many definitions (Goodman et al. 2016) but for the purposes of this class, we will define it as:  
+
+> The ability of independent researchers to reproduce scientific results using the original data and methods (adapted from Markwick et al. 2018)  
+
+<br/>
+
+--
+- Reproducibility is a gradient from unreproducible (no data, no methods, etc.) to completely reproducible (the ability to start with raw data and reproduce all results, figures, tables, etc) $^1$.  
+<br/>
+
+--
+- At a minimum, reproducibility means someone could re-run your analyses and come up with exactly the same answer  
+
+
+???
+
+Goodman, S. N., Fanelli, D., and Ioannidis, J. P. A. (2016) *What Does Research Reproducibility Mean?* Science Translational Medicine, 8, 341ps12–341ps12.
+
+Marwick, B., Boettiger, C. & Mullen, L. (2018) *Packaging Data Analytical Work Reproducibly Using R (and Friends)*, The American Statistician, 72:1, 80-88, DOI: 10.1080/00031305.2017.1375986 
+
+$^1$ Stricly speaking, reproducing results could also include the ability to recreate figures, tables, and even text as it appears in the original report or paper.  Fully reproducible research is *very* hard but that does not mean we shouldn't strive for moving our work closer to to that end of the spectrum. 
+
+---
+## Why make your research reproducible?
+
+Making your work reproducible involves extra work. Why bother?  
+<br/>
+--
+1) To help advance science - if your work can't be reproduced, it's not science  
+<br/>
+
+--
+2) To meet requirements of journals/granting orgs  
+<br/>
+
+--
+3) To make it easier to share your work with collaborators  
+<br/>
+
+--
+4) To make it easier to revise your analysis later
+
+---
+class: inverse, center, middle
+> You always have at least one collaborator on every project - you future self. And your past self doesn't respond to email
+
+---
+## Course philosophy
+
+- Stats courses are the primary source of experience for learning to work with data   
+<br/>
+
+--
+- But in-class examples often ignore the fact that **most** time will be spent wrangling raw data to get it ready for analysis   
+<br/>
+
+--
+- Because data wrangling skills aren't taught, students (often) develop bad habits  
+<br/>
+
+--
+- In the "lab" activities in this course, we will emphasize the tasks of cleaning and processing raw data to prepare it for analysis  
+
+
+--
+### Additional resources
+
+* Cooper, N. & Hsing, P. (2017) [*A guide to reproducible code*](https://www.britishecologicalsociety.org/wp-content/uploads/2017/12/guide-to-reproducible-code.pdf) British Ecological Society
+
+
+
+
+

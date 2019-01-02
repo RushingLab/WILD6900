@@ -1,0 +1,63 @@
+---
+title: "Homework instructions"
+subtitle: "WILD6900"
+date: "updated on `r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Homework instructions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+All homework assignments for this course will be completed R Markdown files. To make the distribution, completion, and grading easier, each homework will follow the same workflow. 
+
+# Homework steps
+
+## Step 1: Create a new directory to store your homework files
+
+1a) Create a new directory (or ideally a subdirectoy of your `WILD6900\` directory) and call it `LastNameFirstName-Homework#`, replacing `LastNameFirstName` with your last and first names and `#` with the appropriate homework number
+
+## Step 2: Create a new R Markdown file using the homework template
+
+2a) Click on `File -> New File -> R Markdown...`
+
+2b) In the window on the left, select `From Template`
+
+2c) Scroll down through the options until you see `WILD6900-Homework#` (where `#` will be the appropriate homework number). Select that template 
+
+2d) In the `Name:` window type `LastnameFirstname-homework#`, substituting your last and first names and the correct homework numbe. In the `Location` window, navigate to your newly create `LastNameFirstName-Homework#` directory
+
+2e) Click `Ok`
+
+## Step 3: Complete the assignment
+
+3a) Change the `author: YOUR NAME HERE` field in the header to your name. 
+
+3b) Work your way through the entire document, following the instructions as you go
+
+## Step 4: Submit your assignment
+
+4a) Before submitting your assignment, always click the "Knit" button to be sure your .Rmd file can be rendered as a HTML page. **If you have any problems rendering the file, please contact me or the TA prior to the submission deadline.**
+
+4b) Once you know your file can be rendered, compress the entire `LastNameFirstName-Homework#` directory:
+
+* On Windows:
+    - Locate the `LastNameFirstName-Homework#` folder
+      
+    - Press and hold (or right-click) the folder, select (or point to) `Send to`, and then select `Compressed (zipped) folder`
+      
+* On Mac
+    - Locate the `LastNameFirstName-Homework#` folder
+      
+    - Right-click the folder and select `compress LastNameFirstName-Homework#`
+
+4c) Email the zipped file to [clark.rushing@usu.edu](clark.rushing@usu.edu) with the subject line: `WILD6900 Homework #`, again substituting `#` for the appropriate homework number
+
+**Assignments that fail to follow this instructions will not be graded**

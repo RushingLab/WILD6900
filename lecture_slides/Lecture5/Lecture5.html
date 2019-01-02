@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 5</title>
+    <meta charset="utf-8">
+    <meta name="author" content="   WILD6900 (Spring 2019)" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="WILD6900.css" type="text/css" />
+    <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lecture 5
+## Implementing Bayesian models: Introduction to MCMC samplers
+### <br/><br/><br/>WILD6900 (Spring 2019)
+
+---
+
+
+
+
+## Readings
+
+&gt; Hobbs &amp; Hooten 145-180
+
+---
+## From the joint distribution to the posterior
+
+Remember from lecture 3 that the posterior distribution of random variable `\(\theta\)` conditional on data `\(y\)` is defined by Bayes theorem:  
+
+`$$\underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[\theta|y]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$`
+
+--
+We spent a fair about of time learning how to define the likelihood `\([\theta, y]\)` and the prior `\([\theta]\)`  
+
+
+--
+But we gave only given a cursory overview to the denominator of Bayes theorem, the marginal distribution `\([y]\)` `\(^1\)`  
+
+???
+
+`\(^1\)` This is for good reason. For all but the most simple problems (where we can use conjugate distributions or simple integrations to estimate the posterior distribution), estimating the marginal distribution is not analytically possible. A model with four parameters will require solving a four-dimensional integral  
+
+---
+class: inverse, center, middle
+
+# Markov chain Monte Carlo
+
+---
+## Markov chain Monte Carlo
+
+In your own analyses, you will generally write out the model using a programming language understood by one of the common Bayesian software programs and then let the software fit the model  
+
+--
+- This can be done without really knowing much of anything about *how* the software fits the model  
+
+--
+- After this lecture, that's essentially the way we will operate for the remainder of the semester. 
+
+
+--
+But treating these software as a total blackbox is not a great idea  
+
+- Having at least some idea what JAGS (or BUGS or Nimble) is doing to estimate the posterior distributions of parameters in your model will help you better understand if and when these programs are doing what you want `\(^1\)`
+
+???
+
+`\(^1\)` There are different flavors of MCMC that are used behind the scences in all modern Bayesian software, including JAGS, Bugs, Nimble, and Stan  
+
+`\(^1\)` That said, because this course focuses on the practice of Bayesian analyses rather than the theory, we will not go into a lot of details about MCMC  
+
+---
+## From the joint distribution to the posterior
+
+Remember that the marginal distribution `\([y]\)` is what normalizes the joint distribution to ensure the posterior is a proper probability distribution `\(^1\)`  
+&lt;br/&gt;
+
+--
+- Without the marginal distribution, parameters cannot be treated as random variables `\(^1\)`  
+&lt;br/&gt;
+
+
+--
+This issue of estimating the marginal distribution is what limited the application of Bayesian methods to practical problems from it's inception until the 1990's  
+&lt;br/&gt;
+
+--
+Progress was only made once statisticians started developing methods to learn about the posterior distribution by sampling *from the posterior distributions*  
+
+???
+
+`\(^1\)` i.e., sums to 1
+
+`\(^1\)` And therefore we cannot conduct a truly Bayesian analysis  
+
+
+---
+## Learning about the posterior by sampling from it
+
+How can we draw samples from a distribution that we don't know?  
+&lt;br/&gt;
+
+--
+Remember from lecture 3 that we do know something about the distribution of each parameter in our model, namely the joint distribution: 
+
+`$$[\theta|y] \propto [y|\theta][\theta]$$`
+
+
+--
+By taking many many samples from the joint distribution, we can learn about its shape  
+
+---
+## Learning about the posterior by sampling from it
+
+If this seems confusing, think about learning about the shape of a probability distribution by taking many samples from it `\(^1\)`
+
+
+```r
+norm_df &lt;- data.frame(samples = rnorm(5000))    # Generate samples from distribution
+
+ggplot(norm_df, aes(samples)) + geom_histogram(fill = WILD6900_colors$value[WILD6900_colors$name == "primary"]) + annotate("text", x = 0, y = 750, label = paste("Sample mean = ", round(mean(norm_df$samples),2))) + annotate("text", x = 0, y = 675, label = paste("Sample variance = ", round(sd(norm_df$samples),2))) 
+```
+
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+???
+
+`\(^1\)` This is not exactly what we do in Bayesian methods but hopefully it helps understand the concept of learning about a probability distribution via sampling  
+
+---
+## Learning about the posterior by sampling from it
+
+In modern Bayesian analysis, estimating posterior distributions is done using *Markov chain Monte Carlo* (MCMC) methods  
+&lt;br/&gt;
+
+--
+MCMC is an algorithm that uses the joint distribution to to sample values of each random variable in proportion to their to their probability  
+&lt;br/&gt;
+
+--
+Essentially, MCMC take the likelihood profile `\(^1\)`, weights it by the prior `\(^1\)`, and then normalizes the joint distribution so it is a proper probability distribution  
+
+???
+
+ `\(^1\)` which, remember, is not normalized
+ 
+ `\(^1\)` which, remember, is the joint distribution
+ 
+---
+## Implementing a simple MCMC
+
+If that seems a little confusing, it should be come clear if go through the steps of the MCMC applied to a simple model with a single parameter `\(\theta\)`  
+
+
+--
+Let's return to our survival example where we tracked individuals using GPS collars and at the end of the study, recorded the number of individuals that were still alive  
+
+- We will expand the example to include 5 study sites and assume we tracked 20 individuals at each site  
+
+
+--
+We want to estimate `\(\phi\)`, the probability of survival from the beginning to the end of the study `\(^1\)`  
+
+???
+
+`\(^1\)` which we will further assume is constant across all 5 sites  
+
+---
+## Implementing a simple MCMC
+
+Before we can implement the MCMC algorithm, we have to choose an appropriate likelihood distribution to describe our system  
+&lt;br/&gt;
+
+--
+In this case, we want to know the probability of getting `\(n\)` "successes" (alive at the end of the study) out of `\(N\)` "tries" (individuals alive at the beginning of the study)  
+
+- A natural choice for this likelihood is the binomial distribution  
+
+
+--
+Let's simulate some data, assuming the true survival probability is `\(40\%\)`:
+
+
+```r
+n.sites &lt;- 5 # Number of sites
+N &lt;- 20      # Number of individuals tracked at each site
+phi &lt;- 0.4   # True survival probability
+
+(n &lt;- rbinom(n = n.sites, size = N, prob = phi))
+```
+
+```
+## [1] 11  6  7  5  9
+```
+
+---
+## Implementing a simple MCMC
+
+Next, we need to define the prior distribution  
+&lt;br/&gt;
+
+--
+We could choose a uniform prior but as we have already learned, that's probably not the best choice  
+&lt;br/&gt;
+
+--
+Still, let's assume we don't know much about the survival of our study organism other than that it's probably not less than ~20% and probably not more than ~50%  
+
+- A reasonable prior to represent this knowledge might be `\(beta(2,4)\)`
+
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Implementing a simple MCMC
+
+To make our lives easier, let's also define a function to estimate the (log) joint distribution `\(^1\)` conditional on our data and prior:
+
+
+```r
+joint &lt;- function(data, N, p, a, b){
+  ll &lt;- sum(dbinom(data, size = N, prob = p, log = TRUE)) + 
+        dbeta(x = p, shape1 = a, shape2 = b, log = TRUE)
+  return(ll)
+}
+```
+
+Make sure you understand exactly what this function is doing! 
+
+???
+
+`\(^1\)` We work with log probabilities to avoid numerical problems when the actual probabilities get really small
+
+---
+class: inverse, class, middle
+
+# MCMC: basic steps
+
+---
+## MCMC: basic steps
+
+Once we have our data and defined a likelihood function and a prior distribution, the basics steps of the MCMC algorithm `\(^1\)` are:  
+
+--
+0) Choose an initial value for `\(\theta\)` (call it `\(\theta^1\)`)  
+
+--
+1) Propose a new value `\(\theta^*\)` from a proposal distribution  
+
+--
+2) Compute the probability of accepting `\(\theta^*\)` using the joint distributions evaluated at `\(\theta^*\)` and the previous value `\(\theta^{k-1}\)`  
+
+--
+3) Accept `\(\theta*\)` (i.e., `\(\theta^{k} = \theta^*\)`) with the probability estimated in step 2, otherwise retain the previous value (i.e., `\(\theta^{k} = \theta^{k-1}\)`  
+
+
+--
+Steps 1-3 are repeated many times, resulting in `\(K\)` samples of `\(\theta\)`  
+
+- This collection of `\(\theta\)` values is referred to as a *chain*  
+
+- Steps 2 and 3 ensure that the values of `\(\theta\)` is our chain are sampled in proportion to their probability in the posterior distribution `\([\theta|y]\)`  
+
+- By collecting a large number of samples of `\(\theta\)` is proportion to their probability in `\([\theta|y]\)`, we can define the posterior distribution  
+
+???
+
+`\(^1\)` We are technically describing the steps of a specific type of MCMC called *accept-and-reject* sampling. There are types of MCMC samplers that we will not describe here. For addtional references on types of samplers, refer to Hobbs &amp; Hooten chapter 7
+
+---
+## MCMC: basic steps
+
+To clarify what's happening in each of these steps, we'll work through each one using our example data  
+
+---
+## MCMC: basic steps
+
+### Step 0: Choose an initial value
+
+The first step is to choose an initial value for the chain  
+&lt;br/&gt;
+
+--
+The exact value typically isn't too important but should be consistent with the probability distribution that defines the parameter `\(^1\)`  
+&lt;br/&gt;
+
+--
+In some cases, it can be advantageous to choose initial values that are at least reasonable approximations of the parameter value (but for simple models it shouldn't matter much)  
+
+???
+
+`\(^1\)` In our case, `\(\phi\)` is a probability so our initial value should be between 0 and 1  
+
+---
+## MCMC: basic steps
+
+### Step 0: Choose an initial value
+
+For our example, we'll just choose a random number between 0 and 1 using `runif(1)`  
+
+- This will give different values each time we run the algorithm, which is a good way to investigate whether the posterior estimate is sensitive to the initial values `\(^1\)` 
+
+
+```r
+set.seed(123456)
+(init &lt;- runif(1))
+```
+
+```
+## [1] 0.7978
+```
+
+???
+
+`\(^1\)` if the posterior is sensitive to the initial value, that could indicate a problem or simply that you need to run the chain longer. We'll explore how to diagnose problems in our chains shortly  
+
+---
+## MCMC: basic steps
+
+### Step 1: Propose a new value
+
+All MCMC algorithms develop chains by proposing a new value of `\(\theta\)` (denoted `\(\theta^*\)`) from some *proposal distribution*  
+&lt;br/&gt;
+
+--
+As we'll show, there are different ways to formulate proposal distributions but in most applications, the proposal `\(\theta^*\)` is *dependent* on the previous value `\(\theta^{k-1}\)`  
+
+That is: 
+
+`$$[\theta*|\theta^{k-1}]$$` 
+
+--
+For example, we could use a normal proposal distribution:
+
+`$$\theta^* \sim Normal(\theta^{k-1}, \sigma^2)$$`
+
+---
+## MCMC: basic steps
+
+### Step 1: Propose a new value
+
+Using a normal proposal distribution, `\(\theta^*\)` can be any real number but will, on average, tend to be close to `\(\theta^{k-1}\)`  
+&lt;br/&gt;
+
+--
+How close `\(\theta^*\)` is to `\(\theta^{k-1}\)` is determined by `\(\sigma^2\)`, which is referred to as the *tuning parameter*  
+
+- `\(\sigma^2\)` determines the frequency that proposals are accepted  
+
+- Larger values will result in more frequent rejections, smaller values will result in more acceptances. 
+
+---
+## MCMC: basic steps
+
+### Step 1: Propose a new value
+
+The normal distribution implies that `\(\theta\)` can be any real number, which makes sense for some parameters but not for our example  
+
+We could instead use a beta distribution and use moment matching to define `\(\alpha\)` and `\(\beta\)` is terms of `\(\theta^{k-1}\)` (the mean) and `\(\sigma^2\)`:
+
+`$$\theta^* \sim beta\Bigg(\theta^{k-1}\bigg(\frac{\theta^{k-1}(1-\theta^{k-1})}{\sigma^2}-1\bigg), (1-\theta^{k-1})\bigg(\frac{\theta^{k-1}(1-\theta^{k-1})}{\sigma^2}-1\bigg)\Bigg)$$`
+
+---
+## MCMC: basic steps
+
+### Step 1: Propose a new value
+
+Again, let's create a function to generate proposals:
+
+
+```r
+proposal &lt;- function(p, sigma2){
+  alpha &lt;- p * ((p * (1 - p) / sigma2) - 1)
+  beta &lt;- (1 - p) * ((p * (1 - p) / sigma2) - 1)
+  
+  proposal &lt;- rbeta(n = 1, shape1 = alpha, shape2 = beta)
+  return(proposal)
+}
+```
+
+---
+## MCMC: basic steps
+
+### Step 2: Estimate acceptance probability
+
+Once we have a proposal `\(\theta^*\)`, we have to decide whether to accept this as our new value of `\(\theta^k\)`  
+
+- If we accept `\(\theta^*\)`, `\(\theta^{k} = \theta^*{k-1}*\)`  
+
+- If we reject it, `\(\theta^{k} = \theta^{k-1}\)`  
+
+
+--
+We accomplish this using *Metropolis updates*, a very clever way of ensuring that our samples of `\(\theta\)` occur in proportion to their probability in the posterior distribution  
+
+---
+## MCMC: basic steps
+
+### Step 2: Estimate acceptance probability
+
+To see how Metropolis updating works, remember that the support for the proposal conditional on the data is:
+
+`$$[\theta^*|y] = \frac{[y|\theta^*][\theta^*]}{[y]}$$`
+The support for the current value is:
+
+`$$[\theta^{k-1}|y] = \frac{[y|\theta^{k-1}][\theta^{k-1}]}{[y]}$$`
+
+These, of course, are the posterior probabilities of `\(\theta^*\)` and `\(\theta^{k-1}\)`
+
+---
+## MCMC: basic steps
+
+### Step 2: Estimate acceptance probability
+
+At first, this doesn't seem to have gotten us very far  
+
+- We started out saying that the hard part was finding `\([y]\)` and here it is again  
+
+
+--
+But because `\([y]\)` does not depend on `\([\theta]\)`, it cancels out if we take the ratio of the two probabilities:
+
+`$$R = \frac{[y|\theta^*][\theta^*]}{[y|\theta^{k-1}][\theta^{k-1}]} \tag{1}$$`
+
+---
+## MCMC: basic steps
+
+### Step 2: Estimate acceptance probability
+
+Equation 1 tells us the *relative* probability of the proposal (relative to the current value), i.e., which value is more probable `\(^1\)`  
+&lt;br/&gt;
+
+--
+In Metropolis updating we accept `\(\theta^*\)` whenever `\(R \geq 1\)`, i.e. when `\(\theta^*\)` is more probable than `\(\theta^{k-1}\)`   
+&lt;br/&gt;
+
+--
+At first blush, you might assume that we reject  `\(\theta^*\)` when `\(R \lt 1\)`  
+
+- However, if we did this, we would rarely sample values of `\(\theta\)` in the tails `\(^1\)` 
+
+- Instead of automatically rejecting  `\(\theta^*\)` when `\(R \lt 1\)`, we treat `\(R\)` as a probability and we keep `\(\theta^*\)` with probability `\(R\)`  
+
+
+???
+
+`\(^1\)` this is not exactly the way we estimate `\(R\)` when we use a non-normal proposal distribution but we won't worry about that for now  
+
+`\(^1\)` Values in the tails of the posterior are by definition not very probable but we still want to occasionally sample these values so that we can accurately define the full posterior  
+
+---
+## MCMC: basic steps
+
+### Step 2: Estimate acceptance probability
+
+We can now use our custom functions to create the chain. First, we will set up the parameters of the sampler:
+
+
+```r
+n.samples &lt;- 10000    # Number of samples to draw
+sigma2 &lt;- 0.015       # Tuning parameter
+
+posterior &lt;- data.frame(iteration = 1:n.samples, 
+                        phi = rep(NA, n.samples),
+                        accept = rep(0, n.samples)) # Empty vector to store samples of phi
+
+p &lt;- init     # Initial value
+```
+
+---
+## MCMC: basic steps
+
+### Step 2: Estimate acceptance probability
+
+Next, we run teh sampler:
+
+
+```r
+for(i in 1:n.samples){
+  p.cand &lt;- proposal(p = p, sigma2 = sigma2)   ## Proposal
+  
+  l.R &lt;- (joint(data = n, N = 20, p = p.cand, a = 2, b = 4) - ## log(R)
+            joint(data = n, N = 20, p = p, a = 2, b = 4))
+  
+  R &lt;- min(1, exp(l.R))   ## R
+  
+  if(runif(1) &lt; R){
+    p &lt;- p.cand
+    posterior$accept[i] &lt;- 1
+  }
+  
+  posterior$phi[i] &lt;- p
+}
+```
+
+---
+## MCMC: basic steps
+
+### Step 3: Summarizing and visualizing the chain
+
+The `phi` column in the `posterior` dataframe now contains 10^{4} samples from the posterior distribution of `\(\phi\)`  
+
+We can use these samples to characeterize the posterior distribution without having had to do any integration!  
+
+For example, we can plot the posterior distribution:
+
+
+```r
+ggplot(posterior, aes(x = phi)) + geom_density() +
+  scale_x_continuous(expression(phi))
+```
+
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## MCMC: basic steps
+
+### Step 3: Summarizing and visualizing the chain
+
+We can also create a **trace plot** showing values of the chain at each interations `\(^1\)`
+
+
+```r
+ggplot(posterior, aes(x = iteration, y = phi)) + geom_path() +
+  scale_y_continuous(expression(phi))
+```
+
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+
+???
+
+`\(^1\)` Trace plots can be very useful for diagnosing the behavior the chains, as we will see shortly
+
+---
+## MCMC: basic steps
+
+### Step 3: Summarizing and visualizing the chain
+
+Or find the mean (remember that the true value in our simulation was `\(0.4\)`:
+
+
+```r
+mean(posterior$phi)
+```
+
+```
+## [1] 0.3739
+```
+
+Pretty close (that a good sign that our Metropolis sampler did what we wanted it to do!)
+
+---
+## MCMC: basic steps
+
+### Step 3: Summarizing and visualizing the chain
+
+We can also estimate quantiles:
+
+
+```r
+quantile(posterior$phi)
+```
+
+```
+##     0%    25%    50%    75%   100% 
+## 0.1987 0.3410 0.3752 0.4051 0.6665
+```
+
+Quantiles are useful for determing the 95% *credible intervals* of the posterior: `\(^1\)`
+
+
+```r
+quantile(posterior$phi, probs = c(0.025, 0.975))
+```
+
+```
+##   2.5%  97.5% 
+## 0.2811 0.4710
+```
+
+This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.28 and 0.47" `\(^1\)`
+
+???
+
+`\(^1\)` i.e., the range of parameter values within which 95% of the posterior mass occurs  
+
+`\(^1\)` Compare the ease of credible interval estimation and the intuitive interpretation to the estimation/interpretation of frequentist 95% confidence intervals  
+
+---
+## Multiple chains
+
+So far, we have assumed that our MCMC is composed of just a single chain  
+
+In most applications, we actually run multiple chains for each parameter `\(^1\)`
+
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+???
+
+`\(^1\)` In principle, there is nothing wrong with just having a single chain if the samples from that chain accurately characterize the posterior. However, with only a single chain, it can be difficult to determine whether the sample *do* accurately characterize the posterior. As we will see shortly, running multiple chains aides diagnosing whether the model is well-behaved. 
+
+---
+## Multiple parameters
+
+What happens if our model contains multiple parameters?  
+
+- In most models, we need to find the marginal distributions of parameters that are part of multivariate joint distributions  
+
+--
+- To do this, we rely on the conditional relationships defined by the Bayesian network `\(^1\)` 
+
+&lt;img src="full_conditional.png" width="150" style="display: block; margin: auto;" /&gt;
+
+--
+`$$[z, \alpha, \sigma^2, \xi^2|y] \propto \underbrace{[y|z, \xi^2]}_a \underbrace{[z|g(\alpha, x), \sigma^2]}_b \underbrace{[\alpha]}_c \underbrace{[\sigma^2]}_d \underbrace{[\xi^2]}_e$$`
+
+???
+
+`\(^1\)` In this example, imagine the state variables `\(z\)` are the body weight of some organisms, which are influenced by some covariate `\(x\)`. So the `\(z\)` are a deterministic function of `\(x\)` and parameter `\(\alpha\)` and process error `\(\sigma^2\)`. Our measurements `\(y\)` are a function of the true weights and measurement error `\(\xi^2\)`. 
+
+---
+## Multiple parameters
+
+How do we develop a sampler for all of the random variables in this model?  
+&lt;br/&gt;
+
+--
+We start by determining the conditional posterior distribution of each parameter
+
+- the conditional posterior is defined by all of the nodes going to/from the parameter of interest
+
+- all other nodes are ignored
+
+- all parameters other than the parameter of interest are treated as **known constants**
+
+---
+## Multiple parameters
+
+For `\(z\)`, the conditional posterior is: `\(^1\)`
+&lt;img src="full_conditional_z.png" width="300" style="display: block; margin: auto;" /&gt;
+
+--
+`$$[z|.] \propto \underbrace{[y|z, \xi^2]}_a \underbrace{[z|g(\alpha, x), \sigma^2]}_b$$`
+
+???
+
+`\(^1\)` The `\([z|.]\)` notation is used to state that all parameters other than `\(z\)` are treated as known constants
+
+Distributions c-e are not included because they contain no information that is not contained in a &amp; b
+
+---
+## Multiple parameters
+
+For `\(\alpha\)`, the conditional posterior is: 
+
+&lt;img src="full_conditional_alpha.png" width="200" style="display: block; margin: auto;" /&gt;
+
+`$$[\alpha|.] \propto \underbrace{[z|g(\alpha, x), \sigma^2]}_b \underbrace{[\alpha]}_c$$`
+
+???
+
+On your, write out the conditionals for `\(\sigma^2\)` and `\(\xi^2\)`. Why do we not need conditionals for `\(y\)` and `\(x\)`?
+
+---
+## Multiple parameters
+
+The full-conditionals gives us a set of univariate distributions for sampling each random variable:  
+
+`$$[z|.] \propto \underbrace{[y|z, \xi^2]}_a \underbrace{[z|g(\alpha, x), \sigma^2]}_b$$`
+
+`$$[\alpha|.] \propto \underbrace{[z|g(\alpha, x), \sigma^2]}_b \underbrace{[\alpha]}_c$$`
+
+`$$[\sigma^2|.] \propto \underbrace{[z|g(\alpha, x), \sigma^2]}_b \underbrace{[\sigma^2]}_d$$`
+
+`$$[\xi^2|.] \propto \underbrace{[y|z, \xi^2]}_a \underbrace{[\xi^2]}_e$$`
+---
+## Multiple parameters
+
+To construct an MCMC for this model, we use the same steps as for the single-parameter model, except at each iteration, we sample values from each conditional distribution in sequence  
+&lt;br/&gt;
+
+--
+- As we move through the set, we use the updated parameters from the previous conditionals in the sequence in the RHS of subsequent conditionals `\(^{1,2}\)`  
+
+???
+
+`\(^1\)` so in our example, we would propose a new value `\(z^*\)` (actually each `\(z\)` since we have one for each individual), accept or reject `\(z^*\)` (either `\(z^k = z^*\)` or `\(z^k = z^{k-1\)`), then use `\(z^k\)` on the RHS when we propose `\(\alpha^*\)`, and so on
+
+`\(^2\)` we can sample in any order as long as we go in the same sequence for each interation. In other words, it doesn't matter is we sample `\(\alpha\)` first or last in the sequence as long we always sample in the same sequence
+
+---
+class: inverse, middle, center
+
+# Evaluating Markov chains
+
+---
+## Evaluating Markov chains
+
+MCMC is an enormously useful algorithm for finding the posterior distributions of random variables  
+&lt;br/&gt;
+
+--
+But it does not always work :(  
+&lt;br/&gt;
+
+--
+For any model, it is **critical** to evaluate the chains to determine whether you can trust inferences from the model
+
+---
+## Evaluating Markov chains
+
+The most important characeteristic of MCMC chains is **convergence**  
+
+--
+- Convergence occurs when the accumulated samples accurately characeterize the posterior distribution of a parameter
+
+
+--
+Once a chain has converged, adding more samples will not meaningfully change the shape or moments of the posterior distribution  
+
+--
+- At this point, a chain is *stationary* because more samples will not cause it to "move" `\(^1\)`
+
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+
+???
+
+`\(^1\)` Notice in figure 1a that the chain starts well above the true survival probability and it takes several interations for the chains to move from the arbitrary initial value to samples that are consistent with the posterior distribution. In our example, that transition occurs relatively quickly so our posterior estimates based on the full chain isn't particularly influenced by our starting values.  
+
+In more complicated models, it may take many more iterations for chains to move from the initial values to the stationary distribution. We generally don't want these samples to influence our inference so it is common to discard these initial values as **burn-in**. Often, you can just select a reasonably large number of samples (e.g., 5000-10000), tell JAGS to discard these as burn-in, then inspect the trace plots to check that this was enough. In other cases, you can just set burn-in as 0 in JAGS and then discard some number of interations manually after looking at the trace plots.  
+
+
+---
+## Evaluating convergence
+
+There are two main ways to assess convergence: visually and using formal diagnostic tests  
+&lt;br/&gt;
+
+--
+Visual evaluation is done using trace plots  
+
+- Chains that have not converged will "wander" 
+
+- Chains that have converged will exhibit good **mixing** `\(^1\)`
+
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+  
+???
+
+`\(^1\)` Mixing means that the chains are able to efficiently explore the full posterior, meaning they can explore the parameter space without getting stuck or having to slowly wander. Poorly mixing chains will generally exhibit high autocorrelation, that is a high degree of dependence between a sample and the previous sample. Highly autocorrelated chains require more samples to fully characterize the posterior  
+
+In trace plots, well-mixing chains will have a "grassy lawn" look
+
+---
+## Evaluating convergence
+
+There are two main ways to assess convergence: visually and using formal diagnostic tests  
+&lt;br/&gt;
+
+--
+Formal diagnostic testing is commonly done using the **Gelman-Rubin diagnostic**, denoted `\(\hat{r}\)`  
+
+--
+- when chains have not converged, variance among chains `\(&gt;\)` variance within chains
+
+- when chains have converged, variance among chains `\(=\)` variance within chains
+
+--
+- `\(\hat{r}\)` is esentially the ratio of among:within chain variance so `\(\hat{r} \approx 1\)` indicates convergence
+
+- values much greater than 1 indicate lack of convergence (usually `\(\hat{r} \leq 1.1\)` is used as a threshold)
+
+
+---
+## Improving convergence 
+
+Two issues can cause chains to not converge:  
+
+--
+1) Too few samples  
+
+--
+2) Lack of identifiability  
+
+---
+## Improving convergence
+
+If too few samples have been accumulated, the chain will not accurately represent the full posterior  
+&lt;br/&gt;
+
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+
+--
+**Solution** - continuing sampling! 
+
+
+---
+## Improving convergence
+
+If too few samples have been accumulated, the chain will not accurately represent the full posterior  
+&lt;br/&gt;
+
+**Solution** - continuing sampling! 
+
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Improving convergence 
+
+Solving lack of identifiability is harder  
+&lt;br/&gt;
+
+--
+- reduce model complexity  
+&lt;br/&gt;
+
+--
+- collect more data  
+&lt;br/&gt;
+
+--
+- more informative priors `\(^1\)`  
+&lt;br/&gt;
+
+--
+- increase [adaptation phase](http://www.mikemeredith.net/blog/2016/Adapt_or_burn.htm) `\(^1\)`  
+&lt;br/&gt;
+
+--
+- transformations can sometimes help  
+
+???
+
+`\(^1\)` A common cause of non-identifiability is when two parameters trade-off, such that different combinations give the same likelihood. One example is when both `\(N\)` and `\(p\)` are unknown in the binomial distribution - the same number of "successes" can be predicted by high `\(N\)` and low `\(p\)` vs. low `\(N\)` and high `\(p\)`. In this case, incorporating information about `\(p\)` via the prior can help identify `\(N\)` (or vice versa).  
+
+`\(^1\)` Most MCMC software (JAGS, Bugs, etc) use an adaptive phase,  during with the samplers used by the model may modify their behaviour for increased efficiency. This is usually done behind the scenes but as highlighted in the linked post, being aware of what the software is doing can be useful for improving mixing
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

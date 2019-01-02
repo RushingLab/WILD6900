@@ -55,7 +55,7 @@ y <- "blah"
 
 Remember that when you open R (or RStudio), you create a *global workspace*. This is where all of the objects you create get stored. If you type `ls()` you can see everything that is currently stored in your workspace. If you are working on different analyses in the same global environment, it is *very* easy to accidently create different objects with the same name, write code that depends on other code that happens to have been run previously during one R session (for example, you loaded a needed package in one script so didn't add `library(package)` to your next script. What happens when you try to run this code the next time? This often called a "hidden dependency" and can make your life very pretty miserable), and many other confusing behaviors.  
 
-This workflow also makes it very difficult to share your work. Remember that R will default to looking for in/saving to the current working directory. To control this behavior, most people are taught to use `setwd()`. The problem with this is that the path you set using `setwd()` is almost certaintly specific to the computer your used to write that code. If you use a different computer later or send code to your advisor for help, they will not be able to run it without changing the working directory. If you move the files to a new place on your computer, all of your code will break. Got a new computer? Oops, none of your code will work anymore. If you are running mutiple analyses in the same R session, you'll also have to constantly change your working directory, which eventually will lead to confusion and problems rerunning code. Manually setting the working directory seems like a minor annoyance but if you have to do it constantly (for example, an instructor who has to grade a bunch of homework assignments), these minor annoyances add up to a big headache. 
+This workflow also makes it very difficult to share your work. Remember that R will default to looking in/saving to the current working directory. To control this behavior, most people are taught to use `setwd()`. The problem with this is that the path you set using `setwd()` is almost certaintly specific to the computer your used to write that code. If you use a different computer later or send code to your advisor for help, they will not be able to run it without changing the working directory. If you move the files to a new place on your computer, all of your code will break. Got a new computer? Oops, none of your code will work anymore. If you are running mutiple analyses in the same R session, you'll also have to constantly change your working directory, which eventually will lead to confusion and problems rerunning code. Manually setting the working directory seems like a minor annoyance but if you have to do it constantly (for example, an instructor who has to grade a bunch of homework assignments), these minor annoyances add up to a big headache. 
 
 The good news is, there's an easy solution that will make your life (and mine) much easier.
 
@@ -75,7 +75,7 @@ RStudio makes is very easy to create Projects (for clarity, I will use "Project"
 
 A new RStudio window should open when you create the new project. In the future, when you want to work on this Project, just double click the `project_name.Rproj` file and it will open a new instance of RStudio.  
 
-## What's so special about RStudio projects?
+## What's so special about RStudio Projects?
 
 Projects solve two of the big problems we discussed earlier. First, each project opens a fresh instance of R so the global environment of projects is self-contained. That means you can you have mutiple projects open at once but each one will behave independently. This means no more `rm(list = ls())` because the only objects in your environment should be the ones associated with that project (this doesn't totally resolve the problem of hidden dependencies but we'll talk more about that below).  
 
@@ -85,7 +85,7 @@ Second, RStudio will automatically set the working directory to the root directo
 
 Another common mistake made by many novice (and not so novice) R users is to save your current workspace to `.RData` each time you quit R or RStudio. On the surface, this seems like a really convenient shortcut. The next time you open R, all of the objects you created previously are right there waiting for you to keep going!  
 
-The problem is that, again, this creates hidden dependencies. The `.RData` file does not re-load packages that you were using in your previous session. It does not re-set options that you may have set in your previous session (`setwd()`, `stringsAsFactors = FALSE`). Some objects needed for, e.g., making a figure may be loaded by others may not be. This means that even if you saved your workspace, you will still end up needing to re-run some chunks of code to get back to where you left off previously. Which chunks? Who knows. You probably think you'll remember but you won't. 
+The problem is that, again, this creates hidden dependencies. The `.RData` file does not re-load packages that you were using in your previous session. It does not re-set options that you may have set in your previous session (`setwd()`, `stringsAsFactors = FALSE`). Some objects needed for, e.g., making a figure may be loaded but others may not be. This means that even if you saved your workspace, you will still end up needing to re-run some chunks of code to get back to where you left off previously. Which chunks? Who knows. You probably think you'll remember but you won't. 
 
 A better workflow is to start every R session with an empty workspace. This means you go into each session with the mindset that you will need to re-run all code from scratch everytime. Although this seems like a pain, I promise it will make your life easier. It is a way of *ensuring* that at a minimum, you can reproduce all of your analyses anytime you need to.  
 
@@ -103,7 +103,7 @@ As we already saw, the `.Rproj` file treats the directory that it is in as the w
 data <- read.csv("data.csv")
 ```
 
-A natural instinct for those of use that are inclined to be less-than organized might be to put all of our files associated the project in this directory:
+A natural instinct for those of us that are inclined to be less-than organized might be to put all of our files associated the project in this directory:
 
 ```
 my_proj/
@@ -143,7 +143,7 @@ my_proj/
       |─── figures.R
 ```
 
-* `data-raw/` contains my, you guessed it, raw data files and R script that reads the raw data in, cleans it, and saves the clean data to `data/`
+* `data-raw/` contains my, you guessed it, raw data files and a R script that reads the raw data in, cleans it, and saves the clean data to `data/`
 
 * `data/` contains the cleaned data files that are ready to go straight into the analysis
 
@@ -174,11 +174,11 @@ data <- read.csv("data-raw/data.csv")
 If you prefer, you can have as many layers of subdirectories as you want. The important thing is that as long as you move the entire project directory, these relative paths will still work.  
 
 
-## A note of handling raw data  
+## A note on handling raw data  
 
 Raw data is sacred. If you purposely or accidentally change your raw data, everything that comes downstream (analysis, results, reports) will also change. To maintain the integrity of your work, get in the habit of **never** making changes to your raw data files after you have entered the data.   
 
-One of the great things about using scripts to manipulate your data is that you can leave your raw data untouched and have a paper trail of every change you made to prepare your data for analysis. That means adding new variables that are composites of the raw data (e.g., `temp_c <- (temp_f -32)*(5/9)`), removing outliers, joinging different data sets together, whatever. *All of this is done in R after you've read in the raw data rather than in Excel!*    
+One of the great things about using scripts to manipulate your data is that you can leave your raw data untouched and have a paper trail of every change you made to prepare your data for analysis. That means adding new variables that are composites of the raw data (e.g., `temp_c <- (temp_f -32)*(5/9)`), removing outliers, joining different data sets together, whatever. *All of this is done in R after you've read in the raw data rather than in Excel!*    
 
 Just as important, you don't save these new data objects over the raw data or even in the same directory. Those files go in `data/`. This means you can only read from the `data-raw/` and you cannot write to it. R will, of course, allow you to write to `data-raw/`, this is just a suggestion to help you maintain a firewall that will keep you raw data in it's raw form. 
 
