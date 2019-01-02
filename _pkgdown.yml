@@ -1,5 +1,5 @@
 title: WILD6900
-#url: http://rushinglab.github.io/WILD3810
+#url: http://rushinglab.github.io/WILD6900
 template:
   params:
     bootswatch: spacelab
@@ -18,10 +18,10 @@ navbar:
       icon: fas fa-calendar
       href: articles/schedule.html
     - text: "Lectures"
-      icon: fa-question-circle-o
+      icon: fa-file-pdf-o
       menu:
-        - text: "Lecture 1: Introduction to WILD6900"
-          href: articles/lecture1.html
+        - text: "Lecture 0: Introduction to WILD6900"
+          href: articles/Lecture0/Lecture0.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:
@@ -29,6 +29,6 @@ navbar:
           href: articles/projects_and_directories.html
         - text: "Introduction to R Markdown"
           href: articles/rmarkdown_intro.html
-        - text: "Developing informative priors"
-          href: articles/priors.html
-
+    - icon: fas fa-pencil-square-o
+      text: "Assignments"
+      href: articles/homework.html

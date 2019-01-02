@@ -60,7 +60,7 @@
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-question-circle-o"></span>
+    <span class="fa fa-file-pdf-o"></span>
      
     Lectures
      
@@ -68,7 +68,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/lecture1.html">Lecture 1: Introduction to WILD6900</a>
+      <a href="../articles/Lecture0/Lecture0.html">Lecture 0: Introduction to WILD6900</a>
     </li>
   </ul>
 </li>
@@ -87,10 +87,14 @@
     <li>
       <a href="../articles/rmarkdown_intro.html">Introduction to R Markdown</a>
     </li>
-    <li>
-      <a href="../articles/priors.html">Developing informative priors</a>
-    </li>
   </ul>
+</li>
+<li>
+  <a href="../articles/homework.html">
+    <span class="fas fa fas fa-pencil-square-o"></span>
+     
+    Assignments
+  </a>
 </li>
       </ul>
 </div>
@@ -107,7 +111,7 @@
       <h1>Developing informative priors from previously published studies</h1>
             <h3 class="subtitle">WILD6900</h3>
             
-            <h4 class="date">2018-11-29</h4>
+            <h4 class="date">2018-12-28</h4>
       
       
       <div class="hidden name"><code>priors.Rmd</code></div>
@@ -116,11 +120,62 @@
 
     
     
-<p>Given the practical and philosophical advantages of inforamative priors, why aren’t they more common in ecological models? As already discussed, one issue is cultural - many researchers are simply uncomfortable with the <em>idea</em> of informative priors. If one of these scientists is your advisor or the reviewer of your paper, you may be forced to use uninformative priors. You may even be tempted to use uninformative priors in the first place to avoid this problem.</p>
-<p><em>h/t to Nathan Hostettler, a USGS researcher for this approach as well as the code and data to implement these ideas.</em></p>
+<p>Given the practical and philosophical advantages of inforamative priors, why aren’t they more common in ecological models? As already discussed, one issue is cultural - many researchers are simply uncomfortable with the <em>idea</em> of informative priors. <em>“If we can choose any prior we want and that choice influences our inferences, doesn’t that make the entire process too subjective?” “Shouldn’t we let the data speak for itself?”</em> If one of these scientists is your advisor or the reviewer of your manuscript, you may be forced to use uninformative priors. You may even be tempted to use uninformative priors in the first place to avoid this problem.</p>
+<p>But another obstacle to using informative priors is that they can be hard to formulate. How do we translate our domain expertise into a probability distribution? How do we take a published estimate(s) of the parameter value and turn it (or them) into a probability distribution? The skills needed to translate prior knowledge into informative priors are not generally taught in the statistics classes taken by most ecologists.</p>
+<p>In this activity, we’ll work through a few examples of ways to create informative priors from a variety of types of information.</p>
+<div id="question-and-model-development" class="section level2">
+<h2 class="hasAnchor">
+<a href="#question-and-model-development" class="anchor"></a>Question and model development</h2>
+<p>As an example of approaches to developing informative priors, we will <em>h/t to Nathan Hostettler, a USGS researcher for this approach as well as example code and data to implement these ideas.</em></p>
+<p>For this example, let’s say we want to estimate annual survival of adult female polar bears.</p>
+</div>
+<div id="example-1-domain-expertise" class="section level2">
+<h2 class="hasAnchor">
+<a href="#example-1-domain-expertise" class="anchor"></a>Example 1: Domain expertise</h2>
+<p>Even if we have no previous estimates of polar bear survival, we are not completely ignorant about survival of this species. We can use our <em>domain expertise</em> to develop a prior that improves upon the non-informative option.</p>
+<p>Polar bears are a large, long-lived carnivorewith a life expectancy of about 20-25 years (Ramsay &amp; Stirling 1988). This simple fact suggests that annual survival must be pretty high - even with an annual survival probability of <span class="math inline">\(95\%\)</span>, an individual would only have a 36% probability of surviving 20 years. So survival probabilities much less than <span class="math inline">\(\sim 90\%\)</span> would be pretty surprising and we would be pretty suspicious of estimates less than <span class="math inline">\(\sim 80\%\)</span> (which would imply <span class="math inline">\(1\%\)</span> of female polar bears make it to 20 years of age).</p>
+<p>Of course, polar bear populations in many areas are declining pretty quickly, suggesting that maybe adult survival rates could be lower than historical levels. So although we can be pretty sure that survival is pretty high (e.g., <span class="math inline">\(&gt;80\%\)</span>), we’re not super confident about the actual survival rate. With regards to our prior, this suggests we want a prior that puts most of the weight <span class="math inline">\(&gt;80\%\)</span> but is wide enough to reflect our uncertainty about the actual survival rates.</p>
+<div id="turning-our-expertise-into-a-prior" class="section level3">
+<h3 class="hasAnchor">
+<a href="#turning-our-expertise-into-a-prior" class="anchor"></a>Turning our expertise into a prior</h3>
+<p>When modeling a continous random variable that must be between 0 and 1 (i.e., a probability), the beta distribution is a natural choice. The shape of the beta distribution is governed by two parameters, <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">phi &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dt">by =</span> <span class="fl">0.01</span>)
+
+alpha &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">5</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>)
+beta &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">2</span>,<span class="dv">5</span>)
+
+dist &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/paste">paste</a></span>(<span class="st">"alpha = "</span>, alpha, <span class="st">", beta = "</span>, beta)
+beta_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">phi =</span> phi,
+                      <span class="dt">density =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Beta">dbeta</a></span>(phi, alpha[<span class="dv">1</span>], beta[<span class="dv">1</span>]),
+                                  <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Beta">dbeta</a></span>(phi, alpha[<span class="dv">2</span>], beta[<span class="dv">2</span>]),
+                                  <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Beta">dbeta</a></span>(phi, alpha[<span class="dv">3</span>], beta[<span class="dv">3</span>]),
+                                  <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Beta">dbeta</a></span>(phi, alpha[<span class="dv">4</span>], beta[<span class="dv">4</span>])),
+                      <span class="dt">dist =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(dist, <span class="dt">each =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(phi)))
+
+<span class="kw">ggplot</span>(beta_df, <span class="kw">aes</span>(<span class="dt">x =</span> phi, <span class="dt">y =</span> density, <span class="dt">color =</span> dist)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_path</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(phi)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> WILD6900_colors<span class="op">$</span>value[WILD6900_colors<span class="op">$</span>name <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"primary"</span>, <span class="st">"success"</span>, <span class="st">"warning"</span>, <span class="st">"danger"</span>)])</code></pre></div>
+<p><img src="priors_files/figure-html/unnamed-chunk-1-1.png" width="700"></p>
+</div>
+</div>
+<div id="references" class="section level2">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
+<p>Ramsay, M.A. and Stirling, I., 1988. Reproductive biology and ecology of female polar bears (<em>Ursus maritimus</em>). <em>Journal of Zoology</em>, 214(4), pp.601-633.</p>
+<p>Regehr, E.V., Hostetter, N.J., Wilson, R.R., Rode, K.D., Martin, M.S. and Converse, S.J., 2018. Integrated population modeling provides the first empirical estimates of vital rates and abundance for polar bears in the Chukchi Sea. <em>Scientific reports</em>, 8(1), p.16780.</p>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+        <div id="tocnav">
+      <h2 class="hasAnchor">
+<a href="#tocnav" class="anchor"></a>Contents</h2>
+      <ul class="nav nav-pills nav-stacked">
+<li><a href="#question-and-model-development">Question and model development</a></li>
+      <li><a href="#example-1-domain-expertise">Example 1: Domain expertise</a></li>
+      <li><a href="#references">References</a></li>
+      </ul>
+</div>
       </div>
 
 </div>
@@ -131,7 +186,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
 </div>

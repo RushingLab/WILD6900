@@ -4,7 +4,7 @@ subtitle: "Course overview"
 author: "<br/><br/><br/>WILD6900 (Spring 2019)"
 output:
   xaringan::moon_reader:
-    css: ["default", "WILD3810.css", "WILD3810-fonts.css"]
+    css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
     lib_dir: libs
     nature:
       highlightStyle: github
@@ -14,17 +14,11 @@ output:
 
 ```{r setup, echo = FALSE, include=FALSE}
 options(htmltools.dir.version = FALSE)
-library(WILD3810)
-library(gganimate)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
+library(WILD6900)
+# library(gganimate)
 ```
 
-background-image: url(https://upload.wikimedia.org/wikipedia/commons/b/be/Sharingan_triple.svg)
-
-???
-
-Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sharingan_triple.svg)
-
----
 # LOGISTICS
 
 **Lecture**: Tuesday and Thursday 1:30-2:45 BNR 113  
@@ -42,7 +36,7 @@ Image credit: [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Sharin
 ---
 # COURSE FORMAT
 
-Refer to [syllabus]()
+Refer to [syllabus](https://rushinglab.github.io/WILD6900/articles/syllabus.html)
 
 ---
 class: inverse, center, middle
@@ -63,7 +57,7 @@ class: inverse, center, middle
 <br/>
 
 --
-3) Proper accouting of uncertainty  
+3) Proper accounting of uncertainty  
 <br/>
 
 --
@@ -79,7 +73,7 @@ class: inverse, center, middle
 <br/>
 
 --
-2) Many statistical concepts (e.g., random effects) make more sense (no blackbox)  
+2) Many statistical concepts (e.g., random effects) make more sense (no black box)  
 <br/>
 
 --
@@ -119,7 +113,7 @@ The use of Bayesian methods is growing rapidly in ecology, largely due to:
 
 --
 
-These developments have led to many people adopting Bayesian methods even if they don't fully understand what they're doing. They also led to some ecologists becoming full-on Bayesians and then a preditable backlash from those that view these methods as needlessly complex and overly trendy (i.e., statistical machismo)    
+These developments have led to many people adopting Bayesian methods even if they don't fully understand what they're doing. They also led to some ecologists becoming full-on Bayesians and then a predictable backlash from those that view these methods as needlessly complex and overly trendy (i.e., statistical machismo)    
 
 The methods you'll learn about in this class, just like all statistical methods, are *tools* to help you answer questions  
 
@@ -148,7 +142,7 @@ Many definitions (Goodman et al. 2016) but for the purposes of this class, we wi
 <br/>
 
 --
-- Reproducibility is a gradient from unreproducible (no data, no methods, etc.) to completely reproducible (the ability to start with raw data and reproduce all results, figures, tables, etc).  
+- Reproducibility is a gradient from unreproducible (no data, no methods, etc.) to completely reproducible (the ability to start with raw data and reproduce all results, figures, tables, etc) $^1$.  
 <br/>
 
 --
@@ -160,7 +154,8 @@ Many definitions (Goodman et al. 2016) but for the purposes of this class, we wi
 Goodman, S. N., Fanelli, D., and Ioannidis, J. P. A. (2016) *What Does Research Reproducibility Mean?* Science Translational Medicine, 8, 341ps12–341ps12.
 
 Marwick, B., Boettiger, C. & Mullen, L. (2018) *Packaging Data Analytical Work Reproducibly Using R (and Friends)*, The American Statistician, 72:1, 80-88, DOI: 10.1080/00031305.2017.1375986 
-Stricly speaking, reproducing results could also include the ability to recreate figures, tables, and even text as it appears in the original report or paper.  Fully reproducible research is *very* hard but that does not mean we shouldn't strive for moving our work closer to to that end of the spectrum. 
+
+$^1$ Strictly speaking, reproducing results could also include the ability to recreate figures, tables, and even text as it appears in the original report or paper.  Fully reproducible research is *very* hard but that does not mean we shouldn't strive for moving our work closer to to that end of the spectrum. 
 
 ---
 ## Why make your research reproducible?

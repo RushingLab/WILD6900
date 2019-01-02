@@ -1,0 +1,88 @@
+---
+title: "Intro to data wrangling"
+subtitle: "Population growth of Eurasian collared-doves in Utah"
+author: "WILD6900"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{wrangling_bbs}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(fig.align = 'center', message = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+In this lab, we will learn some useful tools and principles for 
+
+We will use data from the North American [Breeding Bird Survey](https://www.mbr-pwrc.usgs.gov/bbs/) to examine the rapid population growth of Eurasian collared-doves (*Streptopelia decaocto*) in the state of Utah. Preparing the raw BBS data for analysis is challenging due the complexity and idiosyncrasies of data. These data 
+
+```{r echo = FALSE, out.width=400, fig.cap="Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)"}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/0/0b/Eurasian_collared-dove_%28Streptopelia_decaocto%29.jpg")
+```
+
+First, let's load the packages we will need for this exercise:
+
+```{r}
+library(WILD6900)
+library(dplyr)
+library(ggplot2)
+```
+
+Rather that starting from the survey-wide data, the `WILD6900` package includes data from just the BBS routes within the [Bird Conservation Regions](http://nabci-us.org/resources/bird-conservation-regions-map/) that make up the state of Utah. You can access those data using the `data()` function: 
+
+```{r}
+data("bbs_data")
+```
+
+## Data structure
+
+Raw BBS data is divided between three separate files:
+
+1) `routes`: Geographic location and associated data for each route
+
+  + 1 row per route
+
+2) `weather`: Covariate values for each route in each year that it was monitored
+
+  + 1 row per route per year
+
+3) `counts`: species-specific counts for each route in each year 
+
+  + 1 row per species per route per year
+
+  + Note that the raw data does not include counts of 0!
+
+The example data we will used is included as a list with the three files as separate data frames. You can see the fields included in each data frame using:
+
+```{r}
+head(bbs_data$routes)
+
+head(bbs_data$weather)
+
+head(bbs_data$counts)
+```
+
+For additional information about what each field represents, see the documentation page (`?bbs_data`). 
+
+## Subsetting the data
+
+The `bbs_data` file contains counts from three BCRs (9, 10, and 16) but right now we only want data from Utah. There are many ways to subset data in `R` but for the sake of consistency, we will use the `filter()` function from the `dplyr` package. The state number for Utah is 85 so we filter based on the `statenum` field in the `routes` data frame:
+
+```{r}
+ut_routes <- filter(bbs_data$routes, statenum == 85)
+```
+
+Unfortunately, neither the `weather` nor the `counts` data frames contain the `statenum` field. How do we subset the correct routes in this case? By using the one field common to all three data sets: `routeID`. So the challenge is to tell `R` to keep only the routes that are shared by the new `ut_routes` object and the `weather` and `counts` data frames. There are a few ways this coudl be done but one easy way is to filter using the `%in%` expression rather than `==`:
+
+```{r}
+ut_weather <- filter(bbs_data$weather, routeID %in% ut_routes$routeID)
+ut_counts <- filter(bbs_data$counts, routeID %in% ut_routes$routeID)
+```
+
+This field is critical because it is links all three data frames together. 
+

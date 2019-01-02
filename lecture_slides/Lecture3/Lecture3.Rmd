@@ -4,7 +4,7 @@ subtitle: "Principles of Bayesian inference"
 author: "<br/><br/><br/>WILD6900 (Spring 2019)"
 output:
   xaringan::moon_reader:
-    css: ["default", "WILD3810.css", "WILD3810-fonts.css"]
+    css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
     lib_dir: libs
     nature:
       highlightStyle: github
@@ -15,28 +15,36 @@ output:
 ```{r setup, include = FALSE}
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
-library(WILD3810)
-library(gganimate)
+library(WILD6900)
+# library(gganimate)
 ```
 
 ## Readings
+
+> Hobbs & Hooten 
 
 ---
 ## From probability to Bayes theorem
 
 Our goal as ecologists is to understand processes that we **cannot directly observe** based on quantities that we *can* observe  
+<br/>
 
-We will refer to the observered processes as $\theta$  
+--
+We will refer to the unobserved processes as $\theta$  
+<br/>
 
+--
 $\theta$ can include parameters of our models or latent states  
 
 - population size  
 
 - occupancy status  
 
-- alive/dead state of individuals 
+- alive/dead state of individuals  
+<br/>
 
 
+--
 Each of these unobserved processes is governed by a probability distribution $[\theta]$  
 
 ---
@@ -45,24 +53,27 @@ Each of these unobserved processes is governed by a probability distribution $[\
 To learn about $\theta$, we take observations $y$  
 <br/>
 
+
+--
 Before those data are collected, they are *random variables* - the probability of observing $y$ conditional on $\theta$ is governed by a probability distribution $[y|\theta]$  
 <br/>
 
+--
 We want to know the probability distribution of the unobserved $\theta$ conditional on the observed data $y$, that is $[\theta|y]$  
 
 ---
 ## From probability to Bayes theorem
 
-We know from last week that $^1$:
+We know from last week that: $^1$  
 <br/>
 
 $$[\theta|y] = \frac{[\theta, y]}{[y]}$$
 
-and $^2$
+and $^2$  
 
 $$[\theta, y] = [y|\theta][\theta]$$
 
-Through substitution, we get **Bayes theorem** $^3$:
+Through substitution, we get **Bayes theorem** $^3$:  
 
 $$[\theta|y] = \frac{[y|\theta][\theta]}{[y]} \tag{1}$$
 
@@ -91,7 +102,7 @@ class: inverse, center, middle
 ---
 ## Likelihood
 
-The concept of likelihod may be familiar to you from previous statistics classes because it is the central principle of *frequentist* statistics  
+The concept of likelihood may be familiar to you from previous statistics classes because it is the central principle of *frequentist* statistics  
 <br/>
 
 --
@@ -112,7 +123,7 @@ That is, in likelihood, we treat $\theta$ as *fixed* and *known* rather than a r
 
 **Example**  
 
-Let's say we're sampling the number of trees on small plots and that we **know** $^1$ the average number of trees/plot is 40  
+Let's say we're sampling the number of trees on small plots and that we **know** $^4$ the average number of trees/plot is 40  
 <br/>
 
 --
@@ -122,7 +133,7 @@ On one plot, we observe 34 trees. What is the probability of $y = 34$?
 --
 To answer this question, we first need to select a sensible probability distribution for the number of trees on a plot  
 
-+ Because these values have to be positive integers, the Poisson distribution is an obvious choice $^2$  
++ Because these values have to be positive integers, the Poisson distribution is an obvious choice $^5$  
 
 
 --
@@ -134,9 +145,9 @@ dpois(x = 34, lambda = 40)
 
 ???
 
-$^1$ Obviously in real life we would not know this but again, likelihood assumes that this quantify is known  
+$^4$ Obviously in real life we would not know this but again, likelihood assumes that this quantify is known  
 
-$^2$ Remember that the expected value of a Poisson distribution is governed by the parameter $\lambda$. In this case, we know that $\lambda = 40$
+$^5$ Remember that the expected value of a Poisson distribution is governed by the parameter $\lambda$. In this case, we know that $\lambda = 40$
 
 ---
 ## Likelihood
@@ -202,8 +213,7 @@ y_probs <- data.frame(y = 15:65,
                       pr_y = dpois(15:65, lambda = 40))
 
 ggplot(data = y_probs, aes(x = y, y = pr_y)) + geom_point() +
-  scale_y_continuous(expression(paste("[y|", lambda, "=40]"))) +
-  theme_classic()
+  scale_y_continuous(expression(paste("[y|", lambda, "=40]"))) 
 
 ```
 
@@ -211,7 +221,7 @@ ggplot(data = y_probs, aes(x = y, y = pr_y)) + geom_point() +
 y_probs <- data.frame(y = 15:65,
                       pr_y = dpois(15:65, lambda = 40))
 
-ggplot(data = y_probs, aes(x = y, y = pr_y)) + geom_point(color = WILD3810_colors$value[WILD3810_colors$name == "secondary"]) +
+ggplot(data = y_probs, aes(x = y, y = pr_y)) + geom_point(color = WILD6900_colors$value[WILD6900_colors$name == "secondary"]) +
   scale_y_continuous(expression(paste("[y|", lambda, "=40]")))
 
 ```
@@ -235,8 +245,7 @@ y_probs <- data.frame(lambda = 15:65,
 
 (lik_profile <- ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path() +
   scale_y_continuous(expression(paste("L(", lambda, "|y=42)"))) +
-  scale_x_continuous(expression(lambda)) +
-  theme_classic())
+  scale_x_continuous(expression(lambda))
 
 ```
 
@@ -246,7 +255,7 @@ y <- 42
 y_probs <- data.frame(lambda = 15:65,
                       pr_y = dpois(y, lambda = 15:65))
 
-(lik_profile <- ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD3810_colors$value[WILD3810_colors$name == "dark"]) +
+(lik_profile <- ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD6900_colors$value[WILD6900_colors$name == "dark"]) +
   scale_y_continuous(expression(paste("L(", lambda, "|y=42)"))) +
   scale_x_continuous(expression(lambda)))
 
@@ -263,7 +272,7 @@ y <- 42
 y_probs <- data.frame(lambda = 15:65,
                       pr_y = dpois(y, lambda = 15:65))
 
-(lik_profile <- ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD3810_colors$value[WILD3810_colors$name == "dark"]) +
+(lik_profile <- ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD6900_colors$value[WILD6900_colors$name == "dark"]) +
   scale_y_continuous(expression(paste("L(", lambda, "|y=42)"))) +
   scale_x_continuous(expression(lambda)))
 
@@ -295,21 +304,21 @@ This distinction between likelihood profiles and probability distributions is on
 
 Many of the methods familiar to ecologists use the principle of maximum likelihood to determine the value of $\theta$ that is most supported by our data  
 
-The maximum likelihood estimate is the peak of the likelihood curve $^1$:
+The maximum likelihood estimate is the peak of the likelihood curve $^6$:
 
 ```{r, fig.width=6.5, fig.height=4}
 
-ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD3810_colors$value[WILD3810_colors$name == "dark"]) +
+ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD6900_colors$value[WILD6900_colors$name == "dark"]) +
   scale_y_continuous(expression(paste("L(", lambda, "|y=42)"))) +
   scale_x_continuous(expression(lambda)) +
-  geom_segment(aes(x = 42, xend =42, y = 0, yend = max(y_probs$pr_y)), linetype = "longdash", color = WILD3810_colors$value[WILD3810_colors$name == "dark"]) +
-  annotate("text", x = 42, y = max(y_probs$pr_y) + 0.00625, label = "MLE", color = WILD3810_colors$value[WILD3810_colors$name == "dark"], size = 6)
+  geom_segment(aes(x = 42, xend =42, y = 0, yend = max(y_probs$pr_y)), linetype = "longdash", color = WILD6900_colors$value[WILD6900_colors$name == "dark"]) +
+  annotate("text", x = 42, y = max(y_probs$pr_y) + 0.00625, label = "MLE", color = WILD6900_colors$value[WILD6900_colors$name == "dark"], size = 6)
 
 ```
 
 ???
 
-$^1$ In a real study we would not base the MLE on a single observation  
+$^6$ In a real study we would not base the MLE on a single observation  
 
 ---
 ## Likelihood profile
@@ -318,22 +327,22 @@ But the MLE does not tell us the probability of $\theta$ given our data!
 
 So although MLE does tell us the value of $\theta$ that is most consistent with our data, we can not say things like:
 
-+ "There is a 90% probability that $\theta > 0$" $^1$  
++ "There is a 90% probability that $\theta > 0$" $^7$  
 
-+ "There is a 96% probability that $a \geq \theta \geq b$" $^1$
++ "There is a 96% probability that $a \geq \theta \geq b$" $^7$
 
 ???
 
-$^1$ Even though these are the things we usually want to know!
+$^7$ Even though these are the things we usually want to know!
 
 ---
 class: inverse, center, middle
 
-# The prior $^1$
+# The prior $^8$
 
 ???
 
-$^1$ Choosing prior distributions is a complex topic that is an area of active research in the statistical community. As a result, the cultural norms for using priors in ecological modeling appears to be rapidly changing. For these reasons, we'll spend a good deal of time discussing how to choose priors in the next lecture.
+$^8$ Choosing prior distributions is a complex topic that is an area of active research in the statistical community. As a result, the cultural norms for using priors in ecological modeling appears to be rapidly changing. For these reasons, we'll spend a good deal of time discussing how to choose priors in the next lecture.
 
 ---
 ## The prior distribution
@@ -366,9 +375,10 @@ The prior distribution provides us with a principled method of incorporating inf
 This information could be results from a pilot study or results from previously published studies  
 
 In some cases, the prior could simply reflect our own knowledge about how the system works  
+<br/>
 
 --
-In this way, priors allow us to weigh conclusions drawn from our data against what we already know about our system $^1$  
+In this way, priors allow us to weigh conclusions drawn from our data against what we already know about our system $^9$  
 
 --
 In the words of Mark Kéry:
@@ -377,7 +387,7 @@ In the words of Mark Kéry:
 
 ???
 
-This is a profound property because it is consistent with both the way that science advances (the accumulation of evidence in support of specific hypotheses) as well as how we naturally learn about the world around us
+$^9$ This is a profound property because it is consistent with both the way that science advances (the accumulation of evidence in support of specific hypotheses) as well as how we naturally learn about the world around us
 
 ---
 ## The prior distribution
@@ -392,7 +402,7 @@ You would find this statement both believable and boring because a 6-ft tall man
 <br/>
 
 --
-If I said I saw a 7-ft tall man, you might find this more noteworthy but believable (because your prior tells you this a possible, though rare, occurence)  
+If I said I saw a 7-ft tall man, you might find this more noteworthy but believable (because your prior tells you this a possible, though rare, occurrence)  
 <br/>
 <br/>
 
@@ -452,6 +462,213 @@ prior <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
                     pr_lambda = dgamma(seq(from = 15, to = 65, by = 0.25), 40^2/6, 40/6))
 
 (prior_lik <- lik_profile + geom_path(data = prior, aes(x = lambda, y = pr_lambda), linetype = "longdash", 
-  color = WILD3810_colors$value[WILD3810_colors$name=="secondary"]))
+  color = WILD6900_colors$value[WILD6900_colors$name=="secondary"]))
 
 ```
+
+---
+class: inverse, center, middle
+
+# The joint distribution
+
+---
+## The joint distribution
+
+
+The product of the likelihood $[y|\theta]$ and the prior $[\theta]$ (the numerator of Bayes theorem) is called the **joint distribution**  
+
+It is important to note again that the joint distribution, like the likelihood profile, is not a probability distribution because the area under the curve does not sum to 1  
+
+```{r, echo=TRUE, eval=FALSE}
+
+joint <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
+                    jnt_dist = dgamma(seq(from = 15, to = 65, by = 0.25), 40^2/6, 40/6) * dpois(42, seq(from = 15, to = 65, by = 0.25)))
+
+(prior_lik_joint <- prior_lik + geom_path(data = joint, aes(x = lambda, y = jnt_dist), linetype = "dotted"))
+
+```
+
+---
+## The joint distribution
+
+```{r, fig.width=8, fig.height=6}
+
+joint <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
+                    jnt_dist = dgamma(seq(from = 15, to = 65, by = 0.25), 40^2/6, 40/6) * dpois(42, seq(from = 15, to = 65, by = 0.25)))
+
+(prior_lik_joint <- prior_lik + geom_path(data = joint, aes(x = lambda, y = jnt_dist), linetype = "dotted",
+  color = WILD6900_colors$value[WILD6900_colors$name=="secondary"]))
+
+```
+
+---
+class: inverse, center, middle
+
+# The marginal distribution
+
+---
+## The marginal distribution
+
+To convert the joint distribution into a true probability distribution, we have to divide it by the total area under the joint distribution curve  
+<br/>
+
+--
+The denominator of eq. 1 $([y])$ is called the marginal distribution of the data - that is, the probability distribution of our data $y$ across all possible values of $\theta$  
+<br/>
+
+--
+Remember from our previous lecture that:
+
+$$[y] = \int [y|\theta][\theta]d\theta$$
+
+```{r, fig.width=5, fig.height=3}
+
+joint <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
+                    jnt_dist = dgamma(seq(from = 15, to = 65, by = 0.25), 40^2/6, 40/6) * dpois(42, seq(from = 15, to = 65, by = 0.25)))
+
+(prior_lik_joint <- prior_lik_joint + geom_area(data = joint, aes(x = lambda, y = jnt_dist), linetype = "dashed",
+  fill = WILD6900_colors$value[WILD6900_colors$name=="secondary"]))
+
+```
+
+---
+## The marginal distribution
+
+For some simple models, $[y]$ can be estimated analytically  
+<br/>
+
+--
+But in many cases, particularly in models with a moderate to large number of parameters, this is very hard to do $^{10}$  
+<br/>
+
+--
+For most of the models you will need to fit as an ecologist, estimating the marginal distribution of the data is one of a major challenges of Bayesian inference $^{11}$
+
+???
+$^{10}$ In fact, the difficulty of computing the marginal distribution is one of the reasons that it look a long time for Bayesian methods to be applied in practice (Bayes theorem was proven in 1763, long before the frequentist methods you are used to using were invented)   
+
+$^{11}$ We will return to this topic later
+
+---
+class: inverse, center, middle
+
+# The posterior distribution
+
+---
+## The posterior distribution
+
+The LHS of equation, $[\theta|y]$, is known as the posterior distribution and it is what we want to know    
+
+> What is the probability distribuiton of $\theta$ given our data?  
+
+<br/>
+
+--
+The posterior distribution tells us everything we know about $\theta$ given our data (and possibly prior knowledge)  
+
+
+```{r, fig.width=5, fig.height=3}
+
+post <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
+                   post_dist = joint$jnt_dist/sum(joint$jnt_dist))
+
+
+(post_prior_lik_joint <- prior_lik_joint + geom_path(data = post, aes(x = lambda, y = post_dist),
+  color = WILD6900_colors$value[WILD6900_colors$name=="dark"]))
+
+```
+
+---
+## The posterior distribution
+
+The posterior allows to make statements like:  
+
+- The most probable value of $\theta$ is $x$  
+
+- There is a 95% probability that $y < \theta < z$  
+
+- There is a 96% probability that $\theta <0$  
+
+
+---
+## The posterior distribution
+
+It's important to realize that before we collect data, $y$ is a random variable governed by the marginal distribution  
+<br/>
+
+--
+However, *after* we collect data, it is not longer random and $[y]$ becomes a *fixed* quantity  
+<br/>
+
+--
+That means that:
+
+$$[\theta|y] \propto [y|\theta][\theta]$$
+
+---
+## The posterior distribution
+
+In other words, because the denominator is a constant, the posterior distribution is proportional to the joint distribution  
+<br/>
+
+--
+This proportionality is important because it's easy to estimate the joint distribution (unlike the marginal distribution)  
+<br/>
+
+--
+This means we can *learn* about the shape of the posterior distribution from the joint distribution even if we can't compute $[y]$  
+<br/>
+
+--
+This is a central concept for applying modern tools for Bayesian analysis and one we will make use of shortly.  
+
+---
+## More about the posterior distribution
+
+One of the cool things about Bayesian methods is that we don't get a point estimate of $\theta$, we get an entire probability distribution! $^{12}$   
+<br/>
+
+--
+These advantages will be come clear as we move towards applications of these methods but as a quick example, let's say we are estimating the abundance of two populations $(N_1$ and $N_2)$  
+
+We want to determine whether $N_1 > N_2$  
+
+???
+
+$^{12}$ Although this may seem like a minor point right now, it has some really practical advantages, namely that we can easily quantify uncertainty in our parameter estimates and we can summarize the distribution is whatever way we want (mean, median, mode, 95% quantiles, 50% quantiles, etc.). 
+
+---
+## More about the posterior distribution
+
+In a frequentist framework, it relatively straightforward to get point estimates of $N_1$ and $N_2$  
+<br/>
+
+--
+Saying that $N_1 > N_2$ is the same as saying $N_1 - N_2 > 0$ so to answer our question we could derive a new parameter $\Delta_N = N_1 - N_2$ and test whether $\Delta_N > 0$  
+<br/>
+
+--
+Answering the question of whether $\Delta_n > 0$ requires knowing not only the magnitude of this difference but also how certain we are in the value. How do we estimate the uncertainty of our new derived variable?  
+<br/>
+
+--
+That's not easy in a frequentist world and will require application of the [delta method](https://en.wikipedia.org/wiki/Delta_method). 
+
+---
+## More about the posterior distribution
+
+In a Bayesian world, we can actually estimate the entire posterior distribution of $\Delta_N$!  
+<br/>
+
+--
+All of the uncertainty in $N_1$ and $N_2$ will propagate into our uncertainty about $\Delta_N$  
+<br/>
+
+--
+It is trivially easy to estimate confidence intervals or specific probabilities for $\Delta_N$ (e.g., $Pr(\Delta_N > 0)$)  
+<br/>
+
+--
+If nothing else turns you into a Bayesian, it's probably this point.
+
+ 
