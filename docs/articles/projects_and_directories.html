@@ -60,7 +60,11 @@
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+<<<<<<< HEAD
+    <span class="fa fa-question-circle-o"></span>
+=======
     <span class="fa fa-file-pdf-o"></span>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
      
     Lectures
      
@@ -68,7 +72,11 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+<<<<<<< HEAD
+      <a href="../articles/lecture1.html">Lecture 1: Introduction to WILD6900</a>
+=======
       <a href="../articles/Lecture0/Lecture0.html">Lecture 0: Introduction to WILD6900</a>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
     </li>
   </ul>
 </li>
@@ -87,6 +95,13 @@
     <li>
       <a href="../articles/rmarkdown_intro.html">Introduction to R Markdown</a>
     </li>
+<<<<<<< HEAD
+    <li>
+      <a href="../articles/priors.html">Developing informative priors</a>
+    </li>
+  </ul>
+</li>
+=======
   </ul>
 </li>
 <li>
@@ -96,6 +111,7 @@
     Assignments
   </a>
 </li>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
       </ul>
 </div>
 <!--/.nav-collapse -->
@@ -111,7 +127,11 @@
       <h1>Improving your workflow through projects</h1>
             <h3 class="subtitle">WILD6900</h3>
             
+<<<<<<< HEAD
+            <h4 class="date">updated on 2018-11-29</h4>
+=======
             <h4 class="date">updated on 2018-12-28</h4>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
       
       
       <div class="hidden name"><code>projects_and_directories.Rmd</code></div>
@@ -130,6 +150,18 @@
 <li><p>Create a script and save it as <code>analysis_for_my_project.R</code></p></li>
 <li><p>Start the script with:</p></li>
 </ol>
+<<<<<<< HEAD
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rm">rm</a></span>(<span class="dt">list =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ls">ls</a></span>())</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd</a></span>(<span class="st">"C:\Users\crushing\path</span><span class="ch">\t</span><span class="st">hat\only\I\have"</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(package1)</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(package2)</a></code></pre></div>
+<ol start="4" style="list-style-type: decimal">
+<li>Create a bunch of objects and do stuff to them:</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">y &lt;-<span class="st"> "blah"</span></a></code></pre></div>
+=======
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rm">rm</a></span>(<span class="dt">list =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ls">ls</a></span>())
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd</a></span>(<span class="st">"C:\Users\crushing\path</span><span class="ch">\t</span><span class="st">hat\only\I\have"</span>)
 
@@ -140,6 +172,7 @@
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">x &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="dv">10</span>
 y &lt;-<span class="st"> "blah"</span></code></pre></div>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
 <ol start="5" style="list-style-type: decimal">
 <li><p>Realize you need to be working on your dissertation instead of this side project so open another script you started earlier</p></li>
 <li><p>Get confused about what objects in your current environment were created by which script</p></li>
@@ -150,7 +183,11 @@ y &lt;-<span class="st"> "blah"</span></code></pre></div>
 <h2 class="hasAnchor">
 <a href="#whats-wrong-with-this" class="anchor"></a>What’s wrong with this?</h2>
 <p>Remember that when you open R (or RStudio), you create a <em>global workspace</em>. This is where all of the objects you create get stored. If you type <code><a href="https://www.rdocumentation.org/packages/base/topics/ls">ls()</a></code> you can see everything that is currently stored in your workspace. If you are working on different analyses in the same global environment, it is <em>very</em> easy to accidently create different objects with the same name, write code that depends on other code that happens to have been run previously during one R session (for example, you loaded a needed package in one script so didn’t add <code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(package)</a></code> to your next script. What happens when you try to run this code the next time? This often called a “hidden dependency” and can make your life very pretty miserable), and many other confusing behaviors.</p>
+<<<<<<< HEAD
+<p>This workflow also makes it very difficult to share your work. Remember that R will default to looking for in/saving to the current working directory. To control this behavior, most people are taught to use <code><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd()</a></code>. The problem with this is that the path you set using <code><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd()</a></code> is almost certaintly specific to the computer your used to write that code. If you use a different computer later or send code to your advisor for help, they will not be able to run it without changing the working directory. If you move the files to a new place on your computer, all of your code will break. Got a new computer? Oops, none of your code will work anymore. If you are running mutiple analyses in the same R session, you’ll also have to constantly change your working directory, which eventually will lead to confusion and problems rerunning code. Manually setting the working directory seems like a minor annoyance but if you have to do it constantly (for example, an instructor who has to grade a bunch of homework assignments), these minor annoyances add up to a big headache.</p>
+=======
 <p>This workflow also makes it very difficult to share your work. Remember that R will default to looking in/saving to the current working directory. To control this behavior, most people are taught to use <code><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd()</a></code>. The problem with this is that the path you set using <code><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd()</a></code> is almost certaintly specific to the computer your used to write that code. If you use a different computer later or send code to your advisor for help, they will not be able to run it without changing the working directory. If you move the files to a new place on your computer, all of your code will break. Got a new computer? Oops, none of your code will work anymore. If you are running mutiple analyses in the same R session, you’ll also have to constantly change your working directory, which eventually will lead to confusion and problems rerunning code. Manually setting the working directory seems like a minor annoyance but if you have to do it constantly (for example, an instructor who has to grade a bunch of homework assignments), these minor annoyances add up to a big headache.</p>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
 <p>The good news is, there’s an easy solution that will make your life (and mine) much easier.</p>
 </div>
 </div>
@@ -168,7 +205,11 @@ y &lt;-<span class="st"> "blah"</span></code></pre></div>
 <p>A new RStudio window should open when you create the new project. In the future, when you want to work on this Project, just double click the <code>project_name.Rproj</code> file and it will open a new instance of RStudio.</p>
 <div id="whats-so-special-about-rstudio-projects" class="section level2">
 <h2 class="hasAnchor">
+<<<<<<< HEAD
+<a href="#whats-so-special-about-rstudio-projects" class="anchor"></a>What’s so special about RStudio projects?</h2>
+=======
 <a href="#whats-so-special-about-rstudio-projects" class="anchor"></a>What’s so special about RStudio Projects?</h2>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
 <p>Projects solve two of the big problems we discussed earlier. First, each project opens a fresh instance of R so the global environment of projects is self-contained. That means you can you have mutiple projects open at once but each one will behave independently. This means no more <code><a href="https://www.rdocumentation.org/packages/base/topics/rm">rm(list = ls())</a></code> because the only objects in your environment should be the ones associated with that project (this doesn’t totally resolve the problem of hidden dependencies but we’ll talk more about that below).</p>
 <p>Second, RStudio will automatically set the working directory to the root directory associate with the Project. This means that whatever folder the <code>.Rproj</code> file is in will automatically be set as the working directory when you open the project. You can check this by typing <code><a href="https://www.rdocumentation.org/packages/base/topics/getwd">getwd()</a></code> in the console of your new project. This setting avoids the need to use <code><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd()</a></code> which makes your code much more portable. You can move or send the entire directory, double-click the <code>.Rproj</code> file and pick up right where you left off.</p>
 </div>
@@ -177,7 +218,11 @@ y &lt;-<span class="st"> "blah"</span></code></pre></div>
 <a href="#a-note-on-saving-your-workspace-to--rdata" class="anchor"></a>A note on saving your workspace to <code>.RData</code>
 </h2>
 <p>Another common mistake made by many novice (and not so novice) R users is to save your current workspace to <code>.RData</code> each time you quit R or RStudio. On the surface, this seems like a really convenient shortcut. The next time you open R, all of the objects you created previously are right there waiting for you to keep going!</p>
+<<<<<<< HEAD
+<p>The problem is that, again, this creates hidden dependencies. The <code>.RData</code> file does not re-load packages that you were using in your previous session. It does not re-set options that you may have set in your previous session (<code><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd()</a></code>, <code>stringsAsFactors = FALSE</code>). Some objects needed for, e.g., making a figure may be loaded by others may not be. This means that even if you saved your workspace, you will still end up needing to re-run some chunks of code to get back to where you left off previously. Which chunks? Who knows. You probably think you’ll remember but you won’t.</p>
+=======
 <p>The problem is that, again, this creates hidden dependencies. The <code>.RData</code> file does not re-load packages that you were using in your previous session. It does not re-set options that you may have set in your previous session (<code><a href="https://www.rdocumentation.org/packages/base/topics/getwd">setwd()</a></code>, <code>stringsAsFactors = FALSE</code>). Some objects needed for, e.g., making a figure may be loaded but others may not be. This means that even if you saved your workspace, you will still end up needing to re-run some chunks of code to get back to where you left off previously. Which chunks? Who knows. You probably think you’ll remember but you won’t.</p>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
 <p>A better workflow is to start every R session with an empty workspace. This means you go into each session with the mindset that you will need to re-run all code from scratch everytime. Although this seems like a pain, I promise it will make your life easier. It is a way of <em>ensuring</em> that at a minimum, you can reproduce all of your analyses anytime you need to.</p>
 <p>In RStudio, you can enforce this workflow by going to <code>RStudio -&gt; Preferences</code> and then in the <code>General</code> tab setting <code>Save workspace to .Rdata on exit</code> to <code>Never</code>. Do it. Trust me.</p>
 <p>What about re-running code that is very time consuming? Do you really need to re-run the code the cleans your raw data every time you need to reanalyze it? Of course not. You can always save those objects (along with the scripts you used to create them!) so that the next time you need them, they can just be re-read into R and you can do everything downstream of those steps without a problem. We’ll see example of this as we work through data cleaning and analysis scripts throughout the semester.</p>
@@ -188,8 +233,13 @@ y &lt;-<span class="st"> "blah"</span></code></pre></div>
 <h1 class="hasAnchor">
 <a href="#organizing-your-project-directories" class="anchor"></a>Organizing your project directories</h1>
 <p>As we already saw, the <code>.Rproj</code> file treats the directory that it is in as the working directory for that project. This means that you can read files from this location and write files to this location without changing any settings. For example, you can stick a filled called <code>data.csv</code> in this directory and the following code will work:</p>
+<<<<<<< HEAD
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.csv</a></span>(<span class="st">"data.csv"</span>)</a></code></pre></div>
+<p>A natural instinct for those of use that are inclined to be less-than organized might be to put all of our files associated the project in this directory:</p>
+=======
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.csv</a></span>(<span class="st">"data.csv"</span>)</code></pre></div>
 <p>A natural instinct for those of us that are inclined to be less-than organized might be to put all of our files associated the project in this directory:</p>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
 <pre><code>my_proj/
 |─── data.csv
 |─── script_that_does_everything.R
@@ -222,7 +272,11 @@ y &lt;-<span class="st"> "blah"</span></code></pre></div>
       |─── analysis.R
       |─── figures.R</code></pre>
 <ul>
+<<<<<<< HEAD
+<li><p><code>data-raw/</code> contains my, you guessed it, raw data files and R script that reads the raw data in, cleans it, and saves the clean data to <code>data/</code></p></li>
+=======
 <li><p><code>data-raw/</code> contains my, you guessed it, raw data files and a R script that reads the raw data in, cleans it, and saves the clean data to <code>data/</code></p></li>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
 <li><p><code>data/</code> contains the cleaned data files that are ready to go straight into the analysis</p></li>
 <li><p><code>R/</code> contains scripts that have custom functions that I will use for data cleaning, analysis, or making figures (we’ll talk more about this later)</p></li>
 <li><p><code>figs/</code> contains figure files</p></li>
@@ -234,6 +288,18 @@ y &lt;-<span class="st"> "blah"</span></code></pre></div>
 <h2 class="hasAnchor">
 <a href="#readingwriting-from-subdirectories" class="anchor"></a>Reading/writing from subdirectories</h2>
 <p>Because RStudio treats the project root directory as the working directory, you could not do the following if, for example, your data is stored in a subdirectory:</p>
+<<<<<<< HEAD
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.csv</a></span>(<span class="st">"data.csv"</span>)</a></code></pre></div>
+<p>Instead, you need to use relative paths. Remember that everything is relative to your working directory:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.csv</a></span>(<span class="st">"data-raw/data.csv"</span>)</a></code></pre></div>
+<p>If you prefer, you can have as many layers of subdirectories as you want. The important thing is that as long as you move the entire project directory, these relative paths will still work.</p>
+</div>
+<div id="a-note-of-handling-raw-data" class="section level2">
+<h2 class="hasAnchor">
+<a href="#a-note-of-handling-raw-data" class="anchor"></a>A note of handling raw data</h2>
+<p>Raw data is sacred. If you purposely or accidentally change your raw data, everything that comes downstream (analysis, results, reports) will also change. To maintain the integrity of your work, get in the habit of <strong>never</strong> making changes to your raw data files after you have entered the data.</p>
+<p>One of the great things about using scripts to manipulate your data is that you can leave your raw data untouched and have a paper trail of every change you made to prepare your data for analysis. That means adding new variables that are composites of the raw data (e.g., <code>temp_c &lt;- (temp_f -32)*(5/9)</code>), removing outliers, joinging different data sets together, whatever. <em>All of this is done in R after you’ve read in the raw data rather than in Excel!</em></p>
+=======
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.csv</a></span>(<span class="st">"data.csv"</span>)</code></pre></div>
 <p>Instead, you need to use relative paths. Remember that everything is relative to your working directory:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/read.table">read.csv</a></span>(<span class="st">"data-raw/data.csv"</span>)</code></pre></div>
@@ -244,6 +310,7 @@ y &lt;-<span class="st"> "blah"</span></code></pre></div>
 <a href="#a-note-on-handling-raw-data" class="anchor"></a>A note on handling raw data</h2>
 <p>Raw data is sacred. If you purposely or accidentally change your raw data, everything that comes downstream (analysis, results, reports) will also change. To maintain the integrity of your work, get in the habit of <strong>never</strong> making changes to your raw data files after you have entered the data.</p>
 <p>One of the great things about using scripts to manipulate your data is that you can leave your raw data untouched and have a paper trail of every change you made to prepare your data for analysis. That means adding new variables that are composites of the raw data (e.g., <code>temp_c &lt;- (temp_f -32)*(5/9)</code>), removing outliers, joining different data sets together, whatever. <em>All of this is done in R after you’ve read in the raw data rather than in Excel!</em></p>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
 <p>Just as important, you don’t save these new data objects over the raw data or even in the same directory. Those files go in <code>data/</code>. This means you can only read from the <code>data-raw/</code> and you cannot write to it. R will, of course, allow you to write to <code>data-raw/</code>, this is just a suggestion to help you maintain a firewall that will keep you raw data in it’s raw form.</p>
 </div>
 </div>
@@ -269,14 +336,22 @@ y &lt;-<span class="st"> "blah"</span></code></pre></div>
 </li>
       <li>
 <a href="#rstudio-projects">RStudio Projects</a><ul class="nav nav-pills nav-stacked">
+<<<<<<< HEAD
+<li><a href="#whats-so-special-about-rstudio-projects">What’s so special about RStudio projects?</a></li>
+=======
 <li><a href="#whats-so-special-about-rstudio-projects">What’s so special about RStudio Projects?</a></li>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
       <li><a href="#a-note-on-saving-your-workspace-to--rdata">A note on saving your workspace to <code>.RData</code></a></li>
       </ul>
 </li>
       <li>
 <a href="#organizing-your-project-directories">Organizing your project directories</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#readingwriting-from-subdirectories">Reading/writing from subdirectories</a></li>
+<<<<<<< HEAD
+      <li><a href="#a-note-of-handling-raw-data">A note of handling raw data</a></li>
+=======
       <li><a href="#a-note-on-handling-raw-data">A note on handling raw data</a></li>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
       </ul>
 </li>
       <li><a href="#additional-resources">Additional resources</a></li>
@@ -292,7 +367,11 @@ y &lt;-<span class="st"> "blah"</span></code></pre></div>
 </div>
 
 <div class="pkgdown">
+<<<<<<< HEAD
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+=======
   <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+>>>>>>> 565c96558e60024004985fee4e90a387b1d10560
 </div>
       </footer>
 </div>
