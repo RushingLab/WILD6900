@@ -22,6 +22,8 @@ navbar:
       menu:
         - text: "Lecture 0: Introduction to WILD6900"
           href: articles/Lecture0/Lecture0.html
+        - text: "Lecture 1: Introduction to statistical inference in ecology"
+          href: articles/Lecture1/Lecture1.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:

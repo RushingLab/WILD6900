@@ -60,7 +60,7 @@
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-question-circle-o"></span>
+    <span class="fa fa-file-pdf-o"></span>
      
     Lectures
      
@@ -68,7 +68,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/lecture1.html">Lecture 1: Introduction to WILD6900</a>
+      <a href="../articles/Lecture0/Lecture0.html">Lecture 0: Introduction to WILD6900</a>
+    </li>
+    <li>
+      <a href="../articles/Lecture1/Lecture1.html">Lecture 1: Introduction to statistical inference in ecology</a>
     </li>
   </ul>
 </li>
@@ -87,10 +90,14 @@
     <li>
       <a href="../articles/rmarkdown_intro.html">Introduction to R Markdown</a>
     </li>
-    <li>
-      <a href="../articles/priors.html">Developing informative priors</a>
-    </li>
   </ul>
+</li>
+<li>
+  <a href="../articles/homework.html">
+    <span class="fas fa fas fa-pencil-square-o"></span>
+     
+    Assignments
+  </a>
 </li>
       </ul>
 </div>
@@ -101,7 +108,7 @@
 <!--/.navbar -->
 
       
-      </header><script src="schedule_files/kePrint-0.0.1/kePrint.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Anticipated schedule (subject to change)</h1>
@@ -132,93 +139,103 @@ Reading
 </th>
 </tr></thead>
 <tbody>
+<tr grouplength="5">
+<td colspan="4" style="background-color: #333333; color: #eeeeee;">
+<strong>Unit 1: Foundations of Bayesian inference</strong>
+</td>
+</tr>
 <tr>
-<td style="text-align:center;">
-1 (Jan. 8 &amp; 10)
+<td style="text-align:center; padding-left: 2em;" indentlevel="1">
+1 (Jan. 8 &amp; 10)
 </td>
 <td style="text-align:center;">
-<a href="lecture1.html">Intro to statistical modeling in ecology</a>
+Intro to WILD6900 and statistical modeling in ecology
 </td>
 <td style="text-align:center;">
-Introduction to R/RStudio and GitHub
+Projects and directories/ Intro to R Markdown
 </td>
 <td style="text-align:center;">
 H&amp;H chp. 1
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
-2 (Jan. 15 &amp; 17)
+<td style="text-align:center; padding-left: 2em;" indentlevel="1">
+2 (Jan. 15 &amp; 17)
 </td>
 <td style="text-align:center;">
 Probability models and stochasticity
 </td>
 <td style="text-align:center;">
-Importing, manipulating and tidying data in R/Crash course on R Markdown
+Manipulating, tidying, &amp; visualizing data in R
 </td>
 <td style="text-align:center;">
-H&amp;H chp. 2
+H&amp;H chp. 2-3
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
-3 (Jan. 22 &amp; 24)
+<td style="text-align:center; padding-left: 2em;" indentlevel="1">
+3 (Jan. 22 &amp; 24)
 </td>
 <td style="text-align:center;">
 Principles of Bayesian inference
 </td>
 <td style="text-align:center;">
-Data simulation techniques/Visualization data using ggplot2
+Data simulation techniques/Informative priors
 </td>
 <td style="text-align:center;">
-H&amp;H chp. 3
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4 (Jan. 29 &amp; 31)
-</td>
-<td style="text-align:center;">
-Simple linear models: t-test, ANOVA, and linear regression
-</td>
-<td style="text-align:center;">
-Introduction to JAGS/ Regression analysis using JAGS
-</td>
-<td style="text-align:center;">
-H&amp;H chp. 4
+H&amp;H chp. 5
 </td>
 </tr>
 <tr>
+<td style="text-align:center; padding-left: 2em;" indentlevel="1">
+4 (Jan. 29 &amp; 31)
+</td>
 <td style="text-align:center;">
-5 (Feb. 5 &amp; 7)
+Implementing Bayesian models: MCMC samplers and JAGS
+</td>
+<td style="text-align:center;">
+Building simple samplers in R
+</td>
+<td style="text-align:center;">
+H&amp;H chp. 7
+</td>
+</tr>
+<tr>
+<td style="text-align:center; padding-left: 2em;" indentlevel="1">
+5 (Feb. 5 &amp; 7)
 </td>
 <td style="text-align:center;">
 Generalized linear models/Hierarchical models
 </td>
 <td style="text-align:center;">
-Poisson and binomial GLMMs for count &amp; presence/absence data
+Introduction to JAGS/ Regression analysis using JAGS
 </td>
 <td style="text-align:center;">
-H&amp;H chp. 5, K&amp;S chps. 3-4
+H&amp;H chp. 6, K&amp;S chps. 3-4
+</td>
+</tr>
+<tr grouplength="6">
+<td colspan="4" style="background-color: #333333; color: #eeeeee;">
+<strong>Unit 2: Abundance and occupancy</strong>
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
-6 (Feb. 12 &amp; 14)
+<td style="text-align:center; padding-left: 2em;" indentlevel="1">
+6 (Feb. 12 &amp; 14)
 </td>
 <td style="text-align:center;">
-Process variation vs. observation error/Sampling design
+Estimating indices of abundance from count data
 </td>
 <td style="text-align:center;">
-State-space count models
+Poisson GLMM for count data
 </td>
 <td style="text-align:center;">
 K&amp;S chp. 12
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
-7 (Feb. 19 &amp; 21)
+<td style="text-align:center; padding-left: 2em;" indentlevel="1">
+7 (Feb. 19 &amp; 21)
 </td>
 <td style="text-align:center;">
 Estimating abundance from count data
@@ -231,8 +248,22 @@ Basic N-mixture model &amp; variations
 </td>
 </tr>
 <tr>
+<td style="text-align:center; padding-left: 2em;" indentlevel="1">
+8 (Feb. 26 &amp; 28)
+</td>
 <td style="text-align:center;">
-8 (Feb. 26 &amp; 28)
+Estimating occupancy from presence/absence data
+</td>
+<td style="text-align:center;">
+Static and dynamic occupancy models
+</td>
+<td style="text-align:center;">
+<ul><li></ul>
+</td>
+</tr>
+<tr>
+<td style="text-align:center; padding-left: 2em;" indentlevel="1">
+9 (Mar. 5 &amp; 7)
 </td>
 <td style="text-align:center;">
 Review/midterm
@@ -241,119 +272,87 @@ Review/midterm
 Buffer
 </td>
 <td style="text-align:center;">
-<ul><li></ul>
 </td>
 </tr>
 <tr>
-<td style="text-align:center;">
-9 (Mar. 5 &amp; 7)
+<td style="text-align:center; padding-left: 2em;" indentlevel="1">
+10 (Mar. 12 &amp; 14)
 </td>
 <td style="text-align:center;">
 Spring break - no class
 </td>
 <td style="text-align:center;">
-Static and dynamic occupancy models
-</td>
-<td style="text-align:center;">
-K&amp;S chp. 13
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-10 (Mar. 12 &amp; 14)
-</td>
-<td style="text-align:center;">
-Estimating occupancy from presence/absence data
-</td>
-<td style="text-align:center;">
 Spring break - no class
 </td>
 <td style="text-align:center;">
-K&amp;S chp. 6
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-11 (Mar. 19 &amp; 21)
-</td>
-<td style="text-align:center;">
-Estimating abundance from mark-recapture data
-</td>
-<td style="text-align:center;">
-M_0, M_t, M_b, and M_h models in JAGS
-</td>
-<td style="text-align:center;">
-K&amp;S chp. 7
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-12 (Mar. 26 &amp; 28)
-</td>
-<td style="text-align:center;">
-Estimating survival from mark-recapture data
-</td>
-<td style="text-align:center;">
-Cormack-Jolly-Seber model/Individual projects
-</td>
-<td style="text-align:center;">
-K&amp;S chp. 10
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-13 (Apr. 2 &amp; 5)
-</td>
-<td style="text-align:center;">
-Estimating survival, recruitment, and abundance from mark-recapture data
-</td>
-<td style="text-align:center;">
-Jolly-Seber model/Individual projects
-</td>
-<td style="text-align:center;">
-K&amp;S chp. 10
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-14 (Apr. 9 &amp; 11)
-</td>
-<td style="text-align:center;">
-Introduction to age-structured data/integrated population models
-</td>
-<td style="text-align:center;">
-IPM model in JAGS/Individual projects
-</td>
-<td style="text-align:center;">
-K&amp;S chp. 11
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-15 (Apr. 16 &amp; 18)
-</td>
-<td style="text-align:center;">
-Integrated population models (cont.)/Student presentations
-</td>
-<td style="text-align:center;">
-Population viability analysis using IPMs/Individual projects
-</td>
-<td style="text-align:center;">
-TBD
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-16 (Apr. 23 &amp; 25)
-</td>
-<td style="text-align:center;">
-Student presentations (cont.)
-</td>
-<td style="text-align:center;">
-No lab
-</td>
-<td style="text-align:center;">
 <ul><li></ul>
+</td>
+</tr>
+<tr>
+<td style="text-align:center; padding-left: 2em;" indentlevel="1">
+11 (Mar. 19 &amp; 21)
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+12 (Mar. 26 &amp; 28)
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+13 (Apr. 2 &amp; 5)
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+14 (Apr. 9 &amp; 11)
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+15 (Apr. 16 &amp; 18)
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+16 (Apr. 23 &amp; 25)
+</td>
+<td style="text-align:center;">
+Student presentations
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
 </td>
 </tr>
 </tbody>
@@ -371,7 +370,7 @@ No lab
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
 </div>

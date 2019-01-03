@@ -1,0 +1,429 @@
+---
+title: "Lecture 1"
+subtitle: "Introduction to statistical inference in ecology"
+author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, echo = FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
+library(WILD6900)
+# library(gganimate)
+```
+
+## Reading
+
+> Hobbs & Hooten 3-16
+
+---
+## Ecology $^1$
+
+> the comprehensive sicence of the relationship of the organism to the environment (Haeckel 1866)
+
+<br/>
+> the study of the natural environment, particularly the interrelationships between organisms and their surroundings (Ricklefs 1973)
+
+<br/>
+> the scientific study of the distribution and abundance of organisms (Andrewartha 1961)
+
+<br/>
+> where organisms are found, how many occur there, and why (Krebs 1972)
+
+???
+
+$^1$ Although there is no single, accepted definition of "ecology", all definitions focus on the *interactions* between organisms and the environment and how these interactions influence the abundance and distribution of individuals, populations, and communities. 
+
+---
+## Ecological state variables
+
+*State variables* are the ecological quantities of interest in our model that change over space or time $^2$
+
+--
+#### Abundance 
+
+> the number of individual organisms in a population at a particular point in time   
+
+
+--
+
+#### Occurence
+
+> the spatial distribution of organisms with a particular region at a particular point in time  
+
+--
+ 
+#### Richness
+
+> the number of co-occuring species at a given location and a particular point in time  
+
+???
+
+$^2$ These are not the only state variables, but are among the most common in ecological studies
+
+---
+## Ecological parameters
+
+*Parameters* determine how the state variables change over space and time
+
+--
+- Survival  
+
+--
+- Reproduction  
+
+--
+- Movement  
+
+--
+- Population growth rate
+
+--
+- Carrying capacity
+
+--
+- Colonization/extinction rate
+
+
+
+---
+## Models of populations
+
+Inference in ecology **requires** models  
+<br/>
+<br/>
+--
+Models link **observations** to **processes**  
+<br/>
+<br/>
+
+--
+Models are tools that allow us understand processes that we **cannot directly observe** based on quantities that we **can** observe  
+<br/>
+<br/>
+
+--
+By necessity, models are simplifications of reality  
+
+---
+## Types of expertise
+
+--
+1) Domain expertise  
+
+> knowledge based on experience and understanding of the *ecological* system of interest  
+
+<br/>
+
+--
+2) Statistical expertise
+
+> knowledge of probabilistic modeling and computation  
+
+<br/>
+
+--
+#### Useful models should be consistent with *both* domain and statistical expertise!  
+
+---
+class: inverse, center, middle
+
+## Notation
+
+---
+
+Parameter(s)
+$$\theta$$
+
+--
+Observation(s)
+
+$$y$$
+
+--
+Predictor(s)
+
+$$x$$
+
+--
+Lightface = scalar
+
+$$(y, \theta, x)$$
+
+--
+**Boldface** = vector
+$$\mathbf {(y, \theta, x)}$$
+
+--
+Probability distribution
+
+$$[a|b,c]$$
+
+--
+Deterministic function
+
+$$g()$$
+
+---
+class: inverse, center, middle
+
+## A line of inference in ecology
+
+???
+
+from Hobbs and Hooten *Bayesian models: A statistical Primer for Ecologists*
+
+---
+class: inverse, center, middle
+
+## Process models
+
+---
+## Process models
+<br/>
+
+$$g(\theta_p, x)$$
+<br/>
+
+- Mathematical description of our hypothesis about how the *state variables* we are interested in change over space and time  
+
+--
+- Represent the **true** value of our state variables at any given point in space or time  
+
+--
+- Deterministic  
+
+--
+- Abstraction  
+
+---
+## Process models
+
+- Abstraction = uncertainty $^3$ 
+
+--
+- Unmodeled sources of variation = $\sigma^2_p$  
+
+--
+- State variable $(z)$ modeled as a *probability distribution*  
+
+$$[z|g(\theta_p, x), \sigma^2_p]$$
+
+???
+
+$^3$ Process models are abstractions - they inherently leave out a lot of details about the system in order to focus on the processes that we are most interested in or think are most important. We treat all the other sources of variation as a source of *uncertainty* - that is, unexplained variation in the state of the system. We can represent these uncertainty stochastically by defining a parameter $\sigma^2_p$ (p is for process) that subsumes all of the unmodeled sources of variation in the system. This allows us to model the *probability distribution* of the state-parameters:
+
+---
+## Process models
+
+**Example**  
+
+We are interested in predicting the population growth on species $a$ as a function of abundance in the previous year $^4$  
+
+We hypothesize that population growth rate will be highest at low densities and lowest (maybe even negative) at high density  
+
+This leads us to believe that the *discrete logistic equation* is a good descriptor of our system:
+
+$$N_{t+1} = g(\theta_p, x) = N_te^{r_0[1-(N_t/K)]}$$
+
+```{r, fig.height=3.25, fig.width = 5.25}
+r0 <- 0.18
+K <- 500
+
+Nl <- data.frame(Time = 0:60, 
+                 N = numeric(length = 61))
+
+Nl$N[1] <- 10
+
+for(t in 2:61){
+  Nl$N[t] <- Nl$N[t-1] * exp(r0 * (1 - (Nl$N[t-1]/K)))
+}
+
+ggplot(Nl, aes(x = Time, y = N)) + geom_path(color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) + geom_point(color = WILD6900_colors$value[WILD6900_colors$name=="primary"], size = 2) 
+
+```
+
+???
+
+$^4$ What is the state variable in this model? The parameters? Predictors?
+
+---
+## Process models
+
+**Example**  
+
+In reality, $N$ will not fall exactly on the line predicted by the Ricker model  
+
+There will obviously be processes other than density-dependence that are influencing population size in each year that are not accounted for by our model  
+- In other words, there is *process uncertainty* $(\sigma^2_p > 0)$: 
+
+```{r fig.height=3.25, fig.width = 5.25}
+Nl <- data.frame(Time = 0:60, 
+                 N.pred = numeric(length = 61))
+
+Nl$N.pred[1] <- 10
+
+for(t in 2:61){
+  Nl$N.pred[t] <- Nl$N.pred[t-1] * exp(r0 * (1 - (Nl$N.pred[t-1]/K)))
+}
+
+Nl$N <- Nl$N.pred + rnorm(61, 0, 20)
+
+ggplot(Nl) + geom_point(aes(x = Time, y = N), color = WILD6900_colors$value[WILD6900_colors$name=="primary"], size = 2) + 
+  geom_path(aes(x = Time, y = N.pred), color = WILD6900_colors$value[WILD6900_colors$name=="secondary"]) 
+  
+
+```
+
+---
+## Process models
+
+**Interpreting $\sigma^2_p$**
+
+- The process model represents the **true** value of $N$, *not* our observation of it. 
+
+- $\sigma^2_p$ is as a measure of how well our process model fits reality 
+
+- To minimize process uncertainty, we need *a better model*. No amount of additional data will lower $\sigma^2_p$.     
+
+
+--
+In our example, maybe we have environmental covariates (rainfall, temperature, etc.) that we also think are important. To reduce process uncertainty, we would need to modify our process model to include these effects. 
+
+---
+class: inverse, center, middle
+
+## Sampling models
+
+---
+## Sampling models
+
+- Obtaining probability distributions about our state-variables and parameters requires **data**   
+
+- Data are samples of the true population  
+    + Our sample will not perfectly represent the true state of the system  
+    
+- As for the process model, we can represent sampling uncertainty $\sigma_s$ stochastically using a probability model $^5$:
+
+$$[u_i|z, \sigma^2_s]$$
+
+???
+
+$^5$ $u_i$ is the true state of $z$ in the $i^{th}$ sample
+
+---
+## Sampling models
+
+**Example**  
+
+In our population size example, suppose we conduct $i =1,2,3,...,K$ transect or point counts to estimate abundance. The area of our counts (we'll call it $a$) is not the entire area of our population $(a < A)$. If we want to estimate $N_t$, we need a model linking our counts (call them $n_{t,i}$) to the true abundance. If we assume individuals are uniformly distributed across our study area, then perhaps we could use:
+
+$$\bigg[\sum_{i=1}^K n_{t,i}\bigg|\frac{N_t}{a}, \sigma^2_s\bigg]$$
+
+In this case, our counts $n_t$ will be different if we had chosen different transect routes or points. This is what $\sigma^2_s$ represents.  
+
+Separating $\sigma^2_s$ from $\sigma^2_p$ is important because we *can* lower $\sigma^2_s$ by collecting larger sample sizes or increasing replication  
+
+---
+class: inverse, center, middle
+
+## Observation models
+
+---
+## Observation models
+
+- $\sigma^2_s$ only captures uncertainty that is due to the randomness of our sampling process  
+
+--
+- Even when sampling, we rarely observe the true state perfectly
+  + Animals are elusive and may hide from observers
+  + Individuals may not be "available" during our sample
+  + Even plants may be cryptic and hard to find
+
+
+--
+- This *observation uncertainty* $(\sigma^2_o)$ can lead to biased estimates of model parameters, so generally requires its own model $^6$
+
+$$[y_i|d(\Theta_o,u_i), \sigma^2_o]$$
+
+???
+
+$^6$ $d(\Theta_o,u_i)$ is used to correct for bias; if our observations are not biased, we don't need an observation model (though we might still have observation uncertainty)
+
+---
+## Observation models
+
+**Example**  
+
+If we used the $n_{t,i}$ as our observations, we would have to make the assumption that we counted every individual in our sampling area. This is almost never a good assumption in studies of animals (and even plants!)  
+
+--
+Another way to say this is that $n_{t,i}$ is the *true* number of individuals in our sampling area but usually cannot count every individual $^7$  
+
+--
+In our count model, we might define a parameter $\psi$ that is the probability that individual that is present in our sample is counted by the observer (we could further use a generalized linear model to account for the effects of, e.g., weather or observer skill, on $\psi$): 
+
+
+$$[y_t|\psi n_t, \sigma^2_o]$$
+
+where $\sigma^2_o$ is uncertainty about the value of $\psi$.  
+
+???
+
+$^7$ Observation error is pervasive in ecological studies. In occupancy models we don't know if a site is truly unoccupied or if we failed to detect our study species. When we take morphological measurements, our instruments have some error that prevents us from knowing the true size of an individual or feature. Thinking hard about observation processes and how we can isolate them from sampling and process uncertainty will be an a key theme throughout the semester. 
+
+
+---
+class: inverse, center, middle
+
+## Parameter models
+
+---
+## Parameter models
+
+- In Bayesian inference, parameter models express what we know about our parameters *prior to* collecting data  
+
+--
+- Parameter models are more commonly referred to as *priors* $^8$  
+
+--
+- Every parameter in our model requires a probability distribution describing the prior probability we place of different values the parameter could take   
+
+$$[\theta_p][\theta_o][\sigma^2_p][\sigma^2_s][\sigma^2_o]$$
+
+--
+- These distributions can provide a lot or a little information about the potential value of each parameter  
+
+???
+
+$^8$ We will talk more about priors in the coming weeks  
+
+---
+class: inverse, center, middle
+## The full model
+
+---
+## The full model
+
+With each of our models created, we are prepared to right out the full model:
+
+$$\bigg[\underbrace{z, \theta_p, \theta_o, \sigma^2_p, \sigma^2_s, \sigma^2_o, u_i}_{unobserved}\big|\underbrace{y_i}_{observed} \bigg] \propto \underbrace{[y_i|d(\Theta_o,u_i), \sigma^2_o]}_{Observation \;model} \underbrace{[u_i|z, \sigma^2_s]}_{Sampling\; model} \underbrace{[z|g(\theta_p, x), \sigma^2_p]}_{Process\; model} \underbrace{[\theta_p][\theta_o][\sigma^2_p][\sigma^2_s][\sigma^2_o]}_{Parameter\; models}$$
+
+--
+Notice that:
+-  all of the quantities that we do not directly observe (parameters and state-variables) are on the left side of the conditioning symbol "|"
+
+--
++ This means that they are treated as *random variables* that are governed by probability distributions   
+
+--
++ treating all unobserved quantities as random variables and specifying probability distributions for each quantity is what makes this model *Bayesian*.  
+
+

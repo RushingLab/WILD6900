@@ -60,7 +60,7 @@
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-question-circle-o"></span>
+    <span class="fa fa-file-pdf-o"></span>
      
     Lectures
      
@@ -68,7 +68,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/lecture1.html">Lecture 1: Introduction to WILD6900</a>
+      <a href="../articles/Lecture0/Lecture0.html">Lecture 0: Introduction to WILD6900</a>
+    </li>
+    <li>
+      <a href="../articles/Lecture1/Lecture1.html">Lecture 1: Introduction to statistical inference in ecology</a>
     </li>
   </ul>
 </li>
@@ -87,10 +90,14 @@
     <li>
       <a href="../articles/rmarkdown_intro.html">Introduction to R Markdown</a>
     </li>
-    <li>
-      <a href="../articles/priors.html">Developing informative priors</a>
-    </li>
   </ul>
+</li>
+<li>
+  <a href="../articles/homework.html">
+    <span class="fas fa fas fa-pencil-square-o"></span>
+     
+    Assignments
+  </a>
 </li>
       </ul>
 </div>
@@ -101,7 +108,7 @@
 <!--/.navbar -->
 
       
-      </header><script src="syllabus_files/kePrint-0.0.1/kePrint.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Syllabus</h1>
@@ -220,11 +227,11 @@ Office hours: Monday and Wednesday 1:00-2:30</p>
 <li><p>Put the cursor in the window labelled <code>Console</code>. Type the following code followed by enter or return: <code>x &lt;- 2 * 4</code>. Next type <code>x</code> followed by enter or return. You should see the value 8 print to screen. If yes, you’ve succeeded in installing R and RStudio.</p></li>
 </ol>
 <p>If you encounter any problems with the previous steps, please contact me prior to the first class. We will diagnose issues running JAGS in class but for now, make sure you have the most up-to-date R packages installed by running the following:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/remove.packages">remove.packages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'coda'</span>,<span class="st">'rjags'</span>, <span class="st">'devtools'</span>, <span class="st">'tidyverse'</span>))</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'coda'</span>,<span class="st">'rjags'</span>, <span class="st">'devtools'</span>, <span class="st">'tidyverse'</span>))</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(devtools)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"kenkellner/jagsUI"</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/remove.packages">remove.packages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'coda'</span>,<span class="st">'rjags'</span>, <span class="st">'devtools'</span>, <span class="st">'tidyverse'</span>))
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">'coda'</span>,<span class="st">'rjags'</span>, <span class="st">'devtools'</span>, <span class="st">'tidyverse'</span>))
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(devtools)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/install_github">install_github</a></span>(<span class="st">"kenkellner/jagsUI"</span>)</code></pre></div>
 </div>
 </div>
 <div id="attendance" class="section level1">
@@ -241,7 +248,7 @@ Office hours: Monday and Wednesday 1:00-2:30</p>
 <h1 class="hasAnchor">
 <a href="#grading" class="anchor"></a>GRADING</h1>
 <p>Your grade in the course will be based on a total of 200 possible points. Twenty five percent of your grade (70 points) will come from 7 homework assignments. Twenty five percent of your grade (50 points) will come from a midterm exam covering the topics we discuss in lecture during the first half of the semester. The final 40% (80 points) will be based on an individual project due at the end of the semesters.</p>
-<p>The 7 homework assignments will build on concepts and skills that we cover in lecture and lab. Specific objectives and tasks for each assignment, along with any necessary data, will be posted on the course website. In general, students will be provided with ‘raw’ data and will need to clean/prepare (and document!) data prior to analysis. Each assignment will be due before class the week after the assignment is posted. All assignments must be prepared as R Markdown files that include all text, code, model output, and figures necessary to fully document your work and conclusions (we will spend the first several labs going over preparation of reports using R Markdown so, again, no previous experience is necessary).</p>
+<p>The 7 homework assignments will build on concepts and skills that we cover in lecture and lab. Specific objectives and tasks for each assignment, along with any necessary data, will be posted on the course website. In general, students will be provided with ‘raw’ data and will need to clean/prepare (and document!) data prior to analysis. Each assignment will be due before class the week after the assignment is posted. All assignments must be prepared as R Markdown files that include all text, code, model output, and figures necessary to fully document your work and conclusions (we will spend the first several labs going over preparation of reports using R Markdown so, again, no previous experience is necessary). See <a href="https://rushinglab.github.io/WILD6900/articles/homework.html">here</a> for instructions on submitting assignment</p>
 <p>Individual projects may address an ecological question of your choosing, but must be approved by me during the first half of the semester. You are free to use any data you have access to, including data from your own projects, published datasets, or even simulated data. Once the project topic and data are approved, you are expected to develop statistical models using the tools and skill gained during the semester to gain insights into the ecological processes that generated your data. Once completed, a final report should be prepared as if you were submitting the results to a short-format scientific journal. Additionally, you will give a short oral presentation of your results during the final week of class as if you were presenting at a professional conference. Later in the semester, I will provide a rubric for how the written and oral reports will be assessed.</p>
 </div>
 <div id="grading-scale" class="section level1">
@@ -422,16 +429,13 @@ F
 <p>The instructor of this course will take appropriate actions in response to Academic Dishonesty, as defined the University’s Student Code. Acts of academic dishonesty include but are not limited to:</p>
 <ul>
 <li>
-<strong>Cheating</strong>: using, attempting to use, or providing others with any unauthorized assistance in taking quizzes, tests, examinations, or in any other academic exercise or activity. Unauthorized assistance includes:
-<ul>
+<strong>Cheating</strong>: using, attempting to use, or providing others with any unauthorized assistance in taking quizzes, tests, examinations, or in any other academic exercise or activity. Unauthorized assistance includes:</li>
 <li>Working in a group when the instructor has designated that the quiz, test, examination, or any other academic exercise or activity be done “individually;”</li>
 <li>Depending on the aid of sources beyond those authorized by the instructor in writing papers, preparing reports, solving problems, or carrying out other assignments;</li>
 <li>Substituting for another student, or permitting another student to substitute for oneself, in taking an examination or preparing academic work;</li>
 <li>Acquiring tests or other academic material belonging to a faculty member, staff member, or another student without express permission;</li>
 <li>Continuing to write after time has been called on a quiz, test, examination, or any other academic exercise or activity;</li>
 <li>Submitting substantially the same work for credit in more than one class, except with prior approval of the instructor; or engaging in any form of research fraud.</li>
-</ul>
-</li>
 <li>
 <strong>Falsification</strong>: altering or fabricating any information or citation in an academic exercise or activity.</li>
 <li>
@@ -556,7 +560,7 @@ F
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
 </div>
