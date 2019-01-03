@@ -28,7 +28,7 @@ knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/0/0b/Eur
 For this exercise, we will use data from the North American [Breeding Bird Survey](https://www.mbr-pwrc.usgs.gov/bbs/) to examine the rapid population growth of Eurasian collared-doves (*Streptopelia decaocto*) in the state of Utah. Preparing the raw BBS data for analysis is challenging due the complexity and idiosyncrasies of data. For these reasons, preparing these data offers many good lessons for data manipulation in general. These data also lend themselves to a number of the models we will discuss this semester so this lab will form the basis for future labs.  
 
 ```{r echo = FALSE}
-ut <- ggplot2::map_data()
+# ut <- ggplot2::map_data()
 
 ```
 
