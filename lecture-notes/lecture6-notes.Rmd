@@ -10,6 +10,7 @@ usepackage:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
+library(WILD6900)
 ```
 
 ## Reading
