@@ -22,28 +22,42 @@ knitr::opts_chunk$set(
 
 ```{r schedule, echo = FALSE}
 library(kableExtra)
-schedule <- data.frame(Week = c("1 (Jan. 8 & 10)", "2 (Jan. 15 & 17)", "3 (Jan. 22 & 24)", "4 (Jan. 29 & 31)",
-                                "5 (Feb. 5 & 7)", "6 (Feb. 12 & 14)", "7 (Feb. 19 & 21)", "8 (Feb. 26 & 28)",
-                                "9 (Mar. 5 & 7)", "10 (Mar. 12 & 14)", "11 (Mar. 19 & 21)", "12 (Mar. 26 & 28)",
-                                "13 (Apr. 2 & 5)", "14 (Apr. 9 & 11)", "15 (Apr. 16 & 18)", "16 (Apr. 23 & 25)"),
-                       Lecture = c("Intro to WILD6900 and statistical modeling in ecology", "Probability models and stochasticity", 
-                                   "Principles of Bayesian inference", "Implementing Bayesian models: Introduction to MCMC samplers",
-                             "Generalized linear models/Hierarchical models", "Estimating indices of abundance from count data", "Estimating abundance from count data",
-                              "Estimating occupancy from presence/absence data","Review/midterm", "Spring break - no class", "Estimating abundance from mark-recapture data",
-                             "Estimating survival from mark-recapture data", "Estimating survival, recruitment, and abundance from mark-recapture data", "Introduction to age-structured data/integrated population models", "Integrated population models", "Student presentations"),
-                       Lab = c("Projects and directories/ Intro to R Markdown", "Importing, manipulating and tidying data in R/Crash course on R Markdown", 
-                               "Data simulation techniques/Visualization data using ggplot2",  "Building simple samplers in R", "Introduction to JAGS/ Regression analysis using JAGS",
+schedule <- data.frame(Week = c("1 (Jan. 8 & 10)", "2 (Jan. 15 & 17)", "3 (Jan. 22 & 24)", 
+                                "4 (Jan. 29 & 31)",
+                                "5 (Feb. 5 & 7)", "6 (Feb. 12 & 14)", "7 (Feb. 19 & 21)", 
+                                "8 (Feb. 26 & 28)",
+                                "9 (Mar. 5 & 7)", "10 (Mar. 12 & 14)", "11 (Mar. 19 & 21)", 
+                                "12 (Mar. 26 & 28)",
+                                "13 (Apr. 2 & 5)", "14 (Apr. 9 & 11)", "15 (Apr. 16 & 18)", 
+                                "16 (Apr. 23 & 25)"),
+                       Lecture = c("Intro to WILD6900 and statistical modeling in ecology", 
+                                   "Probability models and stochasticity", 
+                                   "Principles of Bayesian inference", 
+                                   "Implementing Bayesian models: MCMC samplers and JAGS",
+                             "Generalized linear models/Hierarchical models", 
+                             "Estimating indices of abundance from count data", 
+                             "Estimating abundance from count data",
+                              "Estimating occupancy from presence/absence data",
+                             "Review/midterm", 
+                             "Spring break - no class", 
+                             "",
+                             "",
+                             "", 
+                             "", 
+                             "", 
+                             "Student presentations"),
+                       Lab = c("Projects and directories/ Intro to R Markdown", 
+                               "Manipulating, tidying, & visualizing data in R", 
+                               "Data simulation techniques/Informative priors",  "Building simple samplers in R", "Introduction to JAGS/ Regression analysis using JAGS",
                                "Poisson GLMM for count data ", "Basic N-mixture model & variations", 
-                             "Static and dynamic occupancy models ","Buffer", "Spring break - no class", "M_0, M_t, M_b, and M_h models in JAGS", "Cormack-Jolly-Seber model/Individual projects",
-                             "Jolly-Seber model/Individual projects", "IPM model in JAGS/Individual projects", "Population viability analysis using IPMs/Individual projects", "No lab"),
-                       Reading = c("H&H chp. 1", "H&H chp. 2-3", "H&H chp. 5", "H&H chp. 7", "H&H chp. 6, K&S chps. 3-4", "K&S chp. 12", "-", "-", "K&S chp. 13", "-", "K&S chp. 7", "K&S chp. 10", "K&S chp. 10", "K&S chp. 11", "TBD", "-"))
+                             "Static and dynamic occupancy models ","Buffer", "Spring break - no class", "", "",
+                             "", "", "", ""),
+                       Reading = c("H&H chp. 1", "H&H chp. 2-3", "H&H chp. 5", "H&H chp. 7", "H&H chp. 6, K&S chp. 3", "K&S chp. 4", "K&S chp. 12", "K&S chp. 13", "", "-", "", "", "", "", "", ""))
 
 schedule %>%
   kable("html", col.names = c("Week (dates)", "Lecture topic", "Lab topic", "Reading"), align = 'c') %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE) %>%
     group_rows("Unit 1: Foundations of Bayesian inference", 1,5, label_row_css = "background-color: #333333; color: #eeeeee;") %>%
-  group_rows("Unit 2: Abundance and occupancy", 6,11, label_row_css = "background-color: #333333; color: #eeeeee;") %>%
-  group_rows("Unit 3: Survival", 12, 12, label_row_css = "background-color: #333333; color: #eeeeee;") %>%
-  group_rows("Unit 4: Population dynamics", 13, 16, label_row_css = "background-color: #333333; color: #eeeeee;")
+  group_rows("Unit 2: Abundance and occupancy", 6,11, label_row_css = "background-color: #333333; color: #eeeeee;") 
 
 ```

@@ -60,7 +60,7 @@
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-question-circle-o"></span>
+    <span class="fa fa-file-pdf-o"></span>
      
     Lectures
      
@@ -68,7 +68,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/lecture1.html">Lecture 1: Introduction to WILD6900</a>
+      <a href="../articles/Lecture0/Lecture0.html">Lecture 0: Introduction to WILD6900</a>
+    </li>
+    <li>
+      <a href="../articles/Lecture1/Lecture1.html">Lecture 1: Introduction to statistical inference in ecology</a>
     </li>
   </ul>
 </li>
@@ -87,10 +90,14 @@
     <li>
       <a href="../articles/rmarkdown_intro.html">Introduction to R Markdown</a>
     </li>
-    <li>
-      <a href="../articles/priors.html">Developing informative priors</a>
-    </li>
   </ul>
+</li>
+<li>
+  <a href="../articles/homework.html">
+    <span class="fas fa fas fa-pencil-square-o"></span>
+     
+    Assignments
+  </a>
 </li>
       </ul>
 </div>
@@ -105,9 +112,9 @@
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Introduction to R Markdown</h1>
-            <h3 class="subtitle">WILD2900</h3>
+            <h3 class="subtitle">WILD6900</h3>
             
-            <h4 class="date">updated on 2018-11-29</h4>
+            <h4 class="date">updated on 2019-01-03</h4>
       
       
       <div class="hidden name"><code>rmarkdown_intro.Rmd</code></div>
@@ -201,9 +208,9 @@
 title: "WILD6900"
 subtitle: "Homework 1"
 author: "YOUR NAME HERE"
-output: pdf_document
+output: html_document
 ---</code></pre>
-<p>This is called the “YAML header” and it’s where we can control a lot of the major formatting options for our documents. For example, to change the output to HTML, just switch <code>pdf_document</code> for <code>HTML_document</code> and then click the <code>Knit</code> button again (be sure to change it back to pdf after you try it for yourself)</p>
+<p>This is called the “YAML header” and it’s where we can control a lot of the major formatting options for our documents. For example, to change the output to pdf, just switch <code>html_document</code> for <code>pdf_document</code> and then click the <code>Knit</code> button again</p>
 <p>Pretty cool, right?</p>
 <p>The YAML header allows to control many “high level” options for our document. For example, to change the font size, type the following directly under the <code>output: pdf_document</code> argument:</p>
 <pre><code>fontsize: 12pt</code></pre>
@@ -212,7 +219,7 @@ output: pdf_document
 <pre><code>title: "WILD6900"
 subtitle: "Homework 1"
 author: "YOUR NAME HERE"
-date: "2018-11-29"
+date: "2019-01-03"
 output: 
   pdf_document:
     latex_engine: xelatex
@@ -259,7 +266,7 @@ This is the next line</code></pre>
 <div id="code-type" class="section level2">
 <h2 class="hasAnchor">
 <a href="#code-type" class="anchor"></a>Code type</h2>
-<p>To highlight code (note, this does not actually insert functioning code, just formats text to show that it is code rather than plain text), surround the text with back ticks ": <code><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean()</a></code></p>
+<p>To highlight code (note, this does not actually insert functioning code, just formats text to show that it is code rather than plain text), surround the text with back ticks “: <code><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean()</a></code></p>
 <p>You can include muliple lines of code by including three back ticks on the line before the code and then three back ticks on the line after the code:</p>
 <pre><code>Multiple lines of code
 look like 
@@ -270,14 +277,10 @@ this</code></pre>
 <a href="#bulleted-lists" class="anchor"></a>Bulleted lists</h2>
 <ul>
 <li><p>Bulleted lists can be included by starting a line with an asterisk</p></li>
-<li>
-<p>You can also start the lines with a single dash <code>-</code></p>
-<ul>
+<li><p>You can also start the lines with a single dash <code>-</code></p></li>
 <li>for sub-bullets, indent the line and start it with <code>+</code>
 <ul>
 <li>for sub-sub-bullets, indent twice (press <code>tab</code> two times) and start with <code>-</code>
-</li>
-</ul>
 </li>
 </ul>
 </li>
@@ -358,10 +361,160 @@ B. or uppercase letters</li>
 <div id="adding-code" class="section level1">
 <h1 class="hasAnchor">
 <a href="#adding-code" class="anchor"></a>Adding code</h1>
+<p>The ability to format and create pdf and html documents is great but the real strength of R Markdown is the ability to include and run code within your document. Code can be included <strong>inline</strong> or in <strong>chunks</strong></p>
+<div id="inline-code" class="section level2">
+<h2 class="hasAnchor">
+<a href="#inline-code" class="anchor"></a>Inline code</h2>
+<p>Inline code is useful to including (simple) <code>R</code> output directly into the text. Inline code can be added by inclosing <code>R</code> code between <code>\x60r</code> and <code>\x60</code>. For example, typing <code>\x60r mean(c(3,7,4,7,9))\x60</code> will compute and print the mean of the given vector. This is, it will print 6 instead of the code itself. This can be very useful for including summary statistics in reports.</p>
+<p>For example, if we have a vector indicating the number of individuals captured at each occassion during a mark-recapture study (e.g., <code>n &lt;- c(155, 132, 147, 163)</code>) and we want to include the number of occasions in a report, instead of typing <code>4</code>, we can type <code>\x60r length(n)\x60</code>. Not only does this prevent typos, it is extemely useful if <code><a href="https://www.rdocumentation.org/packages/base/topics/length">length(n)</a></code> might change in the future. Instead of manually changing the number of occasions, we just re-render the document and the new number of occasions will be printed automatically.</p>
 </div>
-<div id="homework-assignment-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#homework-assignment-1" class="anchor"></a>Homework assignment 1</h1>
+<div id="code-chunks" class="section level2">
+<h2 class="hasAnchor">
+<a href="#code-chunks" class="anchor"></a>Code chunks</h2>
+<p>For more complicated code, it is generally more useful to use <strong>chunks</strong> than inline code. Chunks start on a separate line with <code>\x60\x60\x60{r}</code> and end with a <code>\x60\x60\x60</code> on its own line (instead of doing this manually, you can click the <code>Insert</code> button at the top right of script window, then click <code>R</code>). In between these two lines, you can include as many lines of code as you want. For example,</p>
+<pre><code>\x60\x60\x60{r}
+n1 &lt;- 44     # Number of individuals captured on first occasion
+
+n2 &lt;- 32     # Number of individuals captured on second occasion
+  
+m2 &lt;- 15     # Number of previously marked individuals captured on second occasion
+
+N &lt;- n1 * n2 / m2     # Lincoln-Peterson estimate of abundance 
+\x60\x60\x60</code></pre>
+<div id="chunk-options" class="section level3">
+<h3 class="hasAnchor">
+<a href="#chunk-options" class="anchor"></a>Chunk options</h3>
+<p>Code chunks can take a lot of options to control how the code is run and what is displayed in the documents. These options go after <code>{r</code> and before the closing <code>}</code> (to see all the options put your cursor after the <code>{r</code>, hit the space bar, then hit <code>tab</code>). For example:</p>
+<ul>
+<li><p><code>echo = FALSE</code> shows the output of the code but not the code itself</p></li>
+<li><p><code>include = FALSE</code> runs the code but doe not display the code <em>or</em> the output (useful for chunks that read or format data)</p></li>
+<li><p><code>eval = FALSE</code> shows the code but does not run it (useful for showing code)</p></li>
+<li><p><code>warning = FALSE</code> and <code>message = FALSE</code> can be include to ensure that error messages and warnings are not printed, which can be useful for cleaning up the appearance of documents</p></li>
+<li><p><code>cache = TRUE</code> save the results of the <code>R</code> code and doesn’t rerun the chunk unless the code is changed (useful for chunks that take a long time to run)</p></li>
+<li><p><code>out.height</code> and <code>out.width</code> control the size of figures in a pdf document in inches or centimeters (e.g., `out.height = “3in”, notice the quotation marks)</p></li>
+</ul>
+<p>See the main <a href="http://yihui.name/knitr/options/">R Markdown page</a> for a complete list of possible options.</p>
+</div>
+<div id="setting-defaults-for-all-chunks" class="section level3">
+<h3 class="hasAnchor">
+<a href="#setting-defaults-for-all-chunks" class="anchor"></a>Setting defaults for all chunks</h3>
+<p>Often it is useful to set the default behavior for all chunks rather that including, for example, <code>warning = FALSE</code> at the beginning of each one. To do this, you can include a chunk at the beginning of the document:</p>
+<pre><code>\x60\x60\x60{r include=FALSE}
+opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
+\x60\x60\x60</code></pre>
+<p>Any options can be inluded in this chuck to set the default behaviors. You can over-ride these defaults within chunks as needed. You can also load common packages in this chunk to streamline chunks later in the document.</p>
+</div>
+<div id="tables" class="section level3">
+<h3 class="hasAnchor">
+<a href="#tables" class="anchor"></a>Tables</h3>
+<p>To nicely print matrices and data frames in R Markdown document, use the <code><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable()</a></code> function:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(knitr)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(mtcars))</code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th></th>
+<th align="right">mpg</th>
+<th align="right">cyl</th>
+<th align="right">disp</th>
+<th align="right">hp</th>
+<th align="right">drat</th>
+<th align="right">wt</th>
+<th align="right">qsec</th>
+<th align="right">vs</th>
+<th align="right">am</th>
+<th align="right">gear</th>
+<th align="right">carb</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Mazda RX4</td>
+<td align="right">21.0</td>
+<td align="right">6</td>
+<td align="right">160</td>
+<td align="right">110</td>
+<td align="right">3.90</td>
+<td align="right">2.620</td>
+<td align="right">16.46</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">4</td>
+</tr>
+<tr class="even">
+<td>Mazda RX4 Wag</td>
+<td align="right">21.0</td>
+<td align="right">6</td>
+<td align="right">160</td>
+<td align="right">110</td>
+<td align="right">3.90</td>
+<td align="right">2.875</td>
+<td align="right">17.02</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td>Datsun 710</td>
+<td align="right">22.8</td>
+<td align="right">4</td>
+<td align="right">108</td>
+<td align="right">93</td>
+<td align="right">3.85</td>
+<td align="right">2.320</td>
+<td align="right">18.61</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td>Hornet 4 Drive</td>
+<td align="right">21.4</td>
+<td align="right">6</td>
+<td align="right">258</td>
+<td align="right">110</td>
+<td align="right">3.08</td>
+<td align="right">3.215</td>
+<td align="right">19.44</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td>Hornet Sportabout</td>
+<td align="right">18.7</td>
+<td align="right">8</td>
+<td align="right">360</td>
+<td align="right">175</td>
+<td align="right">3.15</td>
+<td align="right">3.440</td>
+<td align="right">17.02</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td>Valiant</td>
+<td align="right">18.1</td>
+<td align="right">6</td>
+<td align="right">225</td>
+<td align="right">105</td>
+<td align="right">2.76</td>
+<td align="right">3.460</td>
+<td align="right">20.22</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>kableExtra</code> package provides even more advanced options for creating nice looking tables. See <a href="https://haozhu233.github.io/kableExtra/awesome_table_in_html.html">here</a> for an overview of options provided by this package.</p>
+</div>
+</div>
 </div>
 <div id="additional-resources" class="section level1">
 <h1 class="hasAnchor">
@@ -369,6 +522,13 @@ B. or uppercase letters</li>
 <p>From the RStudio tool bar, click <code>Help -&gt; Cheatsheets</code> and then select the <code>R Markdown cheat sheet</code> (lots of other good cheat sheets there as well)</p>
 <p>RStudio’s <a href="https://rmarkdown.rstudio.com/lesson-1.html">R Markdown</a> tutorial</p>
 <p>Tom Edward’s <a href="http://learnr.usu.edu/r_markdown/1_1_markdown.php">R Markdown</a> tutorial</p>
+<p>Coding Club’s <a href="https://ourcodingclub.github.io/2016/11/24/rmarkdown-1.html">Getting Started with R Markdown</a></p>
+<p>Cosma Shalizi’s <a href="http://www.stat.cmu.edu/~cshalizi/rmarkdown">Using R Markdown for Class Reports</a></p>
+</div>
+<div id="homework-assignment-1" class="section level1">
+<h1 class="hasAnchor">
+<a href="#homework-assignment-1" class="anchor"></a>Homework assignment 1</h1>
+<p>Before submitting your assignment, be sure to double check the instructions for <a href="https://rushinglab.github.io/WILD3810/articles/homework.html">completing and submitting homework assignments</a>.</p>
 </div>
   </div>
 
@@ -412,9 +572,14 @@ B. or uppercase letters</li>
       <li><a href="#operators">Operators</a></li>
       </ul>
 </li>
-      <li><a href="#adding-code">Adding code</a></li>
-      <li><a href="#homework-assignment-1">Homework assignment 1</a></li>
+      <li>
+<a href="#adding-code">Adding code</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#inline-code">Inline code</a></li>
+      <li><a href="#code-chunks">Code chunks</a></li>
+      </ul>
+</li>
       <li><a href="#additional-resources">Additional resources</a></li>
+      <li><a href="#homework-assignment-1">Homework assignment 1</a></li>
       </ul>
 </div>
       </div>
@@ -427,7 +592,7 @@ B. or uppercase letters</li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
 </div>

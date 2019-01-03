@@ -17,13 +17,24 @@ knitr::opts_chunk$set(fig.align = 'center', message = FALSE,
 )
 ```
 
-In this lab, we will learn some useful tools and principles for 
+In this lab, we will starting learning some useful tools and principles for preparing raw data for visualization and analysis. Many of the core principles of so called "data wrangling" are embodied by the [`tidyverse`](https://www.tidyverse.org/packages/), a family of packages created to make tidying, manipulating, and visualizing data and model output more intuitive and consistent. Use of the tidyverse is somewhat [controversial](http://varianceexplained.org/r/teach-tidyverse/) and it is worth noting that everything we will do in the lab can be done using base `R` or non-tidyverse packages. Nonetheless, I find the tidyverse useful *because* it is opinionated. The developers of the tidyverse have spent a great deal of time thinking about how data should be stored, manipulated, and visualized and they have created an entire ecosystem of functions built around these principles. Using the tidyverse isn't so much about the tools themselves as it is about **thinking about the structure and manipulation of data**. For better or worse, focusing on consistent application of these principles is not something base `R` encourages.  
 
-We will use data from the North American [Breeding Bird Survey](https://www.mbr-pwrc.usgs.gov/bbs/) to examine the rapid population growth of Eurasian collared-doves (*Streptopelia decaocto*) in the state of Utah. Preparing the raw BBS data for analysis is challenging due the complexity and idiosyncrasies of data. These data 
+# Data and context
 
 ```{r echo = FALSE, out.width=400, fig.cap="Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)"}
 knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/0/0b/Eurasian_collared-dove_%28Streptopelia_decaocto%29.jpg")
 ```
+
+For this exercise, we will use data from the North American [Breeding Bird Survey](https://www.mbr-pwrc.usgs.gov/bbs/) to examine the rapid population growth of Eurasian collared-doves (*Streptopelia decaocto*) in the state of Utah. Preparing the raw BBS data for analysis is challenging due the complexity and idiosyncrasies of data. For these reasons, preparing these data offers many good lessons for data manipulation in general. These data also lend themselves to a number of the models we will discuss this semester so this lab will form the basis for future labs.  
+
+```{r echo = FALSE}
+# ut <- ggplot2::map_data()
+
+```
+
+Eurasian collared-doves are an introduced species that, as you will soon see, have been rapidly expanding westward across the United States. In this lab, we will focus on cleaning and visualizing the raw data. In future labs, we will use these data and code to quantify population growth of this and other species. 
+
+## Getting the data
 
 First, let's load the packages we will need for this exercise:
 
@@ -53,7 +64,7 @@ Raw BBS data is divided between three separate files:
 
 3) `counts`: species-specific counts for each route in each year 
 
-  + 1 row per species per route per year
+  + 1 row per route per year
 
   + Note that the raw data does not include counts of 0!
 
@@ -69,20 +80,57 @@ head(bbs_data$counts)
 
 For additional information about what each field represents, see the documentation page (`?bbs_data`). 
 
-## Subsetting the data
+## Subsetting the Utah routes
 
-The `bbs_data` file contains counts from three BCRs (9, 10, and 16) but right now we only want data from Utah. There are many ways to subset data in `R` but for the sake of consistency, we will use the `filter()` function from the `dplyr` package. The state number for Utah is 85 so we filter based on the `statenum` field in the `routes` data frame:
+The `bbs_data` file contains counts from three BCRs (9, 10, and 16) but right now we only want data from Utah. There are many ways to subset data in `R` but for the sake of consistency, we will use the `filter()` function from the `dplyr` package.  
 
-```{r}
-ut_routes <- filter(bbs_data$routes, statenum == 85)
-```
+**Side note**: there is also a `filter()` function in the `stats` package. Even though we loaded `dplyr`, it can sometimes be confusing to know which functions come from which packages (or to know which function `R` will default to using). For this reason, it's good practice to get in the habit of using the `package::function()` syntax, as we will do below. Using this syntax makes explicit which package/function you intend to use which makes your code easier for other to understand and reduces the potential for errors. As a benefit, you can stop using `library(package)` at the beginning of each script.  
 
-Unfortunately, neither the `weather` nor the `counts` data frames contain the `statenum` field. How do we subset the correct routes in this case? By using the one field common to all three data sets: `routeID`. So the challenge is to tell `R` to keep only the routes that are shared by the new `ut_routes` object and the `weather` and `counts` data frames. There are a few ways this coudl be done but one easy way is to filter using the `%in%` expression rather than `==`:
+The BBS state number for Utah is 85 so we filter based on the `statenum` field in the `routes` data frame:
 
 ```{r}
-ut_weather <- filter(bbs_data$weather, routeID %in% ut_routes$routeID)
-ut_counts <- filter(bbs_data$counts, routeID %in% ut_routes$routeID)
+ut_routes <- dplyr::filter(bbs_data$routes, statenum == 85)
 ```
 
-This field is critical because it is links all three data frames together. 
+Unfortunately, neither the `weather` nor the `counts` data frames contain the `statenum` field. How do we subset the correct routes in this case? By using the one field common to all three data sets: `routeID`. So the challenge is to tell `R` to keep only the routes that are shared by the new `ut_routes` object and the `weather` and `counts` data frames. There are a few ways this could be done but one easy way is to filter using the `%in%` expression rather than `==` (`%in%` compares a vector `x` on the left-hand side to a second vector `y` on the right-hand side, returning `TRUE` for all values of `x` that are in `y` and `FALSE` otherwise):
+
+```{r}
+## Subset weather and count using Utah routes
+ut_weather <- dplyr::filter(bbs_data$weather, routeID %in% ut_routes$routeID)
+ut_counts <- dplyr::filter(bbs_data$counts, routeID %in% ut_routes$routeID)
+```
+
+The `routeID` field is critical because it is the sole variable that links all three data frames together. It is common practice to divide up data into mutiple files so having an `ID` field of somesort that links observational units across all files is critical!
+
+## Subsetting the dove data
+
+At present, `ut_counts` contains counts of all species. Each column (aside from `Year` and `routeID`) gives the number of individuals of each species counted on each route in each year. The column names refer to the numeric `aou` code used by BBS to identify species (Eurasion collared-dove is 22860). To get those data, we could use `dplyr::select()`:
+
+```{r}
+eucd_counts <- dplyr::select(ut_counts, Year, routeID, `22860`)
+```
+
+However, there are a number of problems with the resulting data frame. 
+
+### What is tidy data?
+
+The first problem with this data frame is that one of the column names is numeric. That's not technically illegal (the data frame exists, after all), but it's not great practice. At the very least, you have to put backticks around the column name to reference it (as we did above). Better to stick with non-numeric names, at least for the first character of a column name. 
+
+The bigger issue, however, is that this data frame isn't **tidy**. What does it mean for data to be tidy? [Essentially](http://vita.had.co.nz/papers/tidy-data.html), "each variable is a column, each observation is a row." In the `ut_counts` data frame, we have two main variable (other than year and routeID): `aou` code and the counts themselves. Each observation is the count of a single species. As formatted, we have one variable (`aos` code) spread across mutiple columns and multiple observations per row. That format makes it hard to use the data. How would you plot the counts of a given species by year? How would you write a model for `counts ~ Year` by species? The short answer is you can't without a lot of intermediate steps. In contrast, having tidy data makes these tasks much easier and consistent (as we will soon see).
+
+So before we subset the dove data, let's tidy the `ut_counts` data frame. We can do this with a single functions from the `tidyr` package:
+
+```{r}
+tidy_counts <- tidyr::gather(ut_counts, key = "aou", value = "count", -Year, -routeID)
+
+head(tidy_counts)
+```
+
+Now we can simply use `dplyr::filter()` to subset the dove counts:
+
+```{r}
+dove_counts <- dplyr::filter(tidy_counts, aou == 22860)
+```
+
+## Filling in 0 counts using joins
 
