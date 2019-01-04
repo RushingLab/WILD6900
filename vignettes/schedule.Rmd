@@ -52,7 +52,7 @@ schedule <- data.frame(Week = c("1 (Jan. 8 & 10)", "2 (Jan. 15 & 17)", "3 (Jan. 
                                "Poisson GLMM for count data ", "Basic N-mixture model & variations", 
                              "Static and dynamic occupancy models ","Buffer", "Spring break - no class", "", "",
                              "", "", "", ""),
-                       Reading = c("H&H chp. 1", "H&H chp. 2-3", "H&H chp. 5", "H&H chp. 7", "H&H chp. 6, K&S chps. 3-4", "K&S chp. 12", "-", "-", "", "-", "", "", "", "", "", ""))
+                       Reading = c("H&H chp. 1", "H&H chp. 2-3", "H&H chp. 5", "H&H chp. 7", "H&H chp. 6, K&S chp. 3", "K&S chp. 4", "K&S chp. 12", "K&S chp. 13", "", "-", "", "", "", "", "", ""))
 
 schedule %>%
   kable("html", col.names = c("Week (dates)", "Lecture topic", "Lab topic", "Reading"), align = 'c') %>%
