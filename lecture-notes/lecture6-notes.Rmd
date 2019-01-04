@@ -49,7 +49,7 @@ By taking many many samples from the joint distribution, we can learn about the 
 
 ```{r}
 
-ggplot(data.frame(samples = rnorm(5000)), aes(samples)) + geom_histogram(fill = WILD3810_colors$value[WILD3810_colors$name == "primary"]) +
+ggplot(data.frame(samples = rnorm(5000)), aes(samples)) + geom_histogram(fill = WILD6900_colors$value[WILD6900_colors$name == "primary"]) +
   annotate("text", x = -2.5, y = 350, label = paste("Sample mean = ", round(mean(rnorm(5000)),2))) +
   annotate("text", x = -2.5, y = 300, label = paste("Sample SD = ", round(sd(rnorm(5000)),2))) 
 ```

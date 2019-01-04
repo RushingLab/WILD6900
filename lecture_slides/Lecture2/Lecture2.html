@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="author" content="   WILD6900 (Spring 2019)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
     <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
   </head>
@@ -87,7 +88,7 @@ For any given random variable, the *sample space* `\(S\)` includes all of the po
 
 For example, for an single-species occupancy model, `\(S\)` would be present or absent. For a model of species abundance, `\(S\)` would be `\({0,1,2,3,...,\infty}\)`.  
 
-**insert figure**
+&lt;img src="S.png" width="500" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -115,6 +116,8 @@ class: inverse, middle, center
 The probability that `\(A\)` will occur is the area of `\(A\)` divided by the area of `\(S\)` `\(^3\)`  
 
 `$$Pr(A) = \frac{area\; of\; A}{area\; of \;S}$$`
+
+&lt;img src="SA.png" width="500" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -146,6 +149,8 @@ class: inverse, middle, center
 Often, we are not interested in the probability of a single event happening but instead of more than one events  
 
 The *joint* probability `\(Pr(A,B)\)` refers to the probability that two or more events occur and is usually denoted `\(^4\)`  
+
+&lt;img src="SAB.png" width="500" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -196,7 +201,7 @@ You can see this very clearly in this [awesome visualization](http://setosa.io/c
 ---
 ## Conditional probability
 
-`\(Pr(z_y|z_x)\)` is the area shared by the two events divided by the area of `\(z_x\)` (not `\(S\)`!) ^5
+`\(Pr(z_y|z_x)\)` is the area shared by the two events divided by the area of `\(z_x\)` (not `\(S\)`!) `\(^5\)`
 
 `$$Pr(z_y|z_x) = \frac{area\; shared\; by\; z_x\; and\; z_y}{area\; of \;z_x} = \frac{Pr(z_x\; \cap\; z_y)}{Pr(z_x)}$$`
 
@@ -265,7 +270,7 @@ In this case, knowing that `\(z_x = 1\)` means that `\(z_y = 0\)`. In other word
 
 `$$Pr(z_y|z_x) = Pr(z_x|z_y) = 0$$`
 
-**insert figure**
+&lt;img src="S_disjoint.png" width="300" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -325,6 +330,63 @@ In this case, we *marginalize* over the different habitat types by summing the c
 Think of this as a weighted average - the probability that `\(z_x=1\)` in each habitat type weighted by the probability that each habitat type occurs.
 
 ---
+## Marginal probability
+
+
+&lt;img src="S_marginal1.png" width="600" style="display: block; margin: auto;" /&gt;
+
+---
+## Marginal probability
+
+
+&lt;img src="S_marginal2.png" width="600" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+## Marginal probability
+
+
+&lt;table class="table table-striped table-hover table-condensed table-responsive" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt;  &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; H1 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; H2 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; H3 &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Total &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Occupied &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 60 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 80 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Unoccupied &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 20 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 70 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 250 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 340 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Total &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 80 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 80 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 260 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 420 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+???
+
+This is the reason random or stratified sampling is so important if you want to know `\(Pr(z)\)` - you do not sample habitats in proportion to `\(Pr(H_i)\)`, you will get biased estimates of `\(Pr(z)\)`!
+
+---
 class: inverse, middle, center
 
 # Factoring joint probabilities
@@ -338,6 +400,9 @@ Many of the models you will work with as an ecologist will contain multiple rand
 
 --
 The rules of probability allow us to express the complex *joint* probabilities as a series of more simple *conditional* probabilities  
+
+- These concepts may feel a little abstract now but they will be very important when we learn about implementing Bayesian models  
+
 
 --
 Determining the dependences between parameters in the models is aided by **Bayesian network models**
@@ -360,7 +425,7 @@ Bayesian networks graphically display the dependence among random variables `\(^
 
 - Children nodes are on the LHS of conditioning symbols  
 
-- Parent nodes are on the RHS of condition  
+- Parent nodes are on the RHS of conditioning symbols  
 
 - Nodes without a parent are expressed unconditionally  
 
@@ -418,6 +483,11 @@ The order of conditioning (i.e., the dependencies in the graph) are determined b
 --
 `$$Pr(A, B, C, D) = Pr(A|B,C,D)Pr(C|D)Pr(D)Pr(B)$$`
 
+???
+
+If we know that `\(B\)` is independent of `\(C\)` and `\(D\)`, we can simplify the conditional expressions because (for independent events):
+
+`$$Pr(z_1|z_2) = Pr(z_1)$$`
 
 ---
 ## Properties of probability distributions
@@ -530,7 +600,7 @@ In R, probability mass is estimating using the `dpois()` function (or the equiva
 
 - `dpois(x = 10, lambda = 10)`  
 
-&lt;img src="Lecture2_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture2_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
 ???
 `\(^{14}\)`R will let us put in a vector of values so we can also do the following to estimate the probability of all values from 0 to 25: `dpois(x = seq(0, 25), lambda = 10)`  
@@ -544,7 +614,7 @@ For continuous variables, estimating probabilities is a little trickier because 
 
 Why? Let's look at the probability distribution for a normal random variable with mean `\(=0\)` and standard deviation `\(=3\)`:
 
-&lt;img src="Lecture2_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture2_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Probability density functions
@@ -553,7 +623,7 @@ The *probability density* is the area under the curve for an interval between `\
 
 For example, the shaded area below shows the probability density `\(Pr(-2 \leq z \leq -1)\)`:
 
-&lt;img src="Lecture2_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture2_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Probability density functions
@@ -564,7 +634,7 @@ This area can be approximated by multiplying the width times the (average) heigh
 
 By making the range `\(\Delta_z =a-b\)` smaller and smaller, we get closer to `\(Pr(z)\)`:
 
-&lt;img src="Lecture2_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture2_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Probability density functions
@@ -595,12 +665,12 @@ Every probability distribution we will use in the course can be described by its
 
 - `\(2^{nd}\)` moment is the variance
 
-&lt;img src="Lecture2_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture2_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Expected value (i.e., the mean)
 
-The first moment of a distribution describes its central tendency (denoted `\(\mu\)`) or *expected value* (denoted `\(E(z)\)`  
+The first moment of a distribution describes its central tendency (denoted `\(\mu\)`) or *expected value* (denoted `\(E(z)\)`)  
 
 This is the most probable value of `\(z\)`  
 
@@ -694,9 +764,9 @@ How close are these values to the true moments? For the gamma distribution:
 `$$\mu = \frac{\alpha}{\beta}$$`
 and 
 
-`$$\sigma^2 = \frac{\alpha}{\beta^1}$$`
+`$$\sigma^2 = \frac{\alpha}{\beta}$$`
 
-For our distribution:
+For our distribution: `\(^1\)`
 
 
 ```r
@@ -704,7 +774,7 @@ mu # Estimated mean
 ```
 
 ```
-## [1] 0.2471
+## [1] 0.2465
 ```
 
 ```r
@@ -736,7 +806,7 @@ sigma2 # Estimated variance
 ```
 
 ```
-## [1] 0.1195
+## [1] 0.1168
 ```
 
 ```r
@@ -786,7 +856,7 @@ Moment matching is very important because often we have the mean and variance of
 
 For the normal distribution, it is relatively easy to understand moments because the parameters of the distribution (mean and standard deviation) *are* the first and second moments
 
-&lt;img src="Lecture2_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture2_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Moment matching
@@ -846,12 +916,12 @@ For our model, that means `\(^{25}\)`:
 `\(^{25}\)` On your own, use our simulation method to check that our estimates are correct:
 
 
-```
-## [1] 0.2981
-```
+```r
+samp &lt;- rbeta(n, alpha, beta)
 
-```
-## [1] 0.02511
+(mu &lt;- sum(samp)/n)
+
+(sigma &lt;- sum((samp-mu)^2)/n)
 ```
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>

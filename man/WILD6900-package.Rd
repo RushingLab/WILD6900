@@ -6,8 +6,7 @@
 \alias{WILD6900-package}
 \title{WILD6900: Course materials for WILD6900: Applied Bayesian Analysis for Ecological Data}
 \description{
-More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Course materials for WILD6900: Applied Bayesian Analysis for Ecological Data at Utah State University. This package primarily exists to distribute data, code, and other materials in an efficient manner.
 }
 \author{
 \strong{Maintainer}: Clark Rushing \email{clark.rushing@usu.edu}

@@ -84,12 +84,20 @@ Raw BBS data is divided between three separate files:
 
 The example data we will used is included as a list with the three files as separate data frames. You can see the fields included in each data frame using:
 
-```{r}
+```{r eval = FALSE}
 head(bbs_data$routes)
 
 head(bbs_data$weather)
 
 head(bbs_data$counts[,1:10])
+```
+
+```{r echo = FALSE}
+knitr::kable(head(bbs_data$routes))
+
+knitr::kable(head(bbs_data$weather))
+
+knitr::kable(head(bbs_data$counts[,1:10]))
 ```
 
 For additional information about what each field represents, see the documentation page (`?bbs_data`). 
@@ -141,10 +149,22 @@ The bigger issue, however, is that this data frame isn't **tidy**. What does it 
 
 So before we subset the dove data, let's tidy the `ut_counts` data frame. We can do this with a single functions from the `tidyr` package:
 
-```{r}
+```{r eval = FALSE}
 tidy_counts <- tidyr::gather(ut_counts, key = "aou", value = "count", -Year, -routeID)
 
 head(tidy_counts)
+```
+
+```{r echo = FALSE}
+tidy_counts <- tidyr::gather(ut_counts, key = "aou", value = "count", -Year, -routeID)
+
+knitr::kable(head(tidy_counts))
+```
+
+Gather turns a "wide" dataframe into a "long" data frame (awesome animations courtesy of [Garrick Aden-Buie](https://github.com/gadenbuie/tidyexplain)).
+
+```{r}
+knitr::include_graphics('images/tidyr-spread-gather.gif')
 ```
 
 Now we can simply use `dplyr::filter()` to subset the dove counts:
@@ -160,3 +180,112 @@ One of the main challenges to working with BBS data is that the raw counts don't
 As always, there are multiple ways we could solve this problem. One thing to note is that the `weather` data frame contains covariate values for every run of every route. So if there are covariate values, we know the route was run. If not, we know it wasn't. One efficient (though maybe not immediately intuitive) way to add the 0 counts is the **join** the two data frames in a way that fills in 0's if there is a corresponding route/year combination in `weather` data frame and `NA` otherwise. Although not difficult to code, understanding how this works requires understanding the different types of `joins` available in the `tidyverse`. 
 
 ## Joins
+
+The *join* functions do exactly what they say - join two are more data frames. However, the manner in which they join and the output they produce varies depending on the type of join. In general, joins are divided into [two categories](https://r4ds.had.co.nz/relational-data.html#mutating-joins):
+
+1) Mutating joins
+
+> A mutating join allows you to combine variables from two tables. It first matches observations by their keys, then copies across variables from one table to the other
+
+2) Filtering joins
+
+> Filtering joins match observations in the same way as mutating joins, but affect the observations, not the variables
+
+This difference will be more clear after looking at a few examples.
+
+### Mutating joins
+
+
+Mutating joins include `inner_join()`, `left_join()`, `right_join()`, and `full_join()` (note that all of these functions come from the `dplyr` package). Let's start with `full_join()`, which produces a new data frame that includes all rows and columns from the two original data frame (call them `x` and `y`):
+
+```{r echo = FALSE}
+knitr::include_graphics("images/full-join.gif")
+```
+
+
+```{r eval = FALSE}
+(x <- data.frame(id = c(1,2,3), x = c("x1", "x2", "x3")))
+
+(y <- data.frame(id = c(1,2,4), y = c("y1", "y2", "y4")))
+
+dplyr::full_join(x, y)
+```
+
+```{r echo = FALSE}
+knitr::kable(x <- data.frame(id = c(1,2,3), x = c("x1", "x2", "x3")))
+
+knitr::kable(y <- data.frame(id = c(1,2,4), y = c("y1", "y2", "y4")))
+
+knitr::kable(dplyr::full_join(x, y))
+```
+
+Note that if there is not a matching values (`id = 3` and `id=4`), `full_join()` returns NA 
+
+The remaining mutating joins do modified verions of what `full_join()` does. `left_join()` keeps all rows from `x` (or the "left" dataframe in the arguments) and all columns from both `x` and `y`. Rows in `y` that are not shared with `x` (`id = 4`) are dropped from the resulting data frame:
+
+```{r echo = FALSE}
+knitr::include_graphics("images/left-join.gif")
+```
+
+```{r eval = FALSE}
+dplyr::left_join(x, y)
+```
+
+```{r echo = FALSE}
+knitr::kable(dplyr::left_join(x, y))
+```
+
+`right_join()` does the same thing but in reverse (so `left_join(x,y)` produces the same output as `right_join(y,x)`)
+
+`inner_join()` is the most restrictive the the mutating joins. It returns only rows from `x` where there are matching values in `y`:
+
+```{r echo = FALSE}
+knitr::include_graphics("images/inner-join.gif")
+```
+
+```{r eval = FALSE}
+dplyr::inner_join(x, y)
+```
+
+```{r echo = FALSE}
+knitr::kable(dplyr::inner_join(x, y))
+```
+
+Note that all of these functions first look for columns with the same name (in this case `id`) and joins *by* that (or those) column(s). 
+
+### Filtering joins
+
+In the examples above, the resulting data frame contained all of the columns from both `x` and `y`. Filtering joins are different in that they only keep the columns from the first data frame. For example, `semi_join()` returns all rows from `x` with matching values of `y` but only returns the original columns in `x`:
+
+```{r echo = FALSE}
+knitr::include_graphics("images/semi-join.gif")
+```
+
+```{r eval = FALSE}
+dplyr::semi_join(x, y)
+```
+
+```{r echo = FALSE}
+knitr::kable(dplyr::semi_join(x, y))
+```
+
+This is useful for getting rid of rows in `x` that are not shared with `y` (similar to the way we used `filter()` to keep only rows we wanted in the BBS data frames). 
+
+`anti_join()` returns rows from `x` where there are **not** matching values in `y`:
+
+```{r echo = FALSE}
+knitr::include_graphics("images/anti-join.gif")
+```
+
+```{r eval = FALSE}
+dplyr::anti_join(x, y)
+```
+
+```{r echo = FALSE}
+knitr::kable(dplyr::anti_join(x, y))
+```
+
+
+## Back to the 0 counts
+
+So how can we use a join to add the 0 counts? 

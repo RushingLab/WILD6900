@@ -1,11 +1,10 @@
 Package: WILD6900
 Type: Package
 Title: Course materials for WILD6900: Applied Bayesian Analysis for Ecological Data
-Version: 0.1.0
+Version: 2019.1
 Authors@R: person("Clark", "Rushing", role = c("aut", "cre"), email = "clark.rushing@usu.edu")
 Maintainer: Clark Rushing <clark.rushing@usu.edu>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Course materials for WILD6900: Applied Bayesian Analysis for Ecological Data at Utah State University. This package primarily exists to distribute data, code, and other materials in an efficient manner.
 License: CC0
 Encoding: UTF-8
 LazyData: true

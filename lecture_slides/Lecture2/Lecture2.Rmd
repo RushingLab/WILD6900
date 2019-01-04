@@ -85,7 +85,9 @@ For any given random variable, the *sample space* $S$ includes all of the possib
 
 For example, for an single-species occupancy model, $S$ would be present or absent. For a model of species abundance, $S$ would be ${0,1,2,3,...,\infty}$.  
 
-**insert figure**
+```{r out.width=500}
+knitr::include_graphics("S.png")
+```
 
 ???
 
@@ -113,6 +115,10 @@ class: inverse, middle, center
 The probability that $A$ will occur is the area of $A$ divided by the area of $S$ $^3$  
 
 $$Pr(A) = \frac{area\; of\; A}{area\; of \;S}$$
+
+```{r out.width=500}
+knitr::include_graphics("SA.png")
+```
 
 ???
 
@@ -144,6 +150,10 @@ class: inverse, middle, center
 Often, we are not interested in the probability of a single event happening but instead of more than one events  
 
 The *joint* probability $Pr(A,B)$ refers to the probability that two or more events occur and is usually denoted $^4$  
+
+```{r out.width=500}
+knitr::include_graphics("SAB.png")
+```
 
 ???
 
@@ -194,7 +204,7 @@ You can see this very clearly in this [awesome visualization](http://setosa.io/c
 ---
 ## Conditional probability
 
-$Pr(z_y|z_x)$ is the area shared by the two events divided by the area of $z_x$ (not $S$!) ^5
+$Pr(z_y|z_x)$ is the area shared by the two events divided by the area of $z_x$ (not $S$!) $^5$
 
 $$Pr(z_y|z_x) = \frac{area\; shared\; by\; z_x\; and\; z_y}{area\; of \;z_x} = \frac{Pr(z_x\; \cap\; z_y)}{Pr(z_x)}$$
 
@@ -263,7 +273,9 @@ In this case, knowing that $z_x = 1$ means that $z_y = 0$. In other words,
 
 $$Pr(z_y|z_x) = Pr(z_x|z_y) = 0$$
 
-**insert figure**
+```{r out.width=300}
+knitr::include_graphics("S_disjoint.png")
+```
 
 ???
 
@@ -323,6 +335,46 @@ $$Pr(z_x) = \sum_{i=1}^3 Pr(z_x|H_i)Pr(H_i)$$
 Think of this as a weighted average - the probability that $z_x=1$ in each habitat type weighted by the probability that each habitat type occurs.
 
 ---
+## Marginal probability
+
+
+```{r out.width=600}
+knitr::include_graphics("S_marginal1.png")
+```
+
+---
+## Marginal probability
+
+
+```{r out.width=600}
+knitr::include_graphics("S_marginal2.png")
+```
+
+
+
+---
+## Marginal probability
+
+
+```{r out.width=600}
+library(kableExtra)
+marg_df <- data.frame(blank = c("Occupied", "Unoccupied", "Total"), 
+                      H1 = c(60, 20, 80),
+                      H2 = c(10, 70, 80),
+                      H3 = c(10, 250, 260),
+                      Total = c(80, 340, 420))
+
+marg_df %>%
+  kable("html", col.names = c("", "H1", "H2", "H3", "Total"), align = 'c') %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE)
+
+```
+
+???
+
+This is the reason random or stratified sampling is so important if you want to know $Pr(z)$ - you do not sample habitats in proportion to $Pr(H_i)$, you will get biased estimates of $Pr(z)$!
+
+---
 class: inverse, middle, center
 
 # Factoring joint probabilities
@@ -363,7 +415,7 @@ Bayesian networks graphically display the dependence among random variables $^9$
 
 - Children nodes are on the LHS of conditioning symbols  
 
-- Parent nodes are on the RHS of condition  
+- Parent nodes are on the RHS of conditioning symbols  
 
 - Nodes without a parent are expressed unconditionally  
 
@@ -668,7 +720,7 @@ ggplot() +
 ---
 ## Expected value (i.e., the mean)
 
-The first moment of a distribution describes its central tendency (denoted $\mu$) or *expected value* (denoted $E(z)$  
+The first moment of a distribution describes its central tendency (denoted $\mu$) or *expected value* (denoted $E(z)$)  
 
 This is the most probable value of $z$  
 
@@ -760,9 +812,9 @@ How close are these values to the true moments? For the gamma distribution:
 $$\mu = \frac{\alpha}{\beta}$$
 and 
 
-$$\sigma^2 = \frac{\alpha}{\beta^1}$$
+$$\sigma^2 = \frac{\alpha}{\beta}$$
 
-For our distribution:
+For our distribution: $^1$
 
 ```{r echo = TRUE}
 mu # Estimated mean
@@ -899,7 +951,7 @@ For our model, that means $^{25}$:
 
 $^{25}$ On your own, use our simulation method to check that our estimates are correct:
 
-```{r}
+```{r eval = FALSE, echo = TRUE}
 samp <- rbeta(n, alpha, beta)
 
 (mu <- sum(samp)/n)
