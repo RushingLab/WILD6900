@@ -561,6 +561,9 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <p><img src="images/tidyr-spread-gather.gif" style="display: block; margin: auto;"></p>
 <p>Now we can simply use <code><a href="http://dplyr.tidyverse.org/reference/filter.html">dplyr::filter()</a></code> to subset the dove counts:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(tidy_counts, aou <span class="op">==</span><span class="st"> </span><span class="dv">22860</span>)</a></code></pre></div>
+<p>We will also remove all those <code>NA</code> values because it’s unclear what they mean. In the next section, we will figure out how to distinguish between truly missing values and 0 counts:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(dove_counts, <span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(count))</a></code></pre></div>
+<p>(remember that <code>count==NA</code> doesn’t work in <code>R</code> so instead we use <code><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na(count)</a></code>. Since we want to keep rows where the count <em>is not</em> <code>NA</code>, we use the <code>!</code> operator)</p>
 </div>
 </div>
 </div>
@@ -591,11 +594,11 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <a href="#mutating-joins" class="anchor"></a>Mutating joins</h3>
 <p>Mutating joins include <code><a href="http://dplyr.tidyverse.org/reference/join.html">inner_join()</a></code>, <code><a href="http://dplyr.tidyverse.org/reference/join.html">left_join()</a></code>, <code><a href="http://dplyr.tidyverse.org/reference/join.html">right_join()</a></code>, and <code><a href="http://dplyr.tidyverse.org/reference/join.html">full_join()</a></code> (note that all of these functions come from the <code>dplyr</code> package). Let’s start with <code><a href="http://dplyr.tidyverse.org/reference/join.html">full_join()</a></code>, which produces a new data frame that includes all rows and columns from the two original data frame (call them <code>x</code> and <code>y</code>):</p>
 <p><img src="images/full-join.gif" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">(x &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>)))</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3">(y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>), <span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y4"</span>)))</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">full_join</a></span>(x, y)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">(x &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>)))</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">(y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>), <span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y4"</span>)))</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">full_join</a></span>(x, y)</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">id</th>
@@ -668,7 +671,7 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <p>Note that if there is not a matching values (<code>id = 3</code> and <code>id=4</code>), <code><a href="http://dplyr.tidyverse.org/reference/join.html">full_join()</a></code> returns NA</p>
 <p>The remaining mutating joins do modified verions of what <code><a href="http://dplyr.tidyverse.org/reference/join.html">full_join()</a></code> does. <code><a href="http://dplyr.tidyverse.org/reference/join.html">left_join()</a></code> keeps all rows from <code>x</code> (or the “left” dataframe in the arguments) and all columns from both <code>x</code> and <code>y</code>. Rows in <code>y</code> that are not shared with <code>x</code> (<code>id = 4</code>) are dropped from the resulting data frame:</p>
 <p><img src="images/left-join.gif" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(x, y)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(x, y)</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">id</th>
@@ -696,7 +699,7 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <p><code><a href="http://dplyr.tidyverse.org/reference/join.html">right_join()</a></code> does the same thing but in reverse (so <code><a href="http://dplyr.tidyverse.org/reference/join.html">left_join(x,y)</a></code> produces the same output as <code><a href="http://dplyr.tidyverse.org/reference/join.html">right_join(y,x)</a></code>)</p>
 <p><code><a href="http://dplyr.tidyverse.org/reference/join.html">inner_join()</a></code> is the most restrictive the the mutating joins. It returns only rows from <code>x</code> where there are matching values in <code>y</code>:</p>
 <p><img src="images/inner-join.gif" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">inner_join</a></span>(x, y)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">inner_join</a></span>(x, y)</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">id</th>
@@ -723,7 +726,7 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <a href="#filtering-joins" class="anchor"></a>Filtering joins</h3>
 <p>In the examples above, the resulting data frame contained all of the columns from both <code>x</code> and <code>y</code>. Filtering joins are different in that they only keep the columns from the first data frame. For example, <code><a href="http://dplyr.tidyverse.org/reference/join.html">semi_join()</a></code> returns all rows from <code>x</code> with matching values of <code>y</code> but only returns the original columns in <code>x</code>:</p>
 <p><img src="images/semi-join.gif" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">semi_join</a></span>(x, y)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">semi_join</a></span>(x, y)</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">id</th>
@@ -743,7 +746,7 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <p>This is useful for getting rid of rows in <code>x</code> that are not shared with <code>y</code> (similar to the way we used <code><a href="http://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> to keep only rows we wanted in the BBS data frames).</p>
 <p><code><a href="http://dplyr.tidyverse.org/reference/join.html">anti_join()</a></code> returns rows from <code>x</code> where there are <strong>not</strong> matching values in <code>y</code>:</p>
 <p><img src="images/anti-join.gif" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">anti_join</a></span>(x, y)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">anti_join</a></span>(x, y)</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">id</th>
@@ -759,7 +762,18 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <div id="back-to-the-0-counts" class="section level2">
 <h2 class="hasAnchor">
 <a href="#back-to-the-0-counts" class="anchor"></a>Back to the 0 counts</h2>
-<p>So how can we use a join to add the 0 counts?</p>
+<p>So how can we use a join to add the 0 counts? Remember that the <code>ut_weather</code> data frame contains covariate data from all runs of each route. So if a route/year combination is in that data frame, we know it was run. If that route/year combination is <em>not</em> in the <code>dove_counts</code> data frame, it must be a 0 count.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">ut_run &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(ut_weather, routeID, Year)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(ut_run, dove_counts)</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">dove_counts<span class="op">$</span>aou &lt;-<span class="st"> "22860"</span></a>
+<a class="sourceLine" id="cb17-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb17-5" data-line-number="5">dove_counts<span class="op">$</span>count[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(dove_counts<span class="op">$</span>count)] &lt;-<span class="st"> </span><span class="dv">0</span></a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(dove_counts, Year)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(dove_counts, <span class="dt">Count =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(count))</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(dove_counts, <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> Year, <span class="dt">y =</span> Count)) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span>()</a></code></pre></div>
+<p><img src="wrangling_bbs_files/figure-html/unnamed-chunk-34-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 </div>
   </div>

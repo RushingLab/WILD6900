@@ -173,6 +173,14 @@ Now we can simply use `dplyr::filter()` to subset the dove counts:
 dove_counts <- dplyr::filter(tidy_counts, aou == 22860)
 ```
 
+We will also remove all those `NA` values because it's unclear what they mean. In the next section, we will figure out how to distinguish between truly missing values and 0 counts:
+
+```{r}
+dove_counts <- dplyr::filter(dove_counts, !is.na(count))
+```
+
+(remember that `count==NA` doesn't work in `R` so instead we use `is.na(count)`. Since we want to keep rows where the count *is not* `NA`, we use the `!` operator)
+
 # Filling in 0 counts using joins
 
 One of the main challenges to working with BBS data is that the raw counts don't include 0's. This is, if an observer didn't see a Eurasian collared-dove, they don't enter a 0, they enter nothing. That's wouldn't be a big issue except not every route is run in every year. So if we don't have an entry for specific species/route/year combination in the `counts` data frame, we don't immediately know if it's because the count was a 0 (a *true 0*) or if it's because the route wasn't run that year (a missing value). 
@@ -288,4 +296,30 @@ knitr::kable(dplyr::anti_join(x, y))
 
 ## Back to the 0 counts
 
-So how can we use a join to add the 0 counts? 
+So how can we use a join to add the 0 counts? Remember that the `ut_weather` data frame contains covariate data from all runs of each route. So if a route/year combination is in that data frame, we know it was run. If that route/year combination is *not* in the `dove_counts` data frame, it must be a 0 count. 
+
+```{r}
+ut_run <- dplyr::select(ut_weather, routeID, Year)
+```
+
+```{r}
+dove_counts <- dplyr::left_join(ut_run, dove_counts)
+
+dove_counts$aou <- "22860"
+
+dove_counts$count[is.na(dove_counts$count)] <- 0
+```
+
+
+```{r}
+
+dove_counts <- dplyr::group_by(dove_counts, Year)
+```
+
+```{r}
+dove_counts <- dplyr::summarise(dove_counts, Count = sum(count))
+```
+
+```{r}
+ggplot(dove_counts, aes(x = Year, y = Count)) + geom_path()
+```
