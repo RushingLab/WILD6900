@@ -17,5 +17,9 @@ Imports:
     dplyr,
     tidyr,
     ggplot2,
-    jagsUI
+    jagsUI,
+    maptools,
+    sf,
+    maps,
+    mapproj
 RoxygenNote: 6.1.1

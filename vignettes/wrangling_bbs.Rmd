@@ -27,9 +27,23 @@ knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/0/0b/Eur
 
 For this exercise, we will use data from the North American [Breeding Bird Survey](https://www.mbr-pwrc.usgs.gov/bbs/) to examine the rapid population growth of Eurasian collared-doves (*Streptopelia decaocto*) in the state of Utah. Preparing the raw BBS data for analysis is challenging due the complexity and idiosyncrasies of data. For these reasons, preparing these data offers many good lessons for data manipulation in general. These data also lend themselves to a number of the models we will discuss this semester so this lab will form the basis for future labs.  
 
-```{r echo = FALSE}
-# ut <- ggplot2::map_data()
+```{r echo = FALSE, fig.width=6, fig.height=6}
+library(ggplot2)
+library(WILD6900)
 
+usa <- ggplot2::map_data("state")
+west <- dplyr::filter(usa, region %in% c("california", "oregon", "washington", "idaho", "utah", "montanta", "wyoming", "colorado", "nevada", "arizona", "new mexico"))
+ut <- dplyr::filter(usa, region == "utah")
+
+ggplot() + 
+  geom_polygon(data = west, aes(x = long, y = lat, group = group), fill = NA, color = "grey50") + 
+  geom_sf(data = bcr, aes(fill = as.factor(BCRNumber)), alpha = 0.75) + 
+  geom_polygon(data = ut, aes(x = long, y = lat, group = group), fill = NA, color = "black") + 
+  scale_color_manual(values = c(WILD6900_colors$value[WILD6900_colors$name %in% c("primary", "danger", "warning")])) +
+  guides(fill = "none") +
+  coord_sf() + 
+  theme_minimal() +
+  theme(axis.title = element_blank())
 ```
 
 Eurasian collared-doves are an introduced species that, as you will soon see, have been rapidly expanding westward across the United States. In this lab, we will focus on cleaning and visualizing the raw data. In future labs, we will use these data and code to quantify population growth of this and other species. 
@@ -75,7 +89,7 @@ head(bbs_data$routes)
 
 head(bbs_data$weather)
 
-head(bbs_data$counts)
+head(bbs_data$counts[,1:10])
 ```
 
 For additional information about what each field represents, see the documentation page (`?bbs_data`). 
@@ -84,7 +98,14 @@ For additional information about what each field represents, see the documentati
 
 The `bbs_data` file contains counts from three BCRs (9, 10, and 16) but right now we only want data from Utah. There are many ways to subset data in `R` but for the sake of consistency, we will use the `filter()` function from the `dplyr` package.  
 
-**Side note**: there is also a `filter()` function in the `stats` package. Even though we loaded `dplyr`, it can sometimes be confusing to know which functions come from which packages (or to know which function `R` will default to using). For this reason, it's good practice to get in the habit of using the `package::function()` syntax, as we will do below. Using this syntax makes explicit which package/function you intend to use which makes your code easier for other to understand and reduces the potential for errors. As a benefit, you can stop using `library(package)` at the beginning of each script.  
+***
+**NOTE**
+
+There is also a `filter()` function in the `stats` package. Even though we loaded `dplyr`, it can sometimes be confusing to know which functions come from which packages (or to know which function `R` will default to using). For this reason, it's good practice to get in the habit of using the `package::function()` syntax, as we will do below. Using this syntax makes explicit which package/function you intend to use which makes your code easier for other to understand and reduces the potential for errors. As a benefit, you can stop using `library(package)` at the beginning of each script.  
+
+***
+
+
 
 The BBS state number for Utah is 85 so we filter based on the `statenum` field in the `routes` data frame:
 
@@ -116,7 +137,7 @@ However, there are a number of problems with the resulting data frame.
 
 The first problem with this data frame is that one of the column names is numeric. That's not technically illegal (the data frame exists, after all), but it's not great practice. At the very least, you have to put backticks around the column name to reference it (as we did above). Better to stick with non-numeric names, at least for the first character of a column name. 
 
-The bigger issue, however, is that this data frame isn't **tidy**. What does it mean for data to be tidy? [Essentially](http://vita.had.co.nz/papers/tidy-data.html), "each variable is a column, each observation is a row." In the `ut_counts` data frame, we have two main variable (other than year and routeID): `aou` code and the counts themselves. Each observation is the count of a single species. As formatted, we have one variable (`aos` code) spread across mutiple columns and multiple observations per row. That format makes it hard to use the data. How would you plot the counts of a given species by year? How would you write a model for `counts ~ Year` by species? The short answer is you can't without a lot of intermediate steps. In contrast, having tidy data makes these tasks much easier and consistent (as we will soon see).
+The bigger issue, however, is that this data frame isn't **tidy**. What does it mean for data to be tidy? [Essentially](http://vita.had.co.nz/papers/tidy-data.html), "each variable is a column, each observation is a row." In the `ut_counts` data frame, we have four main variables: year, routeID, the `aou` codes, and the counts themselves. Each observation is the count of a single species at a single route in a single year. As formatted, we have one variable (`aos` code) spread across mutiple columns and multiple observations per row. That format makes it hard to use the data. How would you plot the counts of a given species by year? How would you write a model for `counts ~ Year` by species? The short answer is you can't without a lot of intermediate steps. In contrast, having tidy data makes these tasks much easier and consistent (as we will soon see).
 
 So before we subset the dove data, let's tidy the `ut_counts` data frame. We can do this with a single functions from the `tidyr` package:
 
@@ -132,5 +153,10 @@ Now we can simply use `dplyr::filter()` to subset the dove counts:
 dove_counts <- dplyr::filter(tidy_counts, aou == 22860)
 ```
 
-## Filling in 0 counts using joins
+# Filling in 0 counts using joins
 
+One of the main challenges to working with BBS data is that the raw counts don't include 0's. This is, if an observer didn't see a Eurasian collared-dove, they don't enter a 0, they enter nothing. That's wouldn't be a big issue except not every route is run in every year. So if we don't have an entry for specific species/route/year combination in the `counts` data frame, we don't immediately know if it's because the count was a 0 (a *true 0*) or if it's because the route wasn't run that year (a missing value). 
+
+As always, there are multiple ways we could solve this problem. One thing to note is that the `weather` data frame contains covariate values for every run of every route. So if there are covariate values, we know the route was run. If not, we know it wasn't. One efficient (though maybe not immediately intuitive) way to add the 0 counts is the **join** the two data frames in a way that fills in 0's if there is a corresponding route/year combination in `weather` data frame and `NA` otherwise. Although not difficult to code, understanding how this works requires understanding the different types of `joins` available in the `tidyverse`. 
+
+## Joins

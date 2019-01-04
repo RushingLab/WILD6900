@@ -32,4 +32,7 @@ bbs_counts <- tidyr::spread(data = bbs_counts, key = aou, value = speciestotal)
 
 bbs_data <- list(routes = bbs_routes, weather = bbs_weather, counts = bbs_counts)
 
-usethis::use_data(WILD6900_colors, SurvPriorData, bbs_data, overwrite = TRUE)
+bcr <- sf::st_read("data-raw/BCR.shp")
+bcr <- dplyr::filter(bcr, BCRNumber %in% c(9, 10, 16))
+
+usethis::use_data(WILD6900_colors, SurvPriorData, bbs_data, bcr, overwrite = TRUE)
