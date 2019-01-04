@@ -38,9 +38,8 @@
 #'   \item{counts}{SPECIES COUNTS}
 #'    \itemize{
 #'       \item{`Year`}{  The year}
-#'       \item{`aou`}{  The five digit species identification code (see ftp://ftpext.usgs.gov/pub/er/md/laurel/BBS/DataFiles/SpeciesList.txt)}
-#'       \item{`speciestotal`}{  Total individuals recorded on that run of the route}
 #'       \item{`routeID`}{  Unique eight digit route ID}
+#'       \item{`aou`}{  All remaining columns are the counts of specific species; column names refer to the aou code used by BBS to identify species; values indicate the total number of individuals counted at each route in each year}
 #'    }
 #'}
 #' @source \url{https://www.mbr-pwrc.usgs.gov/bbs/}
