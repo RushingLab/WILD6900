@@ -137,7 +137,7 @@ However, there are a number of problems with the resulting data frame.
 
 The first problem with this data frame is that one of the column names is numeric. That's not technically illegal (the data frame exists, after all), but it's not great practice. At the very least, you have to put backticks around the column name to reference it (as we did above). Better to stick with non-numeric names, at least for the first character of a column name. 
 
-The bigger issue, however, is that this data frame isn't **tidy**. What does it mean for data to be tidy? [Essentially](http://vita.had.co.nz/papers/tidy-data.html), "each variable is a column, each observation is a row." In the `ut_counts` data frame, we have four main variables: year, routeID, the `aou` codes, and the counts themselves. Each observation is the count of a single species at a single route in a single year. As formatted, we have one variable (`aos` code) spread across mutiple columns and multiple observations per row. That format makes it hard to use the data. How would you plot the counts of a given species by year? How would you write a model for `counts ~ Year` by species? The short answer is you can't without a lot of intermediate steps. In contrast, having tidy data makes these tasks much easier and consistent (as we will soon see).
+The bigger issue, however, is that this data frame isn't **tidy**. What does it mean for data to be tidy? [Essentially](http://vita.had.co.nz/papers/tidy-data.html), "each variable is a column, each observation is a row." In the `ut_counts` data frame, we have four main variables: year, routeID, the `aou` codes, and the counts themselves. Each observation is the count of a single species at a single route in a single year. As formatted, we have one variable (`aos` code) spread across mutiple columns and multiple observations per row. That format makes it hard to use the data. How would you plot the counts of a given species by year? How would you write a model for `counts ~ Year` by species? The short answer is you can't without a lot of intermediate steps. In contrast, having tidy data makes these tasks much easier and consistent (as we will soon see). They are easier because many `R` functions take vectors as input. In a tidy data frame, each column 
 
 So before we subset the dove data, let's tidy the `ut_counts` data frame. We can do this with a single functions from the `tidyr` package:
 
@@ -147,9 +147,9 @@ tidy_counts <- tidyr::gather(ut_counts, key = "aou", value = "count", -Year, -ro
 head(tidy_counts)
 ```
 
-Gather turns a "wide" dataframe into a "long" data frame.
+Gather turns a "wide" dataframe into a "long" data frame by using the column names 
 
-```{r}
+```{r echo = FALSE}
 knitr::include_graphics('images/tidyr-spread-gather.gif')
 ```
 
