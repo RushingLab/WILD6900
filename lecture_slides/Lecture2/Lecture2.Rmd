@@ -23,7 +23,6 @@ library(WILD6900)
 
 > Hobbs & Hooten 29-70
 
-
 ---
 class: inverse, center, middle 
 

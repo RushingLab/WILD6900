@@ -3,6 +3,9 @@ title: "Intro to data simulation and visualization"
 author: "WILD6900"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+header-includes:
+  - \usepackage{amsmath}
+  
 vignette: >
   %\VignetteIndexEntry{simulation}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,6 +17,7 @@ knitr::opts_chunk$set(fig.align = 'center', message = FALSE,
   collapse = TRUE,
   comment = "#>"
 )
+library(WILD6900)
 ```
 
 ***
@@ -153,19 +157,107 @@ alpha1 <- -0.75 # Effect of elevation on detection probability
 alpha2 <- -1    # Effect of wind on detection probability
 ```
 
-## Generate expected counts
+## Generate expected abundances/review of (generalized) linear models
 
-```{r}
-a <- c(beta0, beta1, beta2)
-X <- cbind(1, sim_df$elevation.c, sim_df$rainfall.c)
+To generate the simulated abundances at each site, we first have to calcuate $\lambda_i$, the *expected* abundance at each site. If this is confusing, remember that a linear model is composed to two parts:
+
+$$response = deterministic\; part+stochastic\; part$$
+
+
+```{r echo = FALSE, fig.width=6, fig.height=6}
+
+x <- runif(100, 0, 100)
+y <- rnorm(100, x, 5)
+
+lm_df <- data.frame(x = x, y = y)
+
+ggplot(lm_df, aes(x, y)) + 
+    stat_smooth(method = "lm", se = FALSE, color = WILD6900_colors$value[WILD6900_colors$name == "secondary"]) +
+    geom_point(color = WILD6900_colors$value[WILD6900_colors$name == "primary"])  
+
 ```
 
+In the figure above, the line in the deterministic part of the model -- the predicted value of $y$ for a given value of $x$. It's deterministic because for a given value of $x$, it will always return the same predicted value of $y$. In our abundance model, $\lambda_i$ is the deterministic part of the model -- the predicted abundance of the orchid at a specific combination of elevation and rainfall. 
+
+We get these values by simply plugging in the observed elevation and rainfall values for each site to our linear model:
+
+$$\begin{bmatrix}
+    response_1 \\
+    reponse_2 \\
+    response_3 \\
+    .\\
+    .\\
+    .\\
+    response_M
+\end{bmatrix} = \begin{bmatrix}
+    1  & elevation_1 & rainfall_1\\
+    1  & elevation_2 & rainfall_2 \\
+    1  & elevation_3 & rainfall_3 \\
+    . & . &.\\
+    . & . &.\\
+    . & . &.\\
+    1  & elevation_M & rainfall_M
+\end{bmatrix} \times
+\begin{bmatrix}
+    \beta0 & \beta1 & \beta2
+\end{bmatrix}$$
+
+If you remember matrix algebra, multiplying the covariate matrix by the coefficient matrix is the same as doing:
+
+$$1 \times \beta0 + elevation_i \times \beta1 + rainfall_i \times \beta2$$
+
+The matrix of predicted responses is called the *linear predictor*. Notice that when we calculate the linear predictor for our data, some of the predicted abundances are negative:
+
+```{r fig.width=6, fig.height=6}
+pred_abun <- beta0 + beta1 * sim_df$elevation.c + beta2 * sim_df$rainfall.c
+hist(pred_abun)
+```
+
+In our model, this makes no sense -- abundance can't be negative. However, note that if we take $e^{response}$ we end up with positive values:
+
+```{r fig.width=6, fig.height=6}
+hist(exp(pred_abun))
+```
+
+This is why our linear model refers to $log(N)$ rather than $N$. In the case, `log()` is called the *link function* and this is what makes our model a *generalized linear model*. 
+
+Now that we have a refreshed our memory of the basic glm structure, let's add the predicted abundance for each site to the data frame:
+
+
 ```{r}
-sim_df <- dplyr::mutate(sim_df, log.lambda = a %*% t(X), 
+sim_df <- dplyr::mutate(sim_df, log.lambda = beta0 + beta1*elevation.c + beta2 * rainfall.c, 
                                 lambda = exp(log.lambda))
 
 ```
 
-```{r}
-ggplot(sim_df, aes(x = elevation, y = lambda)) + geom_point()
+## Plot relationships
+
+Whenever you simulate data, it's very useful to plot your data early and often. As we mentioned above, it's often difficult to know ahead of time exactly what reponse values a complex model will produce. Plots are a great way to quickly assess whether the simulation is producing values that are consistent with your domain expertise. 
+
+### Brief intro to `ggplot2`
+
+To be consistent with our use of the `tidyverse`, we will create plots using `ggplot2()`. 
+
+The power and flexibility of `ggplot2` come from it's consistent structure. Although a bit overwhelming at first, once you get the hang of it the structure actually makes it quite easy to create highly customized publication-quality graphics. All plots created using `ggplot2` use the same underlying structure:
+
+$$\underbrace{ggplot}_{initiate\; plot}(\underbrace{data = df}_{data\;frame},\; \underbrace{aes(x =\; , y = \;)}_{plot\; attributes}) + \underbrace{geom\_line()}_{geometry}$$
+
+The `ggplot()` function initiates a new plot. In this function, you tell `ggplot2` what data frame you will be using for the plot and you tell it how to map attributes of the data to the visual properties of the figures. Attributes are mapped inside the `aes()` argument. Attributes usually include location (`x-axis` and `y-axis` placement), color, size, shape, line type, and many others. In general, each attribute will be mapped to one column of your data frame. 
+
+The `ggplot()` function simply initiates a graph but if you run just that portion of the code you will get a blank graph. We can see that by creating a new plot showing the relationship between elevation (the x-axis of the plot) and predicted abundance (the y-axis): 
+
+```{r fig.width=6, fig.height=6}
+ggplot(data = sim_df, aes(x = elevation, y = lambda))
+```
+
+You can see that `ggplot` created a figure with the correct axes and labels. But no data. That's because we didn't tell `ggplot` what type of *geometry* to use to represent the data. Geometry refers to the actual type geometric object(s) we want to use to display the data. Common geometries include points (e.g., scatterplot), lines (e.g., timeseries), and bars (e.g., histograms). There are many others. Once we add a geometry, we can see the data:
+
+```{r fig.width=6, fig.height=6}
+ggplot(data = sim_df, aes(x = elevation, y = lambda)) + geom_point()
+```
+
+Going back to the `aes()` argument, we can use other attributes to disply additional information in our graph. For example, we could also show 
+
+```{r fig.width=6, fig.height=6}
+ggplot(data = sim_df, aes(x = elevation, y = lambda, size = rainfall)) + geom_point()
 ```
