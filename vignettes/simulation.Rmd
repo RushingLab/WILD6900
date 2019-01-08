@@ -1,0 +1,171 @@
+---
+title: "Intro to data simulation and visualization"
+author: "WILD6900"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{simulation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(fig.align = 'center', message = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+***
+**Objectives**
+
+- blah
+
+- blah
+
+
+***
+
+## What is data simulation
+
+Data simulation is a technique for generating random data from stochastic processes with known parameters. Although not framed as "data simulation", we have already done this several times this semester. For example,
+
+```{r eval = FALSE}
+x <- rnorm(100, 3, 0.75)
+```
+
+Is a simple data simulation to generate random variables from a normal distribution with known mean ($\mu=3$) and variance ($\sigma^2=0.75^2 = 0.5625$). In this exercise, we'll learn about simulating data under more complex models that are similar to the ones you might use to analyze your data. For example, imagine a simple single-season occupancy model with the probability of occupancy $\psi=0.75$ and detection probability $p=0.4$. In other words[^1]:
+
+$$z_i \sim Bernoulli(psi)$$
+
+$$y_i \sim Bernoulli(z_i \times p)$$ 
+
+We can simulate a data set from this model using a few lines of `R` code:
+
+```{r}
+nSites <- 100  # Number of sites
+psi <- 0.75    # Occupancy probability
+p <- 0.4       # Detection probability
+
+z <- rbinom(n = nSites, size = 1, prob = psi)     ## Generate true state of each site;
+                                                  ## note that Bernoulli = binomial with size = 1 (single coin flip)
+y <- rbinom(n = nSites, size = 1, prob = z * p)   ## Generate observations
+```
+
+With those five lines of code, we know how a fake data set that could be fed into an occupancy model to estimate $\psi$ and $p$.
+
+[^1]: Note that $z_i$ can either be 1 (site $i$ is occupied) or 0 (site $i$ is unoccupied) and $y_i$ can be 1 (species detected at site $i$) or 0 (species not detected at site $i$). In the second equation, adding $z_i$ ensures that if the site is unoccupied ($z_i=0$) than $y_i$ has to be 0 also. We'll learn more about this formulation of occupancy models later in the semester
+
+## Why simulate data?
+
+At first, it may seem strange to generate a fake data set just so we can run it through a modeling exercise to get answers we already know. But data simulation is a powerful technique in your toolbox as an ecological modeller. There are a number of reasons data simulation is useful[^2]: 
+
+[^2]: Based on chapter 4 of Kery & Royle *Applied Hierarchical Modeling in Ecology* 
+
+1) *Thruth is known*: Usually when we apply a model to data, we don't know the true parameter values that generated the data. In this case, you may be able to fit the model but you'll never know if it got the right answer. With simulated data, you can check whether your model returns the known parameter values. This is a useful way to make sure you code is doing what you *think* it's doing.  
+
+2) *Sampling error*: As we already learned, sampling error is an inherent part of any ecological analysis. The noise that results from sampling error makes it harder to detect the true signals in our process model. With real data, you only have a single data set, which makes it hard to understand the effect of sampling error on your inference. With simulated data, you can generate hundreds or even thousands of data sets from the same process/observation models, allowing you to observe the effects of sampling error directly. 
+
+3) *Check characteristics of estimators*: Related to point 1, with a complex model and just a single data set it's difficult to determine whether the estimators you are using are well-behaved; that is, do they return estimates that are unbiased and precise. With simulated data, you can directly quantify these properties.
+
+4) *Power analysis*: By varying the effect sizes and sample sizes in your simulated data, you can easily perform power analyses. Using simulated data in this way can be very useful for designing field studies or helping to interpret inferences after data has been collected and analyzed.  
+
+5) *Check identifiability/estimability of parameters*: In Bayesian models, we can always obtain posteterior distributions for every parameter in our model. However, these posteriors are not always useful. In some cases, our data may provide little-to-no information about the value of a parameter and therefore the posterior distribution for this parameter will simply be determined by the prior. This lack of *identifiability* may be caused by instrinsic properties of our model (for example, if two parameters are completely confounded such that different combinations of parameter values have the same likelihood) or because our data do not provide enough information to estimate all parameters in the model (for example, a regression model with dozens of predictors but few observations). Although there are rigorous methods for testing instrinsic identifiability, this task can be extremely difficult for complex hierarchical models. Simulated data allow you to check whether all parameters in your model can be estimated by generated replicate data sets that have the same properties (sample size, etc) as your data.     
+
+6) *Check robustness to violations of model assumptions*: All models have assumptions about how the data was generated. These assumptions stem from the way we formulate the process and observation models. Of course, most assumptions will be violated to some degree in real data sets. With simulated data sets, we can generate data that we know violate the assumptions of the model in one or more ways (e.g., generated heterogeneous survival probabilities for a model that assumes constant survival). By comparing the parameters estimates from these "mis-specified" data sets, we can guage the degree to which our inferences are sensitive to violations. 
+
+7) *Better understand your model*: One good way to test whether you really understand your model is to see if you can write the code to simulate data under the model. In many cases, this exercise will uncover misunderstandings or lack of understanding about what the model is actually doing. Simulating data is also a good way to make sure you understand what each parameter in your model actually represents. If you can simulate data from each part of the model, chances are you can also figure out why your model may not be working the way you think it does. In short, simulating data is a great way to develop a deeper understanding of your model. 
+
+# Simulating count data
+
+In this exercise, we will simulate and visualize data generated under very general process and state models. We will simulate the data assuming a "glm" type formulation with covariates effecting both the abundances as well as the observed counts (apropos of point 7 above, we will also use this example as a brief review of glm's). 
+
+Because I'm probably too guilty of being animal focused, we will assume these counts are generated a part of a study documenting the distribution of a rare orchid. Because we're making this up as we go, we'll assume this rare orchid prefers high elevation sites that receive a lot of rainfall each year. Therefore, we expect abundance to increase with increasing elevation and rainfall. To estimate abundance, we conduct $M$ replicated counts at $J$ sample plots. For the process model, we will assume
+
+$$N_i \sim Poisson(\lambda_i)$$
+
+where $N_i$ is the true abundance at site $i$ and $\lambda_i$ is the *expected* abundance[^3]. To model the elevational and rainfall relationships, we incoporate those predictors on the (log) expected counts (we will review why we use the log counts shortly). Therefore:
+
+$$log(\lambda_i) = \beta_0 + \beta_1 \times elevation_i + \beta_2 \times rainfall_i$$
+
+where $\beta_0$, $\beta_1$, and $\beta_2$ are regression coefficients that govern the relationshp between abundance, elevation, and rainfall.  
+
+Even though these are plants, they are small and cryptic so no matter how hard we search on the study plots, it is likely that we won't find every plant. This is, the probability of detecting each plant $p < 1$. Let's assume detection probability is lowest at high elevations because our oxygen-deprived brains are bad at searching at high elevations. We'll further assume that it's hard to detect the species on windy days. For the observation model, we will assume:
+
+$$y_{i,j} \sim Binomial(N_i, p_{i,j})$$
+
+and
+
+$$logit(p_{i,j}) = \alpha_0 + \alpha_1 \times elevation_i + \alpha_2 \times wind_{i,j}$$
+
+where $y_{i,j}$ is the number of individuals counted at site $i$ during count $j$, $p_{i,j}$ is the site/occasion specific detection probability, and $\alpha_0$, $\alpha_1$, and $\alpha_2$ are regression coefficients that govern the relationship between detection probability, elevation, and wind. Again, we will briefly review why we model detection probability on the logit scale shortly. 
+
+[^3]: Remember our discussion of probability distributions. The Poisson distribution generates random integer values greater than 0. Both the mean and variance of the Poisson distribution $= \lambda$. 
+
+## Initial steps: Setting the model parameters
+
+The first step to simulating data is to set the fixed values that are needed to generate the stochastic data. This usually includes the sample size, number of visits, covariate and parameter values and any other fixed value relevant to the analysis. In this case, we'll first set the number of sites and number of visits:
+
+```{r}
+M <- 175 # Number of sites
+J <- 4   # Number of replicate counts
+```
+
+Next, we need to generate the covariate values, in this case elevation, rainfall, and wind. Notice that both elevation and rainfall are *site-level* covariates; they get a single value for each site. Wind is a sampling covariate so it will get one value for each site *and* each visit. For this reason, we'll treat elevation and rainfall as vectors of length $M$ and wind as a matrix with dimensions $c(M,J)$. For now, we'll assume our sites vary from sea-level to 1500m in elevation, rainfall varies from 0mm to 200mm per year, and wind can vary from 0kph to 50kph. We'll further assume that the predictors are independent (which is probably not realistic but we will ignore correlations among predictors for now)
+
+```{r}
+sim_df <- data.frame(elevation = runif(M, min = 0, max = 1500),
+                     rainfall = runif(M, min = 0, max = 200),
+                     wind = runif(M*J, min = 0, max = 50))
+```
+
+In most analyses, it is good practice to scale covariate values so they have a mean of 0 and do not extend too far above and below 0 (very large values (positive or negative) can create numerical issues when fitting models). So next we center and scale the covariates (we'll do it manually but it could also be done using the built-in function `scale()`):
+
+```{r}
+sim_df <- dplyr::mutate(sim_df, elevation.c = (elevation - mean(elevation))/sd(elevation),
+                                rainfall.c = (rainfall - mean(rainfall))/sd(rainfall),
+                                wind.c = (wind - mean(wind))/sd(wind))
+```
+
+You can check that these now have mean = 0 and sd = 1. 
+
+Finally, we need to set the parameter values for the regression models. This is where understanding what each parameter represents is very helpful. For example, $\beta_0$ is the expected number of orchids (on the log scale) when the other covariates have a value of 0 (because we centered elevation and rainfall, we interpret $\beta_0$ to be the expected abundance at the mean elevation and rainfall rather than at sea-level and 0mm of rain). Thinking about counts on the log scale is hard so we'll set this value on the abundance scale and then transform to get $\beta_0$:
+
+```{r}
+mean.lambda <- 2           # Mean expected number of orchids
+(beta0 <- log(mean.lambda))  # Log expected number of orchids (intercept)
+```
+
+We can do the same thing with $\alpha_1$, which is the (logit) expected detection probability at the mean abundance and wind:
+
+```{r}
+mean.p <- 0.65
+(alpha0 <- log(mean.p/(1-mean.p)))
+```
+
+Now we set the other regression coefficients. We have already said the $\beta_1$ is positive (abundance increases with elevation) whereas $\beta_2$, $\alpha_1$, and $\alpha_2$ are negative (abundance decreases with increasing rainfall; detection probability decreases with increasing elevation and wind). All that's left is to decide specific values. I recommend playing with these values a bit to get a feel for effect sizes on the log and logit scales. Both $\lambda$ and $p$ are derived variables based on the regression models and it's not always obvious what values of the regression coefficients will generate reasonable abundances and counts. Simulating data under different effect sizes is a good way to build intuition about what a "large" effect size is in glms. 
+
+```{r}
+beta1 <- 0.6   # Effect of elevation on abundance
+beta2 <- -1 # Effect of rainfall on abundance
+ 
+alpha1 <- -0.75 # Effect of elevation on detection probability
+alpha2 <- -1    # Effect of wind on detection probability
+```
+
+## Generate expected counts
+
+```{r}
+a <- c(beta0, beta1, beta2)
+X <- cbind(1, sim_df$elevation.c, sim_df$rainfall.c)
+```
+
+```{r}
+sim_df <- dplyr::mutate(sim_df, log.lambda = a %*% t(X), 
+                                lambda = exp(log.lambda))
+
+```
+
+```{r}
+ggplot(sim_df, aes(x = elevation, y = lambda)) + geom_point()
+```
