@@ -58,6 +58,6 @@ All homework assignments for this course will be completed R Markdown files. To 
       
     - Right-click the folder and select `compress LastNameFirstName-Homework#`
 
-4c) Email the zipped file to [clark.rushing@usu.edu](clark.rushing@usu.edu) with the subject line: `WILD6900 Homework #`, again substituting `#` for the appropriate homework number
+4c) Upload the zipped file to Canvas under the correct assignment folder
 
 **Assignments that fail to follow this instructions will not be graded**

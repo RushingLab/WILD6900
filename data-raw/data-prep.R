@@ -29,9 +29,11 @@ bbs_counts <- dplyr::filter(bbs$counts, routeID %in% bbs_routes$routeID)
 
 bbs_counts <- dplyr::select(bbs_counts, Year, aou, speciestotal, routeID)
 bbs_counts <- tidyr::spread(data = bbs_counts, key = aou, value = speciestotal)
+bbs_counts[is.na(bbs_counts)] <- 0
 
 bbs_data <- list(routes = bbs_routes, weather = bbs_weather, counts = bbs_counts)
 
+library(sf)
 bcr <- sf::st_read("data-raw/BCR.shp")
 bcr <- dplyr::filter(bcr, BCRNumber %in% c(9, 10, 16))
 

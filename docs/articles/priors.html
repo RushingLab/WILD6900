@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">WILD6900</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2019.1</span>
       </span>
     </div>
 
@@ -114,7 +114,7 @@
       <h1>Developing informative priors</h1>
             <h3 class="subtitle">WILD6900</h3>
             
-            <h4 class="date">2019-01-03</h4>
+            <h4 class="date">2019-01-04</h4>
       
       
       <div class="hidden name"><code>priors.Rmd</code></div>
@@ -229,7 +229,7 @@
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">(mu3 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(sim_phi))</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">#&gt; [1] 0.9351</span></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">(var3 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/sd">sd</a></span>(sim_phi) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt; [1] 0.001109</span></a></code></pre></div>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt; [1] 0.00111</span></a></code></pre></div>
 <p>You can see that the variance of these samples is much larger than for approach 1, reflecting the additional source of uncertainty in approach 2. Now we use the same moment matching code as before to generate and visualize the prior:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co">## Beta parameters</span></a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">alpha4 &lt;-<span class="st"> </span>mu3<span class="op">^</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>((<span class="dv">1</span><span class="op">-</span>mu3)<span class="op">/</span>var3 <span class="op">-</span><span class="st"> </span>(<span class="dv">1</span><span class="op">/</span>mu3))</a>

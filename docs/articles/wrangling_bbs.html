@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">WILD6900</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2019.1</span>
       </span>
     </div>
 
@@ -115,7 +115,7 @@
             <h3 class="subtitle">Population growth of Eurasian collared-doves in Utah</h3>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-01-03</h4>
+            <h4 class="date">2019-01-04</h4>
       
       
       <div class="hidden name"><code>wrangling_bbs.Rmd</code></div>
@@ -134,24 +134,17 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 </p>
 </div>
 <p>For this exercise, we will use data from the North American <a href="https://www.mbr-pwrc.usgs.gov/bbs/">Breeding Bird Survey</a> to examine the rapid population growth of Eurasian collared-doves (<em>Streptopelia decaocto</em>) in the state of Utah. Preparing the raw BBS data for analysis is challenging due the complexity and idiosyncrasies of data. For these reasons, preparing these data offers many good lessons for data manipulation in general. These data also lend themselves to a number of the models we will discuss this semester so this lab will form the basis for future labs.</p>
+<p><img src="wrangling_bbs_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Eurasian collared-doves are an introduced species that, as you will soon see, have been rapidly expanding westward across the United States. In this lab, we will focus on cleaning and visualizing the raw data. In future labs, we will use these data and code to quantify population growth of this and other species.</p>
 <div id="getting-the-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#getting-the-data" class="anchor"></a>Getting the data</h2>
 <p>First, let’s load the packages we will need for this exercise:</p>
-<<<<<<< HEAD
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(WILD6900)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggplot2)</code></pre></div>
-<p>Rather that starting from the survey-wide data, the <code>WILD6900</code> package includes data from just the BBS routes within the <a href="http://nabci-us.org/resources/bird-conservation-regions-map/">Bird Conservation Regions</a> that make up the state of Utah. You can access those data using the <code><a href="https://www.rdocumentation.org/packages/utils/topics/data">data()</a></code> function:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"bbs_data"</span>)</code></pre></div>
-=======
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(WILD6900)</a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggplot2)</a></code></pre></div>
 <p>Rather that starting from the survey-wide data, the <code>WILD6900</code> package includes data from just the BBS routes within the <a href="http://nabci-us.org/resources/bird-conservation-regions-map/">Bird Conservation Regions</a> that make up the state of Utah. You can access those data using the <code><a href="https://www.rdocumentation.org/packages/utils/topics/data">data()</a></code> function:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"bbs_data"</span>)</a></code></pre></div>
->>>>>>> 5cf75ebe31a3a44b8878b827514c488223bcbd19
 </div>
 <div id="data-structure" class="section level2">
 <h2 class="hasAnchor">
@@ -180,580 +173,607 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <li><p>Note that the raw data does not include counts of 0!</p></li>
 </ul>
 <p>The example data we will used is included as a list with the three files as separate data frames. You can see the fields included in each data frame using:</p>
-<<<<<<< HEAD
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>routes)
-<span class="co">#&gt;   countrynum statenum Route Active Latitude Longitude BCR RouteTypeID</span>
-<span class="co">#&gt; 1        124        4     5      0    49.63    -114.6  10           1</span>
-<span class="co">#&gt; 2        124        4    10      1    50.48    -114.4  10           1</span>
-<span class="co">#&gt; 3        124        4    16      0    51.10    -115.1  10           1</span>
-<span class="co">#&gt; 4        124        4    17      1    51.46    -116.2  10           1</span>
-<span class="co">#&gt; 5        124        4    24      1    52.26    -116.4  10           1</span>
-<span class="co">#&gt; 6        124        4    25      1    52.73    -117.6  10           1</span>
-<span class="co">#&gt;    routeID</span>
-<span class="co">#&gt; 1 12404005</span>
-<span class="co">#&gt; 2 12404010</span>
-<span class="co">#&gt; 3 12404016</span>
-<span class="co">#&gt; 4 12404017</span>
-<span class="co">#&gt; 5 12404024</span>
-<span class="co">#&gt; 6 12404025</span>
-
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>weather)
-<span class="co">#&gt;   RPID Year Month Day    ObsN StartTemp EndTemp StartWind EndWind StartSky</span>
-<span class="co">#&gt; 1  101 1973     6  23 1090178        50      55         5       2        5</span>
-<span class="co">#&gt; 2  101 1975     6  21 1090178        50      65         2       2        1</span>
-<span class="co">#&gt; 3  101 1985     6  26 1150442        42      59         0       1        0</span>
-<span class="co">#&gt; 4  101 1986     6  22 1150442        46      54         5       4        1</span>
-<span class="co">#&gt; 5  101 1987     6  28 1150442        53      64         2       2        1</span>
-<span class="co">#&gt; 6  101 1988     6  25 1150442        47      62         0       0        0</span>
-<span class="co">#&gt;   EndSky StartTime EndTime Assistant RunType  routeID</span>
-<span class="co">#&gt; 1      5       503     852         0       0 12404005</span>
-<span class="co">#&gt; 2      1       500     930         0       1 12404005</span>
-<span class="co">#&gt; 3      0       500     925         0       1 12404005</span>
-<span class="co">#&gt; 4      2       500     933         0       0 12404005</span>
-<span class="co">#&gt; 5      1       500     938         0       1 12404005</span>
-<span class="co">#&gt; 6      0       500     926         0       1 12404005</span>
-
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>counts)
-<span class="co">#&gt;   Year  routeID 10 11 12 20 30 40 60 70 77 290 440 510 530 534 540 550 590</span>
-<span class="co">#&gt; 1 1968 12411004 NA NA NA  1 NA NA NA NA NA  NA  NA  NA  NA  NA  NA  NA  NA</span>
-<span class="co">#&gt; 2 1968 12411005 NA NA 29 NA NA NA NA NA NA  NA  NA  NA   1  NA  NA  NA  NA</span>
-<span class="co">#&gt; 3 1968 12411009 NA NA NA NA NA NA NA NA NA  NA  NA  NA  NA  NA  NA  NA  NA</span>
-<span class="co">#&gt; 4 1968 12411018 NA NA NA NA NA NA NA  1 NA  NA  NA  NA  NA  NA  NA  NA  NA</span>
-<span class="co">#&gt; 5 1968 12411020 NA NA  1 NA NA NA  5  8 NA  NA  NA  NA  NA  NA  NA  NA  NA</span>
-<span class="co">#&gt; 6 1968 12411023 NA NA NA NA NA NA NA  1 NA  NA  NA  NA  NA  NA  NA  NA  NA</span>
-<span class="co">#&gt;   600 640 690 700 770 1200 1250 1290 1300 1310 1320 1326 1350 1370 1390</span>
-<span class="co">#&gt; 1  NA  NA  NA  NA  NA   NA   NA   NA   NA   NA    1   NA   NA   NA   NA</span>
-<span class="co">#&gt; 2  NA  NA  NA  NA  NA   NA   NA    1   NA   NA    1   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3  NA  NA  NA  NA  NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4  NA  NA  NA  NA  NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5  NA  NA  NA  NA  NA   NA   NA   NA   NA   NA    1   NA   NA   NA   NA</span>
-<span class="co">#&gt; 6  NA  NA  NA  NA  NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   1400 1410 1420 1430 1440 1460 1470 1480 1489 1490 1500 1510 1512 1520</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    8</span>
-<span class="co">#&gt; 2    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   1530 1550 1650 1660 1670 1720 1725 1800 1810 1870 1900 1910 1940 1945</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   1960 1970 2001 2010 2020 2060 2120 2140 2150 2190 2210 2230 2240 2250</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA    1   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA    1    1   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   2260 2300 2490 2540 2550 2560 2580 2610 2630 2640 2730 2780 2810 2881</span>
-<span class="co">#&gt; 1   NA    5   NA   NA   NA   NA   NA   NA   NA   NA    5   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA    1   NA   NA   NA   NA   NA   NA   13   NA    1   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA    1   NA   NA   NA   NA   NA   NA   NA   NA    2   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA    5   NA   NA   NA   NA   NA   NA    1   NA    2   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   2882 2890 2920 2930 2940 2950 2960 2970 2971 2973 2980 3000 3040 3080</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   3089 3090 3091 3100 3120 3131 3160 3190 3200 3240 3250 3310 3320 3330</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA    4   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA    5   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA    2   NA   NA   NA    3   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   3333 3340 3370 3380 3400 3420 3430 3450 3451 3470 3480 3490 3520 3550</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   3560 3570 3600 3640 3650 3660 3670 3680 3690 3700 3710 3720 3730 3732</span>
-<span class="co">#&gt; 1   NA   NA    2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA    3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA    3    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   3740 3750 3770 3780 3790 3850 3870 3880 3900 3920 3930 3940 3960 3970</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    2   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA    1   NA    2    1   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA    1   NA   NA</span>
-<span class="co">#&gt;   3990 4000 4010 4020 4021 4022 4030 4040 4050 4060 4070 4080 4110 4120</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA    2   NA   NA   NA   NA   NA   NA    3   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA   NA   19   NA   NA   NA    3   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA    2   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   4123 4125 4130 4172 4180 4200 4205 4210 4220 4230 4240 4250 4290 4300</span>
-<span class="co">#&gt; 1   NA   NA   11   NA   NA    9   NA   NA   NA   NA    1   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   11   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA    5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   12   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA    7   NA   NA    1   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   13   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   4310 4320 4330 4340 4360 4402 4430 4440 4447 4460 4470 4480 4530 4540</span>
-<span class="co">#&gt; 1   NA   NA    1   NA   NA   NA   NA    5   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA    1   NA   NA   NA   NA    1   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   11   NA   12   NA   NA    1   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA   NA    1   NA   NA    6   NA   NA    2   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA    2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   4560 4570 4580 4590 4620 4630 4640 4641 4642 4660 4661 4665 4670 4679</span>
-<span class="co">#&gt; 1   NA   NA   NA    2    9   NA   NA   NA   NA    4   NA   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA    1   NA   NA   NA    8   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA    1    7   NA   NA   NA   NA   NA   NA    5   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA    2   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   4680 4689 4690 4691 4710 4740 4750 4770 4780 4810 4820 4840 4860 4865</span>
-<span class="co">#&gt; 1   NA   NA   25   NA   NA   NA    1   NA   NA   NA   NA   NA    8   NA</span>
-<span class="co">#&gt; 2   NA   NA    8   NA   NA   NA   NA   NA   NA   NA   NA   NA    9   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1   11   NA</span>
-<span class="co">#&gt; 4   NA   NA    2   NA   NA   NA   NA   NA   NA   NA   NA   NA    6   NA</span>
-<span class="co">#&gt; 5   11   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    7   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    3   NA</span>
-<span class="co">#&gt;   4870 4880 4890 4910 4920 4930 4940 4950 4970 4980 5000 5010 5011 5012</span>
-<span class="co">#&gt; 1   NA   14   NA   NA   NA   39   NA    3   NA    2   NA   NA   11   NA</span>
-<span class="co">#&gt; 2   NA   15   NA   NA   NA    8   NA   11   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA    9   NA   NA   NA   NA   NA   NA   NA    3   NA   NA    2   NA</span>
-<span class="co">#&gt; 4   NA    7   NA   NA   NA   22   NA    8   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   91   NA   NA   NA   32    1   14   NA   32   NA   NA    4   NA</span>
-<span class="co">#&gt; 6   NA    5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   5040 5050 5060 5070 5077 5080 5090 5100 5110 5120 5140 5150 5170 5180</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA    3   NA   NA   NA   NA   NA    9</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA    3   NA   NA    3   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA   NA   NA    2   NA   65   NA   NA    7   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1</span>
-<span class="co">#&gt;   5190 5195 5210 5220 5225 5240 5250 5260 5290 5300 5310 5330 5380 5390</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   35   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   84   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   26   NA   NA   NA   NA   NA   NA   NA   NA   16   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA    2   NA   NA   57   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA    6   NA   NA   NA   NA   NA    3   NA   NA   66   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA    2   NA   NA   NA   NA   NA   NA   NA   NA   19   NA   NA</span>
-<span class="co">#&gt;   5400 5420 5450 5460 5480 5491 5520 5540 5570 5580 5590 5600 5610 5620</span>
-<span class="co">#&gt; 1   27   NA   NA   NA   NA   NA    1    1   NA   NA   NA   40    3   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   82   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA    2   NA   NA   NA    9   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   50   NA   NA</span>
-<span class="co">#&gt; 5    4   12   NA   NA   NA   NA   NA   NA   NA   NA   NA   22   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   11   NA   NA</span>
-<span class="co">#&gt;   5630 5650 5660 5670 5671 5677 5680 5690 5730 5738 5740 5780 5800 5810</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA   17   NA   NA   NA   NA   NA   NA   NA   NA    4</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   22   NA   NA   NA   NA   NA   NA   NA   NA    1</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   12   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   14   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA   NA    4   NA   NA   NA   NA   NA   NA   NA   NA   11</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA    1   NA   NA   NA   NA   NA   NA   NA   NA    2</span>
-<span class="co">#&gt;   5830 5840 5850 5870 5880 5900 5910 5911 5920 5930 5950 5960 5970 5980</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA   18   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA    8   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA    4   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA</span>
-<span class="co">#&gt;   5990 6040 6050 6070 6090 6100 6110 6120 6130 6140 6150 6160 6170 6180</span>
-<span class="co">#&gt; 1    8   NA   NA   11   NA   NA   NA   31    1   NA   11  128    2   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   10   NA   NA   NA   13   31   NA   59    3   12   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA    4   NA   NA   NA   NA   NA    1    6   NA    7   NA</span>
-<span class="co">#&gt; 4    4   NA   NA   NA   NA   NA   NA   25   17    2   33   NA    5   NA</span>
-<span class="co">#&gt; 5   21   NA   NA   19   NA   NA   NA    3    6    6    7   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA    4   NA   NA   NA   NA   NA   18    3   NA   NA   NA</span>
-<span class="co">#&gt;   6190 6200 6220 6240 6260 6270 6290 6291 6292 6295 6296 6320 6330 6340</span>
-<span class="co">#&gt; 1   12   NA   NA   13   NA   14   NA   10   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 2   39   NA   NA    3   NA    1   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA    5   NA    6   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   11   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5    9   NA   NA   68   NA    5   NA   12   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA    4   NA    4   NA    1   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   6360 6430 6440 6450 6460 6470 6500 6520 6550 6556 6560 6570 6590 6610</span>
-<span class="co">#&gt; 1   NA   NA   NA    4    4   NA   NA   10   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   55   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA    7   NA   NA    7   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   43   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA    1   NA   NA   NA   14   NA   NA   17   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA    3   NA   NA    1   NA   NA   NA</span>
-<span class="co">#&gt;   6630 6640 6650 6670 6680 6685 6686 6690 6720 6740 6750 6760 6780 6790</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA    1   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA    5   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    3   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA    1   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   6800 6810 6830 6850 6860 6870 6882 6970 7000 7010 7020 7030 7040 7050</span>
-<span class="co">#&gt; 1   NA    4   NA    1   NA   16    5   NA   NA   NA   NA   NA    4   NA</span>
-<span class="co">#&gt; 2    1   NA   NA   NA   NA    8   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 4   12   NA   NA   NA   NA   NA    2   NA   NA   NA   NA   NA    1   NA</span>
-<span class="co">#&gt; 5    7    3   NA   NA   NA    2    1   NA   NA   NA   NA   NA    2   NA</span>
-<span class="co">#&gt; 6    3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   7070 7080 7100 7110 7120 7130 7150 7170 7190 7210 7221 7222 7250 7260</span>
-<span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA   NA   NA    7   NA   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA    1</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA   NA    1    1   NA    1   NA</span>
-<span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt;   7270 7280 7300 7315 7330 7331 7332 7350 7351 7353 7380 7400 7410 7420</span>
-<span class="co">#&gt; 1   NA    4   NA   NA   NA   NA   NA    9   NA   NA    8   NA   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   14   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 3   NA    8   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA    6   NA   NA   NA   NA   NA   NA</span>
-<span class="co">#&gt; 5   NA    5   NA   NA   NA   NA   NA    8   NA   NA    2   NA   NA   NA</span>
-<span class="co">#&gt; 6   NA    3   NA   NA   NA   NA   NA   NA   NA   NA    6   NA   NA   NA</span>
-<span class="co">#&gt;   7430 7460 7480 7490 7510 7520 7540 7560 7570 7580 7590 7610 7630 7660</span>
-<span class="co">#&gt; 1   NA   NA   NA    9   NA   NA   NA   20   NA   20   NA   56   NA   NA</span>
-<span class="co">#&gt; 2   NA   NA   NA    5   NA   NA   NA   NA   NA   27   NA  132   NA   NA</span>
-<span class="co">#&gt; 3   NA   NA   NA    4   NA   NA    2   NA   NA   52    5   28   NA   NA</span>
-<span class="co">#&gt; 4   NA   NA   NA    1   NA   NA   NA    2   NA   45   NA  132    9   NA</span>
-<span class="co">#&gt; 5   NA   NA    5    3   NA   NA   NA   11   NA   28   NA   34   NA   NA</span>
-<span class="co">#&gt; 6   NA   NA    1    1   NA   NA    1   NA   NA   15    1   46   NA   NA</span>
-<span class="co">#&gt;   7670 7680 22860</span>
-<span class="co">#&gt; 1   NA    5    NA</span>
-<span class="co">#&gt; 2   NA   NA    NA</span>
-<span class="co">#&gt; 3   NA   NA    NA</span>
-<span class="co">#&gt; 4   NA   NA    NA</span>
-<span class="co">#&gt; 5   NA    5    NA</span>
-<span class="co">#&gt; 6   NA    7    NA</span></code></pre></div>
-=======
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>routes)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="co">#&gt;   countrynum statenum Route Active Latitude Longitude BCR RouteTypeID</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt; 1        124        4     5      0    49.63    -114.6  10           1</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt; 2        124        4    10      1    50.48    -114.4  10           1</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; 3        124        4    16      0    51.10    -115.1  10           1</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt; 4        124        4    17      1    51.46    -116.2  10           1</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; 5        124        4    24      1    52.26    -116.4  10           1</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt; 6        124        4    25      1    52.73    -117.6  10           1</span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt;    routeID</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; 1 12404005</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt; 2 12404010</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt; 3 12404016</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt; 4 12404017</span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt; 5 12404024</span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt; 6 12404025</span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"></a>
-<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>weather)</a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt;   RPID Year Month Day    ObsN StartTemp EndTemp StartWind EndWind StartSky</span></a>
-<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt; 1  101 1973     6  23 1090178      50      55           5       2        5</span></a>
-<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#&gt; 2  101 1975     6  21 1090178      50      65           2       2        1</span></a>
-<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#&gt; 3  101 1985     6  26 1150442      42      59           0       1        0</span></a>
-<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co">#&gt; 4  101 1986     6  22 1150442      46      54           5       4        1</span></a>
-<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#&gt; 5  101 1987     6  28 1150442      53      64           2       2        1</span></a>
-<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co">#&gt; 6  101 1988     6  25 1150442      47      62           0       0        0</span></a>
-<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co">#&gt;   EndSky StartTime EndTime Assistant RunType  routeID</span></a>
-<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="co">#&gt; 1      5       503     852      0          0 12404005</span></a>
-<a class="sourceLine" id="cb3-27" data-line-number="27"><span class="co">#&gt; 2      1       500     930      0          1 12404005</span></a>
-<a class="sourceLine" id="cb3-28" data-line-number="28"><span class="co">#&gt; 3      0       500     925      0          1 12404005</span></a>
-<a class="sourceLine" id="cb3-29" data-line-number="29"><span class="co">#&gt; 4      2       500     933      0          0 12404005</span></a>
-<a class="sourceLine" id="cb3-30" data-line-number="30"><span class="co">#&gt; 5      1       500     938      0          1 12404005</span></a>
-<a class="sourceLine" id="cb3-31" data-line-number="31"><span class="co">#&gt; 6      0       500     926      0          1 12404005</span></a>
-<a class="sourceLine" id="cb3-32" data-line-number="32"></a>
-<a class="sourceLine" id="cb3-33" data-line-number="33"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>counts)</a>
-<a class="sourceLine" id="cb3-34" data-line-number="34"><span class="co">#&gt;   Year  routeID 10 11 12 20 30 40 60 70 77 290 440 510 530 534 540 550 590</span></a>
-<a class="sourceLine" id="cb3-35" data-line-number="35"><span class="co">#&gt; 1 1968 12411004 NA NA NA  1 NA NA NA NA NA  NA  NA  NA  NA  NA  NA  NA  NA</span></a>
-<a class="sourceLine" id="cb3-36" data-line-number="36"><span class="co">#&gt; 2 1968 12411005 NA NA 29 NA NA NA NA NA NA  NA  NA  NA   1  NA  NA  NA  NA</span></a>
-<a class="sourceLine" id="cb3-37" data-line-number="37"><span class="co">#&gt; 3 1968 12411009 NA NA NA NA NA NA NA NA NA  NA  NA  NA  NA  NA  NA  NA  NA</span></a>
-<a class="sourceLine" id="cb3-38" data-line-number="38"><span class="co">#&gt; 4 1968 12411018 NA NA NA NA NA NA NA  1 NA  NA  NA  NA  NA  NA  NA  NA  NA</span></a>
-<a class="sourceLine" id="cb3-39" data-line-number="39"><span class="co">#&gt; 5 1968 12411020 NA NA  1 NA NA NA  5  8 NA  NA  NA  NA  NA  NA  NA  NA  NA</span></a>
-<a class="sourceLine" id="cb3-40" data-line-number="40"><span class="co">#&gt; 6 1968 12411023 NA NA NA NA NA NA NA  1 NA  NA  NA  NA  NA  NA  NA  NA  NA</span></a>
-<a class="sourceLine" id="cb3-41" data-line-number="41"><span class="co">#&gt;   600 640 690 700 770 1200 1250 1290 1300 1310 1320 1326 1350 1370 1390</span></a>
-<a class="sourceLine" id="cb3-42" data-line-number="42"><span class="co">#&gt; 1  NA  NA  NA  NA  NA   NA   NA   NA   NA   NA    1   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-43" data-line-number="43"><span class="co">#&gt; 2  NA  NA  NA  NA  NA   NA   NA    1   NA   NA    1   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-44" data-line-number="44"><span class="co">#&gt; 3  NA  NA  NA  NA  NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-45" data-line-number="45"><span class="co">#&gt; 4  NA  NA  NA  NA  NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-46" data-line-number="46"><span class="co">#&gt; 5  NA  NA  NA  NA  NA   NA   NA   NA   NA   NA    1   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-47" data-line-number="47"><span class="co">#&gt; 6  NA  NA  NA  NA  NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-48" data-line-number="48"><span class="co">#&gt;   1400 1410 1420 1430 1440 1460 1470 1480 1489 1490 1500 1510 1512 1520</span></a>
-<a class="sourceLine" id="cb3-49" data-line-number="49"><span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    8</span></a>
-<a class="sourceLine" id="cb3-50" data-line-number="50"><span class="co">#&gt; 2    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-51" data-line-number="51"><span class="co">#&gt; 3   NA    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-52" data-line-number="52"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-53" data-line-number="53"><span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-54" data-line-number="54"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-55" data-line-number="55"><span class="co">#&gt;   1530 1550 1650 1660 1670 1720 1725 1800 1810 1870 1900 1910 1940 1945</span></a>
-<a class="sourceLine" id="cb3-56" data-line-number="56"><span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-57" data-line-number="57"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-58" data-line-number="58"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-59" data-line-number="59"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-60" data-line-number="60"><span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-61" data-line-number="61"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-62" data-line-number="62"><span class="co">#&gt;   1960 1970 2001 2010 2020 2060 2120 2140 2150 2190 2210 2230 2240 2250</span></a>
-<a class="sourceLine" id="cb3-63" data-line-number="63"><span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA    1   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-64" data-line-number="64"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-65" data-line-number="65"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-66" data-line-number="66"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-67" data-line-number="67"><span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA    1    1   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-68" data-line-number="68"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-69" data-line-number="69"><span class="co">#&gt;   2260 2300 2490 2540 2550 2560 2580 2610 2630 2640 2730 2780 2810 2881</span></a>
-<a class="sourceLine" id="cb3-70" data-line-number="70"><span class="co">#&gt; 1   NA    5   NA   NA   NA   NA   NA   NA   NA   NA    5   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-71" data-line-number="71"><span class="co">#&gt; 2   NA    1   NA   NA   NA   NA   NA   NA   13   NA    1   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-72" data-line-number="72"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-73" data-line-number="73"><span class="co">#&gt; 4   NA    1   NA   NA   NA   NA   NA   NA   NA   NA    2   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-74" data-line-number="74"><span class="co">#&gt; 5   NA    5   NA   NA   NA   NA   NA   NA    1   NA    2   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-75" data-line-number="75"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-76" data-line-number="76"><span class="co">#&gt;   2882 2890 2920 2930 2940 2950 2960 2970 2971 2973 2980 3000 3040 3080</span></a>
-<a class="sourceLine" id="cb3-77" data-line-number="77"><span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA</span></a>
-<a class="sourceLine" id="cb3-78" data-line-number="78"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA</span></a>
-<a class="sourceLine" id="cb3-79" data-line-number="79"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-80" data-line-number="80"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-81" data-line-number="81"><span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-82" data-line-number="82"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-83" data-line-number="83"><span class="co">#&gt;   3089 3090 3091 3100 3120 3131 3160 3190 3200 3240 3250 3310 3320 3330</span></a>
-<a class="sourceLine" id="cb3-84" data-line-number="84"><span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA    4   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-85" data-line-number="85"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-86" data-line-number="86"><span class="co">#&gt; 3   NA   NA   NA   NA    5   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-87" data-line-number="87"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-88" data-line-number="88"><span class="co">#&gt; 5   NA   NA    2   NA   NA   NA    3   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-89" data-line-number="89"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-90" data-line-number="90"><span class="co">#&gt;   3333 3340 3370 3380 3400 3420 3430 3450 3451 3470 3480 3490 3520 3550</span></a>
-<a class="sourceLine" id="cb3-91" data-line-number="91"><span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-92" data-line-number="92"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-93" data-line-number="93"><span class="co">#&gt; 3   NA   NA    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-94" data-line-number="94"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-95" data-line-number="95"><span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-96" data-line-number="96"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-97" data-line-number="97"><span class="co">#&gt;   3560 3570 3600 3640 3650 3660 3670 3680 3690 3700 3710 3720 3730 3732</span></a>
-<a class="sourceLine" id="cb3-98" data-line-number="98"><span class="co">#&gt; 1   NA   NA    2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-99" data-line-number="99"><span class="co">#&gt; 2   NA   NA    3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-100" data-line-number="100"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-101" data-line-number="101"><span class="co">#&gt; 4   NA   NA    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-102" data-line-number="102"><span class="co">#&gt; 5   NA   NA    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-103" data-line-number="103"><span class="co">#&gt; 6   NA   NA    3    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-104" data-line-number="104"><span class="co">#&gt;   3740 3750 3770 3780 3790 3850 3870 3880 3900 3920 3930 3940 3960 3970</span></a>
-<a class="sourceLine" id="cb3-105" data-line-number="105"><span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    2   NA   NA</span></a>
-<a class="sourceLine" id="cb3-106" data-line-number="106"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-107" data-line-number="107"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-108" data-line-number="108"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-109" data-line-number="109"><span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA    1   NA    2    1   NA   NA</span></a>
-<a class="sourceLine" id="cb3-110" data-line-number="110"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA    1   NA   NA</span></a>
-<a class="sourceLine" id="cb3-111" data-line-number="111"><span class="co">#&gt;   3990 4000 4010 4020 4021 4022 4030 4040 4050 4060 4070 4080 4110 4120</span></a>
-<a class="sourceLine" id="cb3-112" data-line-number="112"><span class="co">#&gt; 1   NA   NA   NA   NA    2   NA   NA   NA   NA   NA   NA    3   NA   NA</span></a>
-<a class="sourceLine" id="cb3-113" data-line-number="113"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-114" data-line-number="114"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-115" data-line-number="115"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-116" data-line-number="116"><span class="co">#&gt; 5   NA   NA   NA   NA   19   NA   NA   NA    3   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-117" data-line-number="117"><span class="co">#&gt; 6   NA   NA   NA   NA    2   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-118" data-line-number="118"><span class="co">#&gt;   4123 4125 4130 4172 4180 4200 4205 4210 4220 4230 4240 4250 4290 4300</span></a>
-<a class="sourceLine" id="cb3-119" data-line-number="119"><span class="co">#&gt; 1   NA   NA   11   NA   NA    9   NA   NA   NA   NA    1   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-120" data-line-number="120"><span class="co">#&gt; 2   NA   NA   11   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-121" data-line-number="121"><span class="co">#&gt; 3   NA   NA    5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-122" data-line-number="122"><span class="co">#&gt; 4   NA   NA   12   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-123" data-line-number="123"><span class="co">#&gt; 5   NA   NA    7   NA   NA    1   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-124" data-line-number="124"><span class="co">#&gt; 6   NA   NA   13   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-125" data-line-number="125"><span class="co">#&gt;   4310 4320 4330 4340 4360 4402 4430 4440 4447 4460 4470 4480 4530 4540</span></a>
-<a class="sourceLine" id="cb3-126" data-line-number="126"><span class="co">#&gt; 1   NA   NA    1   NA   NA   NA   NA    5   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-127" data-line-number="127"><span class="co">#&gt; 2   NA   NA    1   NA   NA   NA   NA    1   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-128" data-line-number="128"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-129" data-line-number="129"><span class="co">#&gt; 4   NA   NA   11   NA   12   NA   NA    1   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-130" data-line-number="130"><span class="co">#&gt; 5   NA   NA   NA   NA    1   NA   NA    6   NA   NA    2   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-131" data-line-number="131"><span class="co">#&gt; 6   NA   NA    2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-132" data-line-number="132"><span class="co">#&gt;   4560 4570 4580 4590 4620 4630 4640 4641 4642 4660 4661 4665 4670 4679</span></a>
-<a class="sourceLine" id="cb3-133" data-line-number="133"><span class="co">#&gt; 1   NA   NA   NA    2    9   NA   NA   NA   NA    4   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-134" data-line-number="134"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-135" data-line-number="135"><span class="co">#&gt; 3   NA   NA   NA    1   NA   NA   NA    8   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-136" data-line-number="136"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-137" data-line-number="137"><span class="co">#&gt; 5   NA   NA   NA    1    7   NA   NA   NA   NA   NA   NA    5   NA   NA</span></a>
-<a class="sourceLine" id="cb3-138" data-line-number="138"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA    2   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-139" data-line-number="139"><span class="co">#&gt;   4680 4689 4690 4691 4710 4740 4750 4770 4780 4810 4812 4813 4820 4840</span></a>
-<a class="sourceLine" id="cb3-140" data-line-number="140"><span class="co">#&gt; 1   NA   NA   25   NA   NA   NA    1   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-141" data-line-number="141"><span class="co">#&gt; 2   NA   NA    8   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-142" data-line-number="142"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1</span></a>
-<a class="sourceLine" id="cb3-143" data-line-number="143"><span class="co">#&gt; 4   NA   NA    2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-144" data-line-number="144"><span class="co">#&gt; 5   11   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-145" data-line-number="145"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-146" data-line-number="146"><span class="co">#&gt;   4860 4865 4870 4880 4890 4910 4920 4930 4940 4950 4970 4980 5000 5010</span></a>
-<a class="sourceLine" id="cb3-147" data-line-number="147"><span class="co">#&gt; 1    8   NA   NA   14   NA   NA   NA   39   NA    3   NA    2   NA   NA</span></a>
-<a class="sourceLine" id="cb3-148" data-line-number="148"><span class="co">#&gt; 2    9   NA   NA   15   NA   NA   NA    8   NA   11   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-149" data-line-number="149"><span class="co">#&gt; 3   11   NA   NA    9   NA   NA   NA   NA   NA   NA   NA    3   NA   NA</span></a>
-<a class="sourceLine" id="cb3-150" data-line-number="150"><span class="co">#&gt; 4    6   NA   NA    7   NA   NA   NA   22   NA    8   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-151" data-line-number="151"><span class="co">#&gt; 5    7   NA   NA   91   NA   NA   NA   32    1   14   NA   32   NA   NA</span></a>
-<a class="sourceLine" id="cb3-152" data-line-number="152"><span class="co">#&gt; 6    3   NA   NA    5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-153" data-line-number="153"><span class="co">#&gt;   5011 5012 5040 5050 5060 5070 5077 5080 5090 5100 5110 5120 5140 5150</span></a>
-<a class="sourceLine" id="cb3-154" data-line-number="154"><span class="co">#&gt; 1   11   NA   NA   NA   NA   NA   NA   NA   NA    3   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-155" data-line-number="155"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA    3   NA   NA    3   NA</span></a>
-<a class="sourceLine" id="cb3-156" data-line-number="156"><span class="co">#&gt; 3    2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-157" data-line-number="157"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1   NA</span></a>
-<a class="sourceLine" id="cb3-158" data-line-number="158"><span class="co">#&gt; 5    4   NA   NA   NA   NA   NA   NA    2   NA   65   NA   NA    7   NA</span></a>
-<a class="sourceLine" id="cb3-159" data-line-number="159"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-160" data-line-number="160"><span class="co">#&gt;   5170 5180 5190 5195 5210 5220 5225 5240 5250 5260 5290 5300 5310 5330</span></a>
-<a class="sourceLine" id="cb3-161" data-line-number="161"><span class="co">#&gt; 1   NA    9   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   35</span></a>
-<a class="sourceLine" id="cb3-162" data-line-number="162"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   84</span></a>
-<a class="sourceLine" id="cb3-163" data-line-number="163"><span class="co">#&gt; 3   NA    1   NA   NA   26   NA   NA   NA   NA   NA   NA   NA   NA   16</span></a>
-<a class="sourceLine" id="cb3-164" data-line-number="164"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    2   NA   NA   57</span></a>
-<a class="sourceLine" id="cb3-165" data-line-number="165"><span class="co">#&gt; 5   NA   NA   NA   NA    6   NA   NA   NA   NA   NA    3   NA   NA   66</span></a>
-<a class="sourceLine" id="cb3-166" data-line-number="166"><span class="co">#&gt; 6   NA    1   NA   NA    2   NA   NA   NA   NA   NA   NA   NA   NA   19</span></a>
-<a class="sourceLine" id="cb3-167" data-line-number="167"><span class="co">#&gt;   5380 5390 5400 5420 5450 5460 5480 5491 5520 5540 5570 5580 5590 5600</span></a>
-<a class="sourceLine" id="cb3-168" data-line-number="168"><span class="co">#&gt; 1   NA   NA   27   NA   NA   NA   NA   NA    1    1   NA   NA   NA   40</span></a>
-<a class="sourceLine" id="cb3-169" data-line-number="169"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   82</span></a>
-<a class="sourceLine" id="cb3-170" data-line-number="170"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA    2   NA   NA   NA    9</span></a>
-<a class="sourceLine" id="cb3-171" data-line-number="171"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   50</span></a>
-<a class="sourceLine" id="cb3-172" data-line-number="172"><span class="co">#&gt; 5   NA   NA    4   12   NA   NA   NA   NA   NA   NA   NA   NA   NA   22</span></a>
-<a class="sourceLine" id="cb3-173" data-line-number="173"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   11</span></a>
-<a class="sourceLine" id="cb3-174" data-line-number="174"><span class="co">#&gt;   5610 5620 5630 5650 5660 5670 5671 5677 5680 5690 5730 5738 5740 5780</span></a>
-<a class="sourceLine" id="cb3-175" data-line-number="175"><span class="co">#&gt; 1    3   NA   NA   NA   NA   NA   17   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-176" data-line-number="176"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   22   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-177" data-line-number="177"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   12   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-178" data-line-number="178"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   14   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-179" data-line-number="179"><span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA    4   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-180" data-line-number="180"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA    1   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-181" data-line-number="181"><span class="co">#&gt;   5800 5810 5830 5840 5850 5870 5880 5900 5910 5911 5920 5930 5950 5960</span></a>
-<a class="sourceLine" id="cb3-182" data-line-number="182"><span class="co">#&gt; 1   NA    4   NA   NA   NA   NA   18   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-183" data-line-number="183"><span class="co">#&gt; 2   NA    1   NA   NA   NA   NA    8   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-184" data-line-number="184"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-185" data-line-number="185"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA    4   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-186" data-line-number="186"><span class="co">#&gt; 5   NA   11   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-187" data-line-number="187"><span class="co">#&gt; 6   NA    2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1</span></a>
-<a class="sourceLine" id="cb3-188" data-line-number="188"><span class="co">#&gt;   5970 5980 5990 6040 6050 6070 6090 6100 6110 6120 6130 6140 6150 6160</span></a>
-<a class="sourceLine" id="cb3-189" data-line-number="189"><span class="co">#&gt; 1   NA   NA    8   NA   NA   11   NA   NA   NA   31    1   NA   11  128</span></a>
-<a class="sourceLine" id="cb3-190" data-line-number="190"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   10   NA   NA   NA   13   31   NA   59    3</span></a>
-<a class="sourceLine" id="cb3-191" data-line-number="191"><span class="co">#&gt; 3   NA   NA   NA   NA   NA    4   NA   NA   NA   NA   NA    1    6   NA</span></a>
-<a class="sourceLine" id="cb3-192" data-line-number="192"><span class="co">#&gt; 4   NA   NA    4   NA   NA   NA   NA   NA   NA   25   17    2   33   NA</span></a>
-<a class="sourceLine" id="cb3-193" data-line-number="193"><span class="co">#&gt; 5   NA   NA   21   NA   NA   19   NA   NA   NA    3    6    6    7   NA</span></a>
-<a class="sourceLine" id="cb3-194" data-line-number="194"><span class="co">#&gt; 6   NA   NA   NA   NA   NA    4   NA   NA   NA   NA   NA   18    3   NA</span></a>
-<a class="sourceLine" id="cb3-195" data-line-number="195"><span class="co">#&gt;   6170 6180 6190 6200 6220 6240 6260 6270 6290 6291 6292 6295 6296 6320</span></a>
-<a class="sourceLine" id="cb3-196" data-line-number="196"><span class="co">#&gt; 1    2   NA   12   NA   NA   13   NA   14   NA   10   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-197" data-line-number="197"><span class="co">#&gt; 2   12   NA   39   NA   NA    3   NA    1   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-198" data-line-number="198"><span class="co">#&gt; 3    7   NA   NA   NA   NA    5   NA    6   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-199" data-line-number="199"><span class="co">#&gt; 4    5   NA   11   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-200" data-line-number="200"><span class="co">#&gt; 5   NA   NA    9   NA   NA   68   NA    5   NA   12   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-201" data-line-number="201"><span class="co">#&gt; 6   NA   NA   NA   NA   NA    4   NA    4   NA    1   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-202" data-line-number="202"><span class="co">#&gt;   6330 6340 6360 6430 6440 6450 6460 6470 6500 6520 6550 6556 6560 6570</span></a>
-<a class="sourceLine" id="cb3-203" data-line-number="203"><span class="co">#&gt; 1   NA   NA   NA   NA   NA    4    4   NA   NA   10   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-204" data-line-number="204"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   55   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-205" data-line-number="205"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA    7   NA   NA    7   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-206" data-line-number="206"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   43   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-207" data-line-number="207"><span class="co">#&gt; 5   NA   NA   NA   NA   NA    1   NA   NA   NA   14   NA   NA   17   NA</span></a>
-<a class="sourceLine" id="cb3-208" data-line-number="208"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA    3   NA   NA    1   NA</span></a>
-<a class="sourceLine" id="cb3-209" data-line-number="209"><span class="co">#&gt;   6590 6610 6640 6650 6670 6680 6685 6686 6690 6720 6740 6750 6780 6790</span></a>
-<a class="sourceLine" id="cb3-210" data-line-number="210"><span class="co">#&gt; 1   NA   NA   NA   NA   NA    1   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-211" data-line-number="211"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-212" data-line-number="212"><span class="co">#&gt; 3   NA   NA   NA   NA   NA    5   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-213" data-line-number="213"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-214" data-line-number="214"><span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    3   NA   NA</span></a>
-<a class="sourceLine" id="cb3-215" data-line-number="215"><span class="co">#&gt; 6   NA   NA   NA   NA   NA    1   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-216" data-line-number="216"><span class="co">#&gt;   6800 6810 6830 6850 6860 6870 6882 6970 7000 7010 7020 7030 7040 7050</span></a>
-<a class="sourceLine" id="cb3-217" data-line-number="217"><span class="co">#&gt; 1   NA    4   NA    1   NA   16    5   NA   NA   NA   NA   NA    4   NA</span></a>
-<a class="sourceLine" id="cb3-218" data-line-number="218"><span class="co">#&gt; 2    1   NA   NA   NA   NA    8   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-219" data-line-number="219"><span class="co">#&gt; 3    1   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-220" data-line-number="220"><span class="co">#&gt; 4   12   NA   NA   NA   NA   NA    2   NA   NA   NA   NA   NA    1   NA</span></a>
-<a class="sourceLine" id="cb3-221" data-line-number="221"><span class="co">#&gt; 5    7    3   NA   NA   NA    2    1   NA   NA   NA   NA   NA    2   NA</span></a>
-<a class="sourceLine" id="cb3-222" data-line-number="222"><span class="co">#&gt; 6    3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-223" data-line-number="223"><span class="co">#&gt;   7070 7080 7100 7110 7120 7130 7150 7170 7190 7210 7221 7222 7250 7260</span></a>
-<a class="sourceLine" id="cb3-224" data-line-number="224"><span class="co">#&gt; 1   NA   NA   NA   NA   NA   NA   NA   NA   NA    7   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-225" data-line-number="225"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-226" data-line-number="226"><span class="co">#&gt; 3   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA    1</span></a>
-<a class="sourceLine" id="cb3-227" data-line-number="227"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-228" data-line-number="228"><span class="co">#&gt; 5   NA   NA   NA   NA   NA   NA   NA   NA   NA    1    1   NA    1   NA</span></a>
-<a class="sourceLine" id="cb3-229" data-line-number="229"><span class="co">#&gt; 6   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-230" data-line-number="230"><span class="co">#&gt;   7270 7280 7300 7315 7330 7331 7332 7350 7351 7353 7380 7400 7410 7420</span></a>
-<a class="sourceLine" id="cb3-231" data-line-number="231"><span class="co">#&gt; 1   NA    4   NA   NA   NA   NA   NA    9   NA   NA    8   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-232" data-line-number="232"><span class="co">#&gt; 2   NA   NA   NA   NA   NA   NA   NA   14   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-233" data-line-number="233"><span class="co">#&gt; 3   NA    8   NA   NA   NA   NA   NA   NA   NA   NA    1   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-234" data-line-number="234"><span class="co">#&gt; 4   NA   NA   NA   NA   NA   NA   NA    6   NA   NA   NA   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-235" data-line-number="235"><span class="co">#&gt; 5   NA    5   NA   NA   NA   NA   NA    8   NA   NA    2   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-236" data-line-number="236"><span class="co">#&gt; 6   NA    3   NA   NA   NA   NA   NA   NA   NA   NA    6   NA   NA   NA</span></a>
-<a class="sourceLine" id="cb3-237" data-line-number="237"><span class="co">#&gt;   7430 7460 7480 7490 7510 7520 7540 7560 7570 7580 7590 7610 7630 7660</span></a>
-<a class="sourceLine" id="cb3-238" data-line-number="238"><span class="co">#&gt; 1   NA   NA   NA    9   NA   NA   NA   20   NA   20   NA   56   NA   NA</span></a>
-<a class="sourceLine" id="cb3-239" data-line-number="239"><span class="co">#&gt; 2   NA   NA   NA    5   NA   NA   NA   NA   NA   27   NA  132   NA   NA</span></a>
-<a class="sourceLine" id="cb3-240" data-line-number="240"><span class="co">#&gt; 3   NA   NA   NA    4   NA   NA    2   NA   NA   52    5   28   NA   NA</span></a>
-<a class="sourceLine" id="cb3-241" data-line-number="241"><span class="co">#&gt; 4   NA   NA   NA    1   NA   NA   NA    2   NA   45   NA  132    9   NA</span></a>
-<a class="sourceLine" id="cb3-242" data-line-number="242"><span class="co">#&gt; 5   NA   NA    5    3   NA   NA   NA   11   NA   28   NA   34   NA   NA</span></a>
-<a class="sourceLine" id="cb3-243" data-line-number="243"><span class="co">#&gt; 6   NA   NA    1    1   NA   NA    1   NA   NA   15    1   46   NA   NA</span></a>
-<a class="sourceLine" id="cb3-244" data-line-number="244"><span class="co">#&gt;   7670 7680 22860</span></a>
-<a class="sourceLine" id="cb3-245" data-line-number="245"><span class="co">#&gt; 1   NA    5    NA</span></a>
-<a class="sourceLine" id="cb3-246" data-line-number="246"><span class="co">#&gt; 2   NA   NA    NA</span></a>
-<a class="sourceLine" id="cb3-247" data-line-number="247"><span class="co">#&gt; 3   NA   NA    NA</span></a>
-<a class="sourceLine" id="cb3-248" data-line-number="248"><span class="co">#&gt; 4   NA   NA    NA</span></a>
-<a class="sourceLine" id="cb3-249" data-line-number="249"><span class="co">#&gt; 5   NA    5    NA</span></a>
-<a class="sourceLine" id="cb3-250" data-line-number="250"><span class="co">#&gt; 6   NA    7    NA</span></a></code></pre></div>
->>>>>>> 5cf75ebe31a3a44b8878b827514c488223bcbd19
+<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>weather)</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>counts[,<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>])</a></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="right">countrynum</th>
+<th align="right">statenum</th>
+<th align="right">Route</th>
+<th align="right">Active</th>
+<th align="right">Latitude</th>
+<th align="right">Longitude</th>
+<th align="right">BCR</th>
+<th align="right">RouteTypeID</th>
+<th align="right">routeID</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">124</td>
+<td align="right">4</td>
+<td align="right">5</td>
+<td align="right">0</td>
+<td align="right">49.63</td>
+<td align="right">-114.6</td>
+<td align="right">10</td>
+<td align="right">1</td>
+<td align="right">12404005</td>
+</tr>
+<tr class="even">
+<td align="right">124</td>
+<td align="right">4</td>
+<td align="right">10</td>
+<td align="right">1</td>
+<td align="right">50.48</td>
+<td align="right">-114.4</td>
+<td align="right">10</td>
+<td align="right">1</td>
+<td align="right">12404010</td>
+</tr>
+<tr class="odd">
+<td align="right">124</td>
+<td align="right">4</td>
+<td align="right">16</td>
+<td align="right">0</td>
+<td align="right">51.10</td>
+<td align="right">-115.1</td>
+<td align="right">10</td>
+<td align="right">1</td>
+<td align="right">12404016</td>
+</tr>
+<tr class="even">
+<td align="right">124</td>
+<td align="right">4</td>
+<td align="right">17</td>
+<td align="right">1</td>
+<td align="right">51.46</td>
+<td align="right">-116.2</td>
+<td align="right">10</td>
+<td align="right">1</td>
+<td align="right">12404017</td>
+</tr>
+<tr class="odd">
+<td align="right">124</td>
+<td align="right">4</td>
+<td align="right">24</td>
+<td align="right">1</td>
+<td align="right">52.26</td>
+<td align="right">-116.4</td>
+<td align="right">10</td>
+<td align="right">1</td>
+<td align="right">12404024</td>
+</tr>
+<tr class="even">
+<td align="right">124</td>
+<td align="right">4</td>
+<td align="right">25</td>
+<td align="right">1</td>
+<td align="right">52.73</td>
+<td align="right">-117.6</td>
+<td align="right">10</td>
+<td align="right">1</td>
+<td align="right">12404025</td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<thead><tr class="header">
+<th align="right">RPID</th>
+<th align="right">Year</th>
+<th align="right">Month</th>
+<th align="right">Day</th>
+<th align="right">ObsN</th>
+<th align="left">StartTemp</th>
+<th align="left">EndTemp</th>
+<th align="left">StartWind</th>
+<th align="left">EndWind</th>
+<th align="left">StartSky</th>
+<th align="left">EndSky</th>
+<th align="right">StartTime</th>
+<th align="right">EndTime</th>
+<th align="left">Assistant</th>
+<th align="right">RunType</th>
+<th align="right">routeID</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">101</td>
+<td align="right">1973</td>
+<td align="right">6</td>
+<td align="right">23</td>
+<td align="right">1090178</td>
+<td align="left">50</td>
+<td align="left">55</td>
+<td align="left">5</td>
+<td align="left">2</td>
+<td align="left">5</td>
+<td align="left">5</td>
+<td align="right">503</td>
+<td align="right">852</td>
+<td align="left">0</td>
+<td align="right">0</td>
+<td align="right">12404005</td>
+</tr>
+<tr class="even">
+<td align="right">101</td>
+<td align="right">1975</td>
+<td align="right">6</td>
+<td align="right">21</td>
+<td align="right">1090178</td>
+<td align="left">50</td>
+<td align="left">65</td>
+<td align="left">2</td>
+<td align="left">2</td>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="right">500</td>
+<td align="right">930</td>
+<td align="left">0</td>
+<td align="right">1</td>
+<td align="right">12404005</td>
+</tr>
+<tr class="odd">
+<td align="right">101</td>
+<td align="right">1985</td>
+<td align="right">6</td>
+<td align="right">26</td>
+<td align="right">1150442</td>
+<td align="left">42</td>
+<td align="left">59</td>
+<td align="left">0</td>
+<td align="left">1</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="right">500</td>
+<td align="right">925</td>
+<td align="left">0</td>
+<td align="right">1</td>
+<td align="right">12404005</td>
+</tr>
+<tr class="even">
+<td align="right">101</td>
+<td align="right">1986</td>
+<td align="right">6</td>
+<td align="right">22</td>
+<td align="right">1150442</td>
+<td align="left">46</td>
+<td align="left">54</td>
+<td align="left">5</td>
+<td align="left">4</td>
+<td align="left">1</td>
+<td align="left">2</td>
+<td align="right">500</td>
+<td align="right">933</td>
+<td align="left">0</td>
+<td align="right">0</td>
+<td align="right">12404005</td>
+</tr>
+<tr class="odd">
+<td align="right">101</td>
+<td align="right">1987</td>
+<td align="right">6</td>
+<td align="right">28</td>
+<td align="right">1150442</td>
+<td align="left">53</td>
+<td align="left">64</td>
+<td align="left">2</td>
+<td align="left">2</td>
+<td align="left">1</td>
+<td align="left">1</td>
+<td align="right">500</td>
+<td align="right">938</td>
+<td align="left">0</td>
+<td align="right">1</td>
+<td align="right">12404005</td>
+</tr>
+<tr class="even">
+<td align="right">101</td>
+<td align="right">1988</td>
+<td align="right">6</td>
+<td align="right">25</td>
+<td align="right">1150442</td>
+<td align="left">47</td>
+<td align="left">62</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="left">0</td>
+<td align="right">500</td>
+<td align="right">926</td>
+<td align="left">0</td>
+<td align="right">1</td>
+<td align="right">12404005</td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<thead><tr class="header">
+<th align="right">Year</th>
+<th align="right">routeID</th>
+<th align="right">10</th>
+<th align="right">11</th>
+<th align="right">12</th>
+<th align="right">20</th>
+<th align="right">30</th>
+<th align="right">40</th>
+<th align="right">60</th>
+<th align="right">70</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1968</td>
+<td align="right">12411004</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="right">1968</td>
+<td align="right">12411005</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">29</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="right">1968</td>
+<td align="right">12411009</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="right">1968</td>
+<td align="right">12411018</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">1</td>
+</tr>
+<tr class="odd">
+<td align="right">1968</td>
+<td align="right">12411020</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">5</td>
+<td align="right">8</td>
+</tr>
+<tr class="even">
+<td align="right">1968</td>
+<td align="right">12411023</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
 <p>For additional information about what each field represents, see the documentation page (<code><a href="../reference/bbs_data.html">?bbs_data</a></code>).</p>
 </div>
 <div id="subsetting-the-utah-routes" class="section level2">
 <h2 class="hasAnchor">
 <a href="#subsetting-the-utah-routes" class="anchor"></a>Subsetting the Utah routes</h2>
 <p>The <code>bbs_data</code> file contains counts from three BCRs (9, 10, and 16) but right now we only want data from Utah. There are many ways to subset data in <code>R</code> but for the sake of consistency, we will use the <code><a href="http://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> function from the <code>dplyr</code> package.</p>
-<p><strong>Side note</strong>: there is also a <code><a href="http://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> function in the <code>stats</code> package. Even though we loaded <code>dplyr</code>, it can sometimes be confusing to know which functions come from which packages (or to know which function <code>R</code> will default to using). For this reason, it’s good practice to get in the habit of using the <code>package::function()</code> syntax, as we will do below. Using this syntax makes explicit which package/function you intend to use which makes your code easier for other to understand and reduces the potential for errors. As a benefit, you can stop using <code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(package)</a></code> at the beginning of each script.</p>
+<hr>
+<p><strong>NOTE</strong></p>
+<p>There is also a <code><a href="http://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> function in the <code>stats</code> package. Even though we loaded <code>dplyr</code>, it can sometimes be confusing to know which functions come from which packages (or to know which function <code>R</code> will default to using). For this reason, it’s good practice to get in the habit of using the <code>package::function()</code> syntax, as we will do below. Using this syntax makes explicit which package/function you intend to use which makes your code easier for other to understand and reduces the potential for errors. As a benefit, you can stop using <code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(package)</a></code> at the beginning of each script.</p>
+<hr>
 <p>The BBS state number for Utah is 85 so we filter based on the <code>statenum</code> field in the <code>routes</code> data frame:</p>
-<<<<<<< HEAD
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ut_routes &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(bbs_data<span class="op">$</span>routes, statenum <span class="op">==</span><span class="st"> </span><span class="dv">85</span>)</code></pre></div>
-<p>Unfortunately, neither the <code>weather</code> nor the <code>counts</code> data frames contain the <code>statenum</code> field. How do we subset the correct routes in this case? By using the one field common to all three data sets: <code>routeID</code>. So the challenge is to tell <code>R</code> to keep only the routes that are shared by the new <code>ut_routes</code> object and the <code>weather</code> and <code>counts</code> data frames. There are a few ways this could be done but one easy way is to filter using the <code>%in%</code> expression rather than <code>==</code> (<code>%in%</code> compares a vector <code>x</code> on the left-hand side to a second vector <code>y</code> on the right-hand side, returning <code>TRUE</code> for all values of <code>x</code> that are in <code>y</code> and <code>FALSE</code> otherwise):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Subset weather and count using Utah routes
-ut_weather &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(bbs_data<span class="op">$</span>weather, routeID <span class="op">%in%</span><span class="st"> </span>ut_routes<span class="op">$</span>routeID)
-ut_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(bbs_data<span class="op">$</span>counts, routeID <span class="op">%in%</span><span class="st"> </span>ut_routes<span class="op">$</span>routeID)</code></pre></div>
-=======
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">ut_routes &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(bbs_data<span class="op">$</span>routes, statenum <span class="op">==</span><span class="st"> </span><span class="dv">85</span>)</a></code></pre></div>
 <p>Unfortunately, neither the <code>weather</code> nor the <code>counts</code> data frames contain the <code>statenum</code> field. How do we subset the correct routes in this case? By using the one field common to all three data sets: <code>routeID</code>. So the challenge is to tell <code>R</code> to keep only the routes that are shared by the new <code>ut_routes</code> object and the <code>weather</code> and <code>counts</code> data frames. There are a few ways this could be done but one easy way is to filter using the <code>%in%</code> expression rather than <code>==</code> (<code>%in%</code> compares a vector <code>x</code> on the left-hand side to a second vector <code>y</code> on the right-hand side, returning <code>TRUE</code> for all values of <code>x</code> that are in <code>y</code> and <code>FALSE</code> otherwise):</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## Subset weather and count using Utah routes</span></a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">ut_weather &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(bbs_data<span class="op">$</span>weather, routeID <span class="op">%in%</span><span class="st"> </span>ut_routes<span class="op">$</span>routeID)</a>
 <a class="sourceLine" id="cb5-3" data-line-number="3">ut_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(bbs_data<span class="op">$</span>counts, routeID <span class="op">%in%</span><span class="st"> </span>ut_routes<span class="op">$</span>routeID)</a></code></pre></div>
->>>>>>> 5cf75ebe31a3a44b8878b827514c488223bcbd19
 <p>The <code>routeID</code> field is critical because it is the sole variable that links all three data frames together. It is common practice to divide up data into mutiple files so having an <code>ID</code> field of somesort that links observational units across all files is critical!</p>
 </div>
 <div id="subsetting-the-dove-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#subsetting-the-dove-data" class="anchor"></a>Subsetting the dove data</h2>
 <p>At present, <code>ut_counts</code> contains counts of all species. Each column (aside from <code>Year</code> and <code>routeID</code>) gives the number of individuals of each species counted on each route in each year. The column names refer to the numeric <code>aou</code> code used by BBS to identify species (Eurasion collared-dove is 22860). To get those data, we could use <code><a href="http://dplyr.tidyverse.org/reference/select.html">dplyr::select()</a></code>:</p>
-<<<<<<< HEAD
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">eucd_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(ut_counts, Year, routeID, <span class="st">`</span><span class="dt">22860</span><span class="st">`</span>)</code></pre></div>
-=======
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">eucd_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(ut_counts, Year, routeID, <span class="st">`</span><span class="dt">22860</span><span class="st">`</span>)</a></code></pre></div>
->>>>>>> 5cf75ebe31a3a44b8878b827514c488223bcbd19
 <p>However, there are a number of problems with the resulting data frame.</p>
 <div id="what-is-tidy-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#what-is-tidy-data" class="anchor"></a>What is tidy data?</h3>
 <p>The first problem with this data frame is that one of the column names is numeric. That’s not technically illegal (the data frame exists, after all), but it’s not great practice. At the very least, you have to put backticks around the column name to reference it (as we did above). Better to stick with non-numeric names, at least for the first character of a column name.</p>
-<p>The bigger issue, however, is that this data frame isn’t <strong>tidy</strong>. What does it mean for data to be tidy? <a href="http://vita.had.co.nz/papers/tidy-data.html">Essentially</a>, “each variable is a column, each observation is a row.” In the <code>ut_counts</code> data frame, we have two main variable (other than year and routeID): <code>aou</code> code and the counts themselves. Each observation is the count of a single species. As formatted, we have one variable (<code>aos</code> code) spread across mutiple columns and multiple observations per row. That format makes it hard to use the data. How would you plot the counts of a given species by year? How would you write a model for <code>counts ~ Year</code> by species? The short answer is you can’t without a lot of intermediate steps. In contrast, having tidy data makes these tasks much easier and consistent (as we will soon see).</p>
+<p>The bigger issue, however, is that this data frame isn’t <strong>tidy</strong>. What does it mean for data to be tidy? <a href="http://vita.had.co.nz/papers/tidy-data.html">Essentially</a>, “each variable is a column, each observation is a row.” In the <code>ut_counts</code> data frame, we have four main variables: year, routeID, the <code>aou</code> codes, and the counts themselves. Each observation is the count of a single species at a single route in a single year. As formatted, we have one variable (<code>aos</code> code) spread across mutiple columns and multiple observations per row. That format makes it hard to use the data. How would you plot the counts of a given species by year? How would you write a model for <code>counts ~ Year</code> by species? The short answer is you can’t without a lot of intermediate steps. In contrast, having tidy data makes these tasks much easier and consistent (as we will soon see).</p>
 <p>So before we subset the dove data, let’s tidy the <code>ut_counts</code> data frame. We can do this with a single functions from the <code>tidyr</code> package:</p>
-<<<<<<< HEAD
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tidy_counts &lt;-<span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/gather.html">gather</a></span>(ut_counts, <span class="dt">key =</span> <span class="st">"aou"</span>, <span class="dt">value =</span> <span class="st">"count"</span>, <span class="op">-</span>Year, <span class="op">-</span>routeID)
-
-<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tidy_counts)
-<span class="co">#&gt;   Year  routeID aou count</span>
-<span class="co">#&gt; 1 1968 84085006  10    NA</span>
-<span class="co">#&gt; 2 1968 84085007  10    NA</span>
-<span class="co">#&gt; 3 1968 84085011  10    NA</span>
-<span class="co">#&gt; 4 1968 84085012  10    NA</span>
-<span class="co">#&gt; 5 1968 84085015  10    NA</span>
-<span class="co">#&gt; 6 1968 84085020  10    NA</span></code></pre></div>
-<p>Now we can simply use <code><a href="http://dplyr.tidyverse.org/reference/filter.html">dplyr::filter()</a></code> to subset the dove counts:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(tidy_counts, aou <span class="op">==</span><span class="st"> </span><span class="dv">22860</span>)</code></pre></div>
-=======
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">tidy_counts &lt;-<span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/gather.html">gather</a></span>(ut_counts, <span class="dt">key =</span> <span class="st">"aou"</span>, <span class="dt">value =</span> <span class="st">"count"</span>, <span class="op">-</span>Year, <span class="op">-</span>routeID)</a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tidy_counts)</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt;   Year  routeID aou count</span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="co">#&gt; 1 1968 84085006  10    NA</span></a>
-<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="co">#&gt; 2 1968 84085007  10    NA</span></a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="co">#&gt; 3 1968 84085011  10    NA</span></a>
-<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="co">#&gt; 4 1968 84085012  10    NA</span></a>
-<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="co">#&gt; 5 1968 84085015  10    NA</span></a>
-<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="co">#&gt; 6 1968 84085020  10    NA</span></a></code></pre></div>
+<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tidy_counts)</a></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="right">Year</th>
+<th align="right">routeID</th>
+<th align="left">aou</th>
+<th align="right">count</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1968</td>
+<td align="right">84085006</td>
+<td align="left">10</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="right">1968</td>
+<td align="right">84085007</td>
+<td align="left">10</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="right">1968</td>
+<td align="right">84085011</td>
+<td align="left">10</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="right">1968</td>
+<td align="right">84085012</td>
+<td align="left">10</td>
+<td align="right">NA</td>
+</tr>
+<tr class="odd">
+<td align="right">1968</td>
+<td align="right">84085015</td>
+<td align="left">10</td>
+<td align="right">NA</td>
+</tr>
+<tr class="even">
+<td align="right">1968</td>
+<td align="right">84085020</td>
+<td align="left">10</td>
+<td align="right">NA</td>
+</tr>
+</tbody>
+</table>
+<p>Gather turns a “wide” dataframe into a “long” data frame (awesome animations courtesy of <a href="https://github.com/gadenbuie/tidyexplain">Garrick Aden-Buie</a>).</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">knitr<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/include_graphics">include_graphics</a></span>(<span class="st">'images/tidyr-spread-gather.gif'</span>)</a></code></pre></div>
+<p><img src="images/tidyr-spread-gather.gif" style="display: block; margin: auto;"></p>
 <p>Now we can simply use <code><a href="http://dplyr.tidyverse.org/reference/filter.html">dplyr::filter()</a></code> to subset the dove counts:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(tidy_counts, aou <span class="op">==</span><span class="st"> </span><span class="dv">22860</span>)</a></code></pre></div>
->>>>>>> 5cf75ebe31a3a44b8878b827514c488223bcbd19
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(tidy_counts, aou <span class="op">==</span><span class="st"> </span><span class="dv">22860</span>)</a></code></pre></div>
+<p>We will also remove all those <code>NA</code> values because it’s unclear what they mean. In the next section, we will figure out how to distinguish between truly missing values and 0 counts:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(dove_counts, <span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(count))</a></code></pre></div>
+<p>(remember that <code>count==NA</code> doesn’t work in <code>R</code> so instead we use <code><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na(count)</a></code>. Since we want to keep rows where the count <em>is not</em> <code>NA</code>, we use the <code>!</code> operator)</p>
 </div>
 </div>
-<div id="filling-in-0-counts-using-joins" class="section level2">
+</div>
+<div id="filling-in-0-counts-using-joins" class="section level1">
+<h1 class="hasAnchor">
+<a href="#filling-in-0-counts-using-joins" class="anchor"></a>Filling in 0 counts using joins</h1>
+<p>One of the main challenges to working with BBS data is that the raw counts don’t include 0’s. This is, if an observer didn’t see a Eurasian collared-dove, they don’t enter a 0, they enter nothing. That’s wouldn’t be a big issue except not every route is run in every year. So if we don’t have an entry for specific species/route/year combination in the <code>counts</code> data frame, we don’t immediately know if it’s because the count was a 0 (a <em>true 0</em>) or if it’s because the route wasn’t run that year (a missing value).</p>
+<p>As always, there are multiple ways we could solve this problem. One thing to note is that the <code>weather</code> data frame contains covariate values for every run of every route. So if there are covariate values, we know the route was run. If not, we know it wasn’t. One efficient (though maybe not immediately intuitive) way to add the 0 counts is the <strong>join</strong> the two data frames in a way that fills in 0’s if there is a corresponding route/year combination in <code>weather</code> data frame and <code>NA</code> otherwise. Although not difficult to code, understanding how this works requires understanding the different types of <code>joins</code> available in the <code>tidyverse</code>.</p>
+<div id="joins" class="section level2">
 <h2 class="hasAnchor">
-<a href="#filling-in-0-counts-using-joins" class="anchor"></a>Filling in 0 counts using joins</h2>
+<a href="#joins" class="anchor"></a>Joins</h2>
+<p>The <em>join</em> functions do exactly what they say - join two are more data frames. However, the manner in which they join and the output they produce varies depending on the type of join. In general, joins are divided into <a href="https://r4ds.had.co.nz/relational-data.html#mutating-joins">two categories</a>:</p>
+<ol style="list-style-type: decimal">
+<li>Mutating joins</li>
+</ol>
+<blockquote>
+<p>A mutating join allows you to combine variables from two tables. It first matches observations by their keys, then copies across variables from one table to the other</p>
+</blockquote>
+<ol start="2" style="list-style-type: decimal">
+<li>Filtering joins</li>
+</ol>
+<blockquote>
+<p>Filtering joins match observations in the same way as mutating joins, but affect the observations, not the variables</p>
+</blockquote>
+<p>This difference will be more clear after looking at a few examples.</p>
+<div id="mutating-joins" class="section level3">
+<h3 class="hasAnchor">
+<a href="#mutating-joins" class="anchor"></a>Mutating joins</h3>
+<p>Mutating joins include <code><a href="http://dplyr.tidyverse.org/reference/join.html">inner_join()</a></code>, <code><a href="http://dplyr.tidyverse.org/reference/join.html">left_join()</a></code>, <code><a href="http://dplyr.tidyverse.org/reference/join.html">right_join()</a></code>, and <code><a href="http://dplyr.tidyverse.org/reference/join.html">full_join()</a></code> (note that all of these functions come from the <code>dplyr</code> package). Let’s start with <code><a href="http://dplyr.tidyverse.org/reference/join.html">full_join()</a></code>, which produces a new data frame that includes all rows and columns from the two original data frame (call them <code>x</code> and <code>y</code>):</p>
+<p><img src="images/full-join.gif" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">(x &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>)))</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">(y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>), <span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y4"</span>)))</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">full_join</a></span>(x, y)</a></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="right">id</th>
+<th align="left">x</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">x1</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">x2</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">x3</td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<thead><tr class="header">
+<th align="right">id</th>
+<th align="left">y</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">y1</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">y2</td>
+</tr>
+<tr class="odd">
+<td align="right">4</td>
+<td align="left">y4</td>
+</tr>
+</tbody>
+</table>
+<table class="table">
+<thead><tr class="header">
+<th align="right">id</th>
+<th align="left">x</th>
+<th align="left">y</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">x1</td>
+<td align="left">y1</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">x2</td>
+<td align="left">y2</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">x3</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="left">NA</td>
+<td align="left">y4</td>
+</tr>
+</tbody>
+</table>
+<p>Note that if there is not a matching values (<code>id = 3</code> and <code>id=4</code>), <code><a href="http://dplyr.tidyverse.org/reference/join.html">full_join()</a></code> returns NA</p>
+<p>The remaining mutating joins do modified verions of what <code><a href="http://dplyr.tidyverse.org/reference/join.html">full_join()</a></code> does. <code><a href="http://dplyr.tidyverse.org/reference/join.html">left_join()</a></code> keeps all rows from <code>x</code> (or the “left” dataframe in the arguments) and all columns from both <code>x</code> and <code>y</code>. Rows in <code>y</code> that are not shared with <code>x</code> (<code>id = 4</code>) are dropped from the resulting data frame:</p>
+<p><img src="images/left-join.gif" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(x, y)</a></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="right">id</th>
+<th align="left">x</th>
+<th align="left">y</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">x1</td>
+<td align="left">y1</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">x2</td>
+<td align="left">y2</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="left">x3</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<p><code><a href="http://dplyr.tidyverse.org/reference/join.html">right_join()</a></code> does the same thing but in reverse (so <code><a href="http://dplyr.tidyverse.org/reference/join.html">left_join(x,y)</a></code> produces the same output as <code><a href="http://dplyr.tidyverse.org/reference/join.html">right_join(y,x)</a></code>)</p>
+<p><code><a href="http://dplyr.tidyverse.org/reference/join.html">inner_join()</a></code> is the most restrictive the the mutating joins. It returns only rows from <code>x</code> where there are matching values in <code>y</code>:</p>
+<p><img src="images/inner-join.gif" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">inner_join</a></span>(x, y)</a></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="right">id</th>
+<th align="left">x</th>
+<th align="left">y</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">x1</td>
+<td align="left">y1</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">x2</td>
+<td align="left">y2</td>
+</tr>
+</tbody>
+</table>
+<p>Note that all of these functions first look for columns with the same name (in this case <code>id</code>) and joins <em>by</em> that (or those) column(s).</p>
+</div>
+<div id="filtering-joins" class="section level3">
+<h3 class="hasAnchor">
+<a href="#filtering-joins" class="anchor"></a>Filtering joins</h3>
+<p>In the examples above, the resulting data frame contained all of the columns from both <code>x</code> and <code>y</code>. Filtering joins are different in that they only keep the columns from the first data frame. For example, <code><a href="http://dplyr.tidyverse.org/reference/join.html">semi_join()</a></code> returns all rows from <code>x</code> with matching values of <code>y</code> but only returns the original columns in <code>x</code>:</p>
+<p><img src="images/semi-join.gif" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">semi_join</a></span>(x, y)</a></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="right">id</th>
+<th align="left">x</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="left">x1</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="left">x2</td>
+</tr>
+</tbody>
+</table>
+<p>This is useful for getting rid of rows in <code>x</code> that are not shared with <code>y</code> (similar to the way we used <code><a href="http://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> to keep only rows we wanted in the BBS data frames).</p>
+<p><code><a href="http://dplyr.tidyverse.org/reference/join.html">anti_join()</a></code> returns rows from <code>x</code> where there are <strong>not</strong> matching values in <code>y</code>:</p>
+<p><img src="images/anti-join.gif" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">anti_join</a></span>(x, y)</a></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="right">id</th>
+<th align="left">x</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="right">3</td>
+<td align="left">x3</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+<div id="back-to-the-0-counts" class="section level2">
+<h2 class="hasAnchor">
+<a href="#back-to-the-0-counts" class="anchor"></a>Back to the 0 counts</h2>
+<p>So how can we use a join to add the 0 counts? Remember that the <code>ut_weather</code> data frame contains covariate data from all runs of each route. So if a route/year combination is in that data frame, we know it was run. If that route/year combination is <em>not</em> in the <code>dove_counts</code> data frame, it must be a 0 count.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">ut_run &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/select.html">select</a></span>(ut_weather, routeID, Year)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(ut_run, dove_counts)</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3">dove_counts<span class="op">$</span>aou &lt;-<span class="st"> "22860"</span></a>
+<a class="sourceLine" id="cb17-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb17-5" data-line-number="5">dove_counts<span class="op">$</span>count[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(dove_counts<span class="op">$</span>count)] &lt;-<span class="st"> </span><span class="dv">0</span></a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb18-2" data-line-number="2">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(dove_counts, Year)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(dove_counts, <span class="dt">Count =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sum">sum</a></span>(count))</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span>(dove_counts, <span class="kw"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span>(<span class="dt">x =</span> Year, <span class="dt">y =</span> Count)) <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html">geom_path</a></span>()</a></code></pre></div>
+<p><img src="wrangling_bbs_files/figure-html/unnamed-chunk-34-1.png" width="700" style="display: block; margin: auto;"></p>
 </div>
 </div>
   </div>
@@ -769,7 +789,12 @@ ut_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span cla
       <li><a href="#data-structure">Data structure</a></li>
       <li><a href="#subsetting-the-utah-routes">Subsetting the Utah routes</a></li>
       <li><a href="#subsetting-the-dove-data">Subsetting the dove data</a></li>
-      <li><a href="#filling-in-0-counts-using-joins">Filling in 0 counts using joins</a></li>
+      </ul>
+</li>
+      <li>
+<a href="#filling-in-0-counts-using-joins">Filling in 0 counts using joins</a><ul class="nav nav-pills nav-stacked">
+<li><a href="#joins">Joins</a></li>
+      <li><a href="#back-to-the-0-counts">Back to the 0 counts</a></li>
       </ul>
 </li>
       </ul>
@@ -784,11 +809,7 @@ ut_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span cla
 </div>
 
 <div class="pkgdown">
-<<<<<<< HEAD
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
-=======
   <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
->>>>>>> 5cf75ebe31a3a44b8878b827514c488223bcbd19
 </div>
       </footer>
 </div>
