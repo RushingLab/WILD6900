@@ -35,7 +35,7 @@ class: inverse, center, middle
 ---
 ## Stochasticity and uncertainty in ecological models
 
-In each level of our models, we differentiate between:  
+#### In each level of our models, we differentiate between:  
 
 + a *deterministic* model `\(g()\)`, and
 
@@ -44,11 +44,11 @@ In each level of our models, we differentiate between:
 
 
 --
-The deterministic portion of the model contains no uncertainty `\(^1\)`  
+####  The deterministic portion of the model contains no uncertainty `\(^1\)`  
 
 
 --
-*Stochastic* processes are different:  
+#### *Stochastic* processes are different:  
 
 + given an input, the model will not always return the same answer
 
@@ -64,11 +64,12 @@ The deterministic portion of the model contains no uncertainty `\(^1\)`
 ---
 ## Stochasticity and uncertainty in ecological models
 
-In Bayesian models, all unobserved quantities are treated as a **random variables**, that is they can take on different values due to chance (i.e., stochastic)  
+##### In Bayesian models, all unobserved quantities are treated as a **random variables**, that is they can take on different values due to chance (i.e., stochastic)  
 
-Each random variable in our model is governed by a **probabilty distribution** `\(^2\)`  
+##### Each random variable in our model is governed by a **probabilty distribution** `\(^2\)`  
 
-Our goal is to *use our data to learn about those distributions*
+--
+#### Our goal is to *use our data to learn about those distributions*
 
 ???
 
@@ -77,18 +78,19 @@ Our goal is to *use our data to learn about those distributions*
 ---
 ## Probability
 
-Uncertain events are not necessarily unpredictable  
+#### Uncertain events are not necessarily unpredictable  
 
-*Probability* allows us to summarize how likely each possible value of a random variable is to occur  
+--
+#### *Probability* allows us to summarize how likely each possible value of a random variable is to occur  
 
 ---
 ## Sample space
 
-For any given random variable, the *sample space* `\(S\)` includes all of the possible values the variable can take  
+#### For any given random variable, the *sample space* `\(S\)` includes all of the possible values the variable can take   
 
-For example, for an single-species occupancy model, `\(S\)` would be present or absent. For a model of species abundance, `\(S\)` would be `\({0,1,2,3,...,\infty}\)`.  
+##### For example, for an single-species occupancy model, `\(S\)` would be present or absent. For a model of species abundance, `\(S\)` would be `\({0,1,2,3,...,\infty}\)`.  
 
-&lt;img src="S.png" width="500" style="display: block; margin: auto;" /&gt;
+&lt;img src="S.png" width="450" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -97,13 +99,13 @@ For a random process to truly be a probability, the sum of the probabilities of 
 ---
 ## Sample space
 
-**Example**  
+#### **Example**  
 
-Imagine an occupancy model in which we want to know if species `\(x\)` is present at a given location  
+##### Imagine an occupancy model in which we want to know if species `\(x\)` is present at a given location  
 
-We will denote the occupancy status `\(z_x\)` and the sample space includes just two possible values:  
+##### We will denote the occupancy status `\(z_x\)` and the sample space includes just two possible values:  
 
-`$$S_{z_x}=\{0, 1\}$$`
+`$$\huge S_{z_x}=\{0, 1\}$$`
 
 ---
 class: inverse, middle, center
@@ -113,9 +115,9 @@ class: inverse, middle, center
 ---
 ## Probability of single events
 
-The probability that `\(A\)` will occur is the area of `\(A\)` divided by the area of `\(S\)` `\(^3\)`  
+#### The probability that `\(A\)` will occur is the area of `\(A\)` divided by the area of `\(S\)` `\(^3\)`  
 
-`$$Pr(A) = \frac{area\; of\; A}{area\; of \;S}$$`
+`$$\Large Pr(A) = \frac{area\; of\; A}{area\; of \;S}$$`
 
 &lt;img src="SA.png" width="500" style="display: block; margin: auto;" /&gt;
 
@@ -132,11 +134,12 @@ What is the probability that `\(A\)` does not occur? It's the area outside of `\
 ---
 ## Probability of single events
 
-**Example**  
+#### **Example**  
 
-In our example, let's say that the probability of occupancy for species `\(x\)` is `\(Pr(z_x = 1) = 0.4\)`  
+#### In our example, let's say that the probability of occupancy for species `\(x\)` is `\(Pr(z_x = 1) = 0.4\)`  
 
-This means that the probability that the site in not occupied is `\(Pr(z_x = 0) =1-0.4=0.6\)`  
+--
+#### This means that the probability that the site in not occupied is `\(Pr(z_x = 0) =1-0.4=0.6\)`  
 
 ---
 class: inverse, middle, center
@@ -146,9 +149,10 @@ class: inverse, middle, center
 ---
 ## Probability of multiple events
 
-Often, we are not interested in the probability of a single event happening but instead of more than one events  
+#### Often, we are not interested in the probability of a single event happening but instead of more than one events  
 
-The *joint* probability `\(Pr(A,B)\)` refers to the probability that two or more events occur and is usually denoted `\(^4\)`  
+--
+#### The *joint* probability refers to the probability that two or more events occur and is usually denoted `\(Pr(A,B)\)` `\(^4\)`  
 
 &lt;img src="SAB.png" width="500" style="display: block; margin: auto;" /&gt;
 
@@ -159,16 +163,16 @@ The *joint* probability `\(Pr(A,B)\)` refers to the probability that two or more
 ---
 ## Probability of multiple events
 
-**Example**  
+#### **Example**  
 
 To extend our simple example, let's imagine we are interested in the occupancy status of two species - `\(x\)` and `\(y\)`. Our sample space is now:  
 
-`$$S_{z_x,z_y} = \{(0,0), (0,1), (1,0), (1,1)\}$$`
+`$$\Large S_{z_x,z_y} = \{(0,0), (0,1), (1,0), (1,1)\}$$`
 
 --
 The question we want to know now is: what is the probability that a site is occupied by both species:
 
-`$$Pr(z_x = 1, z_y = 1) = Pr(z_x, z_y)$$`  
+`$$\Large Pr(z_x = 1, z_y = 1) = Pr(z_x, z_y)$$`  
 
 --
 The answer to that question depends on the relationship between `\(Pr(z_x)\)` and `\(Pr(z_y)\)`
@@ -181,7 +185,7 @@ class: inverse, center, middle
 ---
 ## Conditional probability
 
-In some cases, knowing the status of one random variable tells us something about the status of another random variable  
+#### In some cases, knowing the status of one random variable tells us something about the status of another random variable  
 
 Let's say we know that species `\(x\)` is present, that is `\(z_x=1\)`  
 
@@ -203,11 +207,11 @@ You can see this very clearly in this [awesome visualization](http://setosa.io/c
 
 `\(Pr(z_y|z_x)\)` is the area shared by the two events divided by the area of `\(z_x\)` (not `\(S\)`!) `\(^5\)`
 
-`$$Pr(z_y|z_x) = \frac{area\; shared\; by\; z_x\; and\; z_y}{area\; of \;z_x} = \frac{Pr(z_x\; \cap\; z_y)}{Pr(z_x)}$$`
+`$$\large Pr(z_y|z_x) = \frac{area\; shared\; by\; z_x\; and\; z_y}{area\; of \;z_x} = \frac{Pr(z_x\; \cap\; z_y)}{Pr(z_x)}$$`
 
 likewise, 
 
-`$$Pr(z_x|z_y) = \frac{Pr(z_x\; \cap\; z_y)}{Pr(z_y)}$$`
+`$$\large Pr(z_x|z_y) = \frac{Pr(z_x\; \cap\; z_y)}{Pr(z_y)}$$`
 
 ???
 
@@ -218,9 +222,9 @@ likewise,
 ---
 ## Conditional probability
 
-For conditional events, the joint probability is:
+#### For conditional events, the joint probability is:
 
-`$$Pr(z_y, z_x) = Pr(z_y|z_x)Pr(z_x) = Pr(z_x|z_y)Pr(z_y)$$`
+`$$\LARGE Pr(z_y, z_x) = Pr(z_y|z_x)Pr(z_x) = Pr(z_x|z_y)Pr(z_y)$$`
 
 ---
 ## Probability of independent events
@@ -238,16 +242,16 @@ In this case, knowing that `\(z_x=1\)` gives us no new information about the pro
 
 Mathematically, this means that:
 
-`$$Pr(z_y|z_x) = Pr(z_y)$$`
+`$$\large Pr(z_y|z_x) = Pr(z_y)$$`
 
 and
 
-`$$Pr(z_x|z_y) = Pr(z_x)$$`
+`$$\large Pr(z_x|z_y) = Pr(z_x)$$`
 
 --
 Thus, 
 
-`$$Pr(z_x,z_y) = Pr(z_x)Pr(z_y)$$`
+`$$\large Pr(z_x,z_y) = Pr(z_x)Pr(z_y)$$`
 
 ???
 `\(^6\)`For example, the probability of a coin flip being heads is not dependent on whether or not the previous flip was heads. 
@@ -268,7 +272,7 @@ In our example, maybe species `\(x\)` and species `\(y\)` **never** occur togeth
 --
 In this case, knowing that `\(z_x = 1\)` means that `\(z_y = 0\)`. In other words,
 
-`$$Pr(z_y|z_x) = Pr(z_x|z_y) = 0$$`
+`$$\Large Pr(z_y|z_x) = Pr(z_x|z_y) = 0$$`
 
 &lt;img src="S_disjoint.png" width="300" style="display: block; margin: auto;" /&gt;
 
@@ -279,24 +283,24 @@ In this case, knowing that `\(z_x = 1\)` means that `\(z_y = 0\)`. In other word
 ---
 ## Probability of one event or the other
 
-In some cases, we might want to know the probability that one event *or* the other occurs  
-&lt;br/&gt;
+#### In some cases, we might want to know the probability that one event *or* the other occurs  
+
 
 --
-For example, what is the probability that species `\(x\)` or species `\(y\)` is present but not both?  
-&lt;br/&gt;
+#### For example, what is the probability that species `\(x\)` or species `\(y\)` is present but not both?  
+
 
 --
-This is the area in `\(z_x\)` and `\(z_y\)` not including the area of overlap:
+#### This is the area in `\(z_x\)` and `\(z_y\)` not including the area of overlap:
 
-`$$Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y) - Pr(z_x,z_y)$$`
+`$$\Large Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y) - Pr(z_x,z_y)$$`
 
 ---
 ## Probability of one event or the other
 
 When `\(z_x\)` and `\(z_y\)` are independent, 
 
-`$$Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y) - Pr(z_x)Pr(z_y)$$`
+`$$\large Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y) - Pr(z_x)Pr(z_y)$$`
 
 --
 If they are conditional,
@@ -306,7 +310,7 @@ If they are conditional,
 --
 If they are disjoint,
 
-`$$Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y)$$`
+`$$\Large Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y)$$`
 
 ---
 ## Marginal probability
@@ -316,7 +320,7 @@ A critical concept in Bayesian models is **marginal probability**, that is the p
 --
 Imagine that our occupancy model includes the effect of 3 different habitats on the occupancy probability of species `\(x\)`, so:
 
-`$$Pr(z_x|H_i) = \frac{Pr(z_x \cap H_i)}{Pr(H_i)}$$`
+`$$\Large Pr(z_x|H_i) = \frac{Pr(z_x \cap H_i)}{Pr(H_i)}$$`
 
 --
 What is the overall probability that species `\(x\)` occurs regardless of habitat type? That is, `\(Pr(z_x)\)`?  
@@ -432,7 +436,7 @@ Bayesian networks graphically display the dependence among random variables `\(^
 &lt;img src="AB.png" width="20" style="display: block; margin: auto;" /&gt;
 
 --
-`$$Pr(A, B) = Pr(A|B)Pr(B)$$`
+`$$\LARGE Pr(A, B) = Pr(A|B)Pr(B)$$`
 
 ???
 
@@ -449,7 +453,7 @@ The order of conditioning (i.e., the dependencies in the graph) are determined b
 &lt;img src="ABC.png" width="200" style="display: block; margin: auto;" /&gt;
 
 --
-`$$Pr(A, B, C) = Pr(A|B,C)Pr(B|C)Pr(C)$$`
+`$$\Large Pr(A, B, C) = Pr(A|B,C)Pr(B|C)Pr(C)$$`
 
 ---
 ## Bayesian networks
@@ -457,7 +461,7 @@ The order of conditioning (i.e., the dependencies in the graph) are determined b
 &lt;img src="ABCD.png" width="200" style="display: block; margin: auto;" /&gt;
 
 --
-`$$Pr(A, B, C, D) = Pr(A|C)Pr(B|C)Pr(C|D)Pr(D)$$`
+`$$\Large Pr(A, B, C, D) = Pr(A|C)Pr(B|C)Pr(C|D)Pr(D)$$`
 
 ---
 ## Bayesian networks
@@ -465,7 +469,7 @@ The order of conditioning (i.e., the dependencies in the graph) are determined b
 &lt;img src="ABCDE.png" width="200" style="display: block; margin: auto;" /&gt;
 
 --
-`$$Pr(A, B, C, D, E) = Pr(A|C)Pr(B|C)Pr(C|D, E)Pr(D)Pr(E)$$`
+`$$\Large Pr(A, B, C, D, E) = Pr(A|C)Pr(B|C)Pr(C|D, E)Pr(D)Pr(E)$$`
 
 ---
 ## Bayesian networks
@@ -473,7 +477,7 @@ The order of conditioning (i.e., the dependencies in the graph) are determined b
 &lt;img src="ABCD2.png" width="200" style="display: block; margin: auto;" /&gt;
 
 --
-`$$Pr(A, B, C, D) = Pr(A|B,C,D)Pr(B|C,D)Pr(C|D)Pr(D)$$`
+`$$\Large Pr(A, B, C, D) = Pr(A|B,C,D)Pr(B|C,D)Pr(C|D)Pr(D)$$`
 
 ---
 ## Bayesian networks
@@ -481,7 +485,7 @@ The order of conditioning (i.e., the dependencies in the graph) are determined b
 &lt;img src="ABCD3.png" width="200" style="display: block; margin: auto;" /&gt;
 
 --
-`$$Pr(A, B, C, D) = Pr(A|B,C,D)Pr(C|D)Pr(D)Pr(B)$$`
+`$$\Large Pr(A, B, C, D) = Pr(A|B,C,D)Pr(C|D)Pr(D)Pr(B)$$`
 
 ???
 
@@ -534,7 +538,7 @@ Even though I will discuss specific distributions as they come up, I highly reco
 
 - Binomial  
 
-- Multinational  
+- Multinomial  
 
 ???
 
@@ -545,15 +549,13 @@ Even though I will discuss specific distributions as they come up, I highly reco
 ---
 ## Probability functions
 
-Very often we want to know the probability that a random variable will take a specific value `\(z\)`  
-&lt;br/&gt;  
+#### Very often we want to know the probability that a random variable will take a specific value `\(z\)`  
 
 --
-Answering this question requires the use of probability functions, which we will denote `\([z]^{13}\)`  
-&lt;br/&gt;
+#### Answering this question requires the use of probability functions, which we will denote `\([z]^{13}\)`  
 
 --
-Probability functions differ between *continuous* and *discrete* distributions so we will discuss these separately  
+#### Probability functions differ between *continuous* and *discrete* distributions so we will discuss these separately  
 
 ???
 `\(^{13}\)`Probability functions tell us `\([z]=Pr(z)\)`  
@@ -563,10 +565,10 @@ Probability functions differ between *continuous* and *discrete* distributions s
 
 For *discrete* random variables, the probability that the variable will take a specific value `\(z\)` is defined by the *probability mass function* (pmf)  
 
-All pmf's share two properties:
+#### All pmf's share two properties:
 
-`$$0 \leq [z] \leq 1$$`
-`$$\sum_{z \in S}[z]=1$$`
+`$$\Large 0 \leq [z] \leq 1$$`
+`$$\Large \sum_{z \in S}[z]=1$$`
 
 where `\(S\)` is the set of all `\(z\)` for which `\([z] &gt; 0\)` (the range of possible values of `\(z\)`). 
 
@@ -590,15 +592,14 @@ The shape of the Poisson distribution is determined by 1 parameter called `\(\la
 ---
 ## Probability mass functions
 
-Assume `\(\lambda = 10\)`  
+#### If `\(\lambda = 10\)`, what is the probability that `\(z\)` will equal 10? Or 8? Or 15?  
 
-What is the probability that `\(z\)` will equal 10? Or 8? Or 15?  
-
+--
 In R, probability mass is estimating using the `dpois()` function (or the equivalent for other discrete distributions)
 
 - takes two arguments: the value we are interested in estimating the probability of `\((z)^{14}\)` and the expected value of our distribution `\((\lambda)\)`
 
-- `dpois(x = 10, lambda = 10)`  
+- `dpois(x = seq(0,25), lambda = 10)`  
 
 &lt;img src="Lecture2_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 
@@ -630,7 +631,7 @@ For example, the shaded area below shows the probability density `\(Pr(-2 \leq z
 
 This area can be approximated by multiplying the width times the (average) height of the rectangle: 
 
-`$$Pr(a \leq z \leq b) \approx \Delta_z [(a + b)/2]$$` 
+`$$\Large Pr(a \leq z \leq b) \approx \Delta_z [(a + b)/2]$$` 
 
 By making the range `\(\Delta_z =a-b\)` smaller and smaller, we get closer to `\(Pr(z)\)`:
 
@@ -639,13 +640,16 @@ By making the range `\(\Delta_z =a-b\)` smaller and smaller, we get closer to `\
 ---
 ## Probability density functions
 
-At `\(z\)`, `\(\Delta_z =0\)`, thus `\([z] = 0\)`  
+#### At `\(z\)`, `\(\Delta_z =0\)`, thus `\([z] = 0\)`  
 
-However, we can use calculus to estimate the height of the line `\(([z])\)` as `\(\Delta_z\)` approaches 0  
+--
+#### However, we can use calculus to estimate the height of the line `\(([z])\)` as `\(\Delta_z\)` approaches 0  
 
-So for continuous random variables, the *probability density* of `\(z\)` as the area under the curve between `\(a \leq z \leq b\)` as `\(\Delta_z\)` approaches zero  
+--
+#### So for continuous random variables, the *probability density* of `\(z\)` as the area under the curve between `\(a \leq z \leq b\)` as `\(\Delta_z\)` approaches zero  
 
-Estimating probability density in R is the same as for discrete variables: `dnorm()` `\(^{15}\)`
+--
+#### Estimating probability density in R is the same as for discrete variables: `dnorm()` `\(^{15}\)`
 
 ???
 
@@ -670,39 +674,41 @@ Every probability distribution we will use in the course can be described by its
 ---
 ## Expected value (i.e., the mean)
 
-The first moment of a distribution describes its central tendency (denoted `\(\mu\)`) or *expected value* (denoted `\(E(z)\)`)  
-
-This is the most probable value of `\(z\)`  
+#### The first moment of a distribution describes its central tendency (denoted `\(\mu\)`) or *expected value* (denoted `\(E(z)\)`)  
 
 --
-Think of this as a weighted average - the mean of all possible values of `\(z\)` weighted by the probability mass or density of each value `\([z]\)`  
+#### This is the most probable value of `\(z\)`  
 
 --
-For discrete variables, the first moment can be calculated as
-
-`$$\mu = E(z) = \sum_{z \in S} z[z]$$`
+#### Think of this as a weighted average - the mean of all possible values of `\(z\)` weighted by the probability mass or density of each value `\([z]\)`  
 
 --
-For continuous variables, we need to use an integral instead of a sum:
+#### For discrete variables, the first moment can be calculated as
 
-`$$\mu = E(z) = \int_{-\infty}^{\infty} z[z]dz$$`
+`$$\Large \mu = E(z) = \sum_{z \in S} z[z]$$`
+
+--
+#### For continuous variables, we need to use an integral instead of a sum:
+
+`$$\Large \mu = E(z) = \int_{-\infty}^{\infty} z[z]dz$$`
 
 ---
 ## Variance
 
-The second moment of a distribution describes the *variance* - that is, the spread of the distribution around its mean  
+#### The second moment of a distribution describes the *variance* - that is, the spread of the distribution around its mean  
 
 --
-On average how far is a random value drawn from the distribution from the mean of the distribution  
+#### On average how far is a random value drawn from the distribution from the mean of the distribution  
 
 --
-For discrete variables, variance can be estimated as the weighted average of the squared difference (squared to prevent negative values) between each value `\(z\)` and the mean `\(\mu\)` of the distribution:
+#### For discrete variables, variance can be estimated as the weighted average of the squared difference (squared to prevent negative values) between each value `\(z\)` and the mean `\(\mu\)` of the distribution:
 
-`$$\sigma^2 = E((z - \mu)^2) = \sum_{z \in S} (z - \mu)^2[z]$$`
+`$$\Large \sigma^2 = E((z - \mu)^2) = \sum_{z \in S} (z - \mu)^2[z]$$`
+--
 
-and for continuous variables:
+#### and for continuous variables:
 
-`$$\sigma^2 = E((z - \mu)^2) = \int_{-\infty}^{\infty} (z - \mu)^2[z]dz$$`
+`$$\Large \sigma^2 = E((z - \mu)^2) = \int_{-\infty}^{\infty} (z - \mu)^2[z]dz$$`
 
 ---
 ## Exercise: Estimating moments using *Monte Carlo integration* `\(^{16}\)`
@@ -725,6 +731,7 @@ Let's estimate the first and second moments of a gamma distribution `\(^{18}\)`
 
 --
 The shape of the gamma distribution is governed by two parameters, `\(\alpha\)` (referred to as the shape) and `\(\beta\)` (referred to as the rate or sometimes the scale) `\(^{19}\)` 
+&lt;br/&gt;
 &lt;br/&gt;
 
 --
@@ -761,12 +768,11 @@ sigma2 &lt;- sum((samp - mu)^2)/n # variance of the sample
 ## Exercise: Estimating moments using *Monte Carlo integration*
 
 How close are these values to the true moments? For the gamma distribution: 
-`$$\mu = \frac{\alpha}{\beta}$$`
-and 
+`$$\Large \mu = \frac{\alpha}{\beta}$$`
 
-`$$\sigma^2 = \frac{\alpha}{\beta}$$`
+`$$\Large \sigma^2 = \frac{\alpha}{\beta}$$`
 
-For our distribution: `\(^1\)`
+For our samples: `\(^1\)`
 
 
 ```r
@@ -774,7 +780,7 @@ mu # Estimated mean
 ```
 
 ```
-## [1] 0.2483
+## [1] 0.2542
 ```
 
 ```r
@@ -793,10 +799,9 @@ Your answer won't exactly match the ones here but they should be pretty close
 ## Exercise: Estimating moments using *Monte Carlo integration*
 
 How close are these values to the true moments? For the gamma distribution: 
-`$$\mu = \frac{\alpha}{\beta}$$`
-and 
+`$$\Large \mu = \frac{\alpha}{\beta}$$`
 
-`$$\sigma^2 = \frac{\alpha}{\beta^1}$$`
+`$$\Large \sigma^2 = \frac{\alpha}{\beta^1}$$`
 
 For our distribution:
 
@@ -806,7 +811,7 @@ sigma2 # Estimated variance
 ```
 
 ```
-## [1] 0.1217
+## [1] 0.1315
 ```
 
 ```r
@@ -871,9 +876,9 @@ This is not true of all probability distributions
 --
 For example, the beta distribution is a continuous distribution with values between 0 and 1 `\(^{23,24}\)`. Its first and second moments are:
 
-`$$\mu = \frac{\alpha}{\alpha + \beta}$$`
+`$$\Large \mu = \frac{\alpha}{\alpha + \beta}$$`
 
-`$$\sigma^2 = \frac{\alpha\beta}{(\alpha + \beta)^2 (\alpha + \beta + 1)}$$`
+`$$\Large \sigma^2 = \frac{\alpha\beta}{(\alpha + \beta)^2 (\alpha + \beta + 1)}$$`
 
 ???
 
@@ -884,14 +889,14 @@ For example, the beta distribution is a continuous distribution with values betw
 ---
 ## Moment matching 
 
-What is you know the mean of a beta distribution is 0.3 and the variance is 0.025? What are `\(\alpha\)` and `\(\beta\)`?  
+#### What is you know the mean of a beta distribution is 0.3 and the variance is 0.025? What are `\(\alpha\)` and `\(\beta\)`?  
 
-We need another set of equations:
+--
 
-`$$\alpha = \bigg(\frac{1-\mu}{\sigma^2}- \frac{1}{\mu} \bigg)\mu^2$$`
+`$$\Large \alpha = \bigg(\frac{1-\mu}{\sigma^2}- \frac{1}{\mu} \bigg)\mu^2$$`
 
-`$$\beta = \alpha \bigg(\frac{1}{\mu}-1\bigg)$$`
-
+`$$\Large \beta = \alpha \bigg(\frac{1}{\mu}-1\bigg)$$`
+--
 For our model, that means `\(^{25}\)`:
 
 
