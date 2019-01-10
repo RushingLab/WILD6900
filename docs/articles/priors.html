@@ -76,6 +76,12 @@
     <li>
       <a href="../articles/Lecture2/Lecture2.html">Lecture 2: Probability refresher (or introduction)</a>
     </li>
+    <li>
+      <a href="../articles/Lecture3/Lecture3.html">Lecture 3: Principles of Bayesian inference</a>
+    </li>
+    <li>
+      <a href="../articles/Lecture4/Lecture4.html">Lecture 4: More about prior distributions</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -92,6 +98,9 @@
     </li>
     <li>
       <a href="../articles/rmarkdown_intro.html">Introduction to R Markdown</a>
+    </li>
+    <li>
+      <a href="../articles/priors.html">Creating prior distributions</a>
     </li>
   </ul>
 </li>
@@ -117,7 +126,7 @@
       <h1>Developing informative priors</h1>
             <h3 class="subtitle">WILD6900</h3>
             
-            <h4 class="date">2019-01-07</h4>
+            <h4 class="date">2019-01-10</h4>
       
       
       <div class="hidden name"><code>priors.Rmd</code></div>
@@ -135,12 +144,13 @@
 <p>One issue in many ecological studies is that it is logistically and financially difficult to collect data from a large number of individuals. As a result, vital rate estimates are often based on relatively small sample sizes, which can lead to high uncertainty and possibly spurious results.</p>
 <p>It is precisely in these instances where Bayesian methods can shine - as we saw in lecture, the ability to incorporate previous knowledge of parameter values via informative priors is equivalent to increasing your sample size.</p>
 <p>To explore different ways of generating informative priors, we will borrow data and some clever ideas from a recently published paper on the dynamics of Polar Bear (<em>Ursus maritimus</em>) populations in the Chukchi Sea (Regehr et al. 2018). For this example, we will focus on a subset of the full model, namely estimating annual survival of adult female bears.</p>
+<p>In the model developed by Regehr et al. (2018), female survival was identifiable but estimates were imprecise using only the available data due to small sample sizes. As a result, the authors chose to develop informative priors based on published survival estimates from other populations. In this case, the authors were fortunate to have a handful of previous studies to lean-on and later in this exercise we will learn how they developed priors from those studies. But first, let’s assume there are no published studies but we still want the benefits of informative priors.</p>
 </div>
 <div id="example-1-domain-expertise" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example-1-domain-expertise" class="anchor"></a>Example 1: Domain expertise</h2>
 <p>Even if we have no previous estimates of polar bear survival, we are not completely ignorant about survival of this species. We can use our <em>domain expertise</em> to develop a prior that improves upon the non-informative option.</p>
-<p>Polar bears are a large, long-lived carnivore with a life expectancy of about 20-25 years (Ramsay &amp; Stirling 1988). This simple fact suggests that annual survival must be pretty high - even with an annual survival probability of <span class="math inline">\(95\%\)</span>, an individual would only have a 36% probability of surviving 20 years. So survival probabilities much less than <span class="math inline">\(\sim 90\%\)</span> would be pretty surprising and we would be pretty suspicious of estimates less than <span class="math inline">\(\sim 80\%\)</span> (which would imply <span class="math inline">\(1\%\)</span> of female polar bears make it to 20 years of age).</p>
+<p>Polar bears are a large, long-lived carnivore with a life expectancy of about 20-25 years (Ramsay &amp; Stirling 1988). This simple fact suggests that adult survival must be pretty high - even with an annual survival probability of <span class="math inline">\(95\%\)</span>, an individual would only have a 36% probability of surviving 20 years. So survival probabilities much less than <span class="math inline">\(\sim 90\%\)</span> would be pretty surprising and we would be pretty suspicious of estimates less than <span class="math inline">\(\sim 80\%\)</span> (which would imply <span class="math inline">\(1\%\)</span> of female polar bears make it to 20 years of age).</p>
 <p>Of course, polar bear populations in many areas are declining pretty quickly, suggesting that maybe adult survival rates could be lower than historical levels. So although we can be pretty that survival is high (e.g., <span class="math inline">\(&gt;80\%\)</span>), we’re not super confident about the actual survival rate. With regards to our prior, this suggests we want a prior that puts most of the weight <span class="math inline">\(&gt;80\%\)</span> but is wide enough to reflect our uncertainty about the actual survival rates.</p>
 <div id="turning-our-expertise-into-a-prior" class="section level3">
 <h3 class="hasAnchor">
@@ -148,12 +158,12 @@
 <p>When modeling a continuous random variable that must be between 0 and 1 (i.e., a probability), the beta distribution is a natural choice. The shape of the beta distribution is governed by two parameters, <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span></p>
 <p><img src="priors_files/figure-html/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>We learned in lecture how to turn the mean and variance of a random variable into the parameters of a probability distribution using moment matching. For the beta distribution:</p>
-<p><span class="math display">\[\alpha = \bigg(\frac{1-\mu}{\sigma^2}- \frac{1}{\mu} \bigg)\mu^2 \tag{1}\]</span><br><span class="math display">\[\beta = \alpha \bigg(\frac{1}{\mu}-1\bigg) \tag{2}\]</span> Given our domain expertise, a reasonable choice for the mean and variance of the prior might be <span class="math inline">\(\mu=0.9\)</span> and <span class="math inline">\(\sigma^2=0.03\)</span>. Plugging those values into equations 1 and 2 gives:</p>
-<p><span class="math display">\[\alpha = \bigg(\frac{1-0.9}{0.03}- \frac{1}{0.9} \bigg)0.9^2 = 1.8\]</span> <span class="math display">\[\beta = 3.6 \bigg(\frac{1}{0.9}-1\bigg) = 0.2\]</span></p>
+<p><span class="math display">\[\alpha = \bigg(\frac{1-\mu}{\sigma^2}- \frac{1}{\mu} \bigg)\mu^2 \tag{1}\]</span><br><span class="math display">\[\beta = \alpha \bigg(\frac{1}{\mu}-1\bigg) \tag{2}\]</span> Given our domain expertise, a reasonable choice for the mean and variance of the prior might be <span class="math inline">\(\mu=0.9\)</span> and <span class="math inline">\(\sigma^2=0.005\)</span> (this may seem like a small variance but as you’ll see below, it actually produces a relatively diffuse prior. Figuring out an appropriate variance for probabilities is not easy so the best option is usually to play with a few values and then explore the properties of the resulting distribution to make sure it seems reasonable). Plugging those values into equations 1 and 2 gives:</p>
+<p><span class="math display">\[\alpha = \bigg(\frac{1-0.9}{0.005}- \frac{1}{0.9} \bigg)0.9^2 = 15.3\]</span> <span class="math display">\[\beta = 3.6 \bigg(\frac{1}{0.9}-1\bigg) = 1.7\]</span></p>
 <p>As always, we should visualize this distribution to make sure it matches what we think it should look like:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">## Target mean and variance</span></a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">mu &lt;-<span class="st"> </span><span class="fl">0.9</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">var &lt;-<span class="st"> </span><span class="fl">0.03</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">var &lt;-<span class="st"> </span><span class="fl">0.005</span></a>
 <a class="sourceLine" id="cb1-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">## Beta parameters</span></a>
 <a class="sourceLine" id="cb1-6" data-line-number="6">alpha &lt;-<span class="st"> </span>mu<span class="op">^</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>((<span class="dv">1</span><span class="op">-</span>mu)<span class="op">/</span>var <span class="op">-</span><span class="st"> </span>(<span class="dv">1</span><span class="op">/</span>mu))</a>
@@ -167,8 +177,8 @@
 <a class="sourceLine" id="cb1-14" data-line-number="14">                      <span class="dt">density =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Beta">dbeta</a></span>(phi, alpha, beta),</a>
 <a class="sourceLine" id="cb1-15" data-line-number="15">                      <span class="dt">Approach =</span> <span class="st">"Domain expertise"</span>)</a>
 <a class="sourceLine" id="cb1-16" data-line-number="16"></a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="kw">ggplot</span>(beta_df, <span class="kw">aes</span>(<span class="dt">x =</span> phi, <span class="dt">y =</span> density)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="st">  </span><span class="kw">geom_path</span>(<span class="dt">color =</span> WILD6900_colors<span class="op">$</span>value[WILD6900_colors<span class="op">$</span>name <span class="op">==</span><span class="st"> "primary"</span>]) <span class="op">+</span></a>
+<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="kw">ggplot</span>(beta_df, <span class="kw">aes</span>(<span class="dt">x =</span> phi, <span class="dt">y =</span> density, <span class="dt">color =</span> Approach)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="st">  </span><span class="kw">geom_path</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb1-19" data-line-number="19"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(phi), <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.5</span>, <span class="dv">1</span>)) </a></code></pre></div>
 <p><img src="priors_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>This seems reasonable given our understanding of the species biology. However, because we essentially made up the variance term to give a relatively diffuse prior, we would likely have to be very careful about how we justified this choice and would probably need to include some formal prior sensitivity analyses.</p>
@@ -202,8 +212,7 @@
 <a class="sourceLine" id="cb4-10" data-line-number="10">beta_df &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span>(beta_df, beta_df2)</a>
 <a class="sourceLine" id="cb4-11" data-line-number="11"></a>
 <a class="sourceLine" id="cb4-12" data-line-number="12"><span class="kw">ggplot</span>(beta_df, <span class="kw">aes</span>(<span class="dt">x =</span> phi, <span class="dt">y =</span> density, <span class="dt">color =</span> Approach)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_path</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(phi), <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.5</span>, <span class="dv">1</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> WILD6900_colors<span class="op">$</span>value[WILD6900_colors<span class="op">$</span>name <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"primary"</span>, <span class="st">"success"</span>)]) </a></code></pre></div>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(phi), <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.5</span>, <span class="dv">1</span>))</a></code></pre></div>
 <p><img src="priors_files/figure-html/unnamed-chunk-5-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>As you can see, even though the means of the two priors are not that different, the variance is much smaller on the prior based on published estimates, resulting in a much more informative prior (this prior suggests we’re much more sure about the plausible values of <span class="math inline">\(\phi\)</span>).</p>
 </div>
@@ -230,9 +239,9 @@
 <p>Now hopefully you can see why this approach is so clever. We now have 310^{4} plausible values of adult female survival probability that are consistent with published studies and reflect multiple sources of uncertainty about this vital rate<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>.</p>
 <p>From these simulated values, we can now estimate “hyper-parameters” for a single beta distribution that will serve as our prior. First, we estimate the mean and variance of the simulated values:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">(mu3 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(sim_phi))</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">#&gt; [1] 0.9351</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">#&gt; [1] 0.9352</span></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">(var3 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/sd">sd</a></span>(sim_phi) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt; [1] 0.001092</span></a></code></pre></div>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt; [1] 0.001093</span></a></code></pre></div>
 <p>You can see that the variance of these samples is much larger than for approach 1, reflecting the additional source of uncertainty in approach 2. Now we use the same moment matching code as before to generate and visualize the prior:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co">## Beta parameters</span></a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">alpha4 &lt;-<span class="st"> </span>mu3<span class="op">^</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>((<span class="dv">1</span><span class="op">-</span>mu3)<span class="op">/</span>var3 <span class="op">-</span><span class="st"> </span>(<span class="dv">1</span><span class="op">/</span>mu3))</a>
@@ -249,22 +258,22 @@
 <a class="sourceLine" id="cb8-13" data-line-number="13"><span class="kw">ggplot</span>() <span class="op">+</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb8-14" data-line-number="14"><span class="st">  </span><span class="kw">geom_histogram</span>(<span class="dt">data =</span> sim_df, <span class="kw">aes</span>(x, <span class="kw">stat</span>(density)), <span class="dt">alpha =</span> <span class="fl">0.4</span>,</a>
 <a class="sourceLine" id="cb8-15" data-line-number="15">                 <span class="dt">color =</span> <span class="st">"grey50"</span>,</a>
-<a class="sourceLine" id="cb8-16" data-line-number="16">                 <span class="dt">fill =</span>  WILD6900_colors<span class="op">$</span>value[WILD6900_colors<span class="op">$</span>name <span class="op">==</span><span class="st"> "warning"</span>], <span class="dt">binwidth =</span> <span class="fl">0.005</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="st">  </span><span class="kw">geom_path</span>(<span class="dt">data =</span> beta_df, <span class="kw">aes</span>(<span class="dt">x =</span> phi, <span class="dt">y =</span> density, <span class="dt">color =</span> Approach)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb8-18" data-line-number="18"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(phi), <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.7</span>, <span class="dv">1</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb8-19" data-line-number="19"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> WILD6900_colors<span class="op">$</span>value[WILD6900_colors<span class="op">$</span>name <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"primary"</span>, <span class="st">"success"</span>, <span class="st">"warning"</span>)])</a></code></pre></div>
+<a class="sourceLine" id="cb8-16" data-line-number="16">                 <span class="dt">fill =</span>  WILD6900_colors<span class="op">$</span>value[WILD6900_colors<span class="op">$</span>name <span class="op">==</span><span class="st"> "success"</span>], </a>
+<a class="sourceLine" id="cb8-17" data-line-number="17">                 <span class="dt">binwidth =</span> <span class="fl">0.005</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb8-18" data-line-number="18"><span class="st">  </span><span class="kw">geom_path</span>(<span class="dt">data =</span> beta_df, <span class="kw">aes</span>(<span class="dt">x =</span> phi, <span class="dt">y =</span> density, <span class="dt">color =</span> Approach)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb8-19" data-line-number="19"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(phi), <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.7</span>, <span class="dv">1</span>)) </a></code></pre></div>
 <p><img src="priors_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 </div>
-<div id="questions-to-consider" class="section level2">
+<div id="questions-to-consider3" class="section level2">
 <h2 class="hasAnchor">
-<a href="#questions-to-consider" class="anchor"></a>Questions to consider</h2>
+<a href="#questions-to-consider3" class="anchor"></a>Questions to consider<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>
+</h2>
 <ol style="list-style-type: decimal">
-<li><p>Informative vs vague: for informative priors: We want posteriors to reflect (and be affected by) prior knowledge. against informative priors: why do the study if we claim to basically know the answer.</p></li>
-<li><p>What defines ‘sensitivity to the prior’. Should this be quantified by a change in the posterior mean, sd, some overlap metric, etc? Why use informative priors if the posterior is unaffected?</p></li>
-<li><p>Process vs sampling noise: We included 14 studies reflecting a range of conditions and population trajectories. These 14 point estimates of survival reflect the process noise across populations, which is what we wanted to capture in our prior (option 1). The sampling uncertainty within a study was of less interest (option 2).</p></li>
-<li><p>Life history: Incorporating study-specific uncertainty generally increased prior weight for unreasonably low values of survival relative to option 1, which did not agree with expert opinion or life history characteristics for this species.</p></li>
-<li><p>Posterior distributions were relatively similar between options 1 and 2, if there was a change it generally reduced posterior mass for ecologically unreasonable (low) values. Other parameters were unaffected.</p></li>
+<li><p><strong>Informative vs vague</strong>: On one hand, we want posteriors to reflect (and be affected by) prior knowledge. On the other hand, why collect more data if we basically know the answer?</p></li>
+<li><p><strong>How to assess ‘sensitivity to the prior’</strong>: Ideally, we should test how sensitive our inferences are to the choice of prior distribution. Should this be quantified by a change in the posterior mean, standard deviation, etc? If the posterior is unaffected by the prior, why go through the trouble of using informative priors?</p></li>
+<li><p><strong>Process vs sampling noise</strong>: The studies used to create the priors reflect a range of conditions and population trajectories. In approach 1, we assume that the point estimates of survival reflect the process noise across populations. In approach 2, we use the uncertainty from each study to capture both the sampling and process uncertainty. Which sources of uncertainty should we care about when developing a prior?</p></li>
+<li><p><strong>Domain expertise</strong>: Incorporating sampling uncertainty may increased prior weight for survival values that conflict with our domain expertise (for example, values much lower than we think are plausible). However, these values are consistent with possible survival values from published studies. How should we treat priors that are at the boundary of our statistical and domain expertise?</p></li>
 </ol>
 </div>
 <div id="references" class="section level2">
@@ -276,8 +285,9 @@
 <div class="footnotes">
 <hr>
 <ol>
-<li id="fn1"><p><em>h/t to Nathan Hostetter, a USGS researcher, for supplying example code and data to implement these ideas.</em><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p>h/t to Nathan Hostetter, a USGS researcher, for supplying example code and data to implement these ideas.<a href="#fnref1" class="footnote-back">↩</a></p></li>
 <li id="fn2"><p>Beyond this specific example, simulating data from your prior is a very useful way to ensure that the prior produces values are consistent with your domain expertise. Although we will not go into the details in this class, simulating data from the priors (called <em>prior predictive checks</em>) and then checking that these simulated data are generally consistent with plausible values you would expect in real data is a potentially important step in Bayesian inference, especially for complicated models where interactions between multiple parameters can potentially generate unexpected support for implausible data. For more information about doing prior predictive checks, see this <a href="https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html">great overview</a> from Michael Betancourt.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>h/t again to Nathan Hostetter for engaging discussions about these issues<a href="#fnref3" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
   </div>
@@ -290,7 +300,7 @@
 <li><a href="#question-and-model-development">Question and model development</a></li>
       <li><a href="#example-1-domain-expertise">Example 1: Domain expertise</a></li>
       <li><a href="#example-2-published-studies">Example 2: Published studies</a></li>
-      <li><a href="#questions-to-consider">Questions to consider</a></li>
+      <li><a href="#questions-to-consider3">Questions to consider</a></li>
       <li><a href="#references">References</a></li>
       </ul>
 </div>

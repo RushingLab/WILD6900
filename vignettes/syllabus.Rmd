@@ -129,7 +129,7 @@ I realize that many students have field work obligations during the spring semes
 
 # GRADING
 
-Your grade in the course will be based on a total of 200 possible points. Twenty five percent of your grade (70 points) will come from 7 homework assignments. Twenty five percent of your grade (50 points) will come from a midterm exam covering the topics we discuss in lecture during the first half of the semester. The final 40% (80 points) will be based on an individual project due at the end of the semesters.
+Your grade in the course will be based on a total of 200 possible points. Thirty five percent of your grade (70 points) will come from 7 homework assignments. Twenty five percent of your grade (50 points) will come from a midterm exam covering the topics we discuss in lecture during the first half of the semester. The final 40% (80 points) will be based on an individual project due at the end of the semesters.
  
 The 7 homework assignments will build on concepts and skills that we cover in lecture and lab. Specific objectives and tasks for each assignment, along with any necessary data, will be posted on the course website. In general, students will be provided with ‘raw’ data and will need to clean/prepare (and document!) data prior to analysis. Each assignment will be due before class the week after the assignment is posted. All assignments must be prepared as R Markdown files that include all text, code, model output, and figures necessary to fully document your work and conclusions (we will spend the first several labs going over preparation of reports using R Markdown so, again, no previous experience is necessary). See [here](https://rushinglab.github.io/WILD6900/articles/homework.html) for instructions on submitting assignment
 
