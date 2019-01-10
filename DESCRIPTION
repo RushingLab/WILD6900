@@ -20,5 +20,6 @@ Imports:
     maptools,
     sf,
     maps,
-    mapproj
+    mapproj,
+    lubridate
 RoxygenNote: 6.1.1

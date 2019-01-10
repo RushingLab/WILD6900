@@ -19,6 +19,41 @@ knitr::opts_chunk$set(fig.align = 'center', message = FALSE,
 
 In this lab, we will starting learning some useful tools and principles for preparing raw data for visualization and analysis. Many of the core principles of so called "data wrangling" are embodied by the [`tidyverse`](https://www.tidyverse.org/packages/), a family of packages created to make tidying, manipulating, and visualizing data and model output more intuitive and consistent. Use of the tidyverse is somewhat [controversial](http://varianceexplained.org/r/teach-tidyverse/) and it is worth noting that everything we will do in the lab can be done using base `R` or non-tidyverse packages. Nonetheless, I find the tidyverse useful *because* it is opinionated. The developers of the tidyverse have spent a great deal of time thinking about how data should be stored, manipulated, and visualized and they have created an entire ecosystem of functions built around these principles. Using the tidyverse isn't so much about the tools themselves as it is about **thinking about the structure and manipulation of data**. For better or worse, focusing on consistent application of these principles is not something base `R` encourages.  
 
+***
+**Objectives**
+
+* Prepare raw data for analysis using reproducible code  
+
+
+* Learn/review basic data manipulation tasks, including:  
+    + Creating tidy data frames
+    + Subsetting observations
+    + Joining data frames
+    + Sorting data frames based on specific column values
+    + Adding new variables
+    + Working with dates
+    + Performing operations on grouped data
+    + Create summaries of raw data
+    + Saving data
+  
+  
+* `R` functions used in this exercise:  
+    + `tidyr::gather()`
+    + `tidyr::unite()`
+    + `dplyr::arrange()`
+    + `dplyr::filter()`
+    + `dplyr::select()`
+    + `dplyr::mutate()`
+    + `dplyr::group_by()`
+    + `dplyr::summarise()`
+    + `dplyr::left_join()`
+    + `lubridate::mdy()`
+    + `lubridate::day()`
+    + `duplicated()`
+    + `cumsum()`
+    + `saveRDS()`
+
+***
 # Data and context
 
 ```{r echo = FALSE, out.width=400, fig.cap="Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)"}
@@ -47,6 +82,27 @@ ggplot() +
 ```
 
 Eurasian collared-doves are an introduced species that, as you will soon see, have been rapidly expanding westward across the United States. In this lab, we will focus on cleaning and visualizing the raw data. In future labs, we will use these data and code to quantify population growth of this and other species. 
+
+## Create a new project
+
+Using the instructions from the `Projects and directories` lesson, create a new Project called `bbs_analysis`. 
+
+Within the new `bbs_analysis` directory, create a sub-directory called `data`
+
+```
+bbs_analysis/
+|─── data/
+```
+
+Create a new script and save it as `data_prep.R` within the `data/` sub-directory
+
+```
+bbs_analysis/
+|─── data/
+      |─── data_prep.R
+```
+
+As we work through this exercise, you can copy the code from this file into that script. 
 
 ## Getting the data
 
@@ -80,7 +136,6 @@ Raw BBS data is divided between three separate files:
 
   + 1 row per route per year
 
-  + Note that the raw data does not include counts of 0!
 
 The example data we will used is included as a list with the three files as separate data frames. You can see the fields included in each data frame using:
 
@@ -113,8 +168,6 @@ There is also a `filter()` function in the `stats` package. Even though we loade
 
 ***
 
-
-
 The BBS state number for Utah is 85 so we filter based on the `statenum` field in the `routes` data frame:
 
 ```{r}
@@ -129,11 +182,11 @@ ut_weather <- dplyr::filter(bbs_data$weather, routeID %in% ut_routes$routeID)
 ut_counts <- dplyr::filter(bbs_data$counts, routeID %in% ut_routes$routeID)
 ```
 
-The `routeID` field is critical because it is the sole variable that links all three data frames together. It is common practice to divide up data into mutiple files so having an `ID` field of somesort that links observational units across all files is critical!
+The `routeID` field is critical because it is the sole variable that links all three data frames together. It is common practice to divide up data into multiple files so having an `ID` field of some sort that links observational units across all files is critical!
 
 ## Subsetting the dove data
 
-At present, `ut_counts` contains counts of all species. Each column (aside from `Year` and `routeID`) gives the number of individuals of each species counted on each route in each year. The column names refer to the numeric `aou` code used by BBS to identify species (Eurasion collared-dove is 22860). To get those data, we could use `dplyr::select()`:
+At present, `ut_counts` contains counts of all species. Each column (aside from `Year` and `routeID`) gives the number of individuals of each species counted on each route in each year. The column names refer to the numeric `aou` code used by BBS to identify species (Eurasian collared-dove is 22860). To get those data, we could use `dplyr::select()`:
 
 ```{r}
 eucd_counts <- dplyr::select(ut_counts, Year, routeID, `22860`)
@@ -143,9 +196,9 @@ However, there are a number of problems with the resulting data frame.
 
 ### What is tidy data?
 
-The first problem with this data frame is that one of the column names is numeric. That's not technically illegal (the data frame exists, after all), but it's not great practice. At the very least, you have to put backticks around the column name to reference it (as we did above). Better to stick with non-numeric names, at least for the first character of a column name. 
+The first problem with this data frame is that one of the column names is numeric. That's not technically illegal (the data frame exists, after all), but it's not great practice. At the very least, you have to put back ticks around the column name to reference it (as we did above). Better to stick with non-numeric names, at least for the first character of a column name. 
 
-The bigger issue, however, is that this data frame isn't **tidy**. What does it mean for data to be tidy? [Essentially](http://vita.had.co.nz/papers/tidy-data.html), "each variable is a column, each observation is a row." In the `ut_counts` data frame, we have four main variables: year, routeID, the `aou` codes, and the counts themselves. Each observation is the count of a single species at a single route in a single year. As formatted, we have one variable (`aos` code) spread across mutiple columns and multiple observations per row. That format makes it hard to use the data. How would you plot the counts of a given species by year? How would you write a model for `counts ~ Year` by species? The short answer is you can't without a lot of intermediate steps. In contrast, having tidy data makes these tasks much easier and consistent (as we will soon see).
+The bigger issue, however, is that this data frame isn't **tidy**. What does it mean for data to be tidy? [Essentially](http://vita.had.co.nz/papers/tidy-data.html), "each variable is a column, each observation is a row." In the `ut_counts` data frame, we have four main variables: year, routeID, the `aou` codes, and the counts themselves. Each observation is the count of a single species at a single route in a single year. As formatted, we have one variable (`aos` code) spread across multiple columns and multiple observations per row. That format makes it hard to use the data. How would you plot the counts of a given species by year? How would you write a model for `counts ~ Year` by species? The short answer is you can't without a lot of intermediate steps. In contrast, having tidy data makes these tasks much easier and consistent (as we will soon see). They are easier because many `R` functions take vectors as input. In a tidy data frame, each column 
 
 So before we subset the dove data, let's tidy the `ut_counts` data frame. We can do this with a single functions from the `tidyr` package:
 
@@ -161,9 +214,9 @@ tidy_counts <- tidyr::gather(ut_counts, key = "aou", value = "count", -Year, -ro
 knitr::kable(head(tidy_counts))
 ```
 
-Gather turns a "wide" dataframe into a "long" data frame (awesome animations courtesy of [Garrick Aden-Buie](https://github.com/gadenbuie/tidyexplain)).
+Gather turns a "wide" data frame into a "long" data frame (awesome animations courtesy of [Garrick Aden-Buie](https://github.com/gadenbuie/tidyexplain)).
 
-```{r}
+```{r echo = FALSE}
 knitr::include_graphics('images/tidyr-spread-gather.gif')
 ```
 
@@ -173,19 +226,11 @@ Now we can simply use `dplyr::filter()` to subset the dove counts:
 dove_counts <- dplyr::filter(tidy_counts, aou == 22860)
 ```
 
-We will also remove all those `NA` values because it's unclear what they mean. In the next section, we will figure out how to distinguish between truly missing values and 0 counts:
+# Filling in missing counts using joins
 
-```{r}
-dove_counts <- dplyr::filter(dove_counts, !is.na(count))
-```
+One of the main challenges to working with BBS data is that not all routes are run in every year. If we use the counts as the response in a model (which we will shortly), we often need them to be in a square matrix (one row for each route, one column for each year). So the next step in our preparation of the data is to add those missing counts as `NA`s. 
 
-(remember that `count==NA` doesn't work in `R` so instead we use `is.na(count)`. Since we want to keep rows where the count *is not* `NA`, we use the `!` operator)
-
-# Filling in 0 counts using joins
-
-One of the main challenges to working with BBS data is that the raw counts don't include 0's. This is, if an observer didn't see a Eurasian collared-dove, they don't enter a 0, they enter nothing. That's wouldn't be a big issue except not every route is run in every year. So if we don't have an entry for specific species/route/year combination in the `counts` data frame, we don't immediately know if it's because the count was a 0 (a *true 0*) or if it's because the route wasn't run that year (a missing value). 
-
-As always, there are multiple ways we could solve this problem. One thing to note is that the `weather` data frame contains covariate values for every run of every route. So if there are covariate values, we know the route was run. If not, we know it wasn't. One efficient (though maybe not immediately intuitive) way to add the 0 counts is the **join** the two data frames in a way that fills in 0's if there is a corresponding route/year combination in `weather` data frame and `NA` otherwise. Although not difficult to code, understanding how this works requires understanding the different types of `joins` available in the `tidyverse`. 
+As always, there are multiple ways we could solve this problem. One efficient (though maybe not immediately intuitive) way to add the `NA` counts is the **join** the `dove_counts` data frame with a data frame that contains all of the route/year combinations in a way that fills in `NA`'s if there is no corresponding route/year combination. Although not difficult to code, understanding how this works requires understanding the different types of `joins` available in the `tidyverse`. 
 
 ## Joins
 
@@ -229,7 +274,7 @@ knitr::kable(dplyr::full_join(x, y))
 
 Note that if there is not a matching values (`id = 3` and `id=4`), `full_join()` returns NA 
 
-The remaining mutating joins do modified verions of what `full_join()` does. `left_join()` keeps all rows from `x` (or the "left" dataframe in the arguments) and all columns from both `x` and `y`. Rows in `y` that are not shared with `x` (`id = 4`) are dropped from the resulting data frame:
+The remaining mutating joins do modified versions of what `full_join()` does. `left_join()` keeps all rows from `x` (or the "left" data frame in the arguments) and all columns from both `x` and `y`. Rows in `y` that are not shared with `x` (`id = 4`) are dropped from the resulting data frame:
 
 ```{r echo = FALSE}
 knitr::include_graphics("images/left-join.gif")
@@ -294,32 +339,318 @@ knitr::kable(dplyr::anti_join(x, y))
 ```
 
 
-## Back to the 0 counts
+## Back to the missing counts
 
-So how can we use a join to add the 0 counts? Remember that the `ut_weather` data frame contains covariate data from all runs of each route. So if a route/year combination is in that data frame, we know it was run. If that route/year combination is *not* in the `dove_counts` data frame, it must be a 0 count. 
+So how can we use a join to add the `NA` counts? First, we need a data frame that contains one row for *every* route/year combination. 
 
-```{r}
-ut_run <- dplyr::select(ut_weather, routeID, Year)
+```{r eval = FALSE}
+## Create vector containing all of the routeIDs in the dove count data frame
+routes <- unique(dove_counts$routeID)
+
+## Create vector containing all of the years in the data set
+years <- seq(from = min(dove_counts$Year), to = max(dove_counts$Year))
+
+## Use expand.grid to create data frame with all route/year combinations
+route_year <- expand.grid(routeID = routes, Year = years)
+
+head(route_year)
 ```
 
+```{r echo = FALSE}
+## Create vector containing all of the routeIDs in the dove count data frame
+routes <- unique(dove_counts$routeID)
+
+## Create vector containing all of the years in the data set
+years <- seq(from = min(dove_counts$Year), to = max(dove_counts$Year))
+
+## Use expand.grid to create data frame with all route/year combinations
+route_year <- expand.grid(routeID = routes, Year = years)
+
+knitr::kable(head(route_year))
+```
+
+`expand.grid()` is a useful function. It takes 2 or more vectors and creates a data frame with one row for each combination of values. This can be very useful for creating factorial combinations of different experimental treatments or simulation parameters.  
+
+Now all we have to do is join this new data frame to `dove_counts` using the correct join function: 
+
+```{r eval = FALSE}
+
+dove_counts <- dplyr::right_join(dove_counts, route_year)
+
+head(dove_counts)
+```
+
+```{r echo = FALSE}
+
+dove_counts <- dplyr::right_join(dove_counts, route_year)
+
+knitr::kable(head(dove_counts))
+```
+
+The `dove_counts` data frame is currently sorted by `Year` in increasing order, meaning that observations for each routes are mixed up throughout the data frame. It might be easier to view this data if it was sorted by `routeID` so that counts for each route are together. The tidyverse way to sort data frames is `dplyr::arrange()`
+
+```{r eval = FALSE}
+dove_counts <- dplyr::arrange(dove_counts, routeID, -Year)
+
+head(dove_counts)
+```
+
+```{r echo = FALSE}
+dove_counts <- dplyr::arrange(dove_counts, routeID, -Year)
+
+knitr::kable(head(dove_counts))
+```
+
+In this case, we added a second sorting variable so that within each route, counts are sorted by `Year` in decreasing order (that is what the `-` does). This gives us the most recent counts first. 
+
+# Adding covariates
+
+We can also use joins to add relevant covariates associated with each count. For example, it would be nice to have the lat/long of each route associated with the counts:
+
+```{r eval = FALSE}
+## Add route location information
+dove_counts <- dplyr::left_join(dove_counts, ut_routes)
+
+head(dove_counts)
+```
+
+```{r echo = FALSE}
+## Add route location information
+dove_counts <- dplyr::left_join(dove_counts, ut_routes)
+
+knitr::kable(head(dove_counts))
+```
+
+We don't need all of those columns so let's remove some by using `dplyr::select()`, which allows you to select only the columns you want to keep in a data frame (note - putting a minus sign before the column name *removes* the column):
+
+```{r eval = FALSE}
+## Remove unneeded columns
+dove_counts <- dplyr::select(dove_counts, -countrynum, -statenum, -Route, -Active)
+
+head(dove_counts)
+```
+
+```{r echo = FALSE}
+## Remove unneeded columns
+dove_counts <- dplyr::select(dove_counts, -countrynum, -statenum, -Route, -Active)
+
+knitr::kable(head(dove_counts))
+```
+
+Now let's add some of the relevant data from the `weather` data frame. We'll use select first, then join:
+
+```{r eval = FALSE}
+## Remove unneeded columns
+ut_weather <- dplyr::select(ut_weather, RPID, Year, Month, Day, ObsN, RunType, routeID)
+
+## Add run covariates to counts
+dove_counts <- dplyr::left_join(dove_counts, ut_weather)
+
+head(dove_counts)
+```
+
+```{r echo = FALSE}
+## Remove unneeded columns
+ut_weather <- dplyr::select(ut_weather, RPID, Year, Month, Day, ObsN, RunType, routeID)
+
+## Add run covariates to counts
+dove_counts <- dplyr::left_join(dove_counts, ut_weather)
+
+knitr::kable(head(dove_counts))
+```
+
+## Adding new columns
+
+A common task during data preparation is adding new variables that are derived from variables in the raw data. Remember the first rule of working with data - raw the data is read only. Don't get in the habit of creating new variables in excel. Instead, do it in `R` within the `data_prep.R` script so you have a paper trail of exactly what you did. 
+
+In the tidyverse, the workhorse of adding new variables in `dplyr::mutate()` (though other functions add new columns as we will see). Let's use `mutate` to add a new variable that indicates whether it was a BBS observer's first time running a BBS route (there is a well-known "learning" effect in the BBS. Observers tend to count fewer birds during their first year). We'll call this column `novice` and it will contain a `1` if it's the first time an observer is in `dove_counts` data frame and `0` otherwise. 
+
+A quick way to see if a value has been repeated in a vector is the `duplicated` function which returns `0` for the first time a value occurs in the vector and `0` otherwise. That's the opposite of what we want so we switch the values by again using the `!` operator. 
+
+Before we add the new variable, remember that our data frame is sorted by `Year` in decreasing order (2015 first). `duplicated()` doesn't know this so it will give us a `1` for the *last* year of an observers service rather than the first. So before we at the new column, let's use `arrange()` again to sort by `Year` in increasing order:
+
 ```{r}
-dove_counts <- dplyr::left_join(ut_run, dove_counts)
+dove_counts <- dplyr::arrange(dove_counts, routeID, Year)
 
-dove_counts$aou <- "22860"
+dove_counts <- dplyr::mutate(dove_counts, novice = !duplicated(ObsN))
+```
 
-dove_counts$count[is.na(dove_counts$count)] <- 0
+There are many other columns that could be created depending on the factors we think might influence counts (remember that the counts are a mix of the state and observation processes - factors of interest might influence the process, i.e., the actual number of birds, or the observations or both). One factor that could influence both the process and observation processes is the day of the year that a count took place (maybe individuals are more common at certain times of year or maybe they are more easily detected at certain times of year). Adding day of the year also provides an exercise in a particularly headache-inducing topics: dates.  
+
+### Working with dates
+
+Dates are a perpetual headache in `R`. The tidyverse package `lubridate` at least attempts to make things easier by providing an intuitive, consistent way to handle dates. Let's explore this package by converting the `Year`, `Month`, and `Day` columns into a specific object class called `Date`. 
+
+To convert these columns as dates, we first need to combine them into a single variable that contains all three pieces of information. In the tidyverse, combining the values of multiple columns into a single value is done using `tidyr::unite()`. We need to tell `unite` the name of the new column (we'll call it `date`), a vector with the columns we want to unite (`c("Month", "Day", "Year")`), and the separator to use between values (default is `_` but we'll use `/`):
+
+```{r eval = FALSE}
+## Add date
+dove_counts <- tidyr::unite(dove_counts, "date", c("Month", "Day", "Year"), sep = "/", remove = FALSE)
+head(dove_counts)
+```
+
+```{r echo = FALSE}
+## Add date
+dove_counts <- tidyr::unite(dove_counts, "date", c("Month", "Day", "Year"), sep = "/", remove = FALSE)
+knitr::kable(head(dove_counts))
+```
+
+Note that by default `unite` removes the original columns (we will need the `Year` column later which is why `remove = FALSE`). 
+
+By default, `unite` makes the new column a character string. We need to tell `R` that these are actually dates. This is where the `lubridate` package comes in handy. There are a number of functions to covert character strings into dates depending on the format of the date. In this case, our dates are `Month/Day/Year` so the function we want is `mdy` (see the pattern?):
+
+```{r eval = FALSE}
+## Convert to date
+dove_counts$date <- lubridate::mdy(dove_counts$date)
+```
+
+```{r echo = FALSE}
+## Convert to date
+dove_counts$date <- lubridate::mdy(dove_counts$date)
+```
+
+The `lubridate` functions that convert strings to dates (`dmy`, `ymd`, etc.) try to be smart about the separator used to separate months, days and years. If you work with dates in your own data, get in the habit of converting them into actual `class(Date)` using lubridate as part of your data preparation. This will make your life much easier when you need to use these dates in your modeling. Once you have a variable that is `class(Date)`, `lubridate` has many functions for converting dates into other formats. For example, raw dates are often not the covariate we will use in the model. We may not care about the specific month or year but instead the day of the year. We can easily covert the dates into day of the year (January 1st = 1; `lubridate` will automatically handle leap years)
+
+```{r eval = FALSE}
+## Convert to day
+dove_counts$day <- lubridate::day(dove_counts$date)
+```
+
+```{r echo = FALSE}
+## Convert to day
+dove_counts$day<- lubridate::day(dove_counts$date)
+```
+
+## Grouped variables
+
+Another issue that comes up often during the data cleaning phase is needed to perform operations on groups of data rather than the entire data set. In other words, we need to split the data into smaller groups, perform some operation on each group, and then recombine the groups back into a single data frame. Fortunately, `dplyr` has special functions that make this easy and avoid having to manually separate and recombine the data frame. The work horse of these tasks is `dplyr::group_by()`. As you will see, `group_by()` is very powerful when combined with other functions such as `mutate()`. 
+
+For example, maybe observers get worse as they get older because it's harder from them to see/hear the birds. If we want to include "experience" of each observer in our model, we need a new column indicated the number of years of service for each observer (first year = 1, second year = 2, etc). This is harder than it sounds. 
+
+For each time an observer in listed in the data frame, what we are trying to do is essentially sum the number of times the observer has already been listed. Something like this:
+
+```{r echo = FALSE}
+obs_df <- data.frame(Obs = rep(1, 10),
+                     Experience = seq(1:10))
+
+knitr::kable(obs_df)
+```
+
+What you might notice here is the the `experience` column is the cumulative sum of the `obs` column. `R` has a built in function called `cumsum()` for estimating the cumulative sum of a vector:
+
+```{r}
+x <- seq(1:10)
+cumsum(x)
 ```
 
 
-```{r}
+We need to perform the cumulative sum on each observer separately. But there's a problem - some observers do more than one route per year. If we include those duplicated ObsN/Year combination, we will inflate the experience metric.  
 
-dove_counts <- dplyr::group_by(dove_counts, Year)
+```{r}
+dplyr::filter(dove_counts, ObsN == 981319 & Year == 2015)
+nrow(dove_counts)
+
+## Create a new data frame so we don't lose counts when we remove duplicates
+experience_df <- dplyr::distinct(dove_counts, ObsN, Year)
+dplyr::filter(experience_df, ObsN == 981319 & Year == 2015)
+nrow(experience_df)
 ```
 
-```{r}
-dove_counts <- dplyr::summarise(dove_counts, Count = sum(count))
-```
+Now we're ready to estimate experience. Remember that we need to estimate experience for each observer separately. This is where `group_by()` comes in. We use `group_by()` to tell `dplyr` that we want to perform all subsequent operations on each observer:
 
 ```{r}
-ggplot(dove_counts, aes(x = Year, y = Count)) + geom_path()
+experience_df <- dplyr::group_by(experience_df, ObsN)
+
+experience_df
+```
+
+Notice that when you view the data frame now you see a header saying `Groups: ObsN [196]`. This tells us that the data frame is grouped by `ObsN` and there are 196 groups (you may also have noticed the data frame has been converted to a `tibble`, which is a special type of data frame with some special properties (notice that we didn't use `head()` and yet we only see the first 10 rows on the data frame). We won't go into that now but you can learn more with `?tibble`). 
+
+Now here's the trick for estimating experience with `cumsum`. We will we add a column of ones to the `experience_df` data frame and use `cumsum` to sum that column for each observer (basically recreating the data frame above for each observer). Start by adding the ones column:
+
+```{r}
+experience_df <- dplyr::mutate(experience_df, ones = 1)
+```
+
+Now we'll use `mutate()` with `cumsum` to create the experience metric:
+
+```{r}
+experience_df <- dplyr::mutate(experience_df, experience = cumsum(ones))
+```
+
+One last tweak - all of the `NA` counts have `NA` observers and our experience metric added up the ones for those values too. Let's change those back to `NA` and then remove the `ones` column and join `experience_df` with `dove_counts` to add the experience metric back to the count data frame:
+
+```{r}
+experience_df$experience[is.na(experience_df$ObsN)] <- NA
+
+experience_df <- dplyr::select(experience_df, -ones)
+dove_counts <- dplyr::left_join(dove_counts, experience_df)
+```
+
+What is the most number of years of service by one observer?
+
+```{r}
+max(dove_counts$experience, na.rm = TRUE)
+```
+## Save the data frame
+
+Now that we have a clean data frame with all of the covariates of interest, let's save this object so that we can use it in the future without having to rerun all of these steps. There are many ways to save objects in `R` but one of the most [well-behaved](https://www.fromthebottomoftheheap.net/2012/04/01/saving-and-loading-r-objects/) is `saveRDS()`. 
+
+```{r eval=FALSE}
+saveRDS(object = dove_counts, file = "data/dove_counts.rds")
+```
+
+```{r echo=FALSE}
+saveRDS(object = dove_counts, file = here::here("data/dove_counts.rds"))
+```
+
+When you want to use this object in the future, all you have to do is run:
+
+```{r eval = FALSE}
+dove_counts <- readRDS("data/dove_counts.rds")
+```
+
+# Data summaries
+
+Why stop here? Right now, our counts are at the route-level - ultimately, this is the way we want it. That allows us to build a model directly from the raw observations rather than derived variables. However, using the raw counts involves some modeling complexities that we have not discussed yet. So in the meantime, it might be useful to ignore the route-level variation in counts and just work with the total number of doves counted in each year. 
+
+We already learned about using `group_by` to add new columns by performing operations on groups of data. In this case, we again need to group the data but this type by `Year`. But `mutate` won't work for this purpose. We don't want to add a new observation but instead summarize the counts in each year. In other words, we don't want to add `# routes x # years` new values, we want `# years` new observations. This task is performed by `dplyr::summarise()`, which takes a data frame and creates a new data frame based on specified summaries of the original data. In our case, the summary we want is `sum`:
+
+
+```{r}
+## Group by year
+total_dove_counts <- dplyr::group_by(dove_counts, Year)
+
+## Create annual total counts (note the need for na.rm = TRUE because we have NA counts)
+total_dove_counts <- dplyr::summarise(total_dove_counts, Count = sum(count, na.rm = TRUE))
+
+total_dove_counts
+```
+
+Again, creating summaries is a very common data cleaning task and `dplyr` has *a lot* of powerful functions for doing all kinds of summaries (check out this [entire blog series](https://suzan.rbind.io/2018/01/dplyr-tutorial-1/) for some great lesser known `dplyr` functions). Getting to know these functions can save you a lot of lines of code for some of the more complex summaries you might need to make. 
+
+Let's quickly visualize how the number of collared-doves counted in Utah has changed over time:
+
+```{r}
+ggplot(total_dove_counts, aes(x = Year, y = Count)) + geom_path()
+```
+
+That's a big increase! We will look at this increase in more detail during later lectures when we learn to develop Bayesian models. For that reason, let's save this data frame as well:
+
+```{r eval = FALSE}
+saveRDS(total_dove_counts, file = "data/total_dove_counts.rds")
+```
+
+```{r echo = FALSE}
+saveRDS(total_dove_counts, file = here::here("data/total_dove_counts.rds"))
+```
+
+```{r include = FALSE}
+spatial_counts <- dplyr::group_by(dove_counts, routeID)
+
+spatial_counts <- dplyr::summarise(spatial_counts, Count = sum(count, na.rm = TRUE))
+
+spatial_counts <- dplyr::left_join(spatial_counts, ut_routes)
+
+ggplot(spatial_counts, aes(x = Longitude, y = Latitude, size = Count)) + geom_point()
 ```
