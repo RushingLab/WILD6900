@@ -116,6 +116,11 @@
 
 
   theme_set(theme_spacelab())
+
+  WILD6900_palette <- c("#446E9B", "#D47500", "#3CB521", "#CD0200", "#3399F3")
+  assign("scale_colour_discrete", function(..., values = WILD6900_palette) scale_colour_manual(..., values = values), globalenv())
+  assign("scale_fill_discrete", function(..., values = WILD6900_palette) scale_fill_manual(..., values = values), globalenv())
+
   update_geom_defaults("point", list(size = 3))
   update_geom_defaults("line", list(size = 0.8))
 }
