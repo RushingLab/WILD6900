@@ -126,7 +126,7 @@
       <h1>Intro to data simulation and visualization</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-01-10</h4>
+            <h4 class="date">2019-01-17</h4>
       
       
       <div class="hidden name"><code>simulation.Rmd</code></div>
@@ -138,8 +138,39 @@
 <hr>
 <p><strong>Objectives</strong></p>
 <ul>
-<li><p>blah</p></li>
-<li><p>blah</p></li>
+<li><p>Prepare raw data for analysis using reproducible code</p></li>
+<li>Learn/review basic data manipulation tasks, including:
+<ul>
+<li>Creating tidy data frames</li>
+<li>Subsetting observations</li>
+<li>Joining data frames</li>
+<li>Sorting data frames based on specific column values</li>
+<li>Adding new variables</li>
+<li>Working with dates</li>
+<li>Performing operations on grouped data</li>
+<li>Create summaries of raw data</li>
+<li>Saving data</li>
+</ul>
+</li>
+<li>
+<code>R</code> functions used in this exercise:
+<ul>
+<li><code><a href="https://tidyr.tidyverse.org/reference/gather.html">tidyr::gather()</a></code></li>
+<li><code><a href="https://tidyr.tidyverse.org/reference/unite.html">tidyr::unite()</a></code></li>
+<li><code><a href="https://dplyr.tidyverse.org/reference/arrange.html">dplyr::arrange()</a></code></li>
+<li><code><a href="https://dplyr.tidyverse.org/reference/filter.html">dplyr::filter()</a></code></li>
+<li><code><a href="https://dplyr.tidyverse.org/reference/select.html">dplyr::select()</a></code></li>
+<li><code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate()</a></code></li>
+<li><code><a href="https://dplyr.tidyverse.org/reference/group_by.html">dplyr::group_by()</a></code></li>
+<li><code><a href="https://dplyr.tidyverse.org/reference/summarise.html">dplyr::summarise()</a></code></li>
+<li><code><a href="https://dplyr.tidyverse.org/reference/join.html">dplyr::left_join()</a></code></li>
+<li><code><a href="http://lubridate.tidyverse.org/reference/ymd.html">lubridate::mdy()</a></code></li>
+<li><code><a href="http://lubridate.tidyverse.org/reference/day.html">lubridate::day()</a></code></li>
+<li><code><a href="https://www.rdocumentation.org/packages/base/topics/duplicated">duplicated()</a></code></li>
+<li><code><a href="https://www.rdocumentation.org/packages/base/topics/cumsum">cumsum()</a></code></li>
+<li><code><a href="https://www.rdocumentation.org/packages/base/topics/readRDS">saveRDS()</a></code></li>
+</ul>
+</li>
 </ul>
 <hr>
 <div id="what-is-data-simulation" class="section level2">
@@ -147,8 +178,9 @@
 <a href="#what-is-data-simulation" class="anchor"></a>What is data simulation</h2>
 <p>Data simulation is a technique for generating random data from stochastic processes with known parameters. Although not framed as “data simulation”, we have already done this several times this semester. For example,</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">x &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">100</span>, <span class="dv">3</span>, <span class="fl">0.75</span>)</a></code></pre></div>
-<p>Is a simple data simulation to generate random variables from a normal distribution with known mean (<span class="math inline">\(\mu=3\)</span>) and variance (<span class="math inline">\(\sigma^2=0.75^2 = 0.5625\)</span>). In this exercise, we’ll learn about simulating data under more complex models that are similar to the ones you might use to analyze your data. For example, imagine a simple single-season occupancy model with the probability of occupancy <span class="math inline">\(\psi=0.75\)</span> and detection probability <span class="math inline">\(p=0.4\)</span>. In other words<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>:</p>
-<p><span class="math display">\[z_i \sim Bernoulli(psi)\]</span></p>
+<p>Is a simple data simulation to generate random variables from a normal distribution with known mean (<span class="math inline">\(\mu=3\)</span>) and variance (<span class="math inline">\(\sigma^2=0.75^2 = 0.5625\)</span>).</p>
+<p>In this exercise, we’ll learn about simulating data under more complex models that are similar to the ones you might use to analyze your data. For example, imagine a simple single-season occupancy model with the probability of occupancy <span class="math inline">\(\psi=0.75\)</span> and detection probability <span class="math inline">\(p=0.4\)</span>. In other words<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>:</p>
+<p><span class="math display">\[z_i \sim Bernoulli(\psi)\]</span></p>
 <p><span class="math display">\[y_i \sim Bernoulli(z_i \times p)\]</span></p>
 <p>We can simulate a data set from this model using a few lines of <code>R</code> code:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">nSites &lt;-<span class="st"> </span><span class="dv">100</span>  <span class="co"># Number of sites</span></a>
@@ -156,9 +188,9 @@
 <a class="sourceLine" id="cb2-3" data-line-number="3">p &lt;-<span class="st"> </span><span class="fl">0.4</span>       <span class="co"># Detection probability</span></a>
 <a class="sourceLine" id="cb2-4" data-line-number="4"></a>
 <a class="sourceLine" id="cb2-5" data-line-number="5">z &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(<span class="dt">n =</span> nSites, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> psi)     <span class="co">## Generate true state of each site;</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">                                                  <span class="co">## note that Bernoulli = binomial with size = 1 (single coin flip)</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">                                                  <span class="co">## nb Bernoulli = binomial with size = 1</span></a>
 <a class="sourceLine" id="cb2-7" data-line-number="7">y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(<span class="dt">n =</span> nSites, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> z <span class="op">*</span><span class="st"> </span>p)   <span class="co">## Generate observations</span></a></code></pre></div>
-<p>With those five lines of code, we know how a fake data set that could be fed into an occupancy model to estimate <span class="math inline">\(\psi\)</span> and <span class="math inline">\(p\)</span>.</p>
+<p>With those five lines of code, we now how a fake data set that could be fed into an occupancy model to estimate <span class="math inline">\(\psi\)</span> and <span class="math inline">\(p\)</span>.</p>
 </div>
 <div id="why-simulate-data" class="section level2">
 <h2 class="hasAnchor">
@@ -169,8 +201,8 @@
 <li><p><em>Sampling error</em>: As we already learned, sampling error is an inherent part of any ecological analysis. The noise that results from sampling error makes it harder to detect the true signals in our process model. With real data, you only have a single data set, which makes it hard to understand the effect of sampling error on your inference. With simulated data, you can generate hundreds or even thousands of data sets from the same process/observation models, allowing you to observe the effects of sampling error directly.</p></li>
 <li><p><em>Check characteristics of estimators</em>: Related to point 1, with a complex model and just a single data set it’s difficult to determine whether the estimators you are using are well-behaved; that is, do they return estimates that are unbiased and precise. With simulated data, you can directly quantify these properties.</p></li>
 <li><p><em>Power analysis</em>: By varying the effect sizes and sample sizes in your simulated data, you can easily perform power analyses. Using simulated data in this way can be very useful for designing field studies or helping to interpret inferences after data has been collected and analyzed.</p></li>
-<li><p><em>Check identifiability/estimability of parameters</em>: In Bayesian models, we can always obtain posteterior distributions for every parameter in our model. However, these posteriors are not always useful. In some cases, our data may provide little-to-no information about the value of a parameter and therefore the posterior distribution for this parameter will simply be determined by the prior. This lack of <em>identifiability</em> may be caused by instrinsic properties of our model (for example, if two parameters are completely confounded such that different combinations of parameter values have the same likelihood) or because our data do not provide enough information to estimate all parameters in the model (for example, a regression model with dozens of predictors but few observations). Although there are rigorous methods for testing instrinsic identifiability, this task can be extremely difficult for complex hierarchical models. Simulated data allow you to check whether all parameters in your model can be estimated by generated replicate data sets that have the same properties (sample size, etc) as your data.</p></li>
-<li><p><em>Check robustness to violations of model assumptions</em>: All models have assumptions about how the data was generated. These assumptions stem from the way we formulate the process and observation models. Of course, most assumptions will be violated to some degree in real data sets. With simulated data sets, we can generate data that we know violate the assumptions of the model in one or more ways (e.g., generated heterogeneous survival probabilities for a model that assumes constant survival). By comparing the parameters estimates from these “mis-specified” data sets, we can guage the degree to which our inferences are sensitive to violations.</p></li>
+<li><p><em>Check identifiability/estimability of parameters</em>: In Bayesian models, we can always obtain posteterior distributions for every parameter in our model. However, these posteriors are not always useful. In some cases, our data may provide little-to-no information about the value of a parameter and therefore the posterior distribution for this parameter will simply be determined by the prior. This lack of <em>identifiability</em> may be caused by instrinsic properties of our model (for example, if two parameters are completely confounded such that different combinations of parameter values have the same likelihood) or because our data do not provide enough information to estimate all parameters in the model (for example, a regression model with dozens of predictors but few observations). Although there are rigorous methods for testing instrinsic identifiability, this task can be extremely difficult for complex hierarchical models. Simulated data allow you to check whether all parameters in your model can be estimated by generating replicate data sets that have the same properties (sample size, etc) as your data.</p></li>
+<li><p><em>Check robustness to violations of model assumptions</em>: All models have assumptions about how the data were generated. These assumptions stem from the way we formulate the process and observation models. Of course, most assumptions will be violated to some degree in real data sets. With simulated data sets, we can generate data that we know violate the assumptions of the model in one or more ways (e.g., generating heterogeneous survival probabilities for a model that assumes constant survival). By comparing the parameters estimates from these “mis-specified” data sets, we can gauge the degree to which our inferences are sensitive to violations.</p></li>
 <li><p><em>Better understand your model</em>: One good way to test whether you really understand your model is to see if you can write the code to simulate data under the model. In many cases, this exercise will uncover misunderstandings or lack of understanding about what the model is actually doing. Simulating data is also a good way to make sure you understand what each parameter in your model actually represents. If you can simulate data from each part of the model, chances are you can also figure out why your model may not be working the way you think it does. In short, simulating data is a great way to develop a deeper understanding of your model.</p></li>
 </ol>
 </div>
@@ -178,45 +210,42 @@
 <h1 class="hasAnchor">
 <a href="#simulating-count-data" class="anchor"></a>Simulating count data</h1>
 <p>In this exercise, we will simulate and visualize data generated under very general process and state models. We will simulate the data assuming a “glm” type formulation with covariates effecting both the abundances as well as the observed counts (apropos of point 7 above, we will also use this example as a brief review of glm’s).</p>
-<p>Because I’m probably too guilty of being animal focused, we will assume these counts are generated a part of a study documenting the distribution of a rare orchid. Because we’re making this up as we go, we’ll assume this rare orchid prefers high elevation sites that receive a lot of rainfall each year. Therefore, we expect abundance to increase with increasing elevation and rainfall. To estimate abundance, we conduct <span class="math inline">\(M\)</span> replicated counts at <span class="math inline">\(J\)</span> sample plots. For the process model, we will assume</p>
+<p>Because I’m probably too guilty of being animal focused, we will assume these counts are generated a part of a study documenting the distribution of a rare orchid. Because we’re making this up as we go, we’ll assume this rare orchid prefers high elevation sites that receive little rainfall each year. Therefore, we expect abundance to increase with increasing elevation and decrease with rainfall. To estimate abundance, we conduct <span class="math inline">\(M\)</span> replicated counts at <span class="math inline">\(J\)</span> sample plots. For the process model, we will assume</p>
 <p><span class="math display">\[N_i \sim Poisson(\lambda_i)\]</span></p>
 <p>where <span class="math inline">\(N_i\)</span> is the true abundance at site <span class="math inline">\(i\)</span> and <span class="math inline">\(\lambda_i\)</span> is the <em>expected</em> abundance<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. To model the elevational and rainfall relationships, we incoporate those predictors on the (log) expected counts (we will review why we use the log counts shortly). Therefore:</p>
 <p><span class="math display">\[log(\lambda_i) = \beta_0 + \beta_1 \times elevation_i + \beta_2 \times rainfall_i\]</span></p>
-<p>where <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>, and <span class="math inline">\(\beta_2\)</span> are regression coefficients that govern the relationshp between abundance, elevation, and rainfall.</p>
-<p>Even though these are plants, they are small and cryptic so no matter how hard we search on the study plots, it is likely that we won’t find every plant. This is, the probability of detecting each plant <span class="math inline">\(p &lt; 1\)</span>. Let’s assume detection probability is lowest at high elevations because our oxygen-deprived brains are bad at searching at high elevations. We’ll further assume that it’s hard to detect the species on windy days. For the observation model, we will assume:</p>
+<p>where <span class="math inline">\(\beta_0\)</span>, <span class="math inline">\(\beta_1\)</span>, and <span class="math inline">\(\beta_2\)</span> are regression coefficients that govern the relationship between abundance, elevation, and rainfall.</p>
+<p>Even though these are plants, they are small and cryptic so no matter how hard we search on the study plots, it is likely that we won’t find every plant. That is, the probability of detecting each plant <span class="math inline">\(p &lt; 1\)</span>. Let’s assume detection probability is lowest at high elevations because our oxygen-deprived brains are bad at searching at high elevations. For the observation model, we will assume:</p>
 <p><span class="math display">\[y_{i,j} \sim Binomial(N_i, p_{i,j})\]</span></p>
 <p>and</p>
-<p><span class="math display">\[logit(p_{i,j}) = \alpha_0 + \alpha_1 \times elevation_i + \alpha_2 \times wind_{i,j}\]</span></p>
-<p>where <span class="math inline">\(y_{i,j}\)</span> is the number of individuals counted at site <span class="math inline">\(i\)</span> during count <span class="math inline">\(j\)</span>, <span class="math inline">\(p_{i,j}\)</span> is the site/occasion specific detection probability, and <span class="math inline">\(\alpha_0\)</span>, <span class="math inline">\(\alpha_1\)</span>, and <span class="math inline">\(\alpha_2\)</span> are regression coefficients that govern the relationship between detection probability, elevation, and wind. Again, we will briefly review why we model detection probability on the logit scale shortly.</p>
+<p><span class="math display">\[logit(p_{i,j}) = \alpha_0 + \alpha_1 \times elevation_i\]</span></p>
+<p>where <span class="math inline">\(y_{i,j}\)</span> is the number of individuals counted at site <span class="math inline">\(i\)</span> during count <span class="math inline">\(j\)</span>, <span class="math inline">\(p_{i,j}\)</span> is the site/occasion specific detection probability, and <span class="math inline">\(\alpha_0\)</span>, <span class="math inline">\(\alpha_1\)</span>, and <span class="math inline">\(\alpha_2\)</span> are regression coefficients that govern the relationship between detection probability and elevation. Again, we will briefly review why we model detection probability on the logit scale shortly.</p>
 <div id="initial-steps-setting-the-model-parameters" class="section level2">
 <h2 class="hasAnchor">
 <a href="#initial-steps-setting-the-model-parameters" class="anchor"></a>Initial steps: Setting the model parameters</h2>
 <p>The first step to simulating data is to set the fixed values that are needed to generate the stochastic data. This usually includes the sample size, number of visits, covariate and parameter values and any other fixed value relevant to the analysis. In this case, we’ll first set the number of sites and number of visits:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">M &lt;-<span class="st"> </span><span class="dv">175</span> <span class="co"># Number of sites</span></a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">J &lt;-<span class="st"> </span><span class="dv">4</span>   <span class="co"># Number of replicate counts</span></a></code></pre></div>
-<p>Next, we need to generate the covariate values, in this case elevation, rainfall, and wind. Notice that both elevation and rainfall are <em>site-level</em> covariates; they get a single value for each site. Wind is a sampling covariate so it will get one value for each site <em>and</em> each visit. For this reason, we’ll treat elevation and rainfall as vectors of length <span class="math inline">\(M\)</span> and wind as a matrix with dimensions <span class="math inline">\(c(M,J)\)</span>. For now, we’ll assume our sites vary from sea-level to 1500m in elevation, rainfall varies from 0mm to 200mm per year, and wind can vary from 0kph to 50kph. We’ll further assume that the predictors are independent (which is probably not realistic but we will ignore correlations among predictors for now)</p>
+<p>Next, we need to generate the covariate values, in this case elevation and rainfall. Notice that both elevation and rainfall are <em>site-level</em> covariates; they get a single value for each site. For this reason, we’ll treat elevation and rainfall as vectors of length <span class="math inline">\(M\)</span>. For now, we’ll assume our sites vary from sea-level to 1500m in elevation and rainfall varies from 0mm to 200mm per year. We’ll further assume that the predictors are independent (which is probably not realistic but we will ignore correlations among predictors for now)</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">sim_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">elevation =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(M, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">1500</span>),</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">                     <span class="dt">rainfall =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(M, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">200</span>),</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">                     <span class="dt">wind =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(M<span class="op">*</span>J, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">50</span>))</a></code></pre></div>
-<p>In most analyses, it is good practice to scale covariate values so they have a mean of 0 and do not extend too far above and below 0 (very large values (positive or negative) can create numerical issues when fitting models). So next we center and scale the covariates (we’ll do it manually but it could also be done using the built-in function <code><a href="https://www.rdocumentation.org/packages/base/topics/scale">scale()</a></code>):</p>
+<a class="sourceLine" id="cb4-2" data-line-number="2">                     <span class="dt">rainfall =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(M, <span class="dt">min =</span> <span class="dv">0</span>, <span class="dt">max =</span> <span class="dv">200</span>))</a></code></pre></div>
+<p>In most analyses, it is good practice to scale covariate values so they have a mean of 0 and do not extend too far above and below 0 (very large values (positive or negative) can create numerical issues when fitting models). So next we center and scale the covariates (we’ll do it manually but it could also be done using the built-in function <code><a href="https://www.rdocumentation.org/packages/base/topics/scale">scale()</a></code> or by simply simulating data from a normal distribution in the first place):</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">sim_df &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(sim_df, <span class="dt">elevation.c =</span> (elevation <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(elevation))<span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/sd">sd</a></span>(elevation),</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">                                <span class="dt">rainfall.c =</span> (rainfall <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(rainfall))<span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/sd">sd</a></span>(rainfall),</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">                                <span class="dt">wind.c =</span> (wind <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(wind))<span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/sd">sd</a></span>(wind))</a></code></pre></div>
+<a class="sourceLine" id="cb5-2" data-line-number="2">                                <span class="dt">rainfall.c =</span> (rainfall <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(rainfall))<span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/sd">sd</a></span>(rainfall))</a></code></pre></div>
 <p>You can check that these now have mean = 0 and sd = 1.</p>
 <p>Finally, we need to set the parameter values for the regression models. This is where understanding what each parameter represents is very helpful. For example, <span class="math inline">\(\beta_0\)</span> is the expected number of orchids (on the log scale) when the other covariates have a value of 0 (because we centered elevation and rainfall, we interpret <span class="math inline">\(\beta_0\)</span> to be the expected abundance at the mean elevation and rainfall rather than at sea-level and 0mm of rain). Thinking about counts on the log scale is hard so we’ll set this value on the abundance scale and then transform to get <span class="math inline">\(\beta_0\)</span>:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">mean.lambda &lt;-<span class="st"> </span><span class="dv">2</span>           <span class="co"># Mean expected number of orchids</span></a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">(beta0 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(mean.lambda))  <span class="co"># Log expected number of orchids (intercept)</span></a>
 <a class="sourceLine" id="cb6-3" data-line-number="3"><span class="co">#&gt; [1] 0.6931</span></a></code></pre></div>
-<p>We can do the same thing with <span class="math inline">\(\alpha_1\)</span>, which is the (logit) expected detection probability at the mean abundance and wind:</p>
+<p>We can do the same thing with <span class="math inline">\(\alpha_1\)</span>, which is the (logit) expected detection probability at the mean elevation:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">mean.p &lt;-<span class="st"> </span><span class="fl">0.65</span></a>
 <a class="sourceLine" id="cb7-2" data-line-number="2">(alpha0 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(mean.p<span class="op">/</span>(<span class="dv">1</span><span class="op">-</span>mean.p)))</a>
 <a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co">#&gt; [1] 0.619</span></a></code></pre></div>
-<p>Now we set the other regression coefficients. We have already said the <span class="math inline">\(\beta_1\)</span> is positive (abundance increases with elevation) whereas <span class="math inline">\(\beta_2\)</span>, <span class="math inline">\(\alpha_1\)</span>, and <span class="math inline">\(\alpha_2\)</span> are negative (abundance decreases with increasing rainfall; detection probability decreases with increasing elevation and wind). All that’s left is to decide specific values. I recommend playing with these values a bit to get a feel for effect sizes on the log and logit scales. Both <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(p\)</span> are derived variables based on the regression models and it’s not always obvious what values of the regression coefficients will generate reasonable abundances and counts. Simulating data under different effect sizes is a good way to build intuition about what a “large” effect size is in glms.</p>
+<p>Now we set the other regression coefficients. We have already said the <span class="math inline">\(\beta_1\)</span> is positive (abundance increases with elevation) whereas <span class="math inline">\(\beta_2\)</span> and <span class="math inline">\(\alpha_1\)</span>are negative (abundance decreases with increasing rainfall; detection probability decreases with increasing elevation). All that’s left is to decide specific values. I recommend playing with these values a bit to get a feel for effect sizes on the log and logit scales. Both <span class="math inline">\(\lambda\)</span> and <span class="math inline">\(p\)</span> are derived variables based on the regression models and it’s not always obvious what values of the regression coefficients will generate reasonable abundances and counts. Simulating data under different effect sizes is a good way to build intuition about what a “large” effect size is in glms.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">beta1 &lt;-<span class="st"> </span><span class="fl">0.6</span>   <span class="co"># Effect of elevation on abundance</span></a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">beta2 &lt;-<span class="st"> </span><span class="dv">-1</span> <span class="co"># Effect of rainfall on abundance</span></a>
 <a class="sourceLine" id="cb8-3" data-line-number="3"> </a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">alpha1 &lt;-<span class="st"> </span><span class="fl">-0.75</span> <span class="co"># Effect of elevation on detection probability</span></a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">alpha2 &lt;-<span class="st"> </span><span class="dv">-1</span>    <span class="co"># Effect of wind on detection probability</span></a></code></pre></div>
+<a class="sourceLine" id="cb8-4" data-line-number="4">alpha1 &lt;-<span class="st"> </span><span class="fl">-0.75</span> <span class="co"># Effect of elevation on detection probability</span></a></code></pre></div>
 </div>
 <div id="generate-expected-abundancesreview-of-generalized-linear-models" class="section level2">
 <h2 class="hasAnchor">
@@ -255,7 +284,7 @@
 <p>In our model, this makes no sense – abundance can’t be negative. However, note that if we take <span class="math inline">\(e^{response}\)</span> we end up with positive values:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/hist">hist</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">exp</a></span>(pred_abun))</a></code></pre></div>
 <p><img src="simulation_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;"></p>
-<p>This is why our linear model refers to <span class="math inline">\(log(N)\)</span> rather than <span class="math inline">\(N\)</span>. In the case, <code><a href="https://www.rdocumentation.org/packages/base/topics/Log">log()</a></code> is called the <em>link function</em> and this is what makes our model a <em>generalized linear model</em>.</p>
+<p>This is why our linear model refers to <span class="math inline">\(log(N)\)</span> rather than <span class="math inline">\(N\)</span><a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>. In the case, <code><a href="https://www.rdocumentation.org/packages/base/topics/Log">log()</a></code> is called the <em>link function</em> and this is what makes our model a <em>generalized linear model</em>.</p>
 <p>Now that we have a refreshed our memory of the basic glm structure, let’s add the predicted abundance for each site to the data frame:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">sim_df &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(sim_df, <span class="dt">log.lambda =</span> beta0 <span class="op">+</span><span class="st"> </span>beta1<span class="op">*</span>elevation.c <span class="op">+</span><span class="st"> </span>beta2 <span class="op">*</span><span class="st"> </span>rainfall.c, </a>
 <a class="sourceLine" id="cb11-2" data-line-number="2">                                <span class="dt">lambda =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">exp</a></span>(log.lambda))</a></code></pre></div>
@@ -263,7 +292,7 @@
 <div id="plot-relationships" class="section level2">
 <h2 class="hasAnchor">
 <a href="#plot-relationships" class="anchor"></a>Plot relationships</h2>
-<p>Whenever you simulate data, it’s very useful to plot your data early and often. As we mentioned above, it’s often difficult to know ahead of time exactly what reponse values a complex model will produce. Plots are a great way to quickly assess whether the simulation is producing values that are consistent with your domain expertise.</p>
+<p>Whenever you simulate data, it’s very useful to plot your data early and often. As we mentioned above, it’s often difficult to know ahead of time exactly what response values a complex model will produce. Plots are a great way to quickly assess whether the simulation is producing values that are consistent with your domain expertise.</p>
 <div id="brief-intro-to-ggplot2" class="section level3">
 <h3 class="hasAnchor">
 <a href="#brief-intro-to-ggplot2" class="anchor"></a>Brief intro to <code>ggplot2</code>
@@ -278,10 +307,83 @@
 <p>You can see that <code>ggplot</code> created a figure with the correct axes and labels. But no data. That’s because we didn’t tell <code>ggplot</code> what type of <em>geometry</em> to use to represent the data. Geometry refers to the actual type geometric object(s) we want to use to display the data. Common geometries include points (e.g., scatterplot), lines (e.g., timeseries), and bars (e.g., histograms). There are many others. Once we add a geometry, we can see the data:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> sim_df, <span class="kw">aes</span>(<span class="dt">x =</span> elevation, <span class="dt">y =</span> lambda)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</a></code></pre></div>
 <p><img src="simulation_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;"></p>
-<p>Going back to the <code>aes()</code> argument, we can use other attributes to disply additional information in our graph. For example, we could also show</p>
+<p>Going back to the <code>aes()</code> argument, we can use other attributes to disply additional information in our graph. For example, we could also show the rainfall at each location by scaling the size of the points to the rainfall:</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> sim_df, <span class="kw">aes</span>(<span class="dt">x =</span> elevation, <span class="dt">y =</span> lambda, <span class="dt">size =</span> rainfall)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</a></code></pre></div>
 <p><img src="simulation_files/figure-html/unnamed-chunk-15-1.png" width="576" style="display: block; margin: auto;"></p>
+<p>So we can see that our model predicts abundances ranging from 0.1792 individuals to 26.9107 individuals. Is that reasonable? Who knows, this is a made up species. But it wasn’t, this would be a good time to go back and play with different parameter values to generate abundances that are consistent with our domain expertise.</p>
 </div>
+</div>
+<div id="generating-the-actual-abundances" class="section level2">
+<h2 class="hasAnchor">
+<a href="#generating-the-actual-abundances" class="anchor"></a>Generating the actual abundances</h2>
+<p>So far, our simulated abundances contain no stochastic variation (the rainfall and elevation covariates are stochastic but given those values, the predicted counts are completely deterministic). To create a realistic data set, we need to add some process variance (<span class="math inline">\(\sigma^2_p\)</span>). In some simulations, this would involve setting another parameter that controls the amount of process variation. For example, we might generate data from a normal distribution with mean equal to the expected value and standard deviation chosen to reflect our belief about how much process variation to expect in our system.</p>
+<p>However, because we are generating counts from a Poisson distribution, the process variance is chosen for us <a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>. So simulating the abundances is straightforward:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co">### Generate actual abundance for each site</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">sim_df &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(sim_df, <span class="dt">N =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Poisson">rpois</a></span>(<span class="dt">n =</span> M, lambda))</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="co">### Plot lambda vs. N</span></a>
+<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="kw">ggplot</span>(<span class="dt">data =</span> sim_df, <span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> N)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb15-6" data-line-number="6"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(lambda[i])) <span class="op">+</span></a>
+<a class="sourceLine" id="cb15-7" data-line-number="7"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(N[i])) <span class="op">+</span></a>
+<a class="sourceLine" id="cb15-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">intercept =</span> <span class="dv">0</span>)</a></code></pre></div>
+<p><img src="simulation_files/figure-html/unnamed-chunk-16-1.png" width="576" style="display: block; margin: auto;"></p>
+<p>As expected, abundance increases with <span class="math inline">\(\lambda\)</span>, though you can see the process variation that is added to the model at this stage.</p>
+<hr>
+<p>Go back to lecture 1 and be sure you understand how our simulation steps reflect the process model we learned about in that lecture.</p>
+<p><strong>Which step defined the process model? What is the process model</strong></p>
+<p><strong>Which step defined the process variation? What is the difference between <span class="math inline">\(\lambda_i\)</span> and <span class="math inline">\(N_i\)</span>?</strong></p>
+<hr>
+</div>
+<div id="simulating-the-counts" class="section level2">
+<h2 class="hasAnchor">
+<a href="#simulating-the-counts" class="anchor"></a>Simulating the counts</h2>
+<p>Now that we have the true abundances for each site, we can simulate the counts. The steps are pretty much the same as above but now applied to the observation model rather than the process model.</p>
+<div id="generate-the-detection-probabilities" class="section level3">
+<h3 class="hasAnchor">
+<a href="#generate-the-detection-probabilities" class="anchor"></a>Generate the detection probabilities</h3>
+<p>Just as the expected abundances were not the same for all sites, neither are the detection probabilities. To calcuate the detection probability at each site, we use the same glm framework as above but this time using a different link function.</p>
+<p>For the abundances, we used the <span class="math inline">\(log\)</span> link function because it converts the linear predictor into positive values (counts can be negative). For <span class="math inline">\(p\)</span>, we need to generate values that are between 0 and 1 which means we need a different link function. Although there are several options, the most common link function for probabilities is the <span class="math inline">\(logit\)</span> link:</p>
+<p><span class="math display">\[logit(p)=log\bigg(\frac{p}{1-p}\bigg)=log(p)-log(1-p)=y\]</span></p>
+<p><img src="simulation_files/figure-html/unnamed-chunk-17-1.png" width="576" style="display: block; margin: auto;"></p>
+<p>To convert the linear predictor into a probability we use the inverse logit (just like we used <span class="math inline">\(e^y\)</span> to estimate the predicted abundance from the linear predictor of the count model):</p>
+<p><span class="math display">\[logit^{-1}(y)=\frac{1}{1+e^{-y}}=p\]</span></p>
+<p>We can use these relationships to add both <span class="math inline">\(logit(p)\)</span> and <span class="math inline">\(p\)</span> to the dataframe:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">sim_df &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(sim_df, <span class="dt">logit.p =</span> alpha0 <span class="op">+</span><span class="st"> </span>alpha1 <span class="op">*</span><span class="st"> </span>elevation.c,</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">                                <span class="dt">p =</span> <span class="dv">1</span><span class="op">/</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">exp</a></span>(<span class="op">-</span>logit.p)))</a>
+<a class="sourceLine" id="cb16-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="kw">ggplot</span>(sim_df, <span class="kw">aes</span>(<span class="dt">x =</span> elevation, <span class="dt">y =</span> p)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</a></code></pre></div>
+<p><img src="simulation_files/figure-html/unnamed-chunk-18-1.png" width="576" style="display: block; margin: auto;"></p>
+</div>
+<div id="add-the-counts" class="section level3">
+<h3 class="hasAnchor">
+<a href="#add-the-counts" class="anchor"></a>Add the counts</h3>
+<p>Now we are ready to generate the final piece of simulated data, the actual counts. The binomial observation model we defined above tells us exactly how to do that:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">sim_df &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(sim_df, <span class="dt">C =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(<span class="dt">n =</span> M, <span class="dt">size =</span> N, <span class="dt">prob =</span> p))</a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb17-4" data-line-number="4"><span class="kw">ggplot</span>(<span class="dt">data =</span> sim_df, <span class="kw">aes</span>(<span class="dt">x =</span> N, <span class="dt">y =</span> C)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">slope =</span> <span class="dv">1</span>, <span class="dt">intercept =</span> <span class="dv">0</span>)</a></code></pre></div>
+<p><img src="simulation_files/figure-html/unnamed-chunk-19-1.png" width="576" style="display: block; margin: auto;"></p>
+<p>The figure confirms that <span class="math inline">\(C \leq N\)</span> in all cases, which is another good check that we simulated the data correctly (we only allowed false negatives so the counts cannot be bigger than the true abundance).</p>
+<p>In some cases, it appears that <span class="math inline">\(C=N\)</span>, especially when <span class="math inline">\(N\)</span> is small. Remember that <span class="math inline">\(N\)</span> is smaller at low elevations, which is also where detection probability is the highest. Let’s make another quick plot to check that this is the case. To do this, we’ll plot <span class="math inline">\(N-C\)</span> against elevation based on the prediction that this difference should get bigger as elevation increases:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> sim_df, <span class="kw">aes</span>(<span class="dt">x =</span> elevation, <span class="dt">y =</span> N <span class="op">-</span><span class="st"> </span>C)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</a></code></pre></div>
+<p><img src="simulation_files/figure-html/unnamed-chunk-20-1.png" width="576" style="display: block; margin: auto;"></p>
+</div>
+</div>
+<div id="save-the-simulated-data" class="section level2">
+<h2 class="hasAnchor">
+<a href="#save-the-simulated-data" class="anchor"></a>Save the simulated data</h2>
+<p>Now that we have a simulated data set, let’s save it so it’s available for future use. There are many ways to save objects in <code>R</code> but one of the most <a href="https://www.fromthebottomoftheheap.net/2012/04/01/saving-and-loading-r-objects/">well-behaved</a> is <code><a href="https://www.rdocumentation.org/packages/base/topics/readRDS">saveRDS()</a></code>.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/readRDS">saveRDS</a></span>(<span class="dt">object =</span> sim_df, <span class="dt">file =</span> <span class="st">"data/sim_df.rds"</span>)</a></code></pre></div>
+<p>When you want to use this object in the future, all you have to do is run<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">sim_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/readRDS">readRDS</a></span>(<span class="st">"data/sim_df.rds"</span>)</a></code></pre></div>
+<p><span class="math display">\[[N_i, \beta_0, \beta_1, \beta_2, \alpha_0, \alpha_1|y_i, elev_i, rain_i] \propto [y_i|N_i,\alpha_0, \alpha_i, elev_i][N_i|\beta_0, \beta_1, \beta_2, elev_i, rain_i][\beta_0][\beta_1][\beta_2][\alpha_0][\alpha_1]\]</span></p>
+<p><span class="math display">\[[N_i, \beta_0, \beta_1, \beta_2, \alpha_0, \alpha_1|y_i, elev_i, rain_i] \propto \prod_{i=1}^M \prod_{j=1}^J binomial(y_{i,j}|N_i,\alpha_0, \alpha_i, elev_i) \times Poisson(N_i|\beta_0, \beta_1, \beta_2, elev_i, rain_i) \times normal(\beta_0|0,100) \times normal(\beta_1|0,100) \times normal(\beta_2|0,100) \times normal(\alpha_0|0,100) \times normal(\alpha_1|0,100)\]</span></p>
+<p><span class="math display">\[[N_i|.] \propto  \prod_{i=1}^M \prod_{j=1}^J binomial(y_{i,j}|N_i,\alpha_0, \alpha_i, elev_i) \times Poisson(N_i|\beta_0, \beta_1, \beta_2, elev_i, rain_i)\]</span> <span class="math display">\[[\beta_0|.] \propto  Poisson(N_i|\beta_0, \beta_1, \beta_2, elev_i, rain_i) \times normal(\beta_0|0,100)\]</span></p>
+<p><span class="math display">\[[\beta_1|.] \propto  Poisson(N_i|\beta_0, \beta_1, \beta_2, elev_i, rain_i) \times normal(\beta_1|0,100)\]</span></p>
+<p><span class="math display">\[[\beta_2|.] \propto  Poisson(N_i|\beta_0, \beta_1, \beta_2, elev_i, rain_i) \times normal(\beta_2|0,100)\]</span></p>
+<p><span class="math display">\[[\alpha_0|.] \propto  \prod_{i=1}^M \prod_{j=1}^J binomial(y_{i,j}|N_i,\alpha_0, \alpha_i, elev_i) \times normal(\alpha_0|0,100)\]</span></p>
+<p><span class="math display">\[[\alpha_1|.] \propto  \prod_{i=1}^M \prod_{j=1}^J binomial(y_{i,j}|N_i,\alpha_0, \alpha_i, elev_i) \times normal(\alpha_1|0,100)\]</span></p>
 </div>
 </div>
 <div class="footnotes">
@@ -290,6 +392,9 @@
 <li id="fn1"><p>Note that <span class="math inline">\(z_i\)</span> can either be 1 (site <span class="math inline">\(i\)</span> is occupied) or 0 (site <span class="math inline">\(i\)</span> is unoccupied) and <span class="math inline">\(y_i\)</span> can be 1 (species detected at site <span class="math inline">\(i\)</span>) or 0 (species not detected at site <span class="math inline">\(i\)</span>). In the second equation, adding <span class="math inline">\(z_i\)</span> ensures that if the site is unoccupied (<span class="math inline">\(z_i=0\)</span>) than <span class="math inline">\(y_i\)</span> has to be 0 also. We’ll learn more about this formulation of occupancy models later in the semester<a href="#fnref1" class="footnote-back">↩</a></p></li>
 <li id="fn2"><p>Based on chapter 4 of Kery &amp; Royle <em>Applied Hierarchical Modeling in Ecology</em><a href="#fnref2" class="footnote-back">↩</a></p></li>
 <li id="fn3"><p>Remember our discussion of probability distributions. The Poisson distribution generates random integer values greater than 0. Both the mean and variance of the Poisson distribution <span class="math inline">\(= \lambda\)</span>.<a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p>Remember that <span class="math inline">\(log(x) = y\)</span> if <span class="math inline">\(e^y=x\)</span>. Also note that when we refer to the log function, we almost always use the natural log (log base <span class="math inline">\(e\)</span>).<a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn5"><p>Remember that <span class="math inline">\(\lambda\)</span> is both the mean and the variance of a Poisson distribution.<a href="#fnref5" class="footnote-back">↩</a></p></li>
+<li id="fn6"><p>Note that with <code><a href="https://www.rdocumentation.org/packages/base/topics/readRDS">readRDS()</a></code> you do have to assign the object you are reading to a new object. If you don’t create a new object, <code><a href="https://www.rdocumentation.org/packages/base/topics/readRDS">readRDS()</a></code> will simply print the data frame. This has the advantage that you can rename the object something else when you read it in next time.<a href="#fnref6" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
   </div>
@@ -306,6 +411,9 @@
 <li><a href="#initial-steps-setting-the-model-parameters">Initial steps: Setting the model parameters</a></li>
       <li><a href="#generate-expected-abundancesreview-of-generalized-linear-models">Generate expected abundances/review of (generalized) linear models</a></li>
       <li><a href="#plot-relationships">Plot relationships</a></li>
+      <li><a href="#generating-the-actual-abundances">Generating the actual abundances</a></li>
+      <li><a href="#simulating-the-counts">Simulating the counts</a></li>
+      <li><a href="#save-the-simulated-data">Save the simulated data</a></li>
       </ul>
 </li>
       </ul>

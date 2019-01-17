@@ -59,13 +59,13 @@ In your own analyses, you will generally write out the model using a programming
 
 
 --
-But treating these software as a total blackbox is not a great idea  
+But treating these software as a total black box is not a great idea  
 
 - Having at least some idea what JAGS (or BUGS or Nimble) is doing to estimate the posterior distributions of parameters in your model will help you better understand if and when these programs are doing what you want $^1$
 
 ???
 
-$^1$ There are different flavors of MCMC that are used behind the scences in all modern Bayesian software, including JAGS, Bugs, Nimble, and Stan  
+$^1$ There are different flavors of MCMC that are used behind the scenes in all modern Bayesian software, including JAGS, Bugs, Nimble, and Stan  
 
 $^1$ That said, because this course focuses on the practice of Bayesian analyses rather than the theory, we will not go into a lot of details about MCMC  
 
@@ -265,7 +265,7 @@ Steps 1-3 are repeated many times, resulting in $K$ samples of $\theta$
 
 ???
 
-$^1$ We are technically describing the steps of a specific type of MCMC called *accept-and-reject* sampling. There are types of MCMC samplers that we will not describe here. For addtional references on types of samplers, refer to Hobbs & Hooten chapter 7
+$^1$ We are technically describing the steps of a specific type of MCMC called *accept-and-reject* sampling. There are types of MCMC samplers that we will not describe here. For additional references on types of samplers, refer to Hobbs & Hooten chapter 7
 
 ---
 ## MCMC: basic steps
@@ -351,7 +351,7 @@ How close $\theta^*$ is to $\theta^{k-1}$ is determined by $\sigma^2$, which is 
 
 The normal distribution implies that $\theta$ can be any real number, which makes sense for some parameters but not for our example  
 
-We could instead use a beta distribution and use moment matching to define $\alpha$ and $\beta$ is terms of $\theta^{k-1}$ (the mean) and $\sigma^2$:
+We could instead use a beta distribution and use moment matching to define $\alpha$ and $\beta$ in terms of $\theta^{k-1}$ (the mean) and $\sigma^2$:
 
 $$\theta^* \sim beta\Bigg(\theta^{k-1}\bigg(\frac{\theta^{k-1}(1-\theta^{k-1})}{\sigma^2}-1\bigg), (1-\theta^{k-1})\bigg(\frac{\theta^{k-1}(1-\theta^{k-1})}{\sigma^2}-1\bigg)\Bigg)$$
 
@@ -379,7 +379,7 @@ proposal <- function(p, sigma2){
 
 Once we have a proposal $\theta^*$, we have to decide whether to accept this as our new value of $\theta^k$  
 
-- If we accept $\theta^*$, $\theta^{k} = \theta^*{k-1}*$  
+- If we accept $\theta^*$, $\theta^{k} = \theta^*$  
 
 - If we reject it, $\theta^{k} = \theta^{k-1}$  
 
@@ -465,7 +465,7 @@ p <- init     # Initial value
 
 ### Step 2: Estimate acceptance probability
 
-Next, we run teh sampler:
+Next, we run the sampler:
 
 ```{r echo = TRUE}
 for(i in 1:n.samples){
@@ -490,9 +490,9 @@ for(i in 1:n.samples){
 
 ### Step 3: Summarizing and visualizing the chain
 
-The `phi` column in the `posterior` dataframe now contains `r n.samples` samples from the posterior distribution of $\phi$  
+The `phi` column in the `posterior` data frame now contains `r n.samples` samples from the posterior distribution of $\phi$  
 
-We can use these samples to characeterize the posterior distribution without having had to do any integration!  
+We can use these samples to characterize the posterior distribution without having had to do any integration!  
 
 For example, we can plot the posterior distribution:
 
@@ -506,7 +506,7 @@ ggplot(posterior, aes(x = phi)) + geom_density() +
 
 ### Step 3: Summarizing and visualizing the chain
 
-We can also create a **trace plot** showing values of the chain at each interations $^1$
+We can also create a **trace plot** showing values of the chain at each iterations $^1$
 
 ```{r echo = TRUE, fig.width=5, fig.height=3}
 ggplot(posterior, aes(x = iteration, y = phi)) + geom_path() +
@@ -522,7 +522,7 @@ $^1$ Trace plots can be very useful for diagnosing the behavior the chains, as w
 
 ### Step 3: Summarizing and visualizing the chain
 
-Or find the mean (remember that the true value in our simulation was $0.4$:
+Or find the mean (remember that the true value in our simulation was $0.4$):
 
 ```{r echo = TRUE}
 mean(posterior$phi)
@@ -541,7 +541,7 @@ We can also estimate quantiles:
 quantile(posterior$phi)
 ```
 
-Quantiles are useful for determing the 95% *credible intervals* of the posterior: $^1$
+Quantiles are useful for determining the 95% *credible intervals* of the posterior: $^1$
 
 ```{r echo = TRUE}
 quantile(posterior$phi, probs = c(0.025, 0.975))
@@ -553,7 +553,7 @@ This allows us to make statements like "there is a 95% chance that $\phi$ is bet
 
 $^1$ i.e., the range of parameter values within which 95% of the posterior mass occurs  
 
-$^1$ Compare the ease of credible interval estimation and the intuitive interpretation to the estimation/interpretation of frequentist 95% confidence intervals  
+$^1$ Compare the ease of credible interval estimation and the intuitive interpretation to the estimation/interpretation of frequentest 95% confidence intervals  
 
 ---
 ## Multiple chains
@@ -667,7 +667,7 @@ To construct an MCMC for this model, we use the same steps as for the single-par
 
 $^1$ so in our example, we would propose a new value $z^*$ (actually each $z$ since we have one for each individual), accept or reject $z^*$ (either $z^k = z^*$ or $z^k = z^{k-1$), then use $z^k$ on the RHS when we propose $\alpha^*$, and so on
 
-$^2$ we can sample in any order as long as we go in the same sequence for each interation. In other words, it doesn't matter is we sample $\alpha$ first or last in the sequence as long we always sample in the same sequence
+$^2$ we can sample in any order as long as we go in the same sequence for each iteration. In other words, it doesn't matter is we sample $\alpha$ first or last in the sequence as long we always sample in the same sequence
 
 ---
 class: inverse, middle, center
@@ -690,10 +690,10 @@ For any model, it is **critical** to evaluate the chains to determine whether yo
 ---
 ## Evaluating Markov chains
 
-The most important characeteristic of MCMC chains is **convergence**  
+The most important characteristic of MCMC chains is **convergence**  
 
 --
-- Convergence occurs when the accumulated samples accurately characeterize the posterior distribution of a parameter
+- Convergence occurs when the accumulated samples accurately characterize the posterior distribution of a parameter
 
 
 --
@@ -740,9 +740,9 @@ cowplot::plot_grid(a1, b1, c1, d1, a2, b2, c2, d2,
 
 ???
 
-$^1$ Notice in figure 1a that the chain starts well above the true survival probability and it takes several interations for the chains to move from the arbitrary initial value to samples that are consistent with the posterior distribution. In our example, that transition occurs relatively quickly so our posterior estimates based on the full chain isn't particularly influenced by our starting values.  
+$^1$ Notice in figure 1a that the chain starts well above the true survival probability and it takes several iterations for the chains to move from the arbitrary initial value to samples that are consistent with the posterior distribution. In our example, that transition occurs relatively quickly so our posterior estimates based on the full chain isn't particularly influenced by our starting values.  
 
-In more complicated models, it may take many more iterations for chains to move from the initial values to the stationary distribution. We generally don't want these samples to influence our inference so it is common to discard these initial values as **burn-in**. Often, you can just select a reasonably large number of samples (e.g., 5000-10000), tell JAGS to discard these as burn-in, then inspect the trace plots to check that this was enough. In other cases, you can just set burn-in as 0 in JAGS and then discard some number of interations manually after looking at the trace plots.  
+In more complicated models, it may take many more iterations for chains to move from the initial values to the stationary distribution. We generally don't want these samples to influence our inference so it is common to discard these initial values as **burn-in**. Often, you can just select a reasonably large number of samples (e.g., 5000-10000), tell JAGS to discard these as burn-in, then inspect the trace plots to check that this was enough. In other cases, you can just set burn-in as 0 in JAGS and then discard some number of iterations manually after looking at the trace plots.  
 
 
 ---
@@ -765,7 +765,7 @@ ggplot(chains, aes(x = iteration, y = phi, color = chain)) + geom_path() +
   
 ???
 
-$^1$ Mixing means that the chains are able to efficiently explore the full posterior, meaning they can explore the parameter space without getting stuck or having to slowly wander. Poorly mixing chains will generally exhibit high autocorrelation, that is a high degree of dependence between a sample and the previous sample. Highly autocorrelated chains require more samples to fully characterize the posterior  
+$^1$ Mixing means that the chains are able to efficiently explore the full posterior, meaning they can explore the parameter space without getting stuck or having to slowly wander. Poorly mixing chains will generally exhibit high auto correlation, that is a high degree of dependence between a sample and the previous sample. Highly auto correlated chains require more samples to fully characterize the posterior  
 
 In trace plots, well-mixing chains will have a "grassy lawn" look
 
@@ -784,7 +784,7 @@ Formal diagnostic testing is commonly done using the **Gelman-Rubin diagnostic**
 - when chains have converged, variance among chains $=$ variance within chains
 
 --
-- $\hat{r}$ is esentially the ratio of among:within chain variance so $\hat{r} \approx 1$ indicates convergence
+- $\hat{r}$ is essentially the ratio of among:within chain variance so $\hat{r} \approx 1$ indicates convergence
 
 - values much greater than 1 indicate lack of convergence (usually $\hat{r} \leq 1.1$ is used as a threshold)
 
@@ -859,4 +859,4 @@ Solving lack of identifiability is harder
 
 $^1$ A common cause of non-identifiability is when two parameters trade-off, such that different combinations give the same likelihood. One example is when both $N$ and $p$ are unknown in the binomial distribution - the same number of "successes" can be predicted by high $N$ and low $p$ vs. low $N$ and high $p$. In this case, incorporating information about $p$ via the prior can help identify $N$ (or vice versa).  
 
-$^1$ Most MCMC software (JAGS, Bugs, etc) use an adaptive phase,  during with the samplers used by the model may modify their behaviour for increased efficiency. This is usually done behind the scenes but as highlighted in the linked post, being aware of what the software is doing can be useful for improving mixing  
+$^1$ Most MCMC software (JAGS, Bugs, etc) use an adaptive phase,  during with the samplers used by the model may modify their behavior for increased efficiency. This is usually done behind the scenes but as highlighted in the linked post, being aware of what the software is doing can be useful for improving mixing  
