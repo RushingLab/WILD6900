@@ -82,6 +82,9 @@
     <li>
       <a href="../articles/Lecture4/Lecture4.html">Lecture 4: More about prior distributions</a>
     </li>
+    <li>
+      <a href="../articles/Lecture5/Lecture5.html">Lecture 5: Implementing Bayesian models: Introduction to MCMC samplers</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -126,7 +129,7 @@
       <h1>Developing informative priors</h1>
             <h3 class="subtitle">WILD6900</h3>
             
-            <h4 class="date">2019-01-17</h4>
+            <h4 class="date">2019-01-18</h4>
       
       
       <div class="hidden name"><code>priors.Rmd</code></div>
@@ -236,12 +239,12 @@
 <a class="sourceLine" id="cb6-7" data-line-number="7"><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(SurvPriorData)[<span class="dv">1</span>]){</a>
 <a class="sourceLine" id="cb6-8" data-line-number="8"> sim_phi[,j] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Beta">rbeta</a></span>(<span class="dt">n =</span> nSims, alpha3[j], beta3[j])</a>
 <a class="sourceLine" id="cb6-9" data-line-number="9">}</a></code></pre></div>
-<p>Now hopefully you can see why this approach is so clever. We now have 310^{4} plausible values of adult female survival probability that are consistent with published studies and reflect multiple sources of uncertainty about this vital rate<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>.</p>
+<p>Now hopefully you can see why this approach is so clever. We now have 30000 plausible values of adult female survival probability that are consistent with published studies and reflect multiple sources of uncertainty about this vital rate<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>.</p>
 <p>From these simulated values, we can now estimate “hyper-parameters” for a single beta distribution that will serve as our prior. First, we estimate the mean and variance of the simulated values:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">(mu3 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(sim_phi))</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">#&gt; [1] 0.9348</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co">#&gt; [1] 0.9351</span></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3">(var3 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/sd">sd</a></span>(sim_phi) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>)</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt; [1] 0.001109</span></a></code></pre></div>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#&gt; [1] 0.0011</span></a></code></pre></div>
 <p>You can see that the variance of these samples is much larger than for approach 1, reflecting the additional source of uncertainty in approach 2. Now we use the same moment matching code as before to generate and visualize the prior:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="co">## Beta parameters</span></a>
 <a class="sourceLine" id="cb8-2" data-line-number="2">alpha4 &lt;-<span class="st"> </span>mu3<span class="op">^</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>((<span class="dv">1</span><span class="op">-</span>mu3)<span class="op">/</span>var3 <span class="op">-</span><span class="st"> </span>(<span class="dv">1</span><span class="op">/</span>mu3))</a>

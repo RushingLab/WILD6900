@@ -30,6 +30,8 @@ navbar:
           href: articles/Lecture3/Lecture3.html
         - text: "Lecture 4: More about prior distributions"
           href: articles/Lecture4/Lecture4.html
+        - text: "Lecture 5: Implementing Bayesian models: Introduction to MCMC samplers"
+          href: articles/Lecture5/Lecture5.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:
