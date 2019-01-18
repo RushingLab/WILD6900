@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^docs$
+^figures$
+^lecture_slides$
+^lecture-notes$
