@@ -32,7 +32,7 @@ All homework assignments for this course will be completed R Markdown files. To 
 
 2c) Scroll down through the options until you see `WILD6900-Homework#` (where `#` will be the appropriate homework number). Select that template 
 
-2d) In the `Name:` window type `LastnameFirstname-homework#`, substituting your last and first names and the correct homework numbe. In the `Location` window, navigate to your newly create `LastNameFirstName-Homework#` directory
+2d) In the `Name:` window type `LastnameFirstname-homework#`, substituting your last and first names and the correct homework number. In the `Location` window, navigate to your newly create `LastNameFirstName-Homework#` directory
 
 2e) Click `Ok`
 
@@ -44,20 +44,8 @@ All homework assignments for this course will be completed R Markdown files. To 
 
 ## Step 4: Submit your assignment
 
-4a) Before submitting your assignment, always click the "Knit" button to be sure your .Rmd file can be rendered as a HTML page. **If you have any problems rendering the file, please contact me or the TA prior to the submission deadline.**
+4a) Before submitting your assignment, always click the "Knit" button to be sure your .Rmd file can be rendered as a HTML page. **If you have any problems rendering the file, please contact me prior to the submission deadline.**
 
-4b) Once you know your file can be rendered, compress the entire `LastNameFirstName-Homework#` directory:
-
-* On Windows:
-    - Locate the `LastNameFirstName-Homework#` folder
-      
-    - Press and hold (or right-click) the folder, select (or point to) `Send to`, and then select `Compressed (zipped) folder`
-      
-* On Mac
-    - Locate the `LastNameFirstName-Homework#` folder
-      
-    - Right-click the folder and select `compress LastNameFirstName-Homework#`
-
-4c) Upload the zipped file to Canvas under the correct assignment folder
+4b) Once you know your file can be rendered, upload **both** the `LastnameFirstname-homework#.Rmd` *and* the `LastnameFirstname-homework#.html` files to Canvas under the correct assignment folder
 
 **Assignments that fail to follow this instructions will not be graded**

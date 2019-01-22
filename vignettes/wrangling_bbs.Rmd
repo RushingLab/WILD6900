@@ -17,7 +17,7 @@ knitr::opts_chunk$set(fig.align = 'center', message = FALSE,
 )
 ```
 
-In this lab, we will starting learning some useful tools and principles for preparing raw data for visualization and analysis. Many of the core principles of so called "data wrangling" are embodied by the [`tidyverse`](https://www.tidyverse.org/packages/), a family of packages created to make tidying, manipulating, and visualizing data and model output more intuitive and consistent. Use of the tidyverse is somewhat [controversial](http://varianceexplained.org/r/teach-tidyverse/) and it is worth noting that everything we will do in the lab can be done using base `R` or non-tidyverse packages. Nonetheless, I find the tidyverse useful *because* it is opinionated. The developers of the tidyverse have spent a great deal of time thinking about how data should be stored, manipulated, and visualized and they have created an entire ecosystem of functions built around these principles. Using the tidyverse isn't so much about the tools themselves as it is about **thinking about the structure and manipulation of data**. For better or worse, focusing on consistent application of these principles is not something base `R` encourages.  
+In this lab, we will starting learning some useful tools and principles for preparing raw data for visualization and analysis.  
 
 ***
 **Objectives**

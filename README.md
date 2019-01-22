@@ -12,7 +12,7 @@ General course information can be found by clicking on the `syllabus` and `sched
 In addition to this website, materials from the course will be distributed through an R package called, you guessed it, *WILD6900*. The main purpose of the R package is to distribute code and data that will used for the course, though eventually additional materials may be included, including lectures and reference documents. You can install the most current version of *WILD6900* with:
 
 ``` r
-install.packages(devtools)
+install.packages("devtools")
 devtools::install_github("RushingLab/WILD6900")
 ```
 

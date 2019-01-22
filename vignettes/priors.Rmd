@@ -30,14 +30,16 @@ One issue in many ecological studies is that it is logistically and financially 
 
 It is precisely in these instances where Bayesian methods can shine - as we saw in lecture, the ability to incorporate previous knowledge of parameter values via informative priors is equivalent to increasing your sample size. 
 
-To explore different ways of generating informative priors, we will borrow data and some clever ideas from a recently published paper on the dynamics of Polar Bear (*Ursus maritimus*) populations in the Chukchi Sea (Regehr et al. 2018). For this example, we will focus on a subset of the full model, namely estimating annual survival of adult female bears. 
+To explore different ways of generating informative priors, we will borrow data and some clever ideas from a recently published paper on the dynamics of Polar Bear (*Ursus maritimus*) populations in the Chukchi Sea (Regehr et al. 2018). For this example, we will focus on a subset of the full model, namely estimating annual survival of adult female bears.
+
+In the model developed by Regehr et al. (2018), female survival was identifiable but estimates were imprecise using only the available data due to small sample sizes. As a result, the authors chose to develop informative priors based on published survival estimates from other populations. In this case, the authors were fortunate to have a handful of previous studies to lean-on and later in this exercise we will learn how they developed priors from those studies. But first, let's assume there are no published studies but we still want the benefits of informative priors. 
 
 
 ## Example 1: Domain expertise
 
 Even if we have no previous estimates of polar bear survival, we are not completely ignorant about survival of this species. We can use our *domain expertise* to develop a prior that improves upon the non-informative option.  
 
-Polar bears are a large, long-lived carnivore with a life expectancy of about 20-25 years (Ramsay & Stirling 1988). This simple fact suggests that annual survival must be pretty high - even with an annual survival probability of $95\%$, an individual would only have a `r round((0.95^20),2)*100`% probability of surviving 20 years. So survival probabilities much less than $\sim 90\%$ would be pretty surprising and we would be pretty suspicious of estimates less than $\sim 80\%$ (which would imply $1\%$ of female polar bears make it to 20 years of age). 
+Polar bears are a large, long-lived carnivore with a life expectancy of about 20-25 years (Ramsay & Stirling 1988). This simple fact suggests that adult survival must be pretty high - even with an annual survival probability of $95\%$, an individual would only have a `r round((0.95^20),2)*100`% probability of surviving 20 years. So survival probabilities much less than $\sim 90\%$ would be pretty surprising and we would be pretty suspicious of estimates less than $\sim 80\%$ (which would imply $1\%$ of female polar bears make it to 20 years of age). 
 
 Of course, polar bear populations in many areas are declining pretty quickly, suggesting that maybe adult survival rates could be lower than historical levels. So although we can be pretty that survival is  high (e.g., $>80\%$), we're not super confident about the actual survival rate. With regards to our prior, this suggests we want a prior that puts most of the weight $>80\%$ but is wide enough to reflect our uncertainty about the actual survival rates.
 
@@ -60,25 +62,24 @@ beta_df <- data.frame(phi = phi,
                       dist = rep(dist, each = length(phi)))
 
 ggplot(beta_df, aes(x = phi, y = density, color = dist)) + geom_path() +
-  scale_x_continuous(expression(phi)) +
-  scale_color_manual(values = WILD6900_colors$value[WILD6900_colors$name %in% c("primary", "success", "warning", "danger")])
+  scale_x_continuous(expression(phi)) 
 ```
 
 We learned in lecture how to turn the mean and variance of a random variable into the parameters of a probability distribution using moment matching. For the beta distribution:
 
 $$\alpha = \bigg(\frac{1-\mu}{\sigma^2}- \frac{1}{\mu} \bigg)\mu^2 \tag{1}$$         
 $$\beta = \alpha \bigg(\frac{1}{\mu}-1\bigg) \tag{2}$$
-Given our domain expertise, a reasonable choice for the mean and variance of the prior might be $\mu=0.9$ and $\sigma^2=0.03$. Plugging those values into equations 1 and 2 gives:
+Given our domain expertise, a reasonable choice for the mean and variance of the prior might be $\mu=0.9$ and $\sigma^2=0.005$ (this may seem like a small variance but as you'll see below, it actually produces a relatively diffuse prior. Figuring out an appropriate variance for probabilities is not easy so the best option is usually to play with a few values and then explore the properties of the resulting distribution to make sure it seems reasonable). Plugging those values into equations 1 and 2 gives:
 
-$$\alpha = \bigg(\frac{1-0.9}{0.03}- \frac{1}{0.9} \bigg)0.9^2 = 1.8$$ 
-$$\beta = 3.6 \bigg(\frac{1}{0.9}-1\bigg) = 0.2$$
+$$\alpha = \bigg(\frac{1-0.9}{0.005}- \frac{1}{0.9} \bigg)0.9^2 = 15.3$$ 
+$$\beta = 3.6 \bigg(\frac{1}{0.9}-1\bigg) = 1.7$$
 
 As always, we should visualize this distribution to make sure it matches what we think it should look like:
 
 ```{r, fig.width=6}
 ## Target mean and variance
 mu <- 0.9
-var <- 0.03
+var <- 0.005
 
 ## Beta parameters
 alpha <- mu^2 * ((1-mu)/var - (1/mu))
@@ -92,8 +93,8 @@ beta_df <- data.frame(phi = phi,
                       density = dbeta(phi, alpha, beta),
                       Approach = "Domain expertise")
 
-ggplot(beta_df, aes(x = phi, y = density)) + 
-  geom_path(color = WILD6900_colors$value[WILD6900_colors$name == "primary"]) +
+ggplot(beta_df, aes(x = phi, y = density, color = Approach)) + 
+  geom_path() +
   scale_x_continuous(expression(phi), limits = c(0.5, 1)) 
 ```
 
@@ -133,8 +134,7 @@ beta_df2 <- data.frame(phi = phi,
 beta_df <- dplyr::bind_rows(beta_df, beta_df2)
 
 ggplot(beta_df, aes(x = phi, y = density, color = Approach)) + geom_path() +
-  scale_x_continuous(expression(phi), limits = c(0.5, 1)) +
-  scale_color_manual(values = WILD6900_colors$value[WILD6900_colors$name %in% c("primary", "success")]) 
+  scale_x_continuous(expression(phi), limits = c(0.5, 1))
 
 ```
 
@@ -146,7 +146,7 @@ One of the reasons the informative prior based on published survival estimates i
 
 However, incorporating study-specific uncertainty is not so straightforward. One clever approach is to convert estimates from each study into separate beta distributions, simulate survival estimates from each distribution, and then estimate "hyper-parameters" from all of the simulations together[^1]. Understanding how this approach works is best done through example. 
 
-[^1]: *h/t to Nathan Hostetter, a USGS researcher, for supplying example code and data to implement these ideas.*
+[^1]: h/t to Nathan Hostetter, a USGS researcher, for supplying example code and data to implement these ideas.
 
 Let's start by using moment matching to estimate the $\alpha$ and $\beta$ parameters associated with each individual study. To do this, we'll take advantage of the way `R` performs operations on vectors so we can just plug the columns from the data frame directly into our formulas:
 
@@ -198,23 +198,24 @@ sim_df <- data.frame(x = c(sim_phi))
 ggplot() + 
   geom_histogram(data = sim_df, aes(x, stat(density)), alpha = 0.4,
                  color = "grey50",
-                 fill =  WILD6900_colors$value[WILD6900_colors$name == "warning"], binwidth = 0.005) +
+                 fill =  WILD6900_colors$value[WILD6900_colors$name == "success"], 
+                 binwidth = 0.005) +
   geom_path(data = beta_df, aes(x = phi, y = density, color = Approach)) +
-  scale_x_continuous(expression(phi), limits = c(0.7, 1)) +
-  scale_color_manual(values = WILD6900_colors$value[WILD6900_colors$name %in% c("primary", "success", "warning")])
+  scale_x_continuous(expression(phi), limits = c(0.7, 1)) 
 ```
 
-## Questions to consider
+## Questions to consider[^3] 
 
-1) Informative vs vague: for informative priors: We want posteriors to reflect (and be affected by) prior knowledge.  against informative priors: why do the study if we claim to basically know the answer.
+1) **Informative vs vague**: On one hand, we want posteriors to reflect (and be affected by) prior knowledge. On the other hand, why collect more data if we basically know the answer?
 
-2) What defines 'sensitivity to the prior'. Should this be quantified by a change in the posterior mean, sd, some overlap metric, etc? Why use informative priors if the posterior is unaffected?
+2) **How to assess 'sensitivity to the prior'**: Ideally, we should test how sensitive our inferences are to the choice of prior distribution. Should this be quantified by a change in the posterior mean, standard deviation, etc? If the posterior is unaffected by the prior, why go through the trouble of using informative priors?
 
-3) Process vs sampling noise: We included 14 studies reflecting a range of conditions and population trajectories. These 14 point estimates of survival reflect the process noise across populations, which is what we wanted to capture in our prior (option 1). The sampling uncertainty within a study was of less interest (option 2). 
+3) **Process vs sampling noise**: The studies used to create the priors reflect a range of conditions and population trajectories. In approach 1, we assume that the point estimates of survival reflect the process noise across populations. In approach 2, we use the uncertainty from each study to capture both the sampling and process uncertainty. Which sources of uncertainty should we care about when developing a prior? 
 
-4) Life history: Incorporating study-specific uncertainty generally increased prior weight for unreasonably low values of survival relative to option 1, which did not agree with expert opinion or life history characteristics for this species. 
+4) **Domain expertise**: Incorporating sampling uncertainty may increased prior weight for survival values that conflict with our domain expertise (for example, values much lower than we think are plausible). However, these values are consistent with possible survival values from published studies. How should we treat priors that are at the boundary of our statistical and domain expertise?  
 
-5) Posterior distributions were relatively similar between options 1 and 2, if there was a change it generally reduced posterior mass for ecologically unreasonable (low) values. Other parameters were unaffected.
+
+[^3]: h/t again to Nathan Hostetter for engaging discussions about these issues 
 
 ## References
 

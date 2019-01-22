@@ -26,6 +26,10 @@ navbar:
           href: articles/Lecture1/Lecture1.html
         - text: "Lecture 2: Probability refresher (or introduction)"
           href: articles/Lecture2/Lecture2.html
+        - text: "Lecture 3: Principles of Bayesian inference"
+          href: articles/Lecture3/Lecture3.html
+        - text: "Lecture 4: More about prior distributions"
+          href: articles/Lecture4/Lecture4.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:
@@ -33,6 +37,8 @@ navbar:
           href: articles/projects_and_directories.html
         - text: "Introduction to R Markdown"
           href: articles/rmarkdown_intro.html
+        - text: "Creating prior distributions"
+          href: articles/priors.html
     - icon: fas fa-pencil-square-o
       text: "Assignments"
       href: articles/homework.html
