@@ -169,7 +169,7 @@ for(j in 1:dim(SurvPriorData)[1]){
 }
 ```
 
-Now hopefully you can see why this approach is so clever. We now have `r nrow(SurvPriorData) * nSims` plausible values of adult female survival probability that are consistent with published studies and reflect multiple sources of uncertainty about this vital rate[^2]. 
+Now hopefully you can see why this approach is so clever. We now have `r length(sim_phi)` plausible values of adult female survival probability that are consistent with published studies and reflect multiple sources of uncertainty about this vital rate[^2]. 
 
 [^2]: Beyond this specific example, simulating data from your prior is a very useful way to ensure that the prior produces values are consistent with your domain expertise. Although we will not go into the details in this class, simulating data from the priors (called *prior predictive checks*) and then checking that these simulated data are generally consistent with plausible values you would expect in real data is a potentially important step in Bayesian inference, especially for complicated models where interactions between multiple parameters can potentially generate unexpected support for implausible data. For more information about doing prior predictive checks, see this [great overview](https://betanalpha.github.io/assets/case_studies/principled_bayesian_workflow.html) from Michael Betancourt. 
 

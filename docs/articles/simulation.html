@@ -82,6 +82,9 @@
     <li>
       <a href="../articles/Lecture4/Lecture4.html">Lecture 4: More about prior distributions</a>
     </li>
+    <li>
+      <a href="../articles/Lecture5/Lecture5.html">Lecture 5: Implementing Bayesian models: Introduction to MCMC samplers</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -126,7 +129,7 @@
       <h1>Intro to data simulation and visualization</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-01-17</h4>
+            <h4 class="date">2019-01-18</h4>
       
       
       <div class="hidden name"><code>simulation.Rmd</code></div>
@@ -310,7 +313,11 @@ alpha1 &lt;-<span class="st"> </span><span class="op">-</span><span class="fl">0
 <p>Going back to the <code>aes()</code> argument, we can use other attributes to disply additional information in our graph. For example, we could also show the rainfall at each location by scaling the size of the points to the rainfall:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> sim_df, <span class="kw">aes</span>(<span class="dt">x =</span> elevation, <span class="dt">y =</span> lambda, <span class="dt">size =</span> rainfall)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
 <p><img src="simulation_files/figure-html/unnamed-chunk-15-1.png" width="576" style="display: block; margin: auto;"></p>
+<<<<<<< HEAD
 <p>So we can see that our model predicts abundances ranging from 0.169 individuals to 25.0921 individuals. Is that reasonable? Who knows, this is a made up species. But it wasn’t, this would be a good time to go back and play with different parameter values to generate abundances that are consistent with our domain expertise.</p>
+=======
+<p>So we can see that our model predicts abundances ranging from 0.1518 individuals to 29.1804 individuals. Is that reasonable? Who knows, this is a made up species. But it wasn’t, this would be a good time to go back and play with different parameter values to generate abundances that are consistent with our domain expertise.</p>
+>>>>>>> 40a11a4c86171c3bdcf36f2ea2f97f71ea44a9a9
 </div>
 </div>
 <div id="generating-the-actual-abundances" class="section level2">

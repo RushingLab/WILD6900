@@ -28,14 +28,16 @@ library(WILD6900)
 
 Remember from lecture 3 that the posterior distribution of random variable $\theta$ conditional on data $y$ is defined by Bayes theorem:  
 
-$$\underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[\theta|y]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$
+$$\Large \underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[\theta|y]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$
 
 --
-We spent a fair about of time learning how to define the likelihood $[\theta, y]$ and the prior $[\theta]$  
+
+#### We spent a fair about of time learning how to define the likelihood $\large [\theta, y]$ and the prior $\large [\theta]$  
 
 
 --
-But we gave only given a cursory overview to the denominator of Bayes theorem, the marginal distribution $[y]$ $^1$  
+
+#### But we gave only given a cursory overview to the denominator of Bayes theorem, the marginal distribution $\large [y]$ $^1$  
 
 ???
 
@@ -49,7 +51,7 @@ class: inverse, center, middle
 ---
 ## Markov chain Monte Carlo
 
-In your own analyses, you will generally write out the model using a programming language understood by one of the common Bayesian software programs and then let the software fit the model  
+#### In your own analyses, you will generally write out the model using a programming language understood by one of the common Bayesian software programs and then let the software fit the model  
 
 --
 - This can be done without really knowing much of anything about *how* the software fits the model  
@@ -59,7 +61,8 @@ In your own analyses, you will generally write out the model using a programming
 
 
 --
-But treating these software as a total black box is not a great idea  
+
+#### But treating these software as a total black box is not a great idea  
 
 - Having at least some idea what JAGS (or BUGS or Nimble) is doing to estimate the posterior distributions of parameters in your model will help you better understand if and when these programs are doing what you want $^1$
 
@@ -72,10 +75,42 @@ $^1$ That said, because this course focuses on the practice of Bayesian analyses
 ---
 ## From the joint distribution to the posterior
 
-Remember that the marginal distribution $[y]$ is what normalizes the joint distribution to ensure the posterior is a proper probability distribution $^1$  
-<br/>
+#### Remember that the marginal distribution $\large [y]$ is what normalizes the joint distribution to ensure the posterior is a proper probability distribution $^1$  
 
---
+```{r, fig.width=8, fig.height=5}
+
+y <- 42
+y_probs <- data.frame(lambda = 15:65,
+                      pr_y = dpois(y, lambda = 15:65))
+
+lik_profile <- ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path(color = WILD6900_colors$value[WILD6900_colors$name == "primary"], size = 1.5) +
+  scale_y_continuous(expression(paste("L(", lambda, "|y=42)"))) +
+  scale_x_continuous(expression(lambda))
+
+
+prior <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
+                    pr_lambda = dgamma(seq(from = 15, to = 65, by = 0.25), 40^2/6, 40/6))
+
+prior_lik <- lik_profile + geom_path(data = prior, aes(x = lambda, y = pr_lambda),  color = WILD6900_colors$value[WILD6900_colors$name=="secondary"],
+                                     linetype = "longdash", size = 1.5)
+
+joint <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
+                    jnt_dist = dgamma(seq(from = 15, to = 65, by = 0.25), 40^2/6, 40/6) * 
+                               dpois(42, seq(from = 15, to = 65, by = 0.25)))
+
+prior_lik_joint <- prior_lik + geom_path(data = joint, aes(x = lambda, y = jnt_dist), linetype = "dotted", size = 1.5)
+
+(prior_lik_joint <- prior_lik_joint + geom_area(data = joint, aes(x = lambda, y = jnt_dist), linetype = "dashed",
+  fill = WILD6900_colors$value[WILD6900_colors$name=="secondary"]))
+
+
+```
+
+---
+## From the joint distribution to the posterior
+
+#### Remember that the marginal distribution $\large [y]$ is what normalizes the joint distribution to ensure the posterior is a proper probability distribution $^1$  
+
 - Without the marginal distribution, parameters cannot be treated as random variables $^1$  
 <br/>
 
@@ -97,26 +132,29 @@ $^1$ And therefore we cannot conduct a truly Bayesian analysis
 ---
 ## Learning about the posterior by sampling from it
 
-How can we draw samples from a distribution that we don't know?  
-<br/>
+#### How can we draw samples from a distribution that we don't know?  
 
 --
-Remember from lecture 3 that we do know something about the distribution of each parameter in our model, namely the joint distribution: 
 
-$$[\theta|y] \propto [y|\theta][\theta]$$
+#### Remember from lecture 3 that we do know something about the distribution of each parameter in our model, namely the joint distribution: 
+
+$$\Large [\theta|y] \propto [y|\theta][\theta]$$
 
 
 --
-By taking many many samples from the joint distribution, we can learn about its shape  
+
+#### By taking many many samples from the joint distribution, we can learn about its shape  
 
 ---
 ## Learning about the posterior by sampling from it
 
-If this seems confusing, think about learning about the shape of a probability distribution by taking many samples from it $^1$
+#### If this seems confusing, think about learning about the shape of a probability distribution by taking many samples from it $^1$
 
 ```{r echo = TRUE, fig.height=2, fig.width=4}
 norm_df <- data.frame(samples = rnorm(5000))    # Generate samples from distribution
+```
 
+```{r fig.height=3, fig.width=5}
 ggplot(norm_df, aes(samples)) + geom_histogram(fill = WILD6900_colors$value[WILD6900_colors$name == "primary"]) + annotate("text", x = 0, y = 750, label = paste("Sample mean = ", round(mean(norm_df$samples),2))) + annotate("text", x = 0, y = 675, label = paste("Sample variance = ", round(sd(norm_df$samples),2))) 
 ```
 
@@ -127,36 +165,38 @@ $^1$ This is not exactly what we do in Bayesian methods but hopefully it helps u
 ---
 ## Learning about the posterior by sampling from it
 
-In modern Bayesian analysis, estimating posterior distributions is done using *Markov chain Monte Carlo* (MCMC) methods  
-<br/>
+#### In modern Bayesian analysis, estimating posterior distributions is done using *Markov chain Monte Carlo* (MCMC) methods  
 
 --
-MCMC is an algorithm that uses the joint distribution to to sample values of each random variable in proportion to their to their probability  
-<br/>
+
+#### MCMC is an algorithm that uses the joint distribution to to sample values of each random variable in proportion to their to their probability  
 
 --
-Essentially, MCMC take the likelihood profile $^1$, weights it by the prior $^1$, and then normalizes the joint distribution so it is a proper probability distribution  
+
+#### Essentially, MCMC takes the likelihood profile $^1$, weights it by the prior $^2$, and then normalizes the joint distribution so it is a proper probability distribution  
 
 ???
 
  $^1$ which, remember, is not normalized
  
- $^1$ which, remember, is the joint distribution
+ $^2$ which, remember, is the joint distribution
  
 ---
 ## Implementing a simple MCMC
 
-If that seems a little confusing, it should be come clear if go through the steps of the MCMC applied to a simple model with a single parameter $\theta$  
+#### If that seems a little confusing, it should be come clear if go through the steps of the MCMC applied to a simple model with a single parameter $\large \theta$  
 
 
 --
-Let's return to our survival example where we tracked individuals using GPS collars and at the end of the study, recorded the number of individuals that were still alive  
+
+#### Let's return to our survival example where we tracked individuals using GPS collars and at the end of the study, recorded the number of individuals that were still alive  
 
 - We will expand the example to include 5 study sites and assume we tracked 20 individuals at each site  
 
 
 --
-We want to estimate $\phi$, the probability of survival from the beginning to the end of the study $^1$  
+
+#### We want to estimate $\large \phi$, the probability of survival from the beginning to the end of the study $^1$  
 
 ???
 
@@ -165,17 +205,20 @@ $^1$ which we will further assume is constant across all 5 sites
 ---
 ## Implementing a simple MCMC
 
-Before we can implement the MCMC algorithm, we have to choose an appropriate likelihood distribution to describe our system  
-<br/>
+#### Before we can implement the MCMC algorithm, we have to choose an appropriate likelihood distribution to describe our system  
+
 
 --
-In this case, we want to know the probability of getting $n$ "successes" (alive at the end of the study) out of $N$ "tries" (individuals alive at the beginning of the study)  
 
+#### In this case, we want to know the probability of getting $\large n$ "successes" (alive at the end of the study) out of $\large N$ "tries" (individuals alive at the beginning of the study)  
+
+--
 - A natural choice for this likelihood is the binomial distribution  
 
 
 --
-Let's simulate some data, assuming the true survival probability is $40\%$:
+
+#### Simulate data, assuming the true survival probability is $\large 40\%$:
 
 ```{r, echo = TRUE}
 n.sites <- 5 # Number of sites
@@ -188,25 +231,26 @@ phi <- 0.4   # True survival probability
 ---
 ## Implementing a simple MCMC
 
-Next, we need to define the prior distribution  
-<br/>
+#### Next, we need to define the prior distribution  
 
 --
-We could choose a uniform prior but as we have already learned, that's probably not the best choice  
-<br/>
+
+#### We could choose a uniform prior but as we have already learned, that's probably not the best choice  
+
 
 --
-Still, let's assume we don't know much about the survival of our study organism other than that it's probably not less than ~20% and probably not more than ~50%  
+
+#### Still, let's assume we don't know much about the survival of our study organism other than that it's probably not less than ~20% and probably not more than ~50%  
 
 - A reasonable prior to represent this knowledge might be $beta(2,4)$
 
-```{r fig.width=5, fig.height=3.5}
+```{r fig.width=6, fig.height=3}
 
 beta_df <- data.frame(p = seq(0, 1, 0.01),
                       value = dbeta(seq(0, 1, 0.01), 2, 4),
                       dist = rep(c("Prior"), 101))
 
-(p <- ggplot() + geom_path(data = beta_df, aes(x = p, y = value, group = dist, linetype = dist)) +
+(p <- ggplot() + geom_path(data = beta_df, aes(x = p, y = value, group = dist, linetype = dist), size = 1.5) +
   scale_y_continuous("Density") +
   scale_linetype_manual(values = c("solid", "dotted")))
 
@@ -215,7 +259,7 @@ beta_df <- data.frame(p = seq(0, 1, 0.01),
 ---
 ## Implementing a simple MCMC
 
-To make our lives easier, let's also define a function to estimate the (log) joint distribution $^1$ conditional on our data and prior:
+#### To make our lives easier, let's also define a function to estimate the (log) joint distribution $^1$ conditional on our data and prior:
 
 ```{r, echo = TRUE}
 joint <- function(data, N, p, a, b){
@@ -224,6 +268,8 @@ joint <- function(data, N, p, a, b){
   return(ll)
 }
 ```
+
+--
 
 Make sure you understand exactly what this function is doing! 
 
@@ -239,22 +285,31 @@ class: inverse, class, middle
 ---
 ## MCMC: basic steps
 
-Once we have our data and defined a likelihood function and a prior distribution, the basics steps of the MCMC algorithm $^1$ are:  
+#### Once we have our data and defined a likelihood function and a prior distribution, the basics steps of the MCMC algorithm $^1$ are:  
 
 --
+
 0) Choose an initial value for $\theta$ (call it $\theta^1$)  
 
 --
+
 1) Propose a new value $\theta^*$ from a proposal distribution  
 
 --
-2) Compute the probability of accepting $\theta^*$ using the joint distributions evaluated at $\theta^*$ and the previous value $\theta^{k-1}$  
+
+2) Compute probability of accepting $\theta^*$ using the joint distributions evaluated at $\theta^*$ and $\theta^{k-1}$  
 
 --
-3) Accept $\theta*$ (i.e., $\theta^{k} = \theta^*$) with the probability estimated in step 2, otherwise retain the previous value (i.e., $\theta^{k} = \theta^{k-1}$  
 
+3) Accept $\theta*$ (i.e., $\theta^{k} = \theta^*$) with the probability estimated in step 2, otherwise retain the previous value (i.e., $\theta^{k} = \theta^{k-1}$)  
 
---
+???
+
+$^1$ We are technically describing the steps of a specific type of MCMC called *accept-and-reject* sampling. There are other types of MCMC samplers that we will not describe here. For additional references on types of samplers, refer to Hobbs & Hooten chapter 7
+
+---
+## MCMC: basic steps
+
 Steps 1-3 are repeated many times, resulting in $K$ samples of $\theta$  
 
 - This collection of $\theta$ values is referred to as a *chain*  
@@ -263,29 +318,27 @@ Steps 1-3 are repeated many times, resulting in $K$ samples of $\theta$
 
 - By collecting a large number of samples of $\theta$ is proportion to their probability in $[\theta|y]$, we can define the posterior distribution  
 
-???
 
-$^1$ We are technically describing the steps of a specific type of MCMC called *accept-and-reject* sampling. There are types of MCMC samplers that we will not describe here. For additional references on types of samplers, refer to Hobbs & Hooten chapter 7
 
 ---
 ## MCMC: basic steps
 
-To clarify what's happening in each of these steps, we'll work through each one using our example data  
+#### To clarify what's happening in each of these steps, we'll work through each one using our example data  
 
 ---
 ## MCMC: basic steps
 
 ### Step 0: Choose an initial value
 
-The first step is to choose an initial value for the chain  
-<br/>
+#### The first step is to choose an initial value for the chain  
 
 --
-The exact value typically isn't too important but should be consistent with the probability distribution that defines the parameter $^1$  
-<br/>
+
+#### The exact value typically isn't too important but should be consistent with the probability distribution that defines the parameter $^1$  
 
 --
-In some cases, it can be advantageous to choose initial values that are at least reasonable approximations of the parameter value (but for simple models it shouldn't matter much)  
+
+#### In some cases, it can be advantageous to choose initial values that are at least reasonable approximations of the parameter value (but for simple models it shouldn't matter much)  
 
 ???
 
@@ -296,7 +349,7 @@ $^1$ In our case, $\phi$ is a probability so our initial value should be between
 
 ### Step 0: Choose an initial value
 
-For our example, we'll just choose a random number between 0 and 1 using `runif(1)`  
+#### For our example, we'll just choose a random number between 0 and 1 using `runif(1)`  
 
 - This will give different values each time we run the algorithm, which is a good way to investigate whether the posterior estimate is sensitive to the initial values $^1$ 
 
@@ -314,34 +367,37 @@ $^1$ if the posterior is sensitive to the initial value, that could indicate a p
 
 ### Step 1: Propose a new value
 
-All MCMC algorithms develop chains by proposing a new value of $\theta$ (denoted $\theta^*$) from some *proposal distribution*  
-<br/>
+#### All MCMC algorithms develop chains by proposing a new value of $\large \theta$ (denoted $\large \theta^*$) from some *proposal distribution*  
 
 --
-As we'll show, there are different ways to formulate proposal distributions but in most applications, the proposal $\theta^*$ is *dependent* on the previous value $\theta^{k-1}$  
 
-That is: 
+#### There are different ways to formulate proposal distributions but in most applications, the proposal $\large \theta^*$ is *dependent* on $\large \theta^{k-1}$  
 
-$$[\theta*|\theta^{k-1}]$$ 
+#### That is: 
+
+$$\Large [\theta^*|\theta^{k-1}]$$ 
 
 --
-For example, we could use a normal proposal distribution:
 
-$$\theta^* \sim Normal(\theta^{k-1}, \sigma^2)$$
+#### For example, we could use a normal proposal distribution:
+
+$$\Large \theta^* \sim Normal(\theta^{k-1}, \sigma^2)$$
 
 ---
 ## MCMC: basic steps
 
 ### Step 1: Propose a new value
 
-Using a normal proposal distribution, $\theta^*$ can be any real number but will, on average, tend to be close to $\theta^{k-1}$  
-<br/>
+#### Using a normal proposal distribution, $\large \theta^*$ can be any real number but will, on average, tend to be close to $\large \theta^{k-1}$  
 
 --
-How close $\theta^*$ is to $\theta^{k-1}$ is determined by $\sigma^2$, which is referred to as the *tuning parameter*  
 
+#### How close $\large \theta^*$ is to $\large \theta^{k-1}$ is determined by $\large \sigma^2$, which is referred to as the *tuning parameter*  
+
+--
 - $\sigma^2$ determines the frequency that proposals are accepted  
 
+--
 - Larger values will result in more frequent rejections, smaller values will result in more acceptances. 
 
 ---
@@ -349,18 +405,20 @@ How close $\theta^*$ is to $\theta^{k-1}$ is determined by $\sigma^2$, which is 
 
 ### Step 1: Propose a new value
 
-The normal distribution implies that $\theta$ can be any real number, which makes sense for some parameters but not for our example  
+#### The normal distribution implies that $\large \theta$ can be any real number, which makes sense for some parameters but not for our example  
 
-We could instead use a beta distribution and use moment matching to define $\alpha$ and $\beta$ in terms of $\theta^{k-1}$ (the mean) and $\sigma^2$:
+--
 
-$$\theta^* \sim beta\Bigg(\theta^{k-1}\bigg(\frac{\theta^{k-1}(1-\theta^{k-1})}{\sigma^2}-1\bigg), (1-\theta^{k-1})\bigg(\frac{\theta^{k-1}(1-\theta^{k-1})}{\sigma^2}-1\bigg)\Bigg)$$
+#### We could instead use a beta distribution and use moment matching to define $\large \alpha$ and $\large \beta$ in terms of $\large \theta^{k-1}$ (the mean) and $\large \sigma^2$:
+
+$$\large \theta^* \sim beta\Bigg(\theta^{k-1}\bigg(\frac{\theta^{k-1}(1-\theta^{k-1})}{\sigma^2}-1\bigg), (1-\theta^{k-1})\bigg(\frac{\theta^{k-1}(1-\theta^{k-1})}{\sigma^2}-1\bigg)\Bigg)$$
 
 ---
 ## MCMC: basic steps
 
 ### Step 1: Propose a new value
 
-Again, let's create a function to generate proposals:
+#### Again, let's create a function to generate proposals:
 
 ```{r echo=TRUE}
 proposal <- function(p, sigma2){
@@ -377,7 +435,7 @@ proposal <- function(p, sigma2){
 
 ### Step 2: Estimate acceptance probability
 
-Once we have a proposal $\theta^*$, we have to decide whether to accept this as our new value of $\theta^k$  
+### With the proposal $\large \theta^*$, we have to decide whether to accept this as our new value of $\large \theta^k$  
 
 - If we accept $\theta^*$, $\theta^{k} = \theta^*$  
 
@@ -385,19 +443,22 @@ Once we have a proposal $\theta^*$, we have to decide whether to accept this as 
 
 
 --
-We accomplish this using *Metropolis updates*, a very clever way of ensuring that our samples of $\theta$ occur in proportion to their probability in the posterior distribution  
+
+#### We accomplish this using *Metropolis updates*, a very clever way of ensuring that our samples of $\large \theta$ occur in proportion to their probability in the posterior distribution  
 
 ---
 ## MCMC: basic steps
 
 ### Step 2: Estimate acceptance probability
 
-To see how Metropolis updating works, remember that the support for the proposal conditional on the data is:
+#### Remember that the support for the proposal conditional on the data is:
 
-$$[\theta^*|y] = \frac{[y|\theta^*][\theta^*]}{[y]}$$
-The support for the current value is:
+$$\Large [\theta^*|y] = \frac{[y|\theta^*][\theta^*]}{[y]}$$
+#### The support for the current value is:
 
-$$[\theta^{k-1}|y] = \frac{[y|\theta^{k-1}][\theta^{k-1}]}{[y]}$$
+$$\Large [\theta^{k-1}|y] = \frac{[y|\theta^{k-1}][\theta^{k-1}]}{[y]}$$
+
+--
 
 These, of course, are the posterior probabilities of $\theta^*$ and $\theta^{k-1}$
 
@@ -406,30 +467,31 @@ These, of course, are the posterior probabilities of $\theta^*$ and $\theta^{k-1
 
 ### Step 2: Estimate acceptance probability
 
-At first, this doesn't seem to have gotten us very far  
+#### At first, this doesn't seem to have gotten us very far  
 
 - We started out saying that the hard part was finding $[y]$ and here it is again  
 
 
 --
-But because $[y]$ does not depend on $[\theta]$, it cancels out if we take the ratio of the two probabilities:
 
-$$R = \frac{[y|\theta^*][\theta^*]}{[y|\theta^{k-1}][\theta^{k-1}]} \tag{1}$$
+#### But because $\large [y]$ does not depend on $\large [\theta]$, it cancels out if we take the ratio of the two probabilities:
+
+$$\Large R = \frac{[y|\theta^*][\theta^*]}{[y|\theta^{k-1}][\theta^{k-1}]} \tag{1}$$
 
 ---
 ## MCMC: basic steps
 
 ### Step 2: Estimate acceptance probability
 
-Equation 1 tells us the *relative* probability of the proposal (relative to the current value), i.e., which value is more probable $^1$  
-<br/>
+#### Equation 1 tells us the *relative* probability of the proposal (relative to the current value), i.e., which value is more probable $^1$  
 
 --
-In Metropolis updating we accept $\theta^*$ whenever $R \geq 1$, i.e. when $\theta^*$ is more probable than $\theta^{k-1}$   
-<br/>
+
+#### In Metropolis updating we accept $\large \theta^*$ whenever $\large R \geq 1$, i.e. when $\large \theta^*$ is more probable than $\large \theta^{k-1}$   
 
 --
-At first blush, you might assume that we reject  $\theta^*$ when $R \lt 1$  
+
+#### At first blush, you might assume that we reject  $\large \theta^*$ when $\large R \lt 1$  
 
 - However, if we did this, we would rarely sample values of $\theta$ in the tails $^1$ 
 
@@ -496,8 +558,8 @@ We can use these samples to characterize the posterior distribution without havi
 
 For example, we can plot the posterior distribution:
 
-```{r echo = TRUE, fig.width=5, fig.height=3}
-ggplot(posterior, aes(x = phi)) + geom_density() +
+```{r echo = TRUE, fig.width=5, fig.height=2.5}
+ggplot(posterior, aes(x = phi)) + geom_density(size = 1.5) +
   scale_x_continuous(expression(phi))
 ```
 
@@ -506,7 +568,7 @@ ggplot(posterior, aes(x = phi)) + geom_density() +
 
 ### Step 3: Summarizing and visualizing the chain
 
-We can also create a **trace plot** showing values of the chain at each iterations $^1$
+#### We can also create a **trace plot** showing values of the chain at each iteration $^1$
 
 ```{r echo = TRUE, fig.width=5, fig.height=3}
 ggplot(posterior, aes(x = iteration, y = phi)) + geom_path() +
@@ -522,7 +584,7 @@ $^1$ Trace plots can be very useful for diagnosing the behavior the chains, as w
 
 ### Step 3: Summarizing and visualizing the chain
 
-Or find the mean (remember that the true value in our simulation was $0.4$):
+#### Or find the mean (remember that the true value in our simulation was $\large 0.4$):
 
 ```{r echo = TRUE}
 mean(posterior$phi)
@@ -535,7 +597,7 @@ Pretty close (that a good sign that our Metropolis sampler did what we wanted it
 
 ### Step 3: Summarizing and visualizing the chain
 
-We can also estimate quantiles:
+#### We can also estimate quantiles:
 
 ```{r echo = TRUE}
 quantile(posterior$phi)
@@ -547,20 +609,20 @@ Quantiles are useful for determining the 95% *credible intervals* of the posteri
 quantile(posterior$phi, probs = c(0.025, 0.975))
 ```
 
-This allows us to make statements like "there is a 95% chance that $\phi$ is between `r round(quantile(posterior$phi, probs = 0.025),2)` and `r round(quantile(posterior$phi, probs = 0.975),2)`" $^1$
+This allows us to make statements like "there is a 95% chance that $\phi$ is between `r round(quantile(posterior$phi, probs = 0.025),2)` and `r round(quantile(posterior$phi, probs = 0.975),2)`" $^2$
 
 ???
 
 $^1$ i.e., the range of parameter values within which 95% of the posterior mass occurs  
 
-$^1$ Compare the ease of credible interval estimation and the intuitive interpretation to the estimation/interpretation of frequentest 95% confidence intervals  
+$^2$ Compare the ease of credible interval estimation and the intuitive interpretation to the estimation/interpretation of frequentest 95% confidence intervals  
 
 ---
 ## Multiple chains
 
-So far, we have assumed that our MCMC is composed of just a single chain  
+#### So far, we have assumed that our MCMC is composed of just a single chain  
 
-In most applications, we actually run multiple chains for each parameter $^1$
+#### In most applications, we run multiple chains for each parameter $^1$
 
 ```{r echo = FALSE, fig.height=4, fig.width=6}
 chains <- data.frame(iteration = rep(seq(1:n.samples), 3),
@@ -577,7 +639,7 @@ $^1$ In principle, there is nothing wrong with just having a single chain if the
 ---
 ## Multiple parameters
 
-What happens if our model contains multiple parameters?  
+#### What happens if our model contains multiple parameters?  
 
 - In most models, we need to find the marginal distributions of parameters that are part of multivariate joint distributions  
 
@@ -589,7 +651,7 @@ knitr::include_graphics("full_conditional.png")
 ```
 
 --
-$$[z, \alpha, \sigma^2, \xi^2|y] \propto \underbrace{[y|z, \xi^2]}_a \underbrace{[z|g(\alpha, x), \sigma^2]}_b \underbrace{[\alpha]}_c \underbrace{[\sigma^2]}_d \underbrace{[\xi^2]}_e$$
+$$\Large [z, \alpha, \sigma^2, \xi^2|y] \propto \underbrace{[y|z, \xi^2]}_a \underbrace{[z|g(\alpha, x), \sigma^2]}_b \underbrace{[\alpha]}_c \underbrace{[\sigma^2]}_d \underbrace{[\xi^2]}_e$$
 
 ???
 
@@ -619,7 +681,7 @@ knitr::include_graphics("full_conditional_z.png")
 ```
 
 --
-$$[z|.] \propto \underbrace{[y|z, \xi^2]}_a \underbrace{[z|g(\alpha, x), \sigma^2]}_b$$
+$$\Large [z|.] \propto \underbrace{[y|z, \xi^2]}_a \underbrace{[z|g(\alpha, x), \sigma^2]}_b$$
 
 ???
 
@@ -636,7 +698,7 @@ For $\alpha$, the conditional posterior is:
 knitr::include_graphics("full_conditional_alpha.png")
 ```
 
-$$[\alpha|.] \propto \underbrace{[z|g(\alpha, x), \sigma^2]}_b \underbrace{[\alpha]}_c$$
+$$\Large [\alpha|.] \propto \underbrace{[z|g(\alpha, x), \sigma^2]}_b \underbrace{[\alpha]}_c$$
 
 ???
 
@@ -647,13 +709,13 @@ On your, write out the conditionals for $\sigma^2$ and $\xi^2$. Why do we not ne
 
 The full-conditionals gives us a set of univariate distributions for sampling each random variable:  
 
-$$[z|.] \propto \underbrace{[y|z, \xi^2]}_a \underbrace{[z|g(\alpha, x), \sigma^2]}_b$$
+$$\Large [z|.] \propto \underbrace{[y|z, \xi^2]}_a \underbrace{[z|g(\alpha, x), \sigma^2]}_b$$
 
-$$[\alpha|.] \propto \underbrace{[z|g(\alpha, x), \sigma^2]}_b \underbrace{[\alpha]}_c$$
+$$\Large [\alpha|.] \propto \underbrace{[z|g(\alpha, x), \sigma^2]}_b \underbrace{[\alpha]}_c$$
 
-$$[\sigma^2|.] \propto \underbrace{[z|g(\alpha, x), \sigma^2]}_b \underbrace{[\sigma^2]}_d$$
+$$\Large [\sigma^2|.] \propto \underbrace{[z|g(\alpha, x), \sigma^2]}_b \underbrace{[\sigma^2]}_d$$
 
-$$[\xi^2|.] \propto \underbrace{[y|z, \xi^2]}_a \underbrace{[\xi^2]}_e$$
+$$\Large [\xi^2|.] \propto \underbrace{[y|z, \xi^2]}_a \underbrace{[\xi^2]}_e$$
 ---
 ## Multiple parameters
 
@@ -677,59 +739,60 @@ class: inverse, middle, center
 ---
 ## Evaluating Markov chains
 
-MCMC is an enormously useful algorithm for finding the posterior distributions of random variables  
-<br/>
+#### MCMC is an enormously useful algorithm for finding the posterior distributions of random variables  
+
 
 --
-But it does not always work :(  
-<br/>
+#### But it does not always work :(  
+
 
 --
-For any model, it is **critical** to evaluate the chains to determine whether you can trust inferences from the model
+#### For any model, it is **critical** to evaluate the chains to determine whether you can trust inferences from the model
 
 ---
 ## Evaluating Markov chains
 
-The most important characteristic of MCMC chains is **convergence**  
+#### The most important characteristic of MCMC chains is **convergence**  
 
 --
 - Convergence occurs when the accumulated samples accurately characterize the posterior distribution of a parameter
 
 
 --
-Once a chain has converged, adding more samples will not meaningfully change the shape or moments of the posterior distribution  
+
+#### Once a chain has converged, adding more samples will not meaningfully change the shape or moments of the posterior distribution  
 
 --
 - At this point, a chain is *stationary* because more samples will not cause it to "move" $^1$
 
-```{r fig.height=4, fig.width=8}
+```{r fig.height=3, fig.width=8}
 a1 <- ggplot(posterior[1:100,], aes(x = iteration, y = phi)) + 
   geom_path(color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
-  scale_y_continuous(expression(phi))
+  scale_y_continuous(expression(phi)) + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
 
 a2 <- ggplot(posterior[1:100,], aes(x = phi)) + geom_density() +
-  scale_x_continuous(expression(phi))
+  scale_x_continuous(expression(phi)) + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
 
 b1 <- ggplot(posterior[1:500,], aes(x = iteration, y = phi)) + 
   geom_path(color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
-  scale_y_continuous(expression(phi))
+  scale_y_continuous(expression(phi)) + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
 
 b2 <- ggplot(posterior[1:500,], aes(x = phi)) + geom_density() +
-  scale_x_continuous(expression(phi))
+  scale_x_continuous(expression(phi)) + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
 
 c1 <- ggplot(posterior[1:5000,], aes(x = iteration, y = phi)) + 
   geom_path(color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
-  scale_y_continuous(expression(phi))
+  scale_y_continuous(expression(phi)) + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
 
 c2 <- ggplot(posterior[1:5000,], aes(x = phi)) + geom_density() +
-  scale_x_continuous(expression(phi))
+  scale_x_continuous(expression(phi)) + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
 
 d1 <- ggplot(posterior, aes(x = iteration, y = phi)) + 
   geom_path(color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
-  scale_y_continuous(expression(phi))
+  scale_y_continuous(expression(phi)) + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
 
 d2 <- ggplot(posterior, aes(x = phi)) + geom_density() +
-  scale_x_continuous(expression(phi))
+  scale_x_continuous(expression(phi)) + theme(axis.title.x = element_blank(), axis.text.x = element_blank())
 
 cowplot::plot_grid(a1, b1, c1, d1, a2, b2, c2, d2, 
                    labels = c("1A)", "2A)","3A)", "4A)",
@@ -748,19 +811,18 @@ In more complicated models, it may take many more iterations for chains to move 
 ---
 ## Evaluating convergence
 
-There are two main ways to assess convergence: visually and using formal diagnostic tests  
-<br/>
+#### There are two main ways to assess convergence: visually and using formal diagnostic tests  
+
 
 --
+
 Visual evaluation is done using trace plots  
 
 - Chains that have not converged will "wander" 
 
-- Chains that have converged will exhibit good **mixing** $^1$
 
-```{r fig.height=3, fig.width=5}
-ggplot(chains, aes(x = iteration, y = phi, color = chain)) + geom_path() +
-  scale_color_manual(values = WILD6900_colors$value[WILD6900_colors$name %in% c("primary", "warning", "danger")])
+```{r out.width = 300}
+knitr::include_graphics("Inadequat_ adaptation.jpg")
 ```
   
 ???
@@ -849,7 +911,7 @@ Solving lack of identifiability is harder
 <br/>
 
 --
-- increase [adaptation phase](http://www.mikemeredith.net/blog/2016/Adapt_or_burn.htm) $^1$  
+- increase [adaptation phase](http://www.mikemeredith.net/blog/2016/Adapt_or_burn.htm) $^2$  
 <br/>
 
 --
@@ -859,4 +921,4 @@ Solving lack of identifiability is harder
 
 $^1$ A common cause of non-identifiability is when two parameters trade-off, such that different combinations give the same likelihood. One example is when both $N$ and $p$ are unknown in the binomial distribution - the same number of "successes" can be predicted by high $N$ and low $p$ vs. low $N$ and high $p$. In this case, incorporating information about $p$ via the prior can help identify $N$ (or vice versa).  
 
-$^1$ Most MCMC software (JAGS, Bugs, etc) use an adaptive phase,  during with the samplers used by the model may modify their behavior for increased efficiency. This is usually done behind the scenes but as highlighted in the linked post, being aware of what the software is doing can be useful for improving mixing  
+$^2$ Most MCMC software (JAGS, Bugs, etc) use an adaptive phase,  during with the samplers used by the model may modify their behavior for increased efficiency. This is usually done behind the scenes but as highlighted in the linked post, being aware of what the software is doing can be useful for improving mixing  
