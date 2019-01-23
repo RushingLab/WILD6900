@@ -105,6 +105,12 @@
     <li>
       <a href="../articles/priors.html">Creating prior distributions</a>
     </li>
+    <li>
+      <a href="../articles/simulation.html">Simulating regression data</a>
+    </li>
+    <li>
+      <a href="../articles/metropolis.html">Metropolis sampler for linear regression model</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -130,7 +136,7 @@
             <h3 class="subtitle">Population growth of Eurasian collared-doves in Utah</h3>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-01-18</h4>
+            <h4 class="date">2019-01-23</h4>
       
       
       <div class="hidden name"><code>wrangling_bbs.Rmd</code></div>
@@ -139,7 +145,7 @@
 
     
     
-<p>In this lab, we will starting learning some useful tools and principles for preparing raw data for visualization and analysis. Many of the core principles of so called “data wrangling” are embodied by the <a href="https://www.tidyverse.org/packages/"><code>tidyverse</code></a>, a family of packages created to make tidying, manipulating, and visualizing data and model output more intuitive and consistent. Use of the tidyverse is somewhat <a href="http://varianceexplained.org/r/teach-tidyverse/">controversial</a> and it is worth noting that everything we will do in the lab can be done using base <code>R</code> or non-tidyverse packages. Nonetheless, I find the tidyverse useful <em>because</em> it is opinionated. The developers of the tidyverse have spent a great deal of time thinking about how data should be stored, manipulated, and visualized and they have created an entire ecosystem of functions built around these principles. Using the tidyverse isn’t so much about the tools themselves as it is about <strong>thinking about the structure and manipulation of data</strong>. For better or worse, focusing on consistent application of these principles is not something base <code>R</code> encourages.</p>
+<p>In this lab, we will starting learning some useful tools and principles for preparing raw data for visualization and analysis.</p>
 <hr>
 <p><strong>Objectives</strong></p>
 <ul>
@@ -549,10 +555,6 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <h2 class="hasAnchor">
 <a href="#subsetting-the-utah-routes" class="anchor"></a>Subsetting the Utah routes</h2>
 <p>The <code>bbs_data</code> file contains counts from three BCRs (9, 10, and 16) but right now we only want data from Utah. There are many ways to subset data in <code>R</code> but for the sake of consistency, we will use the <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> function from the <code>dplyr</code> package.</p>
-<hr>
-<p><strong>NOTE</strong></p>
-<p>There is also a <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> function in the <code>stats</code> package. Even though we loaded <code>dplyr</code>, it can sometimes be confusing to know which functions come from which packages (or to know which function <code>R</code> will default to using). For this reason, it’s good practice to get in the habit of using the <code>package::function()</code> syntax, as we will do below. Using this syntax makes explicit which package/function you intend to use which makes your code easier for other to understand and reduces the potential for errors. As a benefit, you can stop using <code><a href="https://www.rdocumentation.org/packages/base/topics/library">library(package)</a></code> at the beginning of each script.</p>
-<hr>
 <p>The BBS state number for Utah is 85 so we filter based on the <code>statenum</code> field in the <code>routes</code> data frame:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ut_routes &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(bbs_data<span class="op">$</span>routes, statenum <span class="op">==</span><span class="st"> </span><span class="dv">85</span>)</code></pre></div>
 <p>Unfortunately, neither the <code>weather</code> nor the <code>counts</code> data frames contain the <code>statenum</code> field. How do we subset the correct routes in this case? By using the one field common to all three data sets: <code>routeID</code>. So the challenge is to tell <code>R</code> to keep only the routes that are shared by the new <code>ut_routes</code> object and the <code>weather</code> and <code>counts</code> data frames. There are a few ways this could be done but one easy way is to filter using the <code>%in%</code> expression rather than <code>==</code> (<code>%in%</code> compares a vector <code>x</code> on the left-hand side to a second vector <code>y</code> on the right-hand side, returning <code>TRUE</code> for all values of <code>x</code> that are in <code>y</code> and <code>FALSE</code> otherwise):</p>

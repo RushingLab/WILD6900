@@ -41,6 +41,10 @@ navbar:
           href: articles/rmarkdown_intro.html
         - text: "Creating prior distributions"
           href: articles/priors.html
+        - text: "Simulating regression data"
+          href: articles/simulation.html
+        - text: "Metropolis sampler for linear regression model"
+          href: articles/metropolis.html
     - icon: fas fa-pencil-square-o
       text: "Assignments"
       href: articles/homework.html

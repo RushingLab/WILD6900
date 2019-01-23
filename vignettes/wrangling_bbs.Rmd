@@ -161,12 +161,7 @@ For additional information about what each field represents, see the documentati
 
 The `bbs_data` file contains counts from three BCRs (9, 10, and 16) but right now we only want data from Utah. There are many ways to subset data in `R` but for the sake of consistency, we will use the `filter()` function from the `dplyr` package.  
 
-***
-**NOTE**
 
-There is also a `filter()` function in the `stats` package. Even though we loaded `dplyr`, it can sometimes be confusing to know which functions come from which packages (or to know which function `R` will default to using). For this reason, it's good practice to get in the habit of using the `package::function()` syntax, as we will do below. Using this syntax makes explicit which package/function you intend to use which makes your code easier for other to understand and reduces the potential for errors. As a benefit, you can stop using `library(package)` at the beginning of each script.  
-
-***
 
 The BBS state number for Utah is 85 so we filter based on the `statenum` field in the `routes` data frame:
 

@@ -52,16 +52,16 @@ In lecture, we learned the basic steps of the Metropolis sampler:
 
 # Seed count model 
 
-When generated the seed count model, we did so assuming a linear model that linked pollination visits to seed counts:
+When we generated the seed count data, we did so assuming a linear model that linked pollination visits to seed counts:
 
 $$y_i = \alpha + \beta * x_i + \epsilon_i$$
 $$\epsilon_i \sim Normal(0, \sigma^2)$$
 
-This model includes 3 random variables that we want to estimate posterior distributions for: $\alpha$, $\beta$, and $\sigma^2$ (remember that the $y_i$ and $x_i$ are *observed* and therefore not modeled as *fixed* and *known* rather than random variables governed by probability distrubtions). So:
+This model includes 3 random variables that we want to estimate posterior distributions for: $\alpha$, $\beta$, and $\sigma^2$ (remember that the $y_i$ and $x_i$ are *observed* and therefore treated as *fixed* and *known* rather than random variables governed by probability distrubtions). So:
 
 $$[\alpha, \beta, \sigma^2|y_i] \propto [y_i|\alpha, \beta, \sigma^2][\alpha][\beta][\sigma^2] \tag{1}$$
 
-Sticking with the data generating model, we can define the likelihood of our model using a Normal distribution. So for given values of $\alpha$, $\beta$, and $\tau$, we estimate the likelihood as:
+Sticking with the data generating model, we can define the likelihood of our model using a Normal distribution. For given values of $\alpha$, $\beta$, and $\sigma^2$, we estimate the likelihood as:
 
 $$[y_i|\alpha, \beta, \tau] = \prod_{i=1}^N Normal(y_i|\alpha + \beta \times x_i, \sigma^2)$$
 
@@ -80,9 +80,10 @@ $$\tau = \frac{1}{\sigma^2}$$
 This is a little confusing if you are used to working with standard deviations or variances but as you will see, we can easily switch back and forth between the two when we create the model. For $\tau$, we will use a relatively diffuse gamma prior:
 
 $$[\tau] = Gamma(\tau|0.01, 0.01)$$
+
 # Custom functions
 
-At each interation of the sampler, we will need to perform the same set of tasks, namely estimating the likelihood and joint distributions for each proposed and current parameter values. We could do this by copying and pasting the code necessary for these calculations at each point in the sampler code where we need them. However, any time you find yourself copying and pasting the same code more than once or twice, it's a good idea to consider wrapping that code in a function, which will do here. 
+At each interation of the sampler, we will need to perform the same set of tasks, namely estimating the likelihood and joint distributions for the proposed and current parameter values. We could do this by copying and pasting the code necessary for these calculations at each point in the sampler code where we need them. However, any time you find yourself copying and pasting the same code more than once or twice, it's a good idea to consider wrapping that code in a function, which will do here. 
 
 ## Function for calculating likelihood
 
@@ -146,7 +147,7 @@ $$[\beta|.] = [y_i|\alpha, \beta, \tau][\beta]$$
 
 $$[\tau|.] = [y_i|\alpha, \beta, \tau][\tau]$$
 
-In the sampler, we loop over each parameter, going through the Metroplis steps for each and treating the other parameters as known (based on their current value in the chain). If this in not clear, walking through the `R` code will hopefully make it more concrete. 
+In the sampler, we loop over each parameter, going through the Metroplis steps for each and treating the other parameters as known (based on their current value in the chain). If this in not clear, walking through the `R` code will hopefully make it more concrete (don't worry about trying to copy and run the code in this section, which is simply for illustration. In the next section, we will *slightly* modify this code to run the sampler for our seed count data). 
 
 First, we set the length of our chains, set the tuning parameter for the proposal distribution, and create an empty data frame to store the samples and a binary variable for estimating the acceptance rate:
 
@@ -214,11 +215,11 @@ Now we create the actual sampler. Below, we will create a loop that implements t
   }
 ```
 
-Let's go through this line by line. In `step 1a`, we generate a new value of $\alpha$ from a normal distribution centered on the previous value. Remember that the tuning parameter we set earlier determine how big the jumps are between the current and proposed values. 
+Let's go through this line by line. In `step 1a`, we generate a new value of $\alpha$ from a normal distribution centered on the previous value. Remember that the tuning parameter we set earlier determines how big the jumps are between the current and proposed values. 
 
 In `step 1b`, we use the `calc_like()` function to estimate the likelihood of our data given the new value of $\alpha$ and the previous values of $\beta$ and $\tau$. This is what we mean when we say that we treat the other parameters as *fixed* and *known*. 
 
-In `step 1c`, we estimate the joint probability of both the current and proposed values by addint the log likelihood to the log prior probability of each value (note that sum of the log values is the same as the product of the probabilities). 
+In `step 1c`, we estimate the joint probability of both the current and proposed values by adding the log likelihood to the log prior probability (note that sum of the log values is the same as the product of the probabilities). 
 
 In `step 1d`, we estimate the probability of accepting the new value. Note that if the proposed value is more likely than the current value ($R > 1$), this function will return 1. Otherwise, it returns the ratio. The closer the joint probabilities are, the closer $R$ will be to 1. The less likely the proposed value is relative to the current value, the smaller $R$ will be. This means that we will be much less likely to accept new values of $\alpha$ that are a lot less probable than the current value (though not impossible). 
 
@@ -268,7 +269,7 @@ Finally, we update $\tau$ using the new values of both $\alpha$ and $\beta$. The
       mcmc_df$tau[i] <- mcmc_df$tau[i-1]
     } else {
 ## 3b: Calculate likelihood at candidate value
-      candLlh <- calc_like(y = y, alpha = mcmc_df$alpha[i], beta = mcmc_df$beta[i], 
+      cand_like <- calc_like(y = y, alpha = mcmc_df$alpha[i], beta = mcmc_df$beta[i], 
                           tau = cand, x = x)
       
 ## 3c: Calculate likelihood * prior at old value and candidate value

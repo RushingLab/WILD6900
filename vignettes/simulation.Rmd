@@ -25,7 +25,7 @@ In this activity, we simulate data that will later be used to verify a simple Me
 
 Simulating data involves many of the same taks involved in preparing raw data for analysis. Many of the core principles of so called "data wrangling" are embodied by the [`tidyverse`](https://www.tidyverse.org/packages/), a family of packages created to make tidying, manipulating, and visualizing data and model output more intuitive and consistent. Throughout this semester, we will focus on using several of the `tidyverse` packages to create reproducible data wrangling scripts. 
 
-Use of the tidyverse is somewhat [controversial](http://varianceexplained.org/r/teach-tidyverse/) and it is worth noting that everything we will do in the lab can be done using base `R` or non-tidyverse packages. Nonetheless, I find the tidyverse useful *because* it is opinionated. The developers of the tidyverse have spent a great deal of time thinking about how data should be stored, manipulated, and visualized and they have created an entire ecosystem of functions built around these principles. Using the tidyverse isn't so much about the tools themselves as it is about **thinking about the structure and manipulation of data**. For better or worse, focusing on consistent application of these principles is not something base `R` encourages. 
+Use of the tidyverse is somewhat [controversial](http://varianceexplained.org/r/teach-tidyverse/) and it is worth noting that everything we will do in this lab can be done using base `R` or non-tidyverse packages. Nonetheless, I find the tidyverse useful *because* it is opinionated. The developers of the tidyverse have spent a great deal of time thinking about how data should be stored, manipulated, and visualized and they have created an entire ecosystem of functions built around these principles. Using the tidyverse isn't so much about the tools themselves as it is about **thinking about the structure and manipulation of data**. For better or worse, focusing on consistent application of these principles is not something base `R` encourages. 
 
 ***
 **Objectives**
@@ -63,15 +63,17 @@ We can simulate a data set from this model using a few lines of `R` code:
 
 ```{r}
 nSites <- 100  # Number of sites
+nVisits <- 3
 psi <- 0.75    # Occupancy probability
 p <- 0.4       # Detection probability
 
 z <- rbinom(n = nSites, size = 1, prob = psi)     ## Generate true state of each site;
                                                   ## nb Bernoulli = binomial with size = 1
-y <- rbinom(n = nSites, size = 1, prob = z * p)   ## Generate observations
+y <- rbinom(n = nSites*nVisits, size = 1, prob = z * p)   ## Generate observations
+y <- matrix(y, nrow = nSites, ncol = nVisits)
 ```
 
-With those five lines of code, we now how a fake data set that could be fed into an occupancy model to estimate $\psi$ and $p$.
+With those seven lines of code, we now how a fake data set that could be fed into an occupancy model to estimate $\psi$ and $p$.
 
 [^1]: Note that $z_i$ can either be 1 (site $i$ is occupied) or 0 (site $i$ is unoccupied) and $y_i$ can be 1 (species detected at site $i$) or 0 (species not detected at site $i$). In the second equation, adding $z_i$ ensures that if the site is unoccupied ($z_i=0$) than $y_i$ has to be 0 also. We'll learn more about this formulation of occupancy models later in the semester
 
@@ -175,7 +177,7 @@ You can check that the covariate now has mean = 0 and sd = 1.
 ***
 **NOTE**
 
-Even though we loaded `dplyr`, it can sometimes be confusing to know which functions come from which packages (or to know which function `R` will default to using). For this reason, it's good practice to get in the habit of using the `package::function()` syntax, as we will do below. Using this syntax makes explicit which package/function you intend to use which makes your code easier for other to understand and reduces the potential for errors. As a benefit, you can stop using `library(package)` at the beginning of each script.  
+It can sometimes be confusing to know which functions come from which packages (or to know which function `R` will default to using). For this reason, it's good practice to get in the habit of using the `package::function()` syntax, as we did for `mutate()` above. Using this syntax makes explicit which package/function you intend to use which makes your code easier for other to understand and reduces the potential for errors. As a benefit, you can stop using `library(package)` at the beginning of each script.  
 
 ***
 
@@ -193,7 +195,7 @@ beta <- 50   # Effect of visits on seed count
 
 # Step 2: Generate expected counts
 
-To generate the simulated seed counts for each flower, we first have to calcuate $\mu_i$, the *expected* seeds for flower. We get these values by simply plugging in the observed visition values for each site to our linear model:
+To generate the simulated seed counts for each flower, we first have to calcuate $\mu_i$, the *expected* seeds for each flower. We get these values by simply plugging in the observed visition values for each site to our linear model:
 
 $$\begin{bmatrix}
     \mu_1 \\
@@ -220,7 +222,9 @@ If you remember matrix algebra, multiplying the covariate matrix by the coeffici
 
 $$1 \times \alpha + visits_i \times \beta$$
 
-The matrix of predicted responses is called the *linear predictor*. Now that we have a refreshed our memory of the basic linear model structure, let's add the predicted seed counts to the data frame:
+The matrix of predicted responses is called the *linear predictor*.  
+
+Now that we have a refreshed our memory of the basic linear model structure, let's add the predicted seed counts to the data frame:
 
 
 ```{r}
@@ -229,7 +233,7 @@ sim_df <- dplyr::mutate(sim_df, mu = alpha + beta*visits.c)
 
 ## Step 2b: Plot relationships
 
-Whenever you simulate data, it's very useful to plot your data early and often. As we mentioned above, it's often difficult to know ahead of time exactly what response values a complex model will produce. Plots are a great way to quickly assess whether the simulation is producing values that are consistent with your domain expertise. 
+Whenever you simulate data, it's very useful to plot your data early and often. It is often difficult to know ahead of time exactly what response values a complex model will produce. Plots are a great way to quickly assess whether the simulation is producing values that are consistent with your domain expertise. 
 
 ### Brief intro to `ggplot2`
 
@@ -241,7 +245,7 @@ $$\underbrace{ggplot}_{initiate\; plot}(\underbrace{data = df}_{data\;frame},\; 
 
 The `ggplot()` function initiates a new plot. In this function, you tell `ggplot2` what data frame you will be using for the plot and you tell it how to map attributes of the data to the visual properties of the figures. Attributes are mapped inside the `aes()` argument. Attributes usually include location (`x-axis` and `y-axis` placement), color, size, shape, line type, and many others. In general, each attribute will be mapped to one column of your data frame. 
 
-The `ggplot()` function simply initiates a graph but if you run just that portion of the code you will get a blank graph. We can see that by creating a new plot showing the relationship between elevation (the x-axis of the plot) and predicted abundance (the y-axis): 
+The `ggplot()` function simply initiates a graph so if you run just that portion of the code you will get a blank graph. We can see that by creating a new plot showing the relationship between elevation (the x-axis of the plot) and predicted abundance (the y-axis): 
 
 ```{r fig.width=6, fig.height=6}
 ggplot(data = sim_df, aes(x = visits, y = mu))
@@ -253,7 +257,7 @@ You can see that `ggplot` created a figure with the correct axes and labels. But
 ggplot(data = sim_df, aes(x = visits, y = mu)) + geom_point()
 ```
 
-So we can see that our model predicts seed counts ranging from `r min(sim_df$mu)` individuals to `r max(sim_df$mu)`. Is that reasonable? Who knows, this is a made up species. But if it wasn't, this would be a good time to go back and play with different parameter values to generate abundances that are consistent with our domain expertise. For example, the model predicts  $\approx$ `r min(sim_df$mu)` seeds for a flower with 0 pollination visits. Maybe that makes sense (perhaps the orchids can self pollinate if necessary) or maybe it doesn't. If it doesn't, we need to re-think the model structure. 
+So we can see that our model predicts seed counts ranging from `r round(min(sim_df$mu),2)` individuals to `r round(max(sim_df$mu),2)`. Is that reasonable? Who knows, this is a made up species. But if it wasn't, this would be a good time to go back and play with different parameter values to generate abundances that are consistent with our domain expertise. For example, the model predicts  $\approx$ `r round(min(sim_df$mu),2)` seeds for a flower with 0 pollination visits. Maybe that makes sense (perhaps the orchids can self-pollinate if necessary) or maybe it doesn't. If it doesn't, we need to re-think the model structure. 
 
 # Step 3: Generate the actual seed counts
 
