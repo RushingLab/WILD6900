@@ -30,7 +30,7 @@ class: center, middle, inverse, title-slide
 
 Remember from lecture 3 that the posterior distribution of random variable `\(\theta\)` conditional on data `\(y\)` is defined by Bayes theorem:  
 
-`$$\Large \underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[\theta|y]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$`
+`$$\Large \underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[y|\theta]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$`
 
 --
 
@@ -204,7 +204,7 @@ phi &lt;- 0.4   # True survival probability
 ```
 
 ```
-## [1] 7 6 9 6 8
+## [1] 5 8 7 7 7
 ```
 
 ---
@@ -576,7 +576,7 @@ mean(posterior$phi)
 ```
 
 ```
-## [1] 0.3555
+## [1] 0.3373
 ```
 
 Pretty close (that a good sign that our Metropolis sampler did what we wanted it to do!)
@@ -595,7 +595,7 @@ quantile(posterior$phi)
 
 ```
 ##     0%    25%    50%    75%   100% 
-## 0.1611 0.3236 0.3545 0.3852 0.6665
+## 0.1734 0.3073 0.3361 0.3663 0.6665
 ```
 
 Quantiles are useful for determining the 95% *credible intervals* of the posterior: `\(^1\)`
@@ -607,10 +607,10 @@ quantile(posterior$phi, probs = c(0.025, 0.975))
 
 ```
 ##   2.5%  97.5% 
-## 0.2637 0.4521
+## 0.2502 0.4302
 ```
 
-This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.26 and 0.45" `\(^2\)`
+This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.25 and 0.43" `\(^2\)`
 
 ???
 

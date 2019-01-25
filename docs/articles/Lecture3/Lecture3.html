@@ -92,7 +92,7 @@ class: center, middle, inverse, title-slide
 
 #### To understand what Bayes theorem says and why it is such a powerful principle, let's break down each part of equation 1:
 
-`$$\LARGE \underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[\theta|y]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$`
+`$$\LARGE \underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[y|\theta]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$`
 
 
 ---
@@ -327,7 +327,7 @@ As we just learned, `\(\theta\)` is not a random variable in the likelihood func
 
 --
 
-`$$\Large \underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[\theta|y]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$`
+`$$\Large \underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[y|\theta]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$`
 
 In eq. 1, the **prior** distribution is what allows us to treat `\(\theta\)` as a random variable  
 

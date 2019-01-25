@@ -1,5 +1,5 @@
 ---
-title: "Intro to data simulation and visualization"
+title: "Simulating linear regression data"
 author: "WILD6900"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -20,41 +20,26 @@ knitr::opts_chunk$set(fig.align = 'center', message = FALSE,
 library(WILD6900)
 ```
 
+
+In this activity, we simulate data that will later be used to verify a simple Metroplis sampler to estimate the parameters of a linear regression model. 
+
+Simulating data involves many of the same taks involved in preparing raw data for analysis. Many of the core principles of so called "data wrangling" are embodied by the [`tidyverse`](https://www.tidyverse.org/packages/), a family of packages created to make tidying, manipulating, and visualizing data and model output more intuitive and consistent. Throughout this semester, we will focus on using several of the `tidyverse` packages to create reproducible data wrangling scripts. 
+
+Use of the tidyverse is somewhat [controversial](http://varianceexplained.org/r/teach-tidyverse/) and it is worth noting that everything we will do in this lab can be done using base `R` or non-tidyverse packages. Nonetheless, I find the tidyverse useful *because* it is opinionated. The developers of the tidyverse have spent a great deal of time thinking about how data should be stored, manipulated, and visualized and they have created an entire ecosystem of functions built around these principles. Using the tidyverse isn't so much about the tools themselves as it is about **thinking about the structure and manipulation of data**. For better or worse, focusing on consistent application of these principles is not something base `R` encourages. 
+
 ***
 **Objectives**
 
-* Prepare raw data for analysis using reproducible code  
-
+* Simulate data with known values to verify sampler results using reproducible code  
 
 * Learn/review basic data manipulation tasks, including:  
-    + Creating tidy data frames
-    + Subsetting observations
-    + Joining data frames
-    + Sorting data frames based on specific column values
     + Adding new variables
-    + Working with dates
-    + Performing operations on grouped data
-    + Create summaries of raw data
     + Saving data
   
   
 * `R` functions used in this exercise:  
-    + `tidyr::gather()`
-    + `tidyr::unite()`
-    + `dplyr::arrange()`
-    + `dplyr::filter()`
-    + `dplyr::select()`
     + `dplyr::mutate()`
-    + `dplyr::group_by()`
-    + `dplyr::summarise()`
-    + `dplyr::left_join()`
-    + `lubridate::mdy()`
-    + `lubridate::day()`
-    + `duplicated()`
-    + `cumsum()`
     + `saveRDS()`
-
-
 
 ***
 
@@ -66,9 +51,9 @@ Data simulation is a technique for generating random data from stochastic proces
 x <- rnorm(100, 3, 0.75)
 ```
 
-Is a simple data simulation to generate random variables from a normal distribution with known mean ($\mu=3$) and variance ($\sigma^2=0.75^2 = 0.5625$).  
+is a simple data simulation to generate random samples from a normal distribution with known mean ($\mu=3$) and variance ($\sigma^2=0.75^2 = 0.5625$).  
 
-In this exercise, we'll learn about simulating data under more complex models that are similar to the ones you might use to analyze your data. For example, imagine a simple single-season occupancy model with the probability of occupancy $\psi=0.75$ and detection probability $p=0.4$. In other words[^1]:
+In this exercise, we'll learn about simulating data under more slightly complex models that are similar to the ones you might use to analyze your data. For example, imagine a simple single-season occupancy model with the probability of occupancy $\psi=0.75$ and detection probability $p=0.4$. In other words[^1]:
 
 $$z_i \sim Bernoulli(\psi)$$
 
@@ -78,15 +63,17 @@ We can simulate a data set from this model using a few lines of `R` code:
 
 ```{r}
 nSites <- 100  # Number of sites
+nVisits <- 3
 psi <- 0.75    # Occupancy probability
 p <- 0.4       # Detection probability
 
 z <- rbinom(n = nSites, size = 1, prob = psi)     ## Generate true state of each site;
                                                   ## nb Bernoulli = binomial with size = 1
-y <- rbinom(n = nSites, size = 1, prob = z * p)   ## Generate observations
+y <- rbinom(n = nSites*nVisits, size = 1, prob = z * p)   ## Generate observations
+y <- matrix(y, nrow = nSites, ncol = nVisits)
 ```
 
-With those five lines of code, we now how a fake data set that could be fed into an occupancy model to estimate $\psi$ and $p$.
+With those seven lines of code, we now how a fake data set that could be fed into an occupancy model to estimate $\psi$ and $p$.
 
 [^1]: Note that $z_i$ can either be 1 (site $i$ is occupied) or 0 (site $i$ is unoccupied) and $y_i$ can be 1 (species detected at site $i$) or 0 (species not detected at site $i$). In the second equation, adding $z_i$ ensures that if the site is unoccupied ($z_i=0$) than $y_i$ has to be 0 also. We'll learn more about this formulation of occupancy models later in the semester
 
@@ -108,160 +95,146 @@ At first, it may seem strange to generate a fake data set just so we can run it 
 
 6) *Check robustness to violations of model assumptions*: All models have assumptions about how the data were generated. These assumptions stem from the way we formulate the process and observation models. Of course, most assumptions will be violated to some degree in real data sets. With simulated data sets, we can generate data that we know violate the assumptions of the model in one or more ways (e.g., generating heterogeneous survival probabilities for a model that assumes constant survival). By comparing the parameters estimates from these "mis-specified" data sets, we can gauge the degree to which our inferences are sensitive to violations. 
 
-7) *Better understand your model*: One good way to test whether you really understand your model is to see if you can write the code to simulate data under the model. In many cases, this exercise will uncover misunderstandings or lack of understanding about what the model is actually doing. Simulating data is also a good way to make sure you understand what each parameter in your model actually represents. If you can simulate data from each part of the model, chances are you can also figure out why your model may not be working the way you think it does. In short, simulating data is a great way to develop a deeper understanding of your model. 
+7) *Better understand your model*: One good way to test whether you really understand your model is to see if you can write the code to simulate data under the model. In many cases, this exercise will uncover misunderstandings or lack of understanding about what the model is actually doing. Simulating data is a good way to make sure you understand what each parameter in your model actually represents. If you can simulate data from each part of the model, chances are you can also figure out why your model may not be working the way you think it does. In short, simulating data is a great way to develop a deeper understanding of your model. 
 
-# Simulating count data
+# Simulating linear regression data
 
-In this exercise, we will simulate and visualize data generated under very general process and state models. We will simulate the data assuming a "glm" type formulation with covariates effecting both the abundances as well as the observed counts (apropos of point 7 above, we will also use this example as a brief review of glm's). 
+In this exercise, we will simulate and visualize data generated under a very general process model: a linear regression. Because I'm probably too guilty of being animal focused, we will assume the response variable of the model are counts of the number of seeds produced by the flowers of a rare, endangered orchid. As ecologists studying this orchid, we want to know whether seed production is related to the number of visits by the orchid's specialist pollinator. Perhaps if it is, we can increase the growth rate of the orchid population by boosting abundance of the pollinator (assuming the number of visits is a function of pollinator abundance). 
 
-Because I'm probably too guilty of being animal focused, we will assume these counts are generated a part of a study documenting the distribution of a rare orchid. Because we're making this up as we go, we'll assume this rare orchid prefers high elevation sites that receive little rainfall each year. Therefore, we expect abundance to increase with increasing elevation and decrease with rainfall. To estimate abundance, we conduct $M$ replicated counts at $J$ sample plots. For the process model, we will assume
+So we hypothesize that seed number will increase linearly with pollinator visition. This hypothesis can then be translated into a process model: 
 
-$$N_i \sim Poisson(\lambda_i)$$
+$$y_i = \alpha + \beta * x_i + \epsilon_i$$
+$$\epsilon_i \sim Normal(0, \sigma^2)$$
+where $y_i$ is the number of seeds counted in flower $i$ and $x_i$ is the number of pollinator visits. For simplicity, we will assume that we record both $y_i$ and $x_i$ without error. In this model, $\alpha$ and $\beta$ are regression coefficients that govern the relationship between seed counts and visitation and $\epsilon_i$ is a normally distribution error term. You may recognize this as a basic linear regression model with a single covariate $x$. 
 
-where $N_i$ is the true abundance at site $i$ and $\lambda_i$ is the *expected* abundance[^3]. To model the elevational and rainfall relationships, we incoporate those predictors on the (log) expected counts (we will review why we use the log counts shortly). Therefore:
+***
+**Choosing a probability distribution to describe seed counts**
 
-$$log(\lambda_i) = \beta_0 + \beta_1 \times elevation_i + \beta_2 \times rainfall_i$$
+Earlier in the semester, we discussed the Poisson distribution as the default distribution for data that have to be positive integers (e.g., count data). However, in this case, our choice of a linear regression implies normally distributed data. Is this choice justified?  
 
-where $\beta_0$, $\beta_1$, and $\beta_2$ are regression coefficients that govern the relationship between abundance, elevation, and rainfall.  
+First of all, remember that a linear model is composed to two parts:
 
-Even though these are plants, they are small and cryptic so no matter how hard we search on the study plots, it is likely that we won't find every plant. That is, the probability of detecting each plant $p < 1$. Let's assume detection probability is lowest at high elevations because our oxygen-deprived brains are bad at searching at high elevations. For the observation model, we will assume:
+$$response = deterministic\; part+stochastic\; part$$ 
 
-$$y_{i,j} \sim Binomial(N_i, p_{i,j})$$
+The distributional assumptions of a linear model refer to the *residuals* (the $\epsilon_i$'s). That is, we assume that there is stochastic error in the response variable ($y_i$) and this error is equally likely to produce values that are larger or smaller than the value predicted by the deterministic portion of the model ($\alpha + \beta * x_i$).  
 
-and
-
-$$logit(p_{i,j}) = \alpha_0 + \alpha_1 \times elevation_i$$
-
-where $y_{i,j}$ is the number of individuals counted at site $i$ during count $j$, $p_{i,j}$ is the site/occasion specific detection probability, and $\alpha_0$, $\alpha_1$, and $\alpha_2$ are regression coefficients that govern the relationship between detection probability and elevation. Again, we will briefly review why we model detection probability on the logit scale shortly. 
-
-[^3]: Remember our discussion of probability distributions. The Poisson distribution generates random integer values greater than 0. Both the mean and variance of the Poisson distribution $= \lambda$. 
-
-## Initial steps: Setting the model parameters
-
-The first step to simulating data is to set the fixed values that are needed to generate the stochastic data. This usually includes the sample size, number of visits, covariate and parameter values and any other fixed value relevant to the analysis. In this case, we'll first set the number of sites and number of visits:
-
-```{r}
-M <- 175 # Number of sites
-J <- 4   # Number of replicate counts
-```
-
-Next, we need to generate the covariate values, in this case elevation and rainfall. Notice that both elevation and rainfall are *site-level* covariates; they get a single value for each site. For this reason, we'll treat elevation and rainfall as vectors of length $M$. For now, we'll assume our sites vary from sea-level to 1500m in elevation and rainfall varies from 0mm to 200mm per year. We'll further assume that the predictors are independent (which is probably not realistic but we will ignore correlations among predictors for now)
-
-```{r}
-sim_df <- data.frame(elevation = runif(M, min = 0, max = 1500),
-                     rainfall = runif(M, min = 0, max = 200))
-```
-
-In most analyses, it is good practice to scale covariate values so they have a mean of 0 and do not extend too far above and below 0 (very large values (positive or negative) can create numerical issues when fitting models). So next we center and scale the covariates (we'll do it manually but it could also be done using the built-in function `scale()` or by simply simulating data from a normal distribution in the first place):
-
-```{r}
-sim_df <- dplyr::mutate(sim_df, elevation.c = (elevation - mean(elevation))/sd(elevation),
-                                rainfall.c = (rainfall - mean(rainfall))/sd(rainfall))
-```
-
-You can check that these now have mean = 0 and sd = 1. 
-
-Finally, we need to set the parameter values for the regression models. This is where understanding what each parameter represents is very helpful. For example, $\beta_0$ is the expected number of orchids (on the log scale) when the other covariates have a value of 0 (because we centered elevation and rainfall, we interpret $\beta_0$ to be the expected abundance at the mean elevation and rainfall rather than at sea-level and 0mm of rain). Thinking about counts on the log scale is hard so we'll set this value on the abundance scale and then transform to get $\beta_0$:
-
-```{r}
-mean.lambda <- 2           # Mean expected number of orchids
-(beta0 <- log(mean.lambda))  # Log expected number of orchids (intercept)
-```
-
-We can do the same thing with $\alpha_1$, which is the (logit) expected detection probability at the mean elevation:
-
-```{r}
-mean.p <- 0.65
-(alpha0 <- log(mean.p/(1-mean.p)))
-```
-
-Now we set the other regression coefficients. We have already said the $\beta_1$ is positive (abundance increases with elevation) whereas $\beta_2$ and $\alpha_1$are negative (abundance decreases with increasing rainfall; detection probability decreases with increasing elevation). All that's left is to decide specific values. I recommend playing with these values a bit to get a feel for effect sizes on the log and logit scales. Both $\lambda$ and $p$ are derived variables based on the regression models and it's not always obvious what values of the regression coefficients will generate reasonable abundances and counts. Simulating data under different effect sizes is a good way to build intuition about what a "large" effect size is in glms. 
-
-```{r}
-beta1 <- 0.6   # Effect of elevation on abundance
-beta2 <- -1 # Effect of rainfall on abundance
- 
-alpha1 <- -0.75 # Effect of elevation on detection probability
-```
-
-## Generate expected abundances/review of (generalized) linear models
-
-To generate the simulated abundances at each site, we first have to calcuate $\lambda_i$, the *expected* abundance at each site. If this is confusing, remember that a linear model is composed to two parts:
-
-$$response = deterministic\; part+stochastic\; part$$
-
+For small counts, the Poisson distibution is asymetrical, meaning that we are more likely to generate values that are larger than the mean than smaller than the mean. You can see this clearly in the histogram below, which was generated from $Poisson(\lambda = 2)$:
 
 ```{r echo = FALSE, fig.width=6, fig.height=6}
 
-x <- runif(100, 0, 100)
-y <- rnorm(100, x, 5)
+df <- data.frame(value = rpois(10000, 2),
+                 Distribution = rep("Poisson", 10000))
 
-lm_df <- data.frame(x = x, y = y)
-
-ggplot(lm_df, aes(x, y)) + 
-    stat_smooth(method = "lm", se = FALSE, color = WILD6900_colors$value[WILD6900_colors$name == "secondary"]) +
-    geom_point(color = WILD6900_colors$value[WILD6900_colors$name == "primary"])  
-
+ggplot(df, aes(x = value)) + 
+  geom_histogram(fill = WILD6900_colors$value[WILD6900_colors$name=="primary"]) 
 ```
 
-In the figure above, the line in the deterministic part of the model -- the predicted value of $y$ for a given value of $x$. It's deterministic because for a given value of $x$, it will always return the same predicted value of $y$. In our abundance model, $\lambda_i$ is the deterministic part of the model -- the predicted abundance of the orchid at a specific combination of elevation and rainfall. 
+In this case, assuming the error terms are normally distribution would likely be inappropriate. However, as counts get larger, the Poisson distribution starts to appear more "normal": 
 
-We get these values by simply plugging in the observed elevation and rainfall values for each site to our linear model:
+```{r echo = FALSE, fig.width=8, fig.height=5}
+
+df <- data.frame(value = c(rnorm(10000, 500, 25), rpois(10000, 500)),
+                 Distribution = rep(c("Normal", "Poisson"), each = 10000))
+
+ggplot(df, aes(x = value)) + 
+  geom_histogram(fill = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
+  facet_wrap(~Distribution, nrow = 1)
+```
+
+In this case, $\mu = \lambda = 500$. So as counts get bigger, there will be very little difference in the results of a linear regression or a Poisson GLM.  
+***
+
+# Step 0: Set up your workspace and directories
+
+Hopefully you have already created a main directory for this course when you started the homework assignment on choosing priors. If you have not already done so, create a sub-directory of that folder called `data`. 
+
+For this exercise, create a new script and add it to whatever sub-directory you will use to store analysis scripts (alternatively, you could add this script to the `data` or `raw-data` folders since we'll use it to create data. Just use whatever system makes most sense to you). In the next section, copy the code from the markdown file into this script. 
+
+# Step 1: Set the model parameters
+
+The first step to simulating data is to set the fixed values that are needed to generate the stochastic data. This usually includes the sample size, covariate and parameter values and any other fixed value relevant to the analysis. In this case, we'll first set the number of flowers that we counted seeds from:
+
+```{r}
+N <- 175 # Number of flowers
+```
+
+Next, we need to generate the covariate values, in this case pollination visits. We'll store these values in a data frame and assume the number of visits ranges from 0 to 25:
+
+```{r}
+sim_df <- data.frame(visits = runif(N, 0, 25)) # Number of pollination visits
+```
+
+A common task during data preparation is adding new variables that are derived from variables in the raw data. In our example, we might want to add a new variable with *scaled* values of the covariate. In most analyses, it is good practice to scale covariate values so they have a mean of 0 and do not extend too far above and below 0 (very large values (positive or negative) can create numerical issues when fitting models). So next we center and scale the visit covariate (we'll do it manually but it could also be done using the built-in function `scale()` or by simply simulating data from a normal distribution in the first place). 
+
+In the tidyverse, the workhorse of adding new variables in `dplyr::mutate()`:
+
+```{r}
+sim_df <- dplyr::mutate(sim_df, visits.c = (visits - mean(visits))/sd(visits))
+```
+
+You can check that the covariate now has mean = 0 and sd = 1. 
+
+***
+**NOTE**
+
+It can sometimes be confusing to know which functions come from which packages (or to know which function `R` will default to using). For this reason, it's good practice to get in the habit of using the `package::function()` syntax, as we did for `mutate()` above. Using this syntax makes explicit which package/function you intend to use which makes your code easier for other to understand and reduces the potential for errors. As a benefit, you can stop using `library(package)` at the beginning of each script.  
+
+***
+
+Finally, we need to set the parameter values for the regression models. This is where understanding what each parameter represents is very helpful. For example, $\alpha$ is the expected number of seeds when the covariate has a value of 0 (because we centered visits, we interpret $\alpha$ to be the expected number of seeds at the mean number of visits):
+
+```{r}
+alpha <- 250 # Expected number of seeds at mean number of visits
+```
+
+Now we set $\beta$ coefficient. We have already said the $\beta$ is positive (seed count increases with visits). All that's left is to decide a specific value. Remember that we interpret $\beta$ as the additional number of seeds for 1 sd increase in the number of visits. 
+
+```{r}
+beta <- 50   # Effect of visits on seed count
+```
+
+# Step 2: Generate expected counts
+
+To generate the simulated seed counts for each flower, we first have to calcuate $\mu_i$, the *expected* seeds for each flower. We get these values by simply plugging in the observed visition values for each site to our linear model:
 
 $$\begin{bmatrix}
-    response_1 \\
-    reponse_2 \\
-    response_3 \\
+    \mu_1 \\
+    \mu_2 \\
+    \mu_3 \\
     .\\
     .\\
     .\\
-    response_M
+    \mu_N
 \end{bmatrix} = \begin{bmatrix}
-    1  & elevation_1 & rainfall_1\\
-    1  & elevation_2 & rainfall_2 \\
-    1  & elevation_3 & rainfall_3 \\
-    . & . &.\\
-    . & . &.\\
-    . & . &.\\
-    1  & elevation_M & rainfall_M
+    1  & visits_1\\
+    1  & visits_2\\
+    1  & visits_3\\
+    . & .\\
+    . & .\\
+    . & .\\
+    1  & visits_N
 \end{bmatrix} \times
 \begin{bmatrix}
-    \beta0 & \beta1 & \beta2
+    \alpha\\
+    \beta 
 \end{bmatrix}$$
 
 If you remember matrix algebra, multiplying the covariate matrix by the coefficient matrix is the same as doing:
 
-$$1 \times \beta0 + elevation_i \times \beta1 + rainfall_i \times \beta2$$
+$$1 \times \alpha + visits_i \times \beta$$
 
-The matrix of predicted responses is called the *linear predictor*. Notice that when we calculate the linear predictor for our data, some of the predicted abundances are negative:
+The matrix of predicted responses is called the *linear predictor*.  
 
-```{r fig.width=6, fig.height=6}
-pred_abun <- beta0 + beta1 * sim_df$elevation.c + beta2 * sim_df$rainfall.c
-hist(pred_abun)
-```
-
-In our model, this makes no sense -- abundance can't be negative. However, note that if we take $e^{response}$ we end up with positive values:
-
-```{r fig.width=6, fig.height=6}
-hist(exp(pred_abun))
-```
-
-This is why our linear model refers to $log(N)$ rather than $N$[^4]. In the case, `log()` is called the *link function* and this is what makes our model a *generalized linear model*. 
-
-[^4]: Remember that $log(x) = y$ if $e^y=x$. Also note that when we refer to the log function, we almost always use the natural log (log base $e$). 
-
-Now that we have a refreshed our memory of the basic glm structure, let's add the predicted abundance for each site to the data frame:
+Now that we have a refreshed our memory of the basic linear model structure, let's add the predicted seed counts to the data frame:
 
 
 ```{r}
-sim_df <- dplyr::mutate(sim_df, log.lambda = beta0 + beta1*elevation.c + beta2 * rainfall.c, 
-                                lambda = exp(log.lambda))
-
+sim_df <- dplyr::mutate(sim_df, mu = alpha + beta*visits.c)
 ```
 
-## Plot relationships
+## Step 2b: Plot relationships
 
-Whenever you simulate data, it's very useful to plot your data early and often. As we mentioned above, it's often difficult to know ahead of time exactly what response values a complex model will produce. Plots are a great way to quickly assess whether the simulation is producing values that are consistent with your domain expertise. 
+Whenever you simulate data, it's very useful to plot your data early and often. It is often difficult to know ahead of time exactly what response values a complex model will produce. Plots are a great way to quickly assess whether the simulation is producing values that are consistent with your domain expertise. 
 
 ### Brief intro to `ggplot2`
 
@@ -273,123 +246,54 @@ $$\underbrace{ggplot}_{initiate\; plot}(\underbrace{data = df}_{data\;frame},\; 
 
 The `ggplot()` function initiates a new plot. In this function, you tell `ggplot2` what data frame you will be using for the plot and you tell it how to map attributes of the data to the visual properties of the figures. Attributes are mapped inside the `aes()` argument. Attributes usually include location (`x-axis` and `y-axis` placement), color, size, shape, line type, and many others. In general, each attribute will be mapped to one column of your data frame. 
 
-The `ggplot()` function simply initiates a graph but if you run just that portion of the code you will get a blank graph. We can see that by creating a new plot showing the relationship between elevation (the x-axis of the plot) and predicted abundance (the y-axis): 
+The `ggplot()` function simply initiates a graph so if you run just that portion of the code you will get a blank graph. We can see that by creating a new plot showing the relationship between elevation (the x-axis of the plot) and predicted abundance (the y-axis): 
 
 ```{r fig.width=6, fig.height=6}
-ggplot(data = sim_df, aes(x = elevation, y = lambda))
+ggplot(data = sim_df, aes(x = visits, y = mu))
 ```
 
 You can see that `ggplot` created a figure with the correct axes and labels. But no data. That's because we didn't tell `ggplot` what type of *geometry* to use to represent the data. Geometry refers to the actual type geometric object(s) we want to use to display the data. Common geometries include points (e.g., scatterplot), lines (e.g., timeseries), and bars (e.g., histograms). There are many others. Once we add a geometry, we can see the data:
 
 ```{r fig.width=6, fig.height=6}
-ggplot(data = sim_df, aes(x = elevation, y = lambda)) + geom_point()
+ggplot(data = sim_df, aes(x = visits, y = mu)) + geom_point()
 ```
 
-Going back to the `aes()` argument, we can use other attributes to disply additional information in our graph. For example, we could also show the rainfall at each location by scaling the size of the points to the rainfall: 
+So we can see that our model predicts seed counts ranging from `r round(min(sim_df$mu),2)` individuals to `r round(max(sim_df$mu),2)`. Is that reasonable? Who knows, this is a made up species. But if it wasn't, this would be a good time to go back and play with different parameter values to generate abundances that are consistent with our domain expertise. For example, the model predicts  $\approx$ `r round(min(sim_df$mu),2)` seeds for a flower with 0 pollination visits. Maybe that makes sense (perhaps the orchids can self-pollinate if necessary) or maybe it doesn't. If it doesn't, we need to re-think the model structure. 
 
-```{r fig.width=6, fig.height=6}
-ggplot(data = sim_df, aes(x = elevation, y = lambda, size = rainfall)) + geom_point()
+# Step 3: Generate the actual seed counts
+
+So far, our simulated seed counts contain no stochastic variation (the visitation covariate is stochastic but given that value, the predicted counts are completely deterministic). To create a realistic data set, we need to add some process variance ($\sigma^2_p$). In our example, this requires setting another parameter that controls the amount of process variation. 
+
+```{r}
+sigma <- 7.5
 ```
 
-So we can see that our model predicts abundances ranging from `r min(sim_df$lambda)` individuals to `r max(sim_df$lambda)` individuals. Is that reasonable? Who knows, this is a made up species. But it wasn't, this would be a good time to go back and play with different parameter values to generate abundances that are consistent with our domain expertise. 
-
-## Generating the actual abundances
-
-So far, our simulated abundances contain no stochastic variation (the rainfall and elevation covariates are stochastic but given those values, the predicted counts are completely deterministic). To create a realistic data set, we need to add some process variance ($\sigma^2_p$). In some simulations, this would involve setting another parameter that controls the amount of process variation. For example, we might generate data from a normal distribution with mean equal to the expected value and standard deviation chosen to reflect our belief about how much process variation to expect in our system. 
-
-However, because we are generating counts from a Poisson distribution, the process variance is chosen for us [^5]. So simulating the abundances is straightforward:
-
-[^5]: Remember that $\lambda$ is both the mean and the variance of a Poisson distribution. 
+Now we simply generate random seed counts using the linear predictor and the process variation
 
 ```{r, fig.height=6, fig.width=6}
 ### Generate actual abundance for each site
-sim_df <- dplyr::mutate(sim_df, N = rpois(n = M, lambda))
+sim_df <- dplyr::mutate(sim_df, y = rnorm(n = N, mu, sigma))
 
 ### Plot lambda vs. N
-ggplot(data = sim_df, aes(x = lambda, y = N)) + geom_point() +
-  scale_x_continuous(expression(lambda[i])) +
-  scale_y_continuous(expression(N[i])) +
+ggplot(data = sim_df, aes(x = mu, y = y)) + geom_point() +
+  scale_x_continuous(expression(mu[i])) +
+  scale_y_continuous(expression(y[i])) +
   geom_abline(slope = 1, intercept = 0)
 ```
 
-As expected, abundance increases with $\lambda$, though you can see the process variation that is added to the model at this stage. 
+As expected, seed count increases with $\mu$, though you can see the process variation that is added to the model at this stage. 
 
-***
-Go back to lecture 1 and be sure you understand how our simulation steps reflect the process model we learned about in that lecture.  
 
-**Which step defined the process model? What is the process model**  
-
-**Which step defined the process variation? What is the difference between $\lambda_i$ and $N_i$?**  
-
-***
-
-## Simulating the counts
-
-Now that we have the true abundances for each site, we can simulate the counts. The steps are pretty much the same as above but now applied to the observation model rather than the process model. 
-
-### Generate the detection probabilities
-
-Just as the expected abundances were not the same for all sites, neither are the detection probabilities. To calcuate the detection probability at each site, we use the same glm framework as above but this time using a different link function. 
-
-For the abundances, we used the $log$ link function because it converts the linear predictor into positive values (counts can be negative). For $p$, we need to generate values that are between 0 and 1 which means we need a different link function. Although there are several options, the most common link function for probabilities is the $logit$ link:
-
-$$logit(p)=log\bigg(\frac{p}{1-p}\bigg)=log(p)-log(1-p)=y$$
-
-```{r echo = FALSE, fig.height=6, fig.width=6}
-
-x <- seq(from = 0, to = 1, length.out = 100)
-
-logit_df <- data.frame(x = x,
-                       logit.x = log(x) - log(1 -x))
-
-ggplot(logit_df, aes(x = x, y = logit.x)) + geom_point() +
-  scale_y_continuous("logit(p)") + scale_x_continuous("p")
-
-```
-
-To convert the linear predictor into a probability we use the inverse logit (just like we used $e^y$ to estimate the predicted abundance from the linear predictor of the count model):
-
-$$logit^{-1}(y)=\frac{1}{1+e^{-y}}=p$$
-
-We can use these relationships to add both $logit(p)$ and $p$ to the dataframe:
-
-```{r fig.height=6, fig.width=6}
-sim_df <- dplyr::mutate(sim_df, logit.p = alpha0 + alpha1 * elevation.c,
-                                p = 1/(1 + exp(-logit.p)))
-
-ggplot(sim_df, aes(x = elevation, y = p)) + geom_point()
-```
-
-### Add the counts
-
-Now we are ready to generate the final piece of simulated data, the actual counts. The binomial observation model we defined above tells us exactly how to do that:
-
-```{r fig.height=6, fig.width=6}
-
-sim_df <- dplyr::mutate(sim_df, C = rbinom(n = M, size = N, prob = p))
-
-ggplot(data = sim_df, aes(x = N, y = C)) + geom_point() +
-  geom_abline(slope = 1, intercept = 0)
-```
-
-The figure confirms that $C \leq N$ in all cases, which is another good check that we simulated the data correctly (we only allowed false negatives so the counts cannot be bigger than the true abundance). 
-
-In some cases, it appears that $C=N$, especially when $N$ is small. Remember that $N$ is smaller at low elevations, which is also where detection probability is the highest. Let's make another quick plot to check that this is the case. To do this, we'll plot $N-C$ against elevation based on the prediction that this difference should get bigger as elevation increases:
-
-```{r fig.height=6, fig.width=6}
-ggplot(data = sim_df, aes(x = elevation, y = N - C)) + geom_point()
-```
-
-## Save the simulated data
+# Step 4: Save the simulated data
 
 Now that we have a simulated data set, let's save it so it's available for future use. There are many ways to save objects in `R` but one of the most [well-behaved](https://www.fromthebottomoftheheap.net/2012/04/01/saving-and-loading-r-objects/) is `saveRDS()`. 
 
 ```{r eval=FALSE}
-saveRDS(object = sim_df, file = "data/sim_df.rds")
+saveRDS(object = sim_df, file = "data/sim_seed_counts.rds")
 ```
 
 ```{r echo=FALSE}
-saveRDS(object = sim_df, file = here::here("data/sim_df.rds"))
+saveRDS(object = sim_df, file = here::here("data/sim_seed_counts.rds"))
 ```
 
 When you want to use this object in the future, all you have to do is run[^6]:
@@ -397,23 +301,6 @@ When you want to use this object in the future, all you have to do is run[^6]:
 [^6]: Note that with `readRDS()` you do have to assign the object you are reading to a new object. If you don't create a new object, `readRDS()` will simply print the data frame. This has the advantage that you can rename the object something else when you read it in next time. 
 
 ```{r eval = FALSE}
-sim_df <- readRDS("data/sim_df.rds")
+sim_df <- readRDS("data/sim_seed_counts.rds")
 ```
-
-
-
-$$[N_i, \beta_0, \beta_1, \beta_2, \alpha_0, \alpha_1|y_i, elev_i, rain_i] \propto [y_i|N_i,\alpha_0, \alpha_i, elev_i][N_i|\beta_0, \beta_1, \beta_2, elev_i, rain_i][\beta_0][\beta_1][\beta_2][\alpha_0][\alpha_1]$$
-
-$$[N_i, \beta_0, \beta_1, \beta_2, \alpha_0, \alpha_1|y_i, elev_i, rain_i] \propto \prod_{i=1}^M \prod_{j=1}^J binomial(y_{i,j}|N_i,\alpha_0, \alpha_i, elev_i) \times Poisson(N_i|\beta_0, \beta_1, \beta_2, elev_i, rain_i) \times normal(\beta_0|0,100) \times normal(\beta_1|0,100) \times normal(\beta_2|0,100) \times normal(\alpha_0|0,100) \times normal(\alpha_1|0,100)$$
-
-$$[N_i|.] \propto  \prod_{i=1}^M \prod_{j=1}^J binomial(y_{i,j}|N_i,\alpha_0, \alpha_i, elev_i) \times Poisson(N_i|\beta_0, \beta_1, \beta_2, elev_i, rain_i)$$
-$$[\beta_0|.] \propto  Poisson(N_i|\beta_0, \beta_1, \beta_2, elev_i, rain_i) \times normal(\beta_0|0,100)$$
-
-$$[\beta_1|.] \propto  Poisson(N_i|\beta_0, \beta_1, \beta_2, elev_i, rain_i) \times normal(\beta_1|0,100)$$
-
-$$[\beta_2|.] \propto  Poisson(N_i|\beta_0, \beta_1, \beta_2, elev_i, rain_i) \times normal(\beta_2|0,100)$$
-
-$$[\alpha_0|.] \propto  \prod_{i=1}^M \prod_{j=1}^J binomial(y_{i,j}|N_i,\alpha_0, \alpha_i, elev_i) \times normal(\alpha_0|0,100)$$
-
-$$[\alpha_1|.] \propto  \prod_{i=1}^M \prod_{j=1}^J binomial(y_{i,j}|N_i,\alpha_0, \alpha_i, elev_i) \times normal(\alpha_1|0,100)$$
 

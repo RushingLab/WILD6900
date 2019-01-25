@@ -32,6 +32,8 @@ navbar:
           href: articles/Lecture4/Lecture4.html
         - text: "Lecture 5: Implementing Bayesian models: Introduction to MCMC samplers"
           href: articles/Lecture5/Lecture5.html
+        - text: "Lecture 6: Introduction of Bayesian analysis using JAGS"
+          href: articles/Lecture6/Lecture6.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:
@@ -41,6 +43,10 @@ navbar:
           href: articles/rmarkdown_intro.html
         - text: "Creating prior distributions"
           href: articles/priors.html
+        - text: "Simulating regression data"
+          href: articles/simulation.html
+        - text: "Metropolis sampler for linear regression model"
+          href: articles/metropolis.html
     - icon: fas fa-pencil-square-o
       text: "Assignments"
       href: articles/homework.html

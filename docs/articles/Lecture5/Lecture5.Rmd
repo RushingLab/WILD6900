@@ -28,7 +28,7 @@ library(WILD6900)
 
 Remember from lecture 3 that the posterior distribution of random variable $\theta$ conditional on data $y$ is defined by Bayes theorem:  
 
-$$\Large \underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[\theta|y]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$
+$$\Large \underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[y|\theta]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$
 
 --
 
