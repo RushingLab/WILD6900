@@ -184,7 +184,7 @@ The `routeID` field is critical because it is the sole variable that links all t
 At present, `ut_counts` contains counts of all species. Each column (aside from `Year` and `routeID`) gives the number of individuals of each species counted on each route in each year. The column names refer to the numeric `aou` code used by BBS to identify species (Eurasian collared-dove is 22860). To get those data, we could use `dplyr::select()`:
 
 ```{r}
-eucd_counts <- dplyr::select(ut_counts, Year, routeID, `22860`)
+eucd_counts <- dplyr::filter(ut_counts, aou == 22860)
 ```
 
 However, there are a number of problems with the resulting data frame. 
@@ -340,10 +340,10 @@ So how can we use a join to add the `NA` counts? First, we need a data frame tha
 
 ```{r eval = FALSE}
 ## Create vector containing all of the routeIDs in the dove count data frame
-routes <- unique(dove_counts$routeID)
+routes <- unique(eucd_counts$routeID)
 
 ## Create vector containing all of the years in the data set
-years <- seq(from = min(dove_counts$Year), to = max(dove_counts$Year))
+years <- seq(from = min(eucd_counts$Year), to = max(eucd_counts$Year))
 
 ## Use expand.grid to create data frame with all route/year combinations
 route_year <- expand.grid(routeID = routes, Year = years)
@@ -353,7 +353,7 @@ head(route_year)
 
 ```{r echo = FALSE}
 ## Create vector containing all of the routeIDs in the dove count data frame
-routes <- unique(dove_counts$routeID)
+routes <- unique(eucd_counts$routeID)
 
 ## Create vector containing all of the years in the data set
 years <- seq(from = min(dove_counts$Year), to = max(dove_counts$Year))
@@ -370,7 +370,7 @@ Now all we have to do is join this new data frame to `dove_counts` using the cor
 
 ```{r eval = FALSE}
 
-dove_counts <- dplyr::right_join(dove_counts, route_year)
+dove_counts <- dplyr::right_join(eucd_counts, route_year)
 
 head(dove_counts)
 ```
