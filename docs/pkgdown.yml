@@ -4,6 +4,7 @@ pkgdown_sha: c980e84a573614087c6e151d5e6e19a22748b761
 articles:
   homework: homework.html
   metropolis: metropolis.html
+  poisson_glm: poisson_glm.html
   priors: priors.html
   projects_and_directories: projects_and_directories.html
   rmarkdown_intro: rmarkdown_intro.html

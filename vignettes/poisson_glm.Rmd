@@ -36,9 +36,9 @@ In this activity, we will analyze a small data set containing counts of both pop
 
 ## Data
 
-The data for this activity comes from a long-term project that monitored the peregrine falcon population nesting in the [French Jura](https://en.wikipedia.org/wiki/Jura_(department) from 1964 to 2003 [^1]. 
+The data for this activity comes from a long-term project that monitored a population of peregrine falcons nesting in the [French Jura](https://en.wikipedia.org/wiki/Jura_(department) from 1964 to 2003 [^1]. 
 
-[^1]: These data are from Kéry & Schaub *Bayesian Population Analysis Using WinBugs* and can be accesssed [here](https://www.vogelwarte.ch/de/projekte/publikationen/bpa/complete-code-and-data-files-of-the-book)
+[^1]: All data and code used in this lab are from Kéry & Schaub *Bayesian Population Analysis Using WinBugs* and can be accessed [here](https://www.vogelwarte.ch/de/projekte/publikationen/bpa/complete-code-and-data-files-of-the-book)
 
 ```{r out.width="75%", echo = FALSE}
 knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/7/7b/Peregrine_falcon_%28Australia%29.JPG")
@@ -76,7 +76,7 @@ To see what each column represents, type:
 
 ## Analysis 1: Change in population size
 
-The first model we will fit examines change in the number of adult falcon pairs over time. Plotting the data shows that ths change has not been linear:
+The first model we will fit examines change in the number of adult falcon pairs over time. Plotting the data shows that this change has not been linear:
 
 ```{r fig.width=6, fig.height=6}
 ggplot(falcons, aes(x = Year, y = Pairs)) + geom_point() + stat_smooth(se = FALSE)
@@ -107,6 +107,8 @@ ggplot(df, aes(x, y)) + geom_path(size = 2, color = WILD6900_colors$value[WILD69
 
 ```
 
+Where $a$ is the maximum (or minimum) value of $y$, $b$ is the value of $x$ where this maximum (or minimum) occurs and $c$ determines whether the peak is a maximum ($c<0$) or a minimum ($c>0$).
+
 We can add more complex shape by adding additional polynomial terms. For example, including a cubic term creates an s-shaped curve:
 
 $$\Large y = a + b \times x + c \times x^2 + d \times x^3$$
@@ -124,4 +126,223 @@ df <- data.frame(x=x, y=y)
 ggplot(df, aes(x, y)) + geom_path(size = 2, color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
   annotate("text", x = 10, y = 60, label = "y = 4 -0.1*x + 0.0075*x^2 - 0.0004*x^3", size = 6)
 
+```
+
+Including polynomial terms in the linear predictor on the model gives us enormous flexibility to model non-linear relationships using GLMs. 
+
+### Modeling change in falcon counts
+
+To build a model for the falcon data, we need to define the components required in all GLMs (the distribution, link function, and linear predictor). Because these are counts, a natural choice for the distribution is:
+
+$$C_t \sim Poisson(\lambda_t)$$
+where $C_t$ is the observed count in year $t$ and $\lambda_t$ is the expected count.  
+
+As we learned in lecture, the conventional link function for count data is the log-link:
+
+$$log(\lambda_t) = log(E(\lambda_t))$$
+
+Finally, we need to write the linear predictor. Based on the preliminary visualization of the data, a cubic polynomial might be appropriate to capture the non-linear change over time:
+
+$$log(\lambda_t) = \alpha + beta_1 \times year_t + \beta_2 \times year^2_t + \beta_3 \times year^3_t$$
+
+### Accessing and viewing the JAGS model
+
+A JAGS model file that corresponds to the above model is already included in the `WILD6900` package. You can access that file and view the model using the following code:
+
+```{r eval=FALSE}
+mod.file <- system.file("jags/GLM_Poisson.jags", package = "WILD6900")
+file.show(mod.file)
+```
+
+```{r echo=FALSE}
+mod.file <- system.file("jags/GLM_Poisson.jags", package = "WILD6900")
+```
+
+```{eval = FALSE}
+model {
+
+  # Priors
+  alpha ~ dnorm(0, 0.33)
+  beta1 ~ dnorm(0, 0.33)
+  beta2 ~ dnorm(0, 0.33)
+  beta3 ~ dnorm(0, 0.33)
+
+  # Likelihooda
+  for (i in 1:n){
+    C[i] ~ dpois(lambda[i])
+    log(lambda[i]) <- alpha + beta1 * year[i] + beta2 * pow(year[i],2) + beta3 * pow(year[i],3)
+  } #i
+}
+```
+
+From this file, you can see that we will use relatively non-informative normal priors on each of the regression coefficients. 
+
+You can also see that the likelihood statement is very similar to the linear regression model from the last lecture, with a few minor differences. First, because we assume the observed falcon counts come from a Poisson distribution, we use `dpois(lambda[i])` rather than `dnorm(mu[i], tau)`. Also, we have to apply the log-link function to the predicted counts (`log(lambda[i])=...`). Notice that JAGS allows you to model the transformed predicted counts on the left hand side of the linear predictor equation 
+
+
+
+***
+**Questions**
+
+1) Plot a histogram of random samples from the normal prior used in the model (remember to convert the precision of `0.33` to standard deviation). As you can see, this is not as vague as the normal priors we have used in the past. What is the advantage of using less-vague normal priors?  
+
+2) In the linear regression model we fit in the last lecture, we also had a prior for $\tau$, the (inverse) of the process variance. Why do we not include that parameter in this model?
+
+3) Creating the `lambda[i]` object is not strictly necessary since it is a deterministic function of year. If you wanted to have fewer lines of code, you could include the linear predictor directly inside of the `dpois()` function instead of `lambda[i]`, though you would need to appropriately transform the linear predictor. What transformation would you use to put the linear predictor on the count scale?
+
+***
+
+### Fitting the model
+
+Before fitting the model, we need to prepare the input for JAGS. This includes:
+
+- storing the data as a named list
+
+- creating a function to randomly generate the initial values for each parameter
+
+- creating a vector with the parameters we want JAGS to monitor
+
+- set the MCMC settings
+
+We've mentioned several times, it's often a bad idea to include covariate values that are too far from 0. For this reason, we will first scale `year` to $mean=0$ and $sd=1$:
+
+```{r}
+year <- (falcons$Year - mean(falcons$Year))/sd(falcons$Year)
+
+jags_data <- list(C = falcons$Pairs, year = year, n = nrow(falcons))
+
+jags_inits <- function(){list(alpha = rnorm(1), beta1 = rnorm(1), beta2 = rnorm(1), beta3 = rnorm(1))}
+
+params <- c("alpha", "beta1", "beta2", "beta3", "lambda")
+
+nC <- 3
+
+nI <- 10000
+
+nB <- 2500
+
+nT <- 1
+```
+
+Now we're ready to run the model:
+
+```{r}
+falcon_mod <- jagsUI::jags(data = jags_data, inits = jags_inits, 
+                           parameters.to.save = params, 
+                           model.file = mod.file, 
+                           n.chains = nC, n.iter = nI, 
+                           n.burnin = nB, n.thin = nT)
+```
+
+
+View a portion of the results (printing all of the `lambda` values takes up too much room):
+
+```{r eval = FALSE}
+falcon_mod$summary[1:10,]
+```
+
+```{r echo = FALSE}
+knitr::kable(falcon_mod$summary[1:10,], format = 'html')
+```
+
+Notice that all `Rhat` are less than 1.1, indicating that all parameters appear to have converged. Also note `f` for `beta2` - the posterior mean is `r round(falcon_mod$mean$beta2, 3)` but there is only a `r round(falcon_mod$f$beta2, 3)*100`% probability that it is greater than 0.  
+
+As usual, let's check the traceplots to see how they look:
+
+```{r}
+# View traceplots for alpha, beta1, beta2, and beta3 (not for lambda)
+jagsUI::traceplot(falcon_mod, parameters=params[-5])
+```
+
+By monitoring `lambda` we can also plot the predicted counts along with the observed counts. First, we add the posterior means and upper/lower bounds of the 95% credible interval to the falcons data frame, then use ggplot to visualize:
+
+```{r fig.width=6, fig.height=6}
+falcons <- dplyr::mutate(falcons, lambda = falcon_mod$mean$lambda, 
+                                  q2.5 = falcon_mod$q2.5$lambda, 
+                                  q97.5 = falcon_mod$q97.5$lambda)
+
+ggplot(falcons) + 
+  geom_ribbon(aes(x = Year, ymin = q2.5, ymax = q97.5), fill = "grey90") +
+  geom_path(aes(x = Year, y = lambda), color = "red") +
+  geom_point(aes(x = Year, y = Pairs)) +
+  scale_y_continuous("Pairs")
+```
+
+## Analysis 2: Nest success model
+
+Next, let's use the `falcons` data set to fit another type of GLM - the binomial GLM. Hopefully this exercise will show you that once you're comfortable writing out and coding the GLM components (distribution, link function, and linear predictor), it is extremely easy to fit models with different distributional assumptions. 
+
+To estimate reproductive success (i.e., the probability that a pair successfully produces offspring), we will model the number of reproductive pairs (`falcons$R.Pairs`) as a function of the total number of  pairs (`falcons$Pairs`).  
+
+Because the total number of reproductive pairs cannot exceed the total number of pairs, the counts in `falcons$.RPairs` are bounded to be less than `falcons$Pairs`. In this case, the Poisson distribution is not an appropriate count model. Instead, we will use the binomial distribution:
+
+$$C_t \sim binomial(N_t, p_t)$$
+
+Our goal is to model $p_t$, the probability of nesting successfully in each year. In this case, the log link is not appropriate - $p_t$ is bound between 0 and 1. For probabilities, the logit link is generally the appropriate link function:
+
+$$logit(p_t) = log\bigg(\frac{p_t}{1-p_t}\bigg)$$
+
+Following Kéry & Schaub, we'll model probability as a quadratic function of year:
+
+$$logit(p_t) = \alpha + \beta_1 \times year_t + \beta_2 \times year^2_t$$
+
+As in the last example, there is a JAGS model file available in the `WILD6900` package:
+
+```{r}
+mod.file <- system.file("jags/GLM_Binomial.jags", package = "WILD6900")
+```
+
+However, before looking at it, see if you can write out the model in the BUGS language (use the same priors from the previous example and note that there is a built in `logit()` function). 
+
+As before, we prepare the data and run the model:
+
+```{r}
+
+year <- (falcons$Year - mean(falcons$Year))/sd(falcons$Year)
+
+jags_data <- list(C = falcons$R.Pairs, N = falcons$Pairs, year = year, nyears = nrow(falcons))
+
+jags_inits <- function(){list(alpha = rnorm(1), beta1 = rnorm(1), beta2 = rnorm(1), beta3 = rnorm(1))}
+
+params <- c("alpha", "beta1", "beta2", "p")
+
+nC <- 3
+
+nI <- 10000
+
+nB <- 2500
+
+nT <- 1
+
+falcon_mod <- jagsUI::jags(data = jags_data, inits = jags_inits, 
+                           parameters.to.save = params, 
+                           model.file = mod.file, 
+                           n.chains = nC, n.iter = nI, 
+                           n.burnin = nB, n.thin = nT)
+```
+
+```{r eval = FALSE}
+falcon_mod$summary[1:10,]
+```
+
+```{r echo = FALSE}
+knitr::kable(falcon_mod$summary[1:10,], format = 'html')
+```
+
+
+```{r}
+# View traceplots for alpha, beta1, and beta2(not for p)
+jagsUI::traceplot(falcon_mod, parameters=params[-4])
+```
+
+```{r fig.width=6, fig.height=6}
+falcons <- dplyr::mutate(falcons, p = falcon_mod$mean$p, 
+                                  q2.5_p = falcon_mod$q2.5$p, 
+                                  q97.5_p = falcon_mod$q97.5$p)
+
+ggplot(falcons) + 
+  geom_ribbon(aes(x = Year, ymin = q2.5_p, ymax = q97.5_p), fill = "grey90") +
+  geom_path(aes(x = Year, y = p), color = "red") +
+  geom_point(aes(x = Year, y = R.Pairs/Pairs)) +
+  scale_y_continuous("Pairs")
 ```

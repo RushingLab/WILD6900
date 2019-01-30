@@ -8,8 +8,8 @@ model {
 
 # Likelihood
 for (i in 1:nyears){
-   C[i] ~ dbin(p[i], N[i])          # 1. Distribution for random part
-   logit(p[i]) <- alpha + beta1 * year[i] + beta2 * pow(year[i],2) # link function and linear predictor
+   C[i] ~ dbin(p[i], N[i])
+   logit(p[i]) <- alpha + beta1 * year[i] + beta2 * pow(year[i],2)
    }
 }
 

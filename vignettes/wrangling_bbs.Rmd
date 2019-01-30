@@ -144,7 +144,7 @@ head(bbs_data$routes)
 
 head(bbs_data$weather)
 
-head(bbs_data$counts[,1:10])
+head(bbs_data$counts)
 ```
 
 ```{r echo = FALSE}
@@ -152,7 +152,7 @@ knitr::kable(head(bbs_data$routes))
 
 knitr::kable(head(bbs_data$weather))
 
-knitr::kable(head(bbs_data$counts[,1:10]))
+knitr::kable(head(bbs_data$counts))
 ```
 
 For additional information about what each field represents, see the documentation page (`?bbs_data`). 
@@ -356,7 +356,7 @@ head(route_year)
 routes <- unique(eucd_counts$routeID)
 
 ## Create vector containing all of the years in the data set
-years <- seq(from = min(dove_counts$Year), to = max(dove_counts$Year))
+years <- seq(from = min(eucd_counts$Year), to = max(eucd_counts$Year))
 
 ## Use expand.grid to create data frame with all route/year combinations
 route_year <- expand.grid(routeID = routes, Year = years)
@@ -377,7 +377,7 @@ head(dove_counts)
 
 ```{r echo = FALSE}
 
-dove_counts <- dplyr::right_join(dove_counts, route_year)
+dove_counts <- dplyr::right_join(eucd_counts, route_year)
 
 knitr::kable(head(dove_counts))
 ```
@@ -467,7 +467,7 @@ Before we add the new variable, remember that our data frame is sorted by `Year`
 ```{r}
 dove_counts <- dplyr::arrange(dove_counts, routeID, Year)
 
-dove_counts <- dplyr::mutate(dove_counts, novice = !duplicated(ObsN))
+# dove_counts <- dplyr::mutate(dove_counts, novice = !duplicated(ObsN))
 ```
 
 There are many other columns that could be created depending on the factors we think might influence counts (remember that the counts are a mix of the state and observation processes - factors of interest might influence the process, i.e., the actual number of birds, or the observations or both). One factor that could influence both the process and observation processes is the day of the year that a count took place (maybe individuals are more common at certain times of year or maybe they are more easily detected at certain times of year). Adding day of the year also provides an exercise in a particularly headache-inducing topics: dates.  
@@ -480,14 +480,14 @@ To convert these columns as dates, we first need to combine them into a single v
 
 ```{r eval = FALSE}
 ## Add date
-dove_counts <- tidyr::unite(dove_counts, "date", c("Month", "Day", "Year"), sep = "/", remove = FALSE)
-head(dove_counts)
+# dove_counts <- tidyr::unite(dove_counts, "date", c("Month", "Day", "Year"), sep = "/", remove = FALSE)
+head(dove_counts)C
 ```
 
 ```{r echo = FALSE}
 ## Add date
-dove_counts <- tidyr::unite(dove_counts, "date", c("Month", "Day", "Year"), sep = "/", remove = FALSE)
-knitr::kable(head(dove_counts))
+# dove_counts <- tidyr::unite(dove_counts, "date", c("Month", "Day", "Year"), sep = "/", remove = FALSE)
+# knitr::kable(head(dove_counts))
 ```
 
 Note that by default `unite` removes the original columns (we will need the `Year` column later which is why `remove = FALSE`). 
@@ -501,7 +501,7 @@ dove_counts$date <- lubridate::mdy(dove_counts$date)
 
 ```{r echo = FALSE}
 ## Convert to date
-dove_counts$date <- lubridate::mdy(dove_counts$date)
+# dove_counts$date <- lubridate::mdy(dove_counts$date)
 ```
 
 The `lubridate` functions that convert strings to dates (`dmy`, `ymd`, etc.) try to be smart about the separator used to separate months, days and years. If you work with dates in your own data, get in the habit of converting them into actual `class(Date)` using lubridate as part of your data preparation. This will make your life much easier when you need to use these dates in your modeling. Once you have a variable that is `class(Date)`, `lubridate` has many functions for converting dates into other formats. For example, raw dates are often not the covariate we will use in the model. We may not care about the specific month or year but instead the day of the year. We can easily covert the dates into day of the year (January 1st = 1; `lubridate` will automatically handle leap years)
@@ -513,7 +513,7 @@ dove_counts$day <- lubridate::day(dove_counts$date)
 
 ```{r echo = FALSE}
 ## Convert to day
-dove_counts$day<- lubridate::day(dove_counts$date)
+# dove_counts$day<- lubridate::day(dove_counts$date)
 ```
 
 ## Grouped variables
@@ -525,38 +525,38 @@ For example, maybe observers get worse as they get older because it's harder fro
 For each time an observer in listed in the data frame, what we are trying to do is essentially sum the number of times the observer has already been listed. Something like this:
 
 ```{r echo = FALSE}
-obs_df <- data.frame(Obs = rep(1, 10),
-                     Experience = seq(1:10))
+# obs_df <- data.frame(Obs = rep(1, 10),
+                     # Experience = seq(1:10))
 
-knitr::kable(obs_df)
+# knitr::kable(obs_df)
 ```
 
 What you might notice here is the the `experience` column is the cumulative sum of the `obs` column. `R` has a built in function called `cumsum()` for estimating the cumulative sum of a vector:
 
 ```{r}
-x <- seq(1:10)
-cumsum(x)
+# x <- seq(1:10)
+# cumsum(x)
 ```
 
 
 We need to perform the cumulative sum on each observer separately. But there's a problem - some observers do more than one route per year. If we include those duplicated ObsN/Year combination, we will inflate the experience metric.  
 
 ```{r}
-dplyr::filter(dove_counts, ObsN == 981319 & Year == 2015)
-nrow(dove_counts)
-
-## Create a new data frame so we don't lose counts when we remove duplicates
-experience_df <- dplyr::distinct(dove_counts, ObsN, Year)
-dplyr::filter(experience_df, ObsN == 981319 & Year == 2015)
-nrow(experience_df)
+# dplyr::filter(dove_counts, ObsN == 981319 & Year == 2015)
+# nrow(dove_counts)
+# 
+# ## Create a new data frame so we don't lose counts when we remove duplicates
+# experience_df <- dplyr::distinct(dove_counts, ObsN, Year)
+# dplyr::filter(experience_df, ObsN == 981319 & Year == 2015)
+# nrow(experience_df)
 ```
 
 Now we're ready to estimate experience. Remember that we need to estimate experience for each observer separately. This is where `group_by()` comes in. We use `group_by()` to tell `dplyr` that we want to perform all subsequent operations on each observer:
 
 ```{r}
-experience_df <- dplyr::group_by(experience_df, ObsN)
-
-experience_df
+# experience_df <- dplyr::group_by(experience_df, ObsN)
+# 
+# experience_df
 ```
 
 Notice that when you view the data frame now you see a header saying `Groups: ObsN [196]`. This tells us that the data frame is grouped by `ObsN` and there are 196 groups (you may also have noticed the data frame has been converted to a `tibble`, which is a special type of data frame with some special properties (notice that we didn't use `head()` and yet we only see the first 10 rows on the data frame). We won't go into that now but you can learn more with `?tibble`). 
@@ -564,45 +564,45 @@ Notice that when you view the data frame now you see a header saying `Groups: Ob
 Now here's the trick for estimating experience with `cumsum`. We will we add a column of ones to the `experience_df` data frame and use `cumsum` to sum that column for each observer (basically recreating the data frame above for each observer). Start by adding the ones column:
 
 ```{r}
-experience_df <- dplyr::mutate(experience_df, ones = 1)
+# experience_df <- dplyr::mutate(experience_df, ones = 1)
 ```
 
 Now we'll use `mutate()` with `cumsum` to create the experience metric:
 
 ```{r}
-experience_df <- dplyr::mutate(experience_df, experience = cumsum(ones))
+# experience_df <- dplyr::mutate(experience_df, experience = cumsum(ones))
 ```
 
 One last tweak - all of the `NA` counts have `NA` observers and our experience metric added up the ones for those values too. Let's change those back to `NA` and then remove the `ones` column and join `experience_df` with `dove_counts` to add the experience metric back to the count data frame:
 
 ```{r}
-experience_df$experience[is.na(experience_df$ObsN)] <- NA
+# experience_df$experience[is.na(experience_df$ObsN)] <- NA
 
-experience_df <- dplyr::select(experience_df, -ones)
-dove_counts <- dplyr::left_join(dove_counts, experience_df)
+# experience_df <- dplyr::select(experience_df, -ones)
+# dove_counts <- dplyr::left_join(dove_counts, experience_df)
 ```
 
 What is the most number of years of service by one observer?
 
 ```{r}
-max(dove_counts$experience, na.rm = TRUE)
+# max(dove_counts$experience, na.rm = TRUE)
 ```
 ## Save the data frame
 
 Now that we have a clean data frame with all of the covariates of interest, let's save this object so that we can use it in the future without having to rerun all of these steps. There are many ways to save objects in `R` but one of the most [well-behaved](https://www.fromthebottomoftheheap.net/2012/04/01/saving-and-loading-r-objects/) is `saveRDS()`. 
 
 ```{r eval=FALSE}
-saveRDS(object = dove_counts, file = "data/dove_counts.rds")
+# saveRDS(object = dove_counts, file = "data/dove_counts.rds")
 ```
 
 ```{r echo=FALSE}
-saveRDS(object = dove_counts, file = here::here("data/dove_counts.rds"))
+# saveRDS(object = dove_counts, file = here::here("data/dove_counts.rds"))
 ```
 
 When you want to use this object in the future, all you have to do is run:
 
 ```{r eval = FALSE}
-dove_counts <- readRDS("data/dove_counts.rds")
+# dove_counts <- readRDS("data/dove_counts.rds")
 ```
 
 # Data summaries
@@ -614,12 +614,12 @@ We already learned about using `group_by` to add new columns by performing opera
 
 ```{r}
 ## Group by year
-total_dove_counts <- dplyr::group_by(dove_counts, Year)
+# total_dove_counts <- dplyr::group_by(dove_counts, Year)
 
 ## Create annual total counts (note the need for na.rm = TRUE because we have NA counts)
-total_dove_counts <- dplyr::summarise(total_dove_counts, Count = sum(count, na.rm = TRUE))
+# total_dove_counts <- dplyr::summarise(total_dove_counts, Count = sum(count, na.rm = TRUE))
 
-total_dove_counts
+# total_dove_counts
 ```
 
 Again, creating summaries is a very common data cleaning task and `dplyr` has *a lot* of powerful functions for doing all kinds of summaries (check out this [entire blog series](https://suzan.rbind.io/2018/01/dplyr-tutorial-1/) for some great lesser known `dplyr` functions). Getting to know these functions can save you a lot of lines of code for some of the more complex summaries you might need to make. 
@@ -627,25 +627,25 @@ Again, creating summaries is a very common data cleaning task and `dplyr` has *a
 Let's quickly visualize how the number of collared-doves counted in Utah has changed over time:
 
 ```{r}
-ggplot(total_dove_counts, aes(x = Year, y = Count)) + geom_path()
+# ggplot(total_dove_counts, aes(x = Year, y = Count)) + geom_path()
 ```
 
 That's a big increase! We will look at this increase in more detail during later lectures when we learn to develop Bayesian models. For that reason, let's save this data frame as well:
 
 ```{r eval = FALSE}
-saveRDS(total_dove_counts, file = "data/total_dove_counts.rds")
+# saveRDS(total_dove_counts, file = "data/total_dove_counts.rds")
 ```
 
 ```{r echo = FALSE}
-saveRDS(total_dove_counts, file = here::here("data/total_dove_counts.rds"))
+# saveRDS(total_dove_counts, file = here::here("data/total_dove_counts.rds"))
 ```
 
 ```{r include = FALSE}
-spatial_counts <- dplyr::group_by(dove_counts, routeID)
+# spatial_counts <- dplyr::group_by(dove_counts, routeID)
 
-spatial_counts <- dplyr::summarise(spatial_counts, Count = sum(count, na.rm = TRUE))
+# spatial_counts <- dplyr::summarise(spatial_counts, Count = sum(count, na.rm = TRUE))
 
-spatial_counts <- dplyr::left_join(spatial_counts, ut_routes)
+# spatial_counts <- dplyr::left_join(spatial_counts, ut_routes)
 
-ggplot(spatial_counts, aes(x = Longitude, y = Latitude, size = Count)) + geom_point()
+# ggplot(spatial_counts, aes(x = Longitude, y = Latitude, size = Count)) + geom_point()
 ```

@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 7</title>
+    <meta charset="utf-8">
+    <meta name="author" content="   WILD6900 (Spring 2019)" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="WILD6900.css" type="text/css" />
+    <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lecture 7
+## Generalized linear model review
+### <br/><br/><br/>WILD6900 (Spring 2019)
+
+---
+
+
+
+
+## Readings
+
+&gt; Kéry &amp; Schaub 48-55
+
+---
+# Statistics cookbook
+
+&lt;img src="stats_flow_chart.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+---
+class: inverse, center, middle
+
+# From linear models to GLMs
+
+---
+# Linear models
+&lt;br/&gt;
+&lt;br/&gt;
+`$$\Large response = deterministic\; part+stochastic\; part$$` 
+&lt;br/&gt;
+&lt;br/&gt;
+
+--
+`$$\underbrace{\LARGE \mu_i = \beta_0 + \beta_1 \times x_i}_{Deterministic}$$`
+&lt;br/&gt;
+&lt;br/&gt;
+
+--
+`$$\underbrace{\LARGE y_i \sim normal(\mu_i, \tau)}_{Stochastic}$$`  
+
+???
+
+Note that the deterministic portion of the model has the same form as the equation for a line: `\(y = a + b \times x\)`, which is why we call these linear models
+
+---
+class: inverse, middle, center
+
+# Linear models under the hood
+## Variations on the determinstic model
+
+---
+# A simple linear model: the t-test
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+
+`$$\LARGE \mu_i = \beta_0 + \beta_1 \times x_i$$`
+&lt;br/&gt;
+&lt;br/&gt;
+
+--
+`$$\LARGE x_i \in [0,1]$$`
+
+---
+## Under the hood: The t-test
+
+`$$\begin{bmatrix}
+    \mu_1 \\
+    \mu_2 \\
+    \mu_3 \\
+    .\\
+    .\\
+    .\\
+    \mu_N
+\end{bmatrix} = \begin{bmatrix}
+    1 &amp; x_1\\
+    1 &amp; x_2\\
+    1 &amp; x_3\\
+    . \\
+    . \\
+    . \\
+    1 &amp; x_N
+\end{bmatrix} \times \begin{bmatrix}
+    \beta_0\\
+    \beta_1 
+\end{bmatrix}$$`
+
+&lt;br/&gt;
+&lt;br/&gt;
+
+--
+`$$\LARGE \mu_1 = \beta_0 \times 1 + \beta_1 \times x_1$$`
+`$$\LARGE \mu_2 = \beta_0 \times 1 + \beta_2 \times x_1$$`
+
+---
+## Under the hood: The t-test
+
+
+
+```r
+model.matrix(lm(mpg ~ am, data = mtcars))[c(3,1,5),]
+```
+
+
+```
+##                   (Intercept) am1
+## Datsun 710                  1   1
+## Mazda RX4                   1   1
+## Hornet Sportabout           1   0
+```
+
+--
+### `\(\LARGE \beta_0\)` is the mean mpg for automatic transmissions
+
+--
+### `\(\LARGE \beta_1\)` is the *difference* between automatic and manual transmissions
+
+???
+
+This is called the *effects* parameterization
+
+---
+## Under the hood: The t-test
+
+
+```r
+lm(mpg ~ am, data = mtcars)
+```
+
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; std.error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.147 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.125 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15.248 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0e+00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; am1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.245 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.764 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.106 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3e-04 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+## Under the hood: The t-test
+
+
+```r
+model.matrix(lm(mpg ~ as.factor(am) - 1, data = mtcars))[c(3,1,5),]
+```
+
+
+```
+##                   am0 am1
+## Datsun 710          0   1
+## Mazda RX4           0   1
+## Hornet Sportabout   1   0
+```
+
+--
+### `\(\LARGE \beta_0\)` is the mean mpg for automatic transmissions
+
+--
+### `\(\LARGE \beta_1\)` is the mean mpg for manual transmissions
+
+???
+
+This is called the *means* parameterization  
+
+A more compact way to write this model would be `\(\mu_i = \beta_{0[j]}\)`. Instead of `\(\beta_0\)` (intercept) and `\(\beta_1\)` (slope), we essentially have one intercept for each factor level  
+
+---
+## Under the hood: The t-test
+
+
+```r
+lm(mpg ~ as.factor(am) - 1, data = mtcars)
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; std.error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; am0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.125 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15.25 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; am1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 24.39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.360 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.94 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+# The t-test becomes an ANOVA
+
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+
+`$$\LARGE y_i = \beta_0 + \beta_{1[j]} \times x_i$$`
+&lt;br/&gt;
+&lt;br/&gt;
+
+--
+`$$j \in [1,2,3,...,J-1]$$`
+
+`$$\LARGE x_i \in [0,1]$$`
+
+---
+## Under the hood: ANOVA
+
+
+```r
+model.matrix(lm(mpg ~ as.factor(cyl), data = mtcars))[c(3,1,5),]
+```
+
+
+```
+##                   (Intercept) cyl6 cyl8
+## Datsun 710                  1    0    0
+## Mazda RX4                   1    1    0
+## Hornet Sportabout           1    0    1
+```
+
+--
+### `\(\LARGE \beta_0\)` is the mean mpg for 4-cylinders
+
+--
+### `\(\LARGE \beta_{1[6-cyl]}\)` is the *difference* between 4-cyl &amp; 6-cyl
+
+--
+### `\(\LARGE \beta_{1[8-cyl]}\)` is the *difference* between 4-cyl &amp; 8-cyl
+
+---
+## Under the hood: ANOVA
+
+### Effects parameterization 
+
+
+```r
+lm(mpg ~ as.factor(cyl) , data = mtcars)
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; std.error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26.664 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9718 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27.437 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0e+00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -6.921 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.5583 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.441 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1e-04 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -11.564 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.2986 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -8.905 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0e+00 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+## Under the hood: ANOVA
+
+### Means parameterization 
+
+`$$\LARGE \mu_i = \beta_{0[j]}$$`
+
+
+```r
+lm(mpg ~ as.factor(cyl) - 1, data = mtcars)
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; std.error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 26.66 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.9718 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 27.44 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 19.74 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.2182 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16.21 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15.10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8614 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17.53 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+# The ANOVA becomes an ANCOVA
+
+
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+
+`$$\LARGE y_i = \beta_0 + \beta_{1[j]} \times x1_i + \beta_2 \times x2_i$$`
+&lt;br/&gt;
+&lt;br/&gt;
+
+--
+
+`$$\LARGE x1_i \in [0,1]$$`
+&lt;br/&gt;
+
+`$$\LARGE x2_i \in [-\infty, \infty]$$`
+
+---
+## Under the hood: ANCOVA
+
+
+```r
+model.matrix(lm(mpg ~ as.factor(cyl) + hp, data = mtcars))[c(3,1,5),]
+```
+
+
+```
+##                   (Intercept) cyl6 cyl8  hp
+## Datsun 710                  1    0    0  93
+## Mazda RX4                   1    1    0 110
+## Hornet Sportabout           1    0    1 175
+```
+
+--
+#### `\(\large \beta_0\)` is the mean mpg for 4-cylinders **@ 0hp**  
+
+--
+#### `\(\large \beta_{1[6-cyl]}\)` is the *difference* between 4-cyl &amp; 6-cyl **@ 0hp**  
+
+--
+#### `\(\large \beta_{1[8-cyl]}\)` is the *difference* between 4-cyl &amp; 8-cyl **@ 0hp**  
+
+--
+#### `\(\large \beta_2\)` is the effect of hp on mpg  
+
+???
+
+In this formulation, we assume that the effect of horsepower is the same for all cylinder levels
+
+---
+## Under the hood: ANCOVA
+
+
+```r
+lm(mpg ~ as.factor(cyl) + hp, data = mtcars)
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; std.error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 28.650 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.5878 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.044 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -5.968 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.6393 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.640 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0011 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -8.521 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.3261 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.663 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0010 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; hp &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.024 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0154 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -1.560 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1300 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+## Under the hood: Interactions
+
+`$$\begin{bmatrix}
+    \mu_1 \\
+    \mu_2 \\
+    \mu_3 \\
+    .\\
+    .\\
+    .\\
+    \mu_N
+\end{bmatrix} = \begin{bmatrix}
+    1 &amp; x1_1 &amp; x2_1 &amp; x1_1 * x2_1\\
+    1 &amp; x1_2 &amp; x2_2 &amp; x1_2 * x2_2\\
+    1 &amp; x1_3 &amp; x2_3 &amp; x1_3 * x2_3\\
+    . \\
+    . \\
+    . \\
+    1 &amp; x1_N &amp; x2_N &amp; x1_N * x2_N
+\end{bmatrix} \times \begin{bmatrix}
+    \beta_0\\
+    \beta_1\\
+    \beta_2\\
+    \beta_3
+\end{bmatrix}$$`
+
+---
+## Under the hood: Interactions
+
+
+
+```r
+model.matrix(lm(mpg~as.factor(cyl)*hp, data = mtcars))[c(3,1,5),]
+```
+
+
+```
+##                   (Intercept) cyl6 cyl8  hp cyl6:hp cyl8:hp
+## Datsun 710                  1    0    0  93       0       0
+## Mazda RX4                   1    1    0 110     110       0
+## Hornet Sportabout           1    0    1 175       0     175
+```
+
+--
+##### `\(\large \beta_0\)` is the mean mpg for 4-cylinders **@ 0hp**  
+
+--
+##### `\(\large \beta_{1[6-cyl]}\)` is the *difference* between 4-cyl &amp; 6-cyl **@ 0hp**  
+
+--
+##### `\(\large \beta_{1[8-cyl]}\)` is the *difference* between 4-cyl &amp; 8-cyl **@ 0hp**  
+
+--
+##### `\(\large \beta_2\)` is the effect of hp on mpg for 4-cylinders  
+
+--
+##### `\(\large \beta_{3[6-cyl]}\)` is the *difference* between the effect of hp in 4-cyl vs 6-cyl   
+
+--
+##### `\(\large \beta_{3[8-cyl]}\)` is the *difference* between the effect of hp in 4-cyl vs 8-cyl     
+
+---
+## Under the hood: Interactions
+
+
+```r
+lm(mpg ~ as.factor(cyl) * hp, data = mtcars)
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; std.error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35.9830 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.8891 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.252 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -15.3092 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.4346 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.059 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0496 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -17.9030 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.2596 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.404 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0022 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; hp &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.1128 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0457 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.465 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0206 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl6:hp &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1052 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0685 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.536 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1367 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl8:hp &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0985 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0486 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.026 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0531 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+## Under the hood: Interactions
+
+
+
+```r
+model.matrix(lm(mpg ~ as.factor(cyl) * hp - 1 - hp, data = mtcars))[c(3,1,5),]
+```
+
+
+```
+##                   cyl4 cyl6 cyl8 cyl4:hp cyl6:hp cyl8:hp
+## Datsun 710           1    0    0      93       0       0
+## Mazda RX4            0    1    0       0     110       0
+## Hornet Sportabout    0    0    1       0       0     175
+```
+
+--
+`\(\large \beta_{0[4-cyl]}\)` is the mean mpg for 4-cylinders **@ 0hp**  
+
+--
+`\(\large \beta_{0[6-cyl]}\)` is the mean mpg for 6-cylinders **@ 0hp**  
+
+--
+`\(\large \beta_{0[8-cyl]}\)` is the mean mpg for 8-cylinders **@ 0hp**  
+
+--
+`\(\large \beta_{1[4-cyl]}\)` is the effect of hp on mpg for 4-cylinders  
+
+--
+`\(\large \beta_{1[6-cyl]}\)` is the effect of hp on mpg for 6-cylinders   
+
+--
+`\(\large \beta_{1[8-cyl]}\)` is the effect of hp on mpg for 8-cylinders     
+
+---
+### Under the hood: Interactions
+
+
+```r
+lm(mpg ~ as.factor(cyl) * hp - 1, data = mtcars)
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; std.error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 35.9830 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.8891 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.2523 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 20.6739 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.3362 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.2628 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0031 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18.0801 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.5410 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.1059 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl4:hp &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.1128 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0457 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -2.4652 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0206 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl6:hp &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.0076 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0510 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.1494 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8824 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; cyl8:hp &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.0142 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0165 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.8645 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3952 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+---
+class: inverse, middle, center
+
+# Linear models under the hood
+## Variations on the stochastic model
+
+---
+## Stochasticity in the linear model
+
+`$$\underbrace{\LARGE \mu_i = -2 + 0.5 \times x_i}_{Deterministic}$$`
+--
+&lt;img src="Lecture7_files/figure-html/unnamed-chunk-28-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Stochasticity in the linear model
+
+`$$\LARGE \mu_i = -2 + 0.5 \times x_i$$`
+
+`$$\underbrace{\LARGE y_i \sim normal(\mu_i, \tau)}_{Stochastic}$$`  
+
+--
+&lt;img src="Lecture7_files/figure-html/unnamed-chunk-29-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Stochasticity in the linear model
+
+`$$\LARGE \mu_i = -2 + 0.5 \times x_i$$`
+
+
+&lt;img src="Lecture7_files/figure-html/unnamed-chunk-30-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Stochasticity in the linear model
+
+`$$\LARGE \mu_i = -2 + 0.5 \times x_i$$`
+
+`$$\LARGE y_i \sim normal(\mu_i, \tau)$$`  
+
+&lt;img src="Lecture7_files/figure-html/unnamed-chunk-31-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+class: inverse, center, middle
+
+# Components of the linear model
+
+---
+## Components of the linear model
+
+### 1) Distribution
+
+`$$\LARGE y_i \sim normal(\mu_i, \tau)$$`
+
+--
+### 2) Link function
+
+`$$\LARGE \mu_i = E(y_i) = linear\;\;predictor$$`
+
+--
+### 3) Linear predictor
+
+`$$\LARGE \beta_0 + \beta_1 \times x_i$$`
+
+
+---
+## Stochasticity in the linear model
+
+### What happens if `\(\Large 0 \leq y_i\)`?
+&lt;br/&gt;
+&lt;br/&gt;
+
+--
+&lt;img src="Lecture7_files/figure-html/unnamed-chunk-32-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+##  Components of the generalized linear model
+
+### 1) Distribution
+
+`$$\LARGE y_i \sim normal(\mu_i, \tau)$$`
+
+---
+## Components of the generalized linear model
+
+### 1) Distribution
+
+`$$\LARGE y_i \sim Poisson(\lambda_i)$$`
+
+
+--
+### 2) Link function
+
+`$$\LARGE \lambda_i = E(y_i) = linear\;\;predictor$$`
+
+---
+## Components of the generalized linear model
+
+### 1) Distribution
+
+`$$\LARGE y_i \sim Poisson(\lambda_i)$$`
+
+
+### 2) Link function
+
+`$$\LARGE log(\lambda_i) = log(E(y_i)) = linear\;\;predictor$$`
+
+--
+&lt;img src="Lecture7_files/figure-html/unnamed-chunk-33-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Components of the generalized linear model
+
+### 1) Distribution
+
+`$$\LARGE y_i \sim Poisson(\lambda_i)$$`
+
+
+### 2) Link function
+
+`$$\LARGE log(\lambda_i) = log(E(y_i)) = linear\;\;predictor$$`
+
+---
+## Components of the generalized linear model
+
+### 1) Distribution
+
+`$$\LARGE y_i \sim Poisson(\lambda_i)$$`
+
+
+### 2) Link function
+
+`$$\LARGE log(\lambda_i) = log(E(y_i)) = linear\;\;predictor$$`
+
+### 3) Linear predictor
+
+`$$\LARGE \beta_0 + \beta_1 \times x_i$$` 
+
+
+---
+## Components of the generalized linear model
+
+### 1) Distribution
+
+`$$\LARGE y_i \sim Bernoulli(p_i)$$`
+
+--
+### 2) Link function
+
+`$$\LARGE logit(p_i) = log \bigg(\frac{p_i}{1-p_0}\bigg) = linear\;\;predictor$$`
+
+--
+&lt;img src="Lecture7_files/figure-html/unnamed-chunk-34-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Components of the generalized linear model
+
+### 1) Distribution
+
+`$$\LARGE y_i \sim Bernoulli(p_i)$$`
+
+### 2) Link function
+
+`$$\LARGE logit(p_i) = log \bigg(\frac{p_i}{1-p_0}\bigg) = linear\;\;predictor$$`
+
+### 3) Linear predictor
+
+`$$\LARGE \beta_0 + \beta_1 \times x_i$$` 
+
+---
+## Components of the generalized linear model
+
+### 1) Distribution
+
+`$$\LARGE y_i \sim binomial(N, p_i)$$`
+
+### 2) Link function
+
+`$$\LARGE logit(p_i) = log \bigg(\frac{p_i}{1-p_0}\bigg) = linear\;\;predictor$$`
+
+### 3) Linear predictor
+
+`$$\LARGE \beta_0 + \beta_1 \times x_i$$` 
+
+---
+class: inverse
+
+## Generalized linear models
+&lt;br/&gt;
+&lt;br/&gt;
+--
+- Flexible method to model observations arising from different probability distributions  
+&lt;br/&gt;
+&lt;br/&gt;
+--
+- Link many classical tests under unified framework  
+&lt;br/&gt;
+&lt;br/&gt;
+--
+- Underlie nearly all common ecological models
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
