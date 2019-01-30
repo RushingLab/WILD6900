@@ -73,3 +73,55 @@ To see what each column represents, type:
 ```{r eval = FALSE}
 ?falcons
 ```
+
+## Analysis 1: Change in population size
+
+The first model we will fit examines change in the number of adult falcon pairs over time. Plotting the data shows that ths change has not been linear:
+
+```{r fig.width=6, fig.height=6}
+ggplot(falcons, aes(x = Year, y = Pairs)) + geom_point() + stat_smooth(se = FALSE)
+```
+
+After a short decline at the beginning of the study period, the population then increased dramatically before perhaps reaching its carrying capacity. 
+
+### Modeling non-linear effects using linear models
+
+How can we model the non-linear change in abundance if, by definition, linear models model linear effects? Using polynomials! 
+
+Remember the equation for a curved line with a single peak (or bottom):
+
+$$\Large y = a + b \times x + c \times x^2$$
+
+```{r echo = FALSE, fig.width=6, fig.height=6}
+a <- 25
+b <- 5
+c <- -0.5
+
+x <- seq(-10, 10)
+y <- a + b * x + c * x^2
+
+df <- data.frame(x=x, y=y)
+
+ggplot(df, aes(x, y)) + geom_path(size = 2, color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
+  annotate("text", x = 0, y = -20, label = "y = 25 + 5*x - 0.5*x^2", size = 6)
+
+```
+
+We can add more complex shape by adding additional polynomial terms. For example, including a cubic term creates an s-shaped curve:
+
+$$\Large y = a + b \times x + c \times x^2 + d \times x^3$$
+
+```{r echo = FALSE, fig.width=6, fig.height=6}
+a <- 4
+b <- -0.1
+c <- 0.0075
+d <- -0.0004
+x <- seq(-50, 50)
+y <- a + b * x + c * x^2 + d*x^3
+
+df <- data.frame(x=x, y=y)
+
+ggplot(df, aes(x, y)) + geom_path(size = 2, color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
+  annotate("text", x = 10, y = 60, label = "y = 4 -0.1*x + 0.0075*x^2 - 0.0004*x^3", size = 6)
+
+```
