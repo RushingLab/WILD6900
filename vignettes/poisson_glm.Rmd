@@ -1,0 +1,75 @@
+---
+title: "Poisson GLM for modeling count data"
+author: "WILD6900"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+header-includes:
+  - \usepackage{amsmath}
+  
+vignette: >
+  %\VignetteIndexEntry{poisson_glm}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(fig.align = 'center', message = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+library(WILD6900)
+```
+
+In this activity, we will analyze a small data set containing counts of both population size and reproductive success using Poisson and Binomial GLMs.
+
+***
+**Objectives**
+
+* Analyze count data using Poisson and Binomial GLMs  
+
+* Gain experience diagnosing JAGS output to check convergence
+
+* `R` functions used in this exercise:  
+    + `system.file()`
+
+***
+
+## Data
+
+The data for this activity comes from a long-term project that monitored the peregrine falcon population nesting in the [French Jura](https://en.wikipedia.org/wiki/Jura_(department) from 1964 to 2003 [^1]. 
+
+[^1]: These data are from Kéry & Schaub *Bayesian Population Analysis Using WinBugs* and can be accesssed [here](https://www.vogelwarte.ch/de/projekte/publikationen/bpa/complete-code-and-data-files-of-the-book)
+
+```{r out.width="75%", echo = FALSE}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/7/7b/Peregrine_falcon_%28Australia%29.JPG")
+```
+
+To access the data, update to the latest version of the `WILD6900` package:
+
+```{r eval = FALSE}
+devtools::install_github("RushingLab/WILD6900")
+```
+
+Once the updated package is installed, the data can be loaded:
+
+```{r eval = FALSE}
+library(WILD6900)
+
+data("falcons")
+
+head(falcons)
+```
+
+```{r echo = FALSE}
+library(WILD6900)
+
+data("falcons")
+
+knitr::kable(head(falcons), format = "html")
+```
+
+To see what each column represents, type:
+
+```{r eval = FALSE}
+?falcons
+```

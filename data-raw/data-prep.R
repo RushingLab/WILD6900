@@ -15,7 +15,7 @@ SurvPriorData <- dplyr::rename(SurvPriorDat, phi = AF, se = AFse)
 
 ## BBS data
 
-# bbs <- BBS.tenstop::get_BBS10()
+bbs <- BBS.tenstop::get_BBS10()
 
 bbs_routes <- dplyr::filter(bbs$routes, BCR %in% c(9, 10, 16))
 
@@ -35,4 +35,8 @@ library(sf)
 bcr <- sf::st_read("data-raw/BCR.shp")
 bcr <- dplyr::filter(bcr, BCRNumber %in% c(9, 10, 16))
 
-usethis::use_data(WILD6900_colors, SurvPriorData, bbs_data, bcr, overwrite = TRUE)
+### Falcons ----
+
+falcons <- read.table('data-raw/falcons.txt', header =  TRUE)
+
+usethis::use_data(WILD6900_colors, SurvPriorData, bbs_data, bcr, falcons, overwrite = TRUE)
