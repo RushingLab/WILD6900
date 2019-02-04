@@ -34,6 +34,8 @@ navbar:
           href: articles/Lecture5/Lecture5.html
         - text: "Lecture 6: Introduction of Bayesian analysis using JAGS"
           href: articles/Lecture6/Lecture6.html
+        - text: "Lecture 7: Generalized linear model review"
+          href: articles/Lecture7/Lecture7.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:
@@ -47,6 +49,8 @@ navbar:
           href: articles/simulation.html
         - text: "Metropolis sampler for linear regression model"
           href: articles/metropolis.html
+        - text: "Poisson and binomial GLMs in JAGS"
+          href: articles/poisson_glm.html
     - icon: fas fa-pencil-square-o
       text: "Assignments"
       href: articles/homework.html
