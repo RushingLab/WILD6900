@@ -18,7 +18,7 @@
         debug = FALSE
       ),
       axis.text = element_text(size = rel(0.8), color = "#999999"),
-      axis.title = element_text(size = rel(0.8), color = "#999999", vjust = 0.35),
+      axis.title = element_text(size = rel(0.8), color = "grey30", vjust = 0.35),
       strip.text = element_text(size = rel(0.8)),
 
       axis.line = element_line(size = 0.8, color = "#999999"),

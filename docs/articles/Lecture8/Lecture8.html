@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 8</title>
+    <meta charset="utf-8">
+    <meta name="author" content="   WILD6900 (Spring 2019)" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="WILD6900.css" type="text/css" />
+    <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lecture 8
+## Introduction to hierarchical models
+### <br/><br/><br/>WILD6900 (Spring 2019)
+
+---
+
+
+
+
+## Readings
+
+&gt; Kéry &amp; Schaub 73-82
+
+
+
+---
+class: inverse, center, middle
+
+# What are random effects?
+
+---
+## What are random effects?
+&lt;br/&gt;
+
+--
+- Fixed effects are constant across observational units, random effects vary across units  
+&lt;br/&gt;
+
+--
+- Fixed effects are used when you are interested in the specific factor levels, random effects are used when you are interested in the underlying population  
+&lt;br/&gt;
+
+--
+- When factors levels are exhaustive, they are fixed. When they are a sample of the possible levels, they are random  
+&lt;br/&gt;
+
+--
+- Random effects are the realized values of a random variable  
+&lt;br/&gt;
+
+--
+- Fixed effects are estimated by maximum likelihood, random effects are estimated with shrinkage  
+
+???
+
+Definitions from Gelman &amp; Hill (2007) pg. 245
+
+
+---
+class: inverse, center, middle
+
+# The question
+
+### How does body length influence body mass?
+
+---
+# The data
+
+- `\(y_i\)` = body mass of individual `\(i\)`
+
+- `\(x_i\)` = body length of individual `\(i\)`
+
+- `\(j\)` = study plot of individual `\(i\)` `\((j \in [1,2,3,...,J])\)`
+
+---
+# Model 1
+
+&lt;br/&gt;
+`$$\Large y_i = \beta_0 + \beta_1 \times x_i + \epsilon_i$$`
+
+`$$\Large \epsilon_i \sim normal(0, \tau)$$`
+&lt;br/&gt;
+
+--
+&lt;img src="Lecture8_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Assumptions of model 1
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

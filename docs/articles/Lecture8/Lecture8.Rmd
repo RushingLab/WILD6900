@@ -1,0 +1,145 @@
+---
+title: "Lecture 8"
+subtitle: "Introduction to hierarchical models"
+author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
+library(WILD6900)
+library(gganimate)
+```
+
+## Readings
+
+> Kéry & Schaub 73-82
+
+```{r}
+N <- 200               # Number of observations
+J <- 5                 # Number of study plots
+
+mu.beta0 <- 20
+sigma.beta0 <- 4
+beta0 <- rnorm(J, mu.beta0, sigma.beta0)
+
+mu.beta1 <- 0.8           # Relationship between body length and body mass
+sigma.beta1 <- 0.2
+beta1 <- rnorm(J, mu.beta1, sigma.beta1)
+
+sigma2 <- 1.2            # Process variance
+tau <- 1/sqrt(sigma2)  # Precision 
+
+length <- rnorm(N)     # Body lengths
+
+x <- rmultinom(N, size = 1, prob = c(0.03, 0.3, 0.3, 0.2, 0.17))
+plot <- apply(x, 2, function(x) which(x == 1))
+
+mass <- data.frame(ID = seq(1:N),
+                   plot = as.factor(plot),
+                   length = length)
+
+mass <- dplyr::mutate(mass, pred.mass = beta0[plot] + beta1 * length,
+                      mass = rnorm(N, pred.mass, sqrt(sigma2)))
+```
+
+---
+class: inverse, center, middle
+
+# What are random effects?
+
+---
+## What are random effects?
+<br/>
+
+--
+- Fixed effects are constant across observational units, random effects vary across units  
+<br/>
+
+--
+- Fixed effects are used when you are interested in the specific factor levels, random effects are used when you are interested in the underlying population  
+<br/>
+
+--
+- When factors levels are exhaustive, they are fixed. When they are a sample of the possible levels, they are random  
+<br/>
+
+--
+- Random effects are the realized values of a random variable  
+<br/>
+
+--
+- Fixed effects are estimated by maximum likelihood, random effects are estimated with shrinkage  
+
+???
+
+Definitions from Gelman & Hill (2007) pg. 245
+
+
+---
+class: inverse, center, middle
+
+# The question
+
+### How does body length influence body mass?
+
+---
+# The data
+
+- $\large y_i$ = body mass of individual $\large i$
+
+- $\large x_i$ = body length of individual $\large i$
+
+- $\large j$ = study plot of individual $\large i$ $\large (j \in [1,2,3,...,J])$
+
+---
+# Model 1
+
+<br/>
+$$\Large y_i = \beta_0 + \beta_1 \times x_i + \epsilon_i$$
+
+$$\Large \epsilon_i \sim normal(0, \tau)$$
+<br/>
+
+--
+```{r fig.width=4.5, fig.height=4.5}
+ggplot(mass, aes(x = length, y = mass)) + geom_point() +
+  geom_abline(slope = mean(beta1), intercept = mean(beta0), size = 2, color = WILD6900_colors$value[WILD6900_colors$name=="warning"])
+```
+
+---
+## Assumptions of model 1
+
+--
+- Basic assumptions of linear regression
+<br/>
+
+--
+- The mean body mass 
+
+---
+# Model 2
+
+---
+# Model 1
+
+<br/>
+$$\Large y_{ij} = \beta_{0[j]} + \beta_1 \times x_i + \epsilon_i$$
+
+$$\Large \epsilon_i \sim normal(0, \tau)$$
+<br/>
+
+--
+```{r fig.width=4.5, fig.height=4.5}
+ggplot(mass, aes(x = length, y = mass)) + geom_point(aes(color = plot)) +
+  geom_abline(slope = mean(beta1), intercept = beta0, size = 2)
+```
+
