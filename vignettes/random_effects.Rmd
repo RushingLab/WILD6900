@@ -1,0 +1,103 @@
+---
+title: "Introduction to random effects and hierarchical models"
+author: "WILD6900"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+header-includes:
+  - \usepackage{amsmath}
+  
+vignette: >
+  %\VignetteIndexEntry{poisson_glm}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(fig.align = 'center', message = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+library(WILD6900)
+```
+
+In this activity, we will use the process of simulating data to understand what random effects are and how they are interpreted in hierarchical models.
+
+***
+**Objectives**
+
+* Simulate data sets with both fixed and random effect structure   
+
+* Fit fixed and random effects models in JAGS  
+
+***
+
+## Fixed effect linear model
+
+Let's start by simulating data from a simple "fixed-effects" linear model:
+
+$$y_i = \beta_{0[group\; i]} + \beta_1 \times x_i + \epsilon_i$$
+
+$$\epsilon_i \sim normal(0, \tau)$$
+
+Assuming $J > 2$ groups and $x$ is a continuous predictor variable, this is the "means parameterization" of a the classic ANCOVA model we learned about last week. To provide some biological realism, let's say $y$ is the mass (g) of individual lizards measured on $J$ study plots as a function of body length $x$ (mm). 
+
+To set up the simulation, we'll choose $J$, $N$, $\beta_1$, and $\tau$ (we'll set the $beta_0$'s below). We will also randomly assign each individual to one of the $J$ plots:
+
+```{r}
+N <- 200               # Number of observations
+J <- 5                 # Number of study plots
+beta1 <- 0.8           # Relationship between body length and body mass
+sigma2 <- 1.2            # Process variance
+tau <- 1/sqrt(sigma2)  # Precision 
+
+length <- rnorm(N)     # Body lengths
+
+plot <- sample(1:J, N, replace = TRUE) # Randomly assign each individual to a plot
+table(plot)
+```
+
+Although there are many definitions of what a fixed effect is (we care about *these specific* study plots,...), statistically treating the plot-specific intercepts (the $\beta_0$'s) as fixed effects means that we assume each group...
+
+To simulate these data, we choose a different intercepts for each population. 
+
+```{r}
+beta0 <- c(10, 16, 20, 26, 35)
+```
+
+Now let's create the predicted and observed mass for each individual:
+
+```{r}
+mass <- data.frame(ID = seq(1:N),
+                   plot = as.factor(plot),
+                   length = length)
+
+mass <- dplyr::mutate(mass, pred.mass = beta0[plot] + beta1 * length,
+                      mass = rnorm(N, pred.mass, sqrt(sigma2)))
+
+ggplot(mass, aes(x = length, y = mass)) + geom_point(aes(color = plot)) +
+  geom_abline(slope = beta1, intercept = beta0)
+  
+```
+
+```{r}
+lm(mass ~ plot + length - 1, data = mass)
+```
+
+```{r}
+jags_data <- list(y = mass$mass, N = nrow(mass), 
+                  J = length(levels(mass$plot)),
+                  plot = as.numeric(mass$plot),
+                  x = mass$length)
+
+jags_inits <- function(){list(beta0 = rnorm(length(levels(mass$plot))), 
+                              beta1 = rnorm(1),
+                              tau = runif(1))}
+params <- c("beta0", "beta1", "tau", "sigma")
+
+fit <- jagsUI::jags(data = jags_data, inits = jags_inits,
+                    parameters.to.save = params, 
+                    model.file = here::here("inst/jags/fixed_ancova.jags"),
+                    n.chains = 3, n.iter = 10000, n.burnin = 2500, n.thin = 1)
+
+print(fit)
+```
