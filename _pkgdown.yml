@@ -36,6 +36,8 @@ navbar:
           href: articles/Lecture6/Lecture6.html
         - text: "Lecture 7: Generalized linear model review"
           href: articles/Lecture7/Lecture7.html
+        - text: "Lecture 8: Introduction to hierarchical models"
+          href: articles/Lecture8/Lecture8.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:
@@ -51,6 +53,8 @@ navbar:
           href: articles/metropolis.html
         - text: "Poisson and binomial GLMs in JAGS"
           href: articles/poisson_glm.html
+        - text: "Random effects ANCOVA in JAGS"
+          href: articles/random_effects.html
     - icon: fas fa-pencil-square-o
       text: "Assignments"
       href: articles/homework.html

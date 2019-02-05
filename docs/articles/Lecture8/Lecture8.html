@@ -25,8 +25,6 @@ class: center, middle, inverse, title-slide
 
 &gt; Kéry &amp; Schaub 73-82
 
-
-
 ---
 class: inverse, center, middle
 
@@ -59,37 +57,231 @@ class: inverse, center, middle
 
 Definitions from Gelman &amp; Hill (2007) pg. 245
 
-
 ---
-class: inverse, center, middle
+## A simple linear model
 
-# The question
-
-### How does body length influence body mass?
-
----
-# The data
-
-- `\(y_i\)` = body mass of individual `\(i\)`
-
-- `\(x_i\)` = body length of individual `\(i\)`
-
-- `\(j\)` = study plot of individual `\(i\)` `\((j \in [1,2,3,...,J])\)`
-
----
-# Model 1
-
-&lt;br/&gt;
-`$$\Large y_i = \beta_0 + \beta_1 \times x_i + \epsilon_i$$`
+`$$\Large y_{ij} = \beta_{[j]} + \epsilon_i$$`
 
 `$$\Large \epsilon_i \sim normal(0, \tau)$$`
+
+--
+- If `\(\beta_{[1]} = \beta_{[2]} = \beta_{[3]} = ...=\beta_{[J]}\)`
+
+--
+```
+model {
+  # Priors
+  beta0 ~ dnorm(0, , 0.33)
+  tau ~ dgamma(0.25, 0.25)
+    
+  # Likelihood
+  for (i in 1:N){
+    y[i] ~ dnorm(mu[i], tau)        
+    mu[i] &lt;- beta0
+  } #i
+}
+```
+
+---
+## A simple linear model
+
+`$$\Large y_{ij} = \beta_{[j]} + \epsilon_i$$`
+
+`$$\Large \epsilon_i \sim normal(0, \tau)$$`
+
+--
+- If `\(\beta_{[1]} \perp \beta_{[2]} \perp \beta_{[3]} \perp ...\perp \beta_{[J]}\)`
+
+--
+```
+model {
+  # Priors
+  for(j in 1:J){
+    beta0 ~ dnorm(0, , 0.33)
+  }
+  tau ~ dgamma(0.25, 0.25)
+    
+  # Likelihood
+  for (i in 1:N){
+    y[i] ~ dnorm(mu[i], tau)        
+    mu[i] &lt;- beta0
+  } #i
+}
+```
+???
+
+nb `\(\perp\)` means "independent of"
+
+This should look familiar - it's the means parameterization of the ANOVA model
+
+---
+## A simple linear model
+
+`$$\Large y_{ij} = \beta_{[j]} + \epsilon_i$$`
+
+`$$\Large \epsilon_i \sim normal(0, \tau)$$`
+
+--
+- If `\(\beta_{[j]} \sim normal(\mu_{\beta0}, \tau_{\beta0})\)`
+
+&lt;img src="Lecture8_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## A simple linear model
+
+`$$\Large y_{ij} = \beta_{[j]} + \epsilon_i$$`
+
+`$$\Large \epsilon_i \sim normal(0, \tau)$$`
+
+--
+- If `\(\beta_{[j]} \sim normal(\mu_{\beta0}, \tau_{\beta0})\)`
+
+--
+```
+model {
+  # Priors
+  for(j in 1:J){
+    beta0 ~ dnorm(mu.beta, , tau.beta)
+  }
+  mu.beta ~ dnorm(0, 0.33)
+  tau.beta ~ dgamma(0.25, 0.25)
+  tau ~ dgamma(0.25, 0.25)
+    
+  # Likelihood
+  for (i in 1:N){
+    y[i] ~ dnorm(mu[i], tau)        
+    mu[i] &lt;- beta0
+  } #i
+}
+```
+
+---
+## Random effects
 &lt;br/&gt;
 
 --
-&lt;img src="Lecture8_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+- Only apply to factors  
+&lt;br/&gt;
+
+--
+- Imply grouped effects  
+&lt;br/&gt;
+
+--
+- Can include intercept, slope, and variance parameters  
+&lt;br/&gt;
+
+--
+- Assume exchangeability  
+&lt;br/&gt;
+
+--
+- Represent a compromise between total pooling `\((\beta_{0[1]}=\beta_{0[2]}=...=\beta_{0[J]})\)` and no pooling `\((\beta_{[1]} \perp \beta_{[2]} \perp ...\perp \beta_{[J]})\)`  
+&lt;br/&gt;
+
+--
+- Typically require `\(&gt;5-10\)` factor levels  
+
 
 ---
-## Assumptions of model 1
+## Random effects = hierarchical model
+&lt;br/&gt;
+&lt;br/&gt;
+
+
+`$$\Large [\beta_{0[j]}, \mu_{\beta0}, \tau_{\beta0}, \tau|y_{ij}] = [y_{ij}|\beta_{0[j]}, \tau][\beta_{0[j]}|\mu_{\beta0}, \tau_{\beta0}][\tau][\mu_{\beta0}][\tau_{\beta0}]$$`
+&lt;br/&gt;
+
+--
+- Can include multiple random effects  
+
+- Can include fixed and random effects (mixed-models)  
+
+- Can include multiple levels of hierarchy  
+
+---
+## Why use random effects?
+
+1) Scope of inference  
+
+- learn about `\(\beta_{0[j]}\)` **and** `\(\mu_{beta_0}\)`, `\(\tau_{beta_0}\)`  
+
+- prediction to unsampled groups (in space or time)  
+
+
+---
+## Why use random effects?
+
+1) Scope of inference  
+
+2) Partitioning of variance  
+
+- Account for variability among groups vs. among observational units
+
+---
+## Why use random effects?
+
+1) Scope of inference  
+
+2) Partitioning of variance  
+
+3) Accounting for uncertainty  
+
+- modeling `\(\tau_{beta_0}\)` recognizes uncertainty from sampling groups
+
+---
+## Why use random effects?
+
+1) Scope of inference  
+
+2) Partitioning of variance  
+
+3) Accounting for uncertainty  
+
+4) Avoiding psuedo-replication  
+
+- Account for non-independence within groups
+
+---
+## Why use random effects?
+
+1) Scope of inference  
+
+2) Partitioning of variance  
+
+3) Accounting for uncertainty  
+
+4) Avoiding psuedo-replication  
+
+5) Borrowing strength  
+
+- `\(\beta_{0[j]}\)` estimating from group `\(j\)` observations + all other groups  
+
+- "shrinkage"" towards mean  
+
+    + degree of shrinkage inversely proportional to precision  
+    
+---
+## Why not use random effects?
+
+#### Always use random effects (Gelman &amp; Hill 2007)
+
+#### but...
+
+--
+- Assumption of exchangeability  
+&lt;br/&gt;
+
+--
+- Requires 5-10 levels  
+&lt;br/&gt;
+
+--
+- Computationally intensive  
+&lt;br/&gt;
+
+--
+- Harder to interpret
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

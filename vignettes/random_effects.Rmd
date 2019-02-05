@@ -31,73 +31,194 @@ In this activity, we will use the process of simulating data to understand what 
 
 ***
 
-## Fixed effect linear model
+For this lab, let's assume we're interested in modeling the the body mass (g) of lizards as a function of body length (mm). We capture lizards on $J$ study plots and measure the mass and length of each individual. 
 
-Let's start by simulating data from a simple "fixed-effects" linear model:
+## The model
 
-$$y_i = \beta_{0[group\; i]} + \beta_1 \times x_i + \epsilon_i$$
+In this example, we have a single continuous predictor variable and $J$ levels of a factor. We'll assume for now that the residual body mass of each individual is normally distributed after accounting for body length. This suggests that following model:
+
+$$y_{ij} = \alpha_{[j]} + \beta \times x_i + epsilon_i$$
+
+$$\alpha_{[j]} \sim normal(\mu_{alpha}, \tau_{alpha})$$
 
 $$\epsilon_i \sim normal(0, \tau)$$
 
-Assuming $J > 2$ groups and $x$ is a continuous predictor variable, this is the "means parameterization" of a the classic ANCOVA model we learned about last week. To provide some biological realism, let's say $y$ is the mass (g) of individual lizards measured on $J$ study plots as a function of body length $x$ (mm). 
+First, set up the simulation parameters:
 
-To set up the simulation, we'll choose $J$, $N$, $\beta_1$, and $\tau$ (we'll set the $beta_0$'s below). We will also randomly assign each individual to one of the $J$ plots:
+```{r eval = FALSE}
+J <- 20               # Number of sites
+N <- 200              # Number of observations
+Length <- rnorm(N)    # Scaled body length
 
-```{r}
-N <- 200               # Number of observations
-J <- 5                 # Number of study plots
-beta1 <- 0.8           # Relationship between body length and body mass
-sigma2 <- 1.2            # Process variance
-tau <- 1/sqrt(sigma2)  # Precision 
-
-length <- rnorm(N)     # Body lengths
-
-plot <- sample(1:J, N, replace = TRUE) # Randomly assign each individual to a plot
+## Randomly determine each individuals study plot
+plot <- sample(x = 1:J, size = N, replace = TRUE)
 table(plot)
 ```
 
-Although there are many definitions of what a fixed effect is (we care about *these specific* study plots,...), statistically treating the plot-specific intercepts (the $\beta_0$'s) as fixed effects means that we assume each group...
+```{r echo = FALSE}
+J <- 20               # Number of sites
+N <- 200              # Number of observations
+Length <- rnorm(N)    # Scaled body length
 
-To simulate these data, we choose a different intercepts for each population. 
-
-```{r}
-beta0 <- c(10, 16, 20, 26, 35)
+## Randomly determine each individuals study plot
+plot <- sample(x = 1:J, size = N, replace = TRUE)
+knitr::kable(table(plot))
 ```
 
-Now let's create the predicted and observed mass for each individual:
+Now, let's set the parameters in the model: 
 
 ```{r}
-mass <- data.frame(ID = seq(1:N),
-                   plot = as.factor(plot),
-                   length = length)
+mu.alpha <- 23   # Overall mean body mass
+sigma.alpha <- 2 # standard deviation of group-level means
+tau.alpha <- 1/sigma.alpha^2
 
-mass <- dplyr::mutate(mass, pred.mass = beta0[plot] + beta1 * length,
-                      mass = rnorm(N, pred.mass, sqrt(sigma2)))
+alpha <- rnorm(J, mu.alpha, sigma.alpha)
 
-ggplot(mass, aes(x = length, y = mass)) + geom_point(aes(color = plot)) +
-  geom_abline(slope = beta1, intercept = beta0)
-  
+beta <- 6     # Slope of body length on mass
+sigma <- 3    # Residual standard deviation
+tau <- 1/sigma^2
 ```
 
+To create the linear predictor, we'll use the `model.matrix()` function to create the model matrix corresponding to our model and then multiply it by our parameters:
+
 ```{r}
-lm(mass ~ plot + length - 1, data = mass)
+Xmat <- model.matrix(~as.factor(plot) + Length - 1)
+Xmat[1:5,c(1,2,3,21)]
 ```
 
-```{r}
-jags_data <- list(y = mass$mass, N = nrow(mass), 
-                  J = length(levels(mass$plot)),
-                  plot = as.numeric(mass$plot),
-                  x = mass$length)
+Now use matrix multiplicaiton to create the linear predictor:
 
-jags_inits <- function(){list(beta0 = rnorm(length(levels(mass$plot))), 
-                              beta1 = rnorm(1),
+```{r}
+linear.pred <- Xmat %*% c(alpha, beta)
+head(linear.pred)
+```
+
+And finally generate the observations and combine the relevant vectors within a single data frame:
+
+```{r fig.width=6, fig.height=6}
+mass <- rnorm(N, mean = linear.pred, sd = sigma)
+mass_df <- data.frame(plot = as.factor(plot), length = Length, pred_length = linear.pred, mass = mass)
+
+ggplot(mass_df, aes(x = length, y = mass, color = plot)) +
+  geom_abline(intercept = alpha, slope = beta) +
+  geom_point() +
+  scale_color_brewer() +
+  guides(color = "none")
+```
+
+
+## Fitting the model
+
+Now we're ready to fit the model in JAGS. Code for this model can be accessed with:
+
+```{r}
+model.file <- system.file("jags/random_ancova.jags", package = "WILD6900")
+```
+
+Next, prepare the data, initial values, and MCMC settings. Notice the need to generate $J$ starting values of $\alpha$:
+
+```{r eval = FALSE}
+jags_data <- list(y = mass_df$mass, N = nrow(mass_df), 
+                  J = J,
+                  plot = plot,
+                  x = mass_df$length)
+
+jags_inits <- function(){list(mu.alpha = rnorm(1),
+                              sigma.alpha = runif(1),
+                              alpha = rnorm(J), # Notice we need J initial values 
+                              beta = rnorm(1),
                               tau = runif(1))}
-params <- c("beta0", "beta1", "tau", "sigma")
 
-fit <- jagsUI::jags(data = jags_data, inits = jags_inits,
+params <- c("mu.alpha", "sigma.alpha", "alpha", "beta", "tau", "sigma")
+
+re_fit <- jagsUI::jags(data = jags_data, inits = jags_inits,
                     parameters.to.save = params, 
-                    model.file = here::here("inst/jags/fixed_ancova.jags"),
+                    model.file = model.file,
                     n.chains = 3, n.iter = 10000, n.burnin = 2500, n.thin = 1)
 
-print(fit)
+print(re_fit)
+```
+
+```{r include = FALSE}
+jags_data <- list(y = mass_df$mass, N = nrow(mass_df), 
+                  J = J,
+                  plot = plot,
+                  x = mass_df$length)
+
+jags_inits <- function(){list(mu.alpha = rnorm(1),
+                              sigma.alpha = runif(1),
+                              alpha = rnorm(J), # Notice we need J initial values 
+                              beta = rnorm(1),
+                              tau = runif(1))}
+
+params <- c("mu.alpha", "sigma.alpha", "alpha", "beta", "tau", "sigma")
+
+re_fit <- jagsUI::jags(data = jags_data, inits = jags_inits,
+                    parameters.to.save = params, 
+                    model.file = model.file,
+                    n.chains = 3, n.iter = 10000, n.burnin = 2500, n.thin = 1)
+```
+
+```{r echo = FALSE}
+knitr::kable(re_fit$summary[1:10,], format = 'html')
+```
+Just for kicks, let's fit the same data to a model that assumes fixed-effects on the $\alpha$'s:
+
+```{r eval = FALSE}
+model.file <- system.file("jags/fixed_ancova.jags", package = "WILD6900")
+
+jags_inits <- function(){list(alpha = rnorm(J), # Notice we need J initial values 
+                              beta = rnorm(1),
+                              tau = runif(1))}
+
+params <- c("alpha", "beta", "tau", "sigma")
+
+fe_fit <- jagsUI::jags(data = jags_data, inits = jags_inits,
+                    parameters.to.save = params, 
+                    model.file = model.file,
+                    n.chains = 3, n.iter = 10000, n.burnin = 2500, n.thin = 1)
+
+print(fe_fit)
+```
+
+```{r include = FALSE}
+model.file <- system.file("jags/fixed_ancova.jags", package = "WILD6900")
+
+jags_inits <- function(){list(alpha = rnorm(J), # Notice we need J initial values 
+                              beta = rnorm(1),
+                              tau = runif(1))}
+
+params <- c("alpha", "beta", "tau", "sigma")
+
+fe_fit <- jagsUI::jags(data = jags_data, inits = jags_inits,
+                    parameters.to.save = params, 
+                    model.file = model.file,
+                    n.chains = 3, n.iter = 10000, n.burnin = 2500, n.thin = 1)
+
+print(fe_fit)
+```
+
+```{r echo = FALSE}
+knitr::kable(fe_fit$summary[1:10,], format = 'html')
+```
+
+Finally, combine results from the two models to visualize differences in the $\alpha$ estimates:
+
+```{r fig.width=6, fig.height=6}
+
+compare_mods <- data.frame(alpha_mean = c(alpha, re_fit$mean$alpha, fe_fit$mean$alpha),
+                           CI_2.5 = c(rep(NA, J), re_fit$q2.5$alpha, fe_fit$q2.5$alpha),
+                           CI_97.5 = c(rep(NA, J), re_fit$q97.5$alpha, fe_fit$q97.5$alpha), 
+                           n = c(table(plot), table(plot) - 0.25, table(plot) + 0.25),
+                           model = rep(c("True", "Random", "Fixed"), each = J))
+
+ggplot(compare_mods, aes(x = alpha_mean, color = model, y = n)) + 
+  geom_vline(xintercept = mu.alpha, color = "grey50", linetype = "longdash") +
+  geom_vline(xintercept = re_fit$mean$mu.alpha, color = "#CD0200", alpha = 0.75) +
+  geom_errorbarh(aes(xmin = CI_2.5, xmax = CI_97.5), height = 0) +
+  geom_point(size = 4, color = "white") +
+  geom_point() +
+  scale_color_manual(values = c("#446E9B", "#D47500", "black")) +
+  scale_x_continuous(expression(alpha)) +
+  scale_y_continuous("Sample size")
 ```

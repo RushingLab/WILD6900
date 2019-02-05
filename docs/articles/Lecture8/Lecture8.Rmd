@@ -23,34 +23,6 @@ library(gganimate)
 
 > Kéry & Schaub 73-82
 
-```{r}
-N <- 200               # Number of observations
-J <- 5                 # Number of study plots
-
-mu.beta0 <- 20
-sigma.beta0 <- 4
-beta0 <- rnorm(J, mu.beta0, sigma.beta0)
-
-mu.beta1 <- 0.8           # Relationship between body length and body mass
-sigma.beta1 <- 0.2
-beta1 <- rnorm(J, mu.beta1, sigma.beta1)
-
-sigma2 <- 1.2            # Process variance
-tau <- 1/sqrt(sigma2)  # Precision 
-
-length <- rnorm(N)     # Body lengths
-
-x <- rmultinom(N, size = 1, prob = c(0.03, 0.3, 0.3, 0.2, 0.17))
-plot <- apply(x, 2, function(x) which(x == 1))
-
-mass <- data.frame(ID = seq(1:N),
-                   plot = as.factor(plot),
-                   length = length)
-
-mass <- dplyr::mutate(mass, pred.mass = beta0[plot] + beta1 * length,
-                      mass = rnorm(N, pred.mass, sqrt(sigma2)))
-```
-
 ---
 class: inverse, center, middle
 
@@ -83,63 +55,249 @@ class: inverse, center, middle
 
 Definitions from Gelman & Hill (2007) pg. 245
 
-
 ---
-class: inverse, center, middle
+## A simple linear model
 
-# The question
-
-### How does body length influence body mass?
-
----
-# The data
-
-- $\large y_i$ = body mass of individual $\large i$
-
-- $\large x_i$ = body length of individual $\large i$
-
-- $\large j$ = study plot of individual $\large i$ $\large (j \in [1,2,3,...,J])$
-
----
-# Model 1
-
-<br/>
-$$\Large y_i = \beta_0 + \beta_1 \times x_i + \epsilon_i$$
+$$\Large y_{ij} = \beta_{[j]} + \epsilon_i$$
 
 $$\Large \epsilon_i \sim normal(0, \tau)$$
-<br/>
 
 --
-```{r fig.width=4.5, fig.height=4.5}
-ggplot(mass, aes(x = length, y = mass)) + geom_point() +
-  geom_abline(slope = mean(beta1), intercept = mean(beta0), size = 2, color = WILD6900_colors$value[WILD6900_colors$name=="warning"])
+- If $\beta_{[1]} = \beta_{[2]} = \beta_{[3]} = ...=\beta_{[J]}$
+
+--
+```
+model {
+  # Priors
+  beta0 ~ dnorm(0, , 0.33)
+  tau ~ dgamma(0.25, 0.25)
+    
+  # Likelihood
+  for (i in 1:N){
+    y[i] ~ dnorm(mu[i], tau)        
+    mu[i] <- beta0
+  } #i
+}
 ```
 
 ---
-## Assumptions of model 1
+## A simple linear model
 
---
-- Basic assumptions of linear regression
-<br/>
-
---
-- The mean body mass 
-
----
-# Model 2
-
----
-# Model 1
-
-<br/>
-$$\Large y_{ij} = \beta_{0[j]} + \beta_1 \times x_i + \epsilon_i$$
+$$\Large y_{ij} = \beta_{[j]} + \epsilon_i$$
 
 $$\Large \epsilon_i \sim normal(0, \tau)$$
+
+--
+- If $\beta_{[1]} \perp \beta_{[2]} \perp \beta_{[3]} \perp ...\perp \beta_{[J]}$
+
+--
+```
+model {
+  # Priors
+  for(j in 1:J){
+    beta0 ~ dnorm(0, , 0.33)
+  }
+  tau ~ dgamma(0.25, 0.25)
+    
+  # Likelihood
+  for (i in 1:N){
+    y[i] ~ dnorm(mu[i], tau)        
+    mu[i] <- beta0
+  } #i
+}
+```
+???
+
+nb $\perp$ means "independent of"
+
+This should look familiar - it's the means parameterization of the ANOVA model
+
+---
+## A simple linear model
+
+$$\Large y_{ij} = \beta_{[j]} + \epsilon_i$$
+
+$$\Large \epsilon_i \sim normal(0, \tau)$$
+
+--
+- If $\beta_{[j]} \sim normal(\mu_{\beta0}, \tau_{\beta0})$
+
+```{r, fig.height = 5, fig.width = 8}
+x <- seq(from = 0, to = 20, length.out = 200)
+
+df <- data.frame(x = x, density = dnorm(x, mean = 10, sd = 2))
+
+beta0 <- c(4, 8, 10, 11, 13)
+
+
+ggplot(df, aes(x = x, y = density))  +
+  scale_x_continuous("", breaks = beta0, 
+                     label = c(expression(beta[0[1]]), 
+                               expression(beta[0[2]]),
+                               expression(beta[0[3]]),
+                               expression(beta[0[4]]),
+                               expression(beta[0[5]]))) +
+  geom_segment(aes(x = beta0[1], xend = beta0[1], y = -Inf, yend = dnorm(beta0[1], 10, 2)), color = "grey60") +
+  geom_segment(aes(x = beta0[2], xend = beta0[2], y = -Inf, yend = dnorm(beta0[2], 10, 2)), color = "grey60") +
+  geom_segment(aes(x = beta0[3], xend = beta0[3], y = -Inf, yend = dnorm(beta0[3], 10, 2)), color = "grey60") +
+  geom_segment(aes(x = beta0[4], xend = beta0[4], y = -Inf, yend = dnorm(beta0[4], 10, 2)), color = "grey60") +
+  geom_segment(aes(x = beta0[5], xend = beta0[5], y = -Inf, yend = dnorm(beta0[5], 10, 2)), color = "grey60") +
+  geom_path(size = 2, color = WILD6900_colors$value[WILD6900_colors$name=="primary"])
+```
+
+---
+## A simple linear model
+
+$$\Large y_{ij} = \beta_{[j]} + \epsilon_i$$
+
+$$\Large \epsilon_i \sim normal(0, \tau)$$
+
+--
+- If $\beta_{[j]} \sim normal(\mu_{\beta0}, \tau_{\beta0})$
+
+--
+```
+model {
+  # Priors
+  for(j in 1:J){
+    beta0 ~ dnorm(mu.beta, , tau.beta)
+  }
+  mu.beta ~ dnorm(0, 0.33)
+  tau.beta ~ dgamma(0.25, 0.25)
+  tau ~ dgamma(0.25, 0.25)
+    
+  # Likelihood
+  for (i in 1:N){
+    y[i] ~ dnorm(mu[i], tau)        
+    mu[i] <- beta0
+  } #i
+}
+```
+
+---
+## Random effects
 <br/>
 
 --
-```{r fig.width=4.5, fig.height=4.5}
-ggplot(mass, aes(x = length, y = mass)) + geom_point(aes(color = plot)) +
-  geom_abline(slope = mean(beta1), intercept = beta0, size = 2)
-```
+- Only apply to factors  
+<br/>
 
+--
+- Imply grouped effects  
+<br/>
+
+--
+- Can include intercept, slope, and variance parameters  
+<br/>
+
+--
+- Assume exchangeability  
+<br/>
+
+--
+- Represent a compromise between total pooling $(\beta_{0[1]}=\beta_{0[2]}=...=\beta_{0[J]})$ and no pooling $(\beta_{[1]} \perp \beta_{[2]} \perp ...\perp \beta_{[J]})$  
+<br/>
+
+--
+- Typically require $>5-10$ factor levels  
+
+
+---
+## Random effects = hierarchical model
+<br/>
+<br/>
+
+
+$$\Large [\beta_{0[j]}, \mu_{\beta0}, \tau_{\beta0}, \tau|y_{ij}] = [y_{ij}|\beta_{0[j]}, \tau][\beta_{0[j]}|\mu_{\beta0}, \tau_{\beta0}][\tau][\mu_{\beta0}][\tau_{\beta0}]$$
+<br/>
+
+--
+- Can include multiple random effects  
+
+- Can include fixed and random effects (mixed-models)  
+
+- Can include multiple levels of hierarchy  
+
+---
+## Why use random effects?
+
+1) Scope of inference  
+
+- learn about $\beta_{0[j]}$ **and** $\mu_{beta_0}$, $\tau_{beta_0}$  
+
+- prediction to unsampled groups (in space or time)  
+
+
+---
+## Why use random effects?
+
+1) Scope of inference  
+
+2) Partitioning of variance  
+
+- Account for variability among groups vs. among observational units
+
+---
+## Why use random effects?
+
+1) Scope of inference  
+
+2) Partitioning of variance  
+
+3) Accounting for uncertainty  
+
+- modeling $\tau_{beta_0}$ recognizes uncertainty from sampling groups
+
+---
+## Why use random effects?
+
+1) Scope of inference  
+
+2) Partitioning of variance  
+
+3) Accounting for uncertainty  
+
+4) Avoiding psuedo-replication  
+
+- Account for non-independence within groups
+
+---
+## Why use random effects?
+
+1) Scope of inference  
+
+2) Partitioning of variance  
+
+3) Accounting for uncertainty  
+
+4) Avoiding psuedo-replication  
+
+5) Borrowing strength  
+
+- $\beta_{0[j]}$ estimating from group $j$ observations + all other groups  
+
+- "shrinkage"" towards mean  
+
+    + degree of shrinkage inversely proportional to precision  
+    
+---
+## Why not use random effects?
+
+#### Always use random effects (Gelman & Hill 2007)
+
+#### but...
+
+--
+- Assumption of exchangeability  
+<br/>
+
+--
+- Requires 5-10 levels  
+<br/>
+
+--
+- Computationally intensive  
+<br/>
+
+--
+- Harder to interpret  
