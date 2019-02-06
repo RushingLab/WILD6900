@@ -1,0 +1,30 @@
+sink("inst/jags/GLMM2.jags")
+cat("
+model {
+
+# Priors
+mu ~ dnorm(0, 0.01)                  # Grand mean
+
+for (j in 1:nsite){
+   alpha[j] ~ dnorm(0, tau.alpha)    # Random site effects
+   }
+tau.alpha <- 1/ (sd.alpha * sd.alpha)
+sd.alpha ~ dunif(0, 5)
+
+for (i in 1:nyear){
+   eps[i] ~ dnorm(0, tau.eps)        # Random year effects
+   }
+tau.eps <- 1/ (sd.eps * sd.eps)
+sd.eps ~ dunif(0, 3)
+
+# Likelihood
+for (i in 1:nyear){
+   for (j in 1:nsite){
+       C[i,j] ~ dpois(lambda[i,j])
+      lambda[i,j] <- exp(log.lambda[i,j])
+      log.lambda[i,j] <- mu + alpha[j] + eps[i]
+      }  #j
+   }  #i
+}
+",fill = TRUE)
+sink()
