@@ -222,3 +222,53 @@ ggplot(compare_mods, aes(x = alpha_mean, color = model, y = n)) +
   scale_x_continuous(expression(alpha)) +
   scale_y_continuous("Sample size")
 ```
+
+# Quantifying changes in Coal tit (*Periparus ater*) abundance
+
+In the remainder of this lab, you will use data from the Swiss Breeding Bird Survey to model changes in the abundance of Swiss Coal tits from 1999-2007. 
+
+```{r out.width = 7, fig.cap="Photo by Andreas Eichler via WikiCommons]"}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/b/b6/2017.01.27.-18-Paradiski-La_Plagne-Champagny-en-Vanoise--Tannenmeise.jpg")
+```
+
+A data frame containing the counts and some additional information about each site (elevation and percent forest cover) and count (observer ID and whether it was an observers first time doing a BBS survey) is included in the `WILD6900` package [^1]:
+
+```{r eval = FALSE}
+data("tits")
+head(tits)
+```
+
+```{r echo = FALSE}
+data("tits")
+knitr::kable(head(tits), format = 'html')
+```
+
+[^1]: Data and code from Kéry & Schaub 2015. *Bayesian Population Analysis using WinBugs*
+
+### An aside on tidy data
+
+This data frame stores data in a relatively efficient format. Because there is only a single row per site, all of the counts and predictor variables for all years are stored in a single row. This makes for a compact data frame and is generally referred to as the "wide" format. 
+
+However, let's say we wanted to use the `glm()` function to fit a model to this counts, e.g., `lm(y ~ year)`. Or if we wanted to plot the site-specific counts across time, e.g., `ggplot(tits, aes(x = year, y = y, group = site))`. These tasks wouldn't be directly possible from this data frame. 
+
+The issue with the wide format is that, although efficient, it's not very convienient for modeling and visualization tasks (which is what we spend most of our time doing). In more trendy terminology, wide data is not **tidy**. What does it mean for data to be tidy? [Essentially](http://vita.had.co.nz/papers/tidy-data.html), "each variable is a column, each observation is a row." In the `tits` data frame, we have seven main variables: site, year, elevation, forest, count, observer ID, and "first". Each observation is the count of coal tits at a single route in a single year. As formatted, we have several variable (`year`, `y`, `obs`, `first`) spread across multiple columns and multiple observations per row. Making this data frame tidy makes it easier to model and visualize the data. These tasks are easier because most `R` functions take vectors as input. In a tidy data frame, each column is vector corresponding to the values of a single variable. 
+
+Before we start modeling the counts, let's tidy the `tits` data frame. We can do this with a single functions from the `tidyr` package:
+
+```{r eval = FALSE}
+tidy_counts <- tidyr::gather(tits, key = "aou", value = "count", -Year, -routeID)
+
+head(tidy_counts)
+```
+
+```{r echo = FALSE}
+tidy_counts <- tidyr::gather(ut_counts, key = "aou", value = "count", -Year, -routeID)
+
+knitr::kable(head(tidy_counts))
+```
+
+Gather turns a "wide" data frame into a "long" data frame (awesome animations courtesy of [Garrick Aden-Buie](https://github.com/gadenbuie/tidyexplain)).
+
+```{r echo = FALSE}
+knitr::include_graphics('images/tidyr-spread-gather.gif')
+```
