@@ -150,7 +150,7 @@
       <h1>Introduction to random effects and hierarchical models</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-02-05</h4>
+            <h4 class="date">2019-02-07</h4>
       
       
       <div class="hidden name"><code>random_effects.Rmd</code></div>
@@ -172,7 +172,7 @@
 <h2 class="hasAnchor">
 <a href="#the-model" class="anchor"></a>The model</h2>
 <p>In this example, we have a single continuous predictor variable and <span class="math inline">\(J\)</span> levels of a factor. We’ll assume for now that the residual body mass of each individual is normally distributed after accounting for body length. This suggests that following model:</p>
-<p><span class="math display">\[y_{ij} = \alpha_{[j]} + \beta \times x_i + epsilon_i\]</span></p>
+<p><span class="math display">\[y_{ij} = \alpha_{[j]} + \beta \times x_i + \epsilon_i\]</span></p>
 <p><span class="math display">\[\alpha_{[j]} \sim normal(\mu_{alpha}, \tau_{alpha})\]</span></p>
 <p><span class="math display">\[\epsilon_i \sim normal(0, \tau)\]</span></p>
 <p>First, set up the simulation parameters:</p>
@@ -191,59 +191,59 @@ plot &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocume
 <tbody>
 <tr class="odd">
 <td align="left">1</td>
-<td align="right">7</td>
+<td align="right">8</td>
 </tr>
 <tr class="even">
 <td align="left">2</td>
-<td align="right">11</td>
+<td align="right">9</td>
 </tr>
 <tr class="odd">
 <td align="left">3</td>
-<td align="right">10</td>
+<td align="right">14</td>
 </tr>
 <tr class="even">
 <td align="left">4</td>
-<td align="right">15</td>
+<td align="right">6</td>
 </tr>
 <tr class="odd">
 <td align="left">5</td>
-<td align="right">9</td>
+<td align="right">8</td>
 </tr>
 <tr class="even">
 <td align="left">6</td>
-<td align="right">7</td>
-</tr>
-<tr class="odd">
-<td align="left">7</td>
-<td align="right">10</td>
-</tr>
-<tr class="even">
-<td align="left">8</td>
-<td align="right">10</td>
-</tr>
-<tr class="odd">
-<td align="left">9</td>
-<td align="right">9</td>
-</tr>
-<tr class="even">
-<td align="left">10</td>
-<td align="right">7</td>
-</tr>
-<tr class="odd">
-<td align="left">11</td>
-<td align="right">8</td>
-</tr>
-<tr class="even">
-<td align="left">12</td>
 <td align="right">5</td>
 </tr>
 <tr class="odd">
-<td align="left">13</td>
+<td align="left">7</td>
+<td align="right">9</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="right">5</td>
+</tr>
+<tr class="odd">
+<td align="left">9</td>
 <td align="right">8</td>
 </tr>
 <tr class="even">
+<td align="left">10</td>
+<td align="right">10</td>
+</tr>
+<tr class="odd">
+<td align="left">11</td>
+<td align="right">6</td>
+</tr>
+<tr class="even">
+<td align="left">12</td>
+<td align="right">14</td>
+</tr>
+<tr class="odd">
+<td align="left">13</td>
+<td align="right">9</td>
+</tr>
+<tr class="even">
 <td align="left">14</td>
-<td align="right">18</td>
+<td align="right">15</td>
 </tr>
 <tr class="odd">
 <td align="left">15</td>
@@ -251,23 +251,23 @@ plot &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocume
 </tr>
 <tr class="even">
 <td align="left">16</td>
-<td align="right">8</td>
+<td align="right">18</td>
 </tr>
 <tr class="odd">
 <td align="left">17</td>
-<td align="right">9</td>
+<td align="right">8</td>
 </tr>
 <tr class="even">
 <td align="left">18</td>
-<td align="right">8</td>
+<td align="right">11</td>
 </tr>
 <tr class="odd">
 <td align="left">19</td>
-<td align="right">15</td>
+<td align="right">10</td>
 </tr>
 <tr class="even">
 <td align="left">20</td>
-<td align="right">11</td>
+<td align="right">12</td>
 </tr>
 </tbody>
 </table>
@@ -284,22 +284,22 @@ tau &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</s
 <p>To create the linear predictor, we’ll use the <code><a href="https://www.rdocumentation.org/packages/stats/topics/model.matrix">model.matrix()</a></code> function to create the model matrix corresponding to our model and then multiply it by our parameters:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Xmat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/model.matrix">model.matrix</a></span>(<span class="op">~</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">as.factor</a></span>(plot) <span class="op">+</span><span class="st"> </span>Length <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)
 Xmat[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">21</span>)]
-<span class="co">#&gt;   as.factor(plot)1 as.factor(plot)2 as.factor(plot)3  Length</span>
-<span class="co">#&gt; 1                0                0                0 -0.4012</span>
-<span class="co">#&gt; 2                0                0                0 -0.1780</span>
-<span class="co">#&gt; 3                0                0                0 -0.4520</span>
-<span class="co">#&gt; 4                0                0                0 -1.4335</span>
-<span class="co">#&gt; 5                0                0                0 -0.7760</span></code></pre></div>
+<span class="co">#&gt;   as.factor(plot)1 as.factor(plot)2 as.factor(plot)3   Length</span>
+<span class="co">#&gt; 1                0                0                0 -0.56998</span>
+<span class="co">#&gt; 2                0                0                0 -0.15063</span>
+<span class="co">#&gt; 3                0                0                0  0.43985</span>
+<span class="co">#&gt; 4                0                0                0  0.29182</span>
+<span class="co">#&gt; 5                0                1                0  0.02343</span></code></pre></div>
 <p>Now use matrix multiplicaiton to create the linear predictor:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">linear.pred &lt;-<span class="st"> </span>Xmat <span class="op">%*%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(alpha, beta)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(linear.pred)
 <span class="co">#&gt;    [,1]</span>
-<span class="co">#&gt; 1 20.86</span>
-<span class="co">#&gt; 2 22.20</span>
-<span class="co">#&gt; 3 18.32</span>
-<span class="co">#&gt; 4 13.82</span>
-<span class="co">#&gt; 5 20.22</span>
-<span class="co">#&gt; 6 31.26</span></code></pre></div>
+<span class="co">#&gt; 1 16.97</span>
+<span class="co">#&gt; 2 24.05</span>
+<span class="co">#&gt; 3 24.35</span>
+<span class="co">#&gt; 4 25.71</span>
+<span class="co">#&gt; 5 23.06</span>
+<span class="co">#&gt; 6 15.62</span></code></pre></div>
 <p>And finally generate the observations and combine the relevant vectors within a single data frame:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mass &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(N, <span class="dt">mean =</span> linear.pred, <span class="dt">sd =</span> sigma)
 mass_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">plot =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">as.factor</a></span>(plot), <span class="dt">length =</span> Length, <span class="dt">pred_length =</span> linear.pred, <span class="dt">mass =</span> mass)
@@ -308,10 +308,7 @@ mass_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdoc
 <span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> alpha, <span class="dt">slope =</span> beta) <span class="op">+</span>
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_brewer</span>() <span class="op">+</span>
-<span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="st">"none"</span>)
-<span class="co">#&gt; Warning in RColorBrewer::brewer.pal(n, pal): n too large, allowed maximum for palette Blues is 9</span>
-<span class="co">#&gt; Returning the palette you asked for with that many colors</span>
-<span class="co">#&gt; Warning: Removed 112 rows containing missing values (geom_point).</span></code></pre></div>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="st">"none"</span>)</code></pre></div>
 <p><img src="random_effects_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 <div id="fitting-the-model" class="section level2">
@@ -383,31 +380,31 @@ f
 mu.alpha
 </td>
 <td style="text-align:right;">
-22.930
+23.089
 </td>
 <td style="text-align:right;">
-0.5283
+0.5585
 </td>
 <td style="text-align:right;">
-21.877
+22.00
 </td>
 <td style="text-align:right;">
-22.588
+22.724
 </td>
 <td style="text-align:right;">
-22.931
+23.086
 </td>
 <td style="text-align:right;">
-23.277
+23.449
 </td>
 <td style="text-align:right;">
-23.971
+24.190
 </td>
 <td style="text-align:right;">
-1
+1.000
 </td>
 <td style="text-align:right;">
-22500
+7768
 </td>
 <td style="text-align:right;">
 0
@@ -421,31 +418,31 @@ mu.alpha
 sigma.alpha
 </td>
 <td style="text-align:right;">
-2.093
+2.209
 </td>
 <td style="text-align:right;">
-0.4521
+0.4666
 </td>
 <td style="text-align:right;">
-1.359
+1.45
 </td>
 <td style="text-align:right;">
-1.779
+1.877
 </td>
 <td style="text-align:right;">
-2.038
+2.159
 </td>
 <td style="text-align:right;">
-2.353
+2.479
 </td>
 <td style="text-align:right;">
-3.122
+3.278
 </td>
 <td style="text-align:right;">
-1
+1.001
 </td>
 <td style="text-align:right;">
-17731
+2188
 </td>
 <td style="text-align:right;">
 0
@@ -459,31 +456,31 @@ sigma.alpha
 alpha[1]
 </td>
 <td style="text-align:right;">
-20.615
+20.868
 </td>
 <td style="text-align:right;">
-1.0361
+1.0085
 </td>
 <td style="text-align:right;">
-18.577
+18.87
 </td>
 <td style="text-align:right;">
-19.926
+20.191
 </td>
 <td style="text-align:right;">
-20.623
+20.874
 </td>
 <td style="text-align:right;">
-21.310
+21.550
 </td>
 <td style="text-align:right;">
-22.636
+22.834
 </td>
 <td style="text-align:right;">
-1
+1.000
 </td>
 <td style="text-align:right;">
-7422
+5361
 </td>
 <td style="text-align:right;">
 0
@@ -497,31 +494,31 @@ alpha[1]
 alpha[2]
 </td>
 <td style="text-align:right;">
-20.297
+22.438
 </td>
 <td style="text-align:right;">
-0.8693
+0.9411
 </td>
 <td style="text-align:right;">
-18.606
+20.57
 </td>
 <td style="text-align:right;">
-19.710
+21.812
 </td>
 <td style="text-align:right;">
-20.293
+22.447
 </td>
 <td style="text-align:right;">
-20.877
+23.062
 </td>
 <td style="text-align:right;">
-22.017
+24.274
 </td>
 <td style="text-align:right;">
-1
+1.000
 </td>
 <td style="text-align:right;">
-17850
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -535,31 +532,31 @@ alpha[2]
 alpha[3]
 </td>
 <td style="text-align:right;">
-26.255
+23.763
 </td>
 <td style="text-align:right;">
-0.9048
+0.7808
 </td>
 <td style="text-align:right;">
-24.509
+22.23
 </td>
 <td style="text-align:right;">
-25.639
+23.236
 </td>
 <td style="text-align:right;">
-26.250
+23.758
 </td>
 <td style="text-align:right;">
-26.857
+24.279
 </td>
 <td style="text-align:right;">
-28.044
+25.310
 </td>
 <td style="text-align:right;">
-1
+1.000
 </td>
 <td style="text-align:right;">
-20059
+8428
 </td>
 <td style="text-align:right;">
 0
@@ -573,28 +570,28 @@ alpha[3]
 alpha[4]
 </td>
 <td style="text-align:right;">
-21.357
+23.924
 </td>
 <td style="text-align:right;">
-0.7364
+1.1170
 </td>
 <td style="text-align:right;">
-19.904
+21.74
 </td>
 <td style="text-align:right;">
-20.859
+23.174
 </td>
 <td style="text-align:right;">
-21.356
+23.920
 </td>
 <td style="text-align:right;">
-21.853
+24.682
 </td>
 <td style="text-align:right;">
-22.804
+26.117
 </td>
 <td style="text-align:right;">
-1
+1.000
 </td>
 <td style="text-align:right;">
 22500
@@ -611,31 +608,31 @@ alpha[4]
 alpha[5]
 </td>
 <td style="text-align:right;">
-22.257
+25.445
 </td>
 <td style="text-align:right;">
-0.9046
+1.0049
 </td>
 <td style="text-align:right;">
-20.457
+23.47
 </td>
 <td style="text-align:right;">
-21.650
+24.760
 </td>
 <td style="text-align:right;">
-22.262
+25.443
 </td>
 <td style="text-align:right;">
-22.866
+26.124
 </td>
 <td style="text-align:right;">
-24.014
+27.429
 </td>
 <td style="text-align:right;">
-1
+1.000
 </td>
 <td style="text-align:right;">
-13177
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -649,28 +646,28 @@ alpha[5]
 alpha[6]
 </td>
 <td style="text-align:right;">
-20.214
+23.486
 </td>
 <td style="text-align:right;">
-1.0546
+1.1724
 </td>
 <td style="text-align:right;">
-18.115
+21.19
 </td>
 <td style="text-align:right;">
-19.506
+22.704
 </td>
 <td style="text-align:right;">
-20.227
+23.489
 </td>
 <td style="text-align:right;">
-20.933
+24.273
 </td>
 <td style="text-align:right;">
-22.249
+25.784
 </td>
 <td style="text-align:right;">
-1
+1.000
 </td>
 <td style="text-align:right;">
 22500
@@ -687,31 +684,31 @@ alpha[6]
 alpha[7]
 </td>
 <td style="text-align:right;">
-24.312
+22.599
 </td>
 <td style="text-align:right;">
-0.8760
+0.9383
 </td>
 <td style="text-align:right;">
-22.586
+20.76
 </td>
 <td style="text-align:right;">
-23.721
+21.965
 </td>
 <td style="text-align:right;">
-24.307
+22.606
 </td>
 <td style="text-align:right;">
-24.902
+23.232
 </td>
 <td style="text-align:right;">
-26.048
+24.442
 </td>
 <td style="text-align:right;">
-1
+1.000
 </td>
 <td style="text-align:right;">
-22500
+18081
 </td>
 <td style="text-align:right;">
 0
@@ -725,31 +722,31 @@ alpha[7]
 alpha[8]
 </td>
 <td style="text-align:right;">
-22.248
+20.968
 </td>
 <td style="text-align:right;">
-0.8684
+1.2018
 </td>
 <td style="text-align:right;">
-20.547
+18.57
 </td>
 <td style="text-align:right;">
-21.667
+20.172
 </td>
 <td style="text-align:right;">
-22.248
+20.981
 </td>
 <td style="text-align:right;">
-22.838
+21.783
 </td>
 <td style="text-align:right;">
-23.943
+23.291
 </td>
 <td style="text-align:right;">
-1
+1.000
 </td>
 <td style="text-align:right;">
-13597
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -819,28 +816,28 @@ f
 alpha[1]
 </td>
 <td style="text-align:right;">
-19.84
+20.21
 </td>
 <td style="text-align:right;">
-1.1415
+1.1079
 </td>
 <td style="text-align:right;">
-17.60
+18.04
 </td>
 <td style="text-align:right;">
-19.08
+19.47
 </td>
 <td style="text-align:right;">
-19.84
+20.21
 </td>
 <td style="text-align:right;">
-20.61
+20.96
 </td>
 <td style="text-align:right;">
-22.08
+22.41
 </td>
 <td style="text-align:right;">
-1.0000
+1
 </td>
 <td style="text-align:right;">
 22500
@@ -857,31 +854,31 @@ alpha[1]
 alpha[2]
 </td>
 <td style="text-align:right;">
-19.75
+22.27
 </td>
 <td style="text-align:right;">
-0.9171
+1.0411
 </td>
 <td style="text-align:right;">
-17.95
+20.22
 </td>
 <td style="text-align:right;">
-19.12
+21.58
 </td>
 <td style="text-align:right;">
-19.75
+22.27
 </td>
 <td style="text-align:right;">
-20.36
+22.97
 </td>
 <td style="text-align:right;">
-21.57
+24.31
 </td>
 <td style="text-align:right;">
-1.0001
+1
 </td>
 <td style="text-align:right;">
-19334
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -895,31 +892,31 @@ alpha[2]
 alpha[3]
 </td>
 <td style="text-align:right;">
-27.01
+23.87
 </td>
 <td style="text-align:right;">
-0.9533
+0.8316
 </td>
 <td style="text-align:right;">
-25.10
+22.25
 </td>
 <td style="text-align:right;">
-26.38
+23.32
 </td>
 <td style="text-align:right;">
-27.02
+23.88
 </td>
 <td style="text-align:right;">
-27.65
+24.44
 </td>
 <td style="text-align:right;">
-28.89
+25.50
 </td>
 <td style="text-align:right;">
-1.0000
+1
 </td>
 <td style="text-align:right;">
-19341
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -933,31 +930,31 @@ alpha[3]
 alpha[4]
 </td>
 <td style="text-align:right;">
-21.09
+24.22
 </td>
 <td style="text-align:right;">
-0.7805
+1.2743
 </td>
 <td style="text-align:right;">
-19.56
+21.73
 </td>
 <td style="text-align:right;">
-20.56
+23.36
 </td>
 <td style="text-align:right;">
-21.09
+24.22
 </td>
 <td style="text-align:right;">
-21.62
+25.09
 </td>
 <td style="text-align:right;">
-22.62
+26.70
 </td>
 <td style="text-align:right;">
-1.0000
+1
 </td>
 <td style="text-align:right;">
-22500
+11820
 </td>
 <td style="text-align:right;">
 0
@@ -971,31 +968,31 @@ alpha[4]
 alpha[5]
 </td>
 <td style="text-align:right;">
-22.07
+26.08
 </td>
 <td style="text-align:right;">
-1.0026
+1.0996
 </td>
 <td style="text-align:right;">
-20.10
+23.95
 </td>
 <td style="text-align:right;">
-21.39
+25.34
 </td>
 <td style="text-align:right;">
-22.07
+26.08
 </td>
 <td style="text-align:right;">
-22.74
+26.81
 </td>
 <td style="text-align:right;">
-24.05
+28.22
 </td>
 <td style="text-align:right;">
-1.0002
+1
 </td>
 <td style="text-align:right;">
-11758
+5815
 </td>
 <td style="text-align:right;">
 0
@@ -1009,31 +1006,31 @@ alpha[5]
 alpha[6]
 </td>
 <td style="text-align:right;">
-19.29
+23.61
 </td>
 <td style="text-align:right;">
-1.1431
+1.3727
 </td>
 <td style="text-align:right;">
-17.06
+20.93
 </td>
 <td style="text-align:right;">
-18.52
+22.68
 </td>
 <td style="text-align:right;">
-19.28
+23.60
 </td>
 <td style="text-align:right;">
-20.05
+24.53
 </td>
 <td style="text-align:right;">
-21.55
+26.30
 </td>
 <td style="text-align:right;">
-0.9999
+1
 </td>
 <td style="text-align:right;">
-22500
+8845
 </td>
 <td style="text-align:right;">
 0
@@ -1047,28 +1044,28 @@ alpha[6]
 alpha[7]
 </td>
 <td style="text-align:right;">
-24.59
+22.48
 </td>
 <td style="text-align:right;">
-0.9652
+1.0597
 </td>
 <td style="text-align:right;">
-22.69
+20.40
 </td>
 <td style="text-align:right;">
-23.95
+21.77
 </td>
 <td style="text-align:right;">
-24.59
+22.48
 </td>
 <td style="text-align:right;">
-25.24
+23.19
 </td>
 <td style="text-align:right;">
-26.47
+24.58
 </td>
 <td style="text-align:right;">
-1.0000
+1
 </td>
 <td style="text-align:right;">
 22500
@@ -1085,28 +1082,28 @@ alpha[7]
 alpha[8]
 </td>
 <td style="text-align:right;">
-22.06
+20.05
 </td>
 <td style="text-align:right;">
-0.9639
+1.3943
 </td>
 <td style="text-align:right;">
-20.18
+17.31
 </td>
 <td style="text-align:right;">
-21.41
+19.11
 </td>
 <td style="text-align:right;">
-22.06
+20.05
 </td>
 <td style="text-align:right;">
-22.71
+20.99
 </td>
 <td style="text-align:right;">
-23.93
+22.82
 </td>
 <td style="text-align:right;">
-1.0000
+1
 </td>
 <td style="text-align:right;">
 22500
@@ -1123,31 +1120,31 @@ alpha[8]
 alpha[9]
 </td>
 <td style="text-align:right;">
-23.03
+23.47
 </td>
 <td style="text-align:right;">
-1.0007
+1.1057
 </td>
 <td style="text-align:right;">
-21.04
+21.30
 </td>
 <td style="text-align:right;">
-22.37
+22.73
 </td>
 <td style="text-align:right;">
-23.04
+23.47
 </td>
 <td style="text-align:right;">
-23.71
+24.22
 </td>
 <td style="text-align:right;">
-25.00
+25.64
 </td>
 <td style="text-align:right;">
-1.0003
+1
 </td>
 <td style="text-align:right;">
-5646
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -1161,28 +1158,28 @@ alpha[9]
 alpha[10]
 </td>
 <td style="text-align:right;">
-19.60
+25.65
 </td>
 <td style="text-align:right;">
-1.1509
+0.9761
 </td>
 <td style="text-align:right;">
-17.34
+23.76
 </td>
 <td style="text-align:right;">
-18.82
+24.99
 </td>
 <td style="text-align:right;">
-19.60
+25.65
 </td>
 <td style="text-align:right;">
-20.37
+26.31
 </td>
 <td style="text-align:right;">
-21.84
+27.56
 </td>
 <td style="text-align:right;">
-1.0000
+1
 </td>
 <td style="text-align:right;">
 22500
@@ -1198,11 +1195,11 @@ alpha[10]
 </table>
 <p>Finally, combine results from the two models to visualize differences in the <span class="math inline">\(\alpha\)</span> estimates:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
-compare_mods &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">alpha_mean =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(alpha, re_fit<span class="op">$</span>mean<span class="op">$</span>alpha, fe_fit<span class="op">$</span>mean<span class="op">$</span>alpha),
-                           <span class="dt">CI_2.5 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="ot">NA</span>, J), re_fit<span class="op">$</span>q2.<span class="dv">5</span><span class="op">$</span>alpha, fe_fit<span class="op">$</span>q2.<span class="dv">5</span><span class="op">$</span>alpha),
-                           <span class="dt">CI_97.5 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="ot">NA</span>, J), re_fit<span class="op">$</span>q97.<span class="dv">5</span><span class="op">$</span>alpha, fe_fit<span class="op">$</span>q97.<span class="dv">5</span><span class="op">$</span>alpha), 
-                           <span class="dt">n =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(plot), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(plot) <span class="op">-</span><span class="st"> </span><span class="fl">0.25</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(plot) <span class="op">+</span><span class="st"> </span><span class="fl">0.25</span>),
-                           <span class="dt">model =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"True"</span>, <span class="st">"Random"</span>, <span class="st">"Fixed"</span>), <span class="dt">each =</span> J))
+compare_mods &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">alpha_mean =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(re_fit<span class="op">$</span>mean<span class="op">$</span>alpha, fe_fit<span class="op">$</span>mean<span class="op">$</span>alpha),
+                           <span class="dt">CI_2.5 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(re_fit<span class="op">$</span>q2.<span class="dv">5</span><span class="op">$</span>alpha, fe_fit<span class="op">$</span>q2.<span class="dv">5</span><span class="op">$</span>alpha),
+                           <span class="dt">CI_97.5 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(re_fit<span class="op">$</span>q97.<span class="dv">5</span><span class="op">$</span>alpha, fe_fit<span class="op">$</span>q97.<span class="dv">5</span><span class="op">$</span>alpha), 
+                           <span class="dt">n =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(plot) <span class="op">-</span><span class="st"> </span><span class="fl">0.15</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(plot) <span class="op">+</span><span class="st"> </span><span class="fl">0.15</span>),
+                           <span class="dt">model =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Random"</span>, <span class="st">"Fixed"</span>), <span class="dt">each =</span> J))
 
 <span class="kw">ggplot</span>(compare_mods, <span class="kw">aes</span>(<span class="dt">x =</span> alpha_mean, <span class="dt">color =</span> model, <span class="dt">y =</span> n)) <span class="op">+</span><span class="st"> </span>
 <span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> mu.alpha, <span class="dt">color =</span> <span class="st">"grey50"</span>, <span class="dt">linetype =</span> <span class="st">"longdash"</span>) <span class="op">+</span>
@@ -1212,8 +1209,7 @@ compare_mods &lt;-<span class="st"> </span><span class="kw"><a href="https://www
 <span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"#446E9B"</span>, <span class="st">"#D47500"</span>, <span class="st">"black"</span>)) <span class="op">+</span>
 <span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(alpha)) <span class="op">+</span>
-<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">"Sample size"</span>)
-<span class="co">#&gt; Warning: Removed 20 rows containing missing values (geom_errorbarh).</span></code></pre></div>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">"Sample size"</span>)</code></pre></div>
 <p><img src="random_effects_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
   </div>

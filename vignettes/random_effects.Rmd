@@ -37,7 +37,7 @@ For this lab, let's assume we're interested in modeling the the body mass (g) of
 
 In this example, we have a single continuous predictor variable and $J$ levels of a factor. We'll assume for now that the residual body mass of each individual is normally distributed after accounting for body length. This suggests that following model:
 
-$$y_{ij} = \alpha_{[j]} + \beta \times x_i + epsilon_i$$
+$$y_{ij} = \alpha_{[j]} + \beta \times x_i + \epsilon_i$$
 
 $$\alpha_{[j]} \sim normal(\mu_{alpha}, \tau_{alpha})$$
 
@@ -95,7 +95,7 @@ head(linear.pred)
 
 And finally generate the observations and combine the relevant vectors within a single data frame:
 
-```{r fig.width=6, fig.height=6}
+```{r fig.width=6, fig.height=6, warning=FALSE}
 mass <- rnorm(N, mean = linear.pred, sd = sigma)
 mass_df <- data.frame(plot = as.factor(plot), length = Length, pred_length = linear.pred, mass = mass)
 
@@ -204,13 +204,13 @@ knitr::kable(fe_fit$summary[1:10,], format = 'html')
 
 Finally, combine results from the two models to visualize differences in the $\alpha$ estimates:
 
-```{r fig.width=6, fig.height=6}
+```{r fig.width=6, fig.height=6, warning=FALSE}
 
-compare_mods <- data.frame(alpha_mean = c(alpha, re_fit$mean$alpha, fe_fit$mean$alpha),
-                           CI_2.5 = c(rep(NA, J), re_fit$q2.5$alpha, fe_fit$q2.5$alpha),
-                           CI_97.5 = c(rep(NA, J), re_fit$q97.5$alpha, fe_fit$q97.5$alpha), 
-                           n = c(table(plot), table(plot) - 0.25, table(plot) + 0.25),
-                           model = rep(c("True", "Random", "Fixed"), each = J))
+compare_mods <- data.frame(alpha_mean = c(re_fit$mean$alpha, fe_fit$mean$alpha),
+                           CI_2.5 = c(re_fit$q2.5$alpha, fe_fit$q2.5$alpha),
+                           CI_97.5 = c(re_fit$q97.5$alpha, fe_fit$q97.5$alpha), 
+                           n = c(table(plot) - 0.15, table(plot) + 0.15),
+                           model = rep(c("Random", "Fixed"), each = J))
 
 ggplot(compare_mods, aes(x = alpha_mean, color = model, y = n)) + 
   geom_vline(xintercept = mu.alpha, color = "grey50", linetype = "longdash") +
