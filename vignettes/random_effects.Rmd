@@ -227,7 +227,7 @@ ggplot(compare_mods, aes(x = alpha_mean, color = model, y = n)) +
 
 In the remainder of this lab, you will use data from the Swiss Breeding Bird Survey to model changes in the abundance of Swiss Coal tits from 1999-2007. 
 
-```{r out.width = 7, fig.cap="Photo by Andreas Eichler via WikiCommons]"}
+```{r echo = FALSE, out.width = "100%", fig.cap="Photo by Andreas Eichler via WikiCommons"}
 knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/b/b6/2017.01.27.-18-Paradiski-La_Plagne-Champagny-en-Vanoise--Tannenmeise.jpg")
 ```
 
@@ -245,30 +245,141 @@ knitr::kable(head(tits), format = 'html')
 
 [^1]: Data and code from Kéry & Schaub 2015. *Bayesian Population Analysis using WinBugs*
 
-### An aside on tidy data
+## Preparing the data
 
-This data frame stores data in a relatively efficient format. Because there is only a single row per site, all of the counts and predictor variables for all years are stored in a single row. This makes for a compact data frame and is generally referred to as the "wide" format. 
+Before running any models, we will first prepare the data. JAGS will take the counts and predictor variables as matrices with dimensions of `nSites x nYears`. Those matrices can easily be created from the data frame:
 
-However, let's say we wanted to use the `glm()` function to fit a model to this counts, e.g., `lm(y ~ year)`. Or if we wanted to plot the site-specific counts across time, e.g., `ggplot(tits, aes(x = year, y = y, group = site))`. These tasks wouldn't be directly possible from this data frame. 
+```{r fig.width=6}
+C <- as.matrix(tits[5:13])
+obs <- as.matrix(tits[14:22])
+first <- as.matrix(tits[23:31])
 
-The issue with the wide format is that, although efficient, it's not very convienient for modeling and visualization tasks (which is what we spend most of our time doing). In more trendy terminology, wide data is not **tidy**. What does it mean for data to be tidy? [Essentially](http://vita.had.co.nz/papers/tidy-data.html), "each variable is a column, each observation is a row." In the `tits` data frame, we have seven main variables: site, year, elevation, forest, count, observer ID, and "first". Each observation is the count of coal tits at a single route in a single year. As formatted, we have several variable (`year`, `y`, `obs`, `first`) spread across multiple columns and multiple observations per row. Making this data frame tidy makes it easier to model and visualize the data. These tasks are easier because most `R` functions take vectors as input. In a tidy data frame, each column is vector corresponding to the values of a single variable. 
+matplot(1999:2007, t(C), type = "l", lty = 1, lwd = 2, main = "", las = 1, ylab = "Territory counts", xlab = "Year", ylim = c(0, 80), frame = FALSE)
+```
 
-Before we start modeling the counts, let's tidy the `tits` data frame. We can do this with a single functions from the `tidyr` package:
+One issue with the `obs` and `first` matrices is that they contain `NA` values, which JAGS will not allow in predictor variables (they are ok in the response variable, as we will soon see). Some of the `NA` values correspond to years when a sites was not surveyed (in these cases, there will also be a `NA` in the `C` matrix). In addition, JAGS will want the observer ID as a continuous variable rather than a factor. We will first convert the `obs` levels into a numeric vector and the create a new matrix containing the correct numberic IDs:
+
+```{r}
+a <- as.numeric(levels(factor(obs)))     # All the levels, numeric
+newobs <- obs                            # Gets ObsID from 1:271
+for (j in 1:length(a)){newobs[which(obs==a[j])] <- j }
+```
+
+Next, we need to fill in the `NA` values. For the observer ID, we'll lump all missing values as a single value corresponding to the number of observers + 1. For the `first` matrix, we will code the `NA` values as `0`, which corresponds to an 'experienced' observer. This will decrease our power to quantify the effect of being a novice observer but not to the extent that it will substaintially alter our conclusions. 
+
+```{r}
+newobs[is.na(newobs)] <- length(a) + 1
+first[is.na(first)] <- 0
+```
+
+## The simplest count model
+
+Let's start by fitting the most simple model we can create for these data: the intercept-only model. In this model, we assume that the expected number of coal tits is constant, that is, it doesn't vary across sites or years or observers. 
+
+***
+**On your own**, write out the distribution, link function, and linear predictor for the intercept-only model. What parameters does this model include? What prior distribution(s) would be most appropriate for these parameters?  
+
+***
+
+You can view the JAGS code for this model by running:
 
 ```{r eval = FALSE}
-tidy_counts <- tidyr::gather(tits, key = "aou", value = "count", -Year, -routeID)
-
-head(tidy_counts)
+glm0_mod <- system.file("jags/GLM0.jags", package = "WILD6900")
+file.show(glm0)
 ```
 
 ```{r echo = FALSE}
-tidy_counts <- tidyr::gather(ut_counts, key = "aou", value = "count", -Year, -routeID)
-
-knitr::kable(head(tidy_counts))
+glm0_mod <- system.file("jags/GLM0.jags", package = "WILD6900")
 ```
 
-Gather turns a "wide" data frame into a "long" data frame (awesome animations courtesy of [Garrick Aden-Buie](https://github.com/gadenbuie/tidyexplain)).
+Now prepare the data and MCMC settings to run this model:
 
-```{r echo = FALSE}
-knitr::include_graphics('images/tidyr-spread-gather.gif')
+```{r, eval = FALSE}
+# Bundle data
+glm0_data <- list(C = t(C), nsite = nrow(C), nyear = ncol(C))
+
+# Initial values
+glm0_inits <- function() list(alpha = runif(1, -10, 10))
+
+# Parameters monitored
+params <- c("alpha")
+
+# MCMC settings
+ni <- 1200
+nt <- 2
+nb <- 200
+nc <- 3
+
+# Call JAGS from R
+glm0 <- jagsUI::jags(data = glm0_data, inits =  glm0_inits,
+                     parameters.to.save = params, 
+                     model.file = glm0_mod, n.chains = nc, 
+                     n.thin = nt, n.iter = ni, n.burnin = nb)
+
+# Summarize posteriors
+print(glm0, digits = 3)
+
+# Check trace plots
+jagsUI::traceplot(glm0)
 ```
+
+## Fixed site effects
+
+The intercept-only model is obviously not a very good model of these counts but serves as a useful starting point for developing more complex models. As a start for building a better model, let's add site as a fixed effect. In other words:
+
+$$y_{ij} \sim Poisson(\lambda_j)$$
+$$log(\lambda_j) = \alpha_j$$
+
+Modify the JAGS model from the previous example to run this fixed-site model. As a starting point:
+
+```{r eval = FALSE}
+
+sink("jags/GLM0.jags")
+cat("
+    model {
+
+    # Prior
+    alpha ~ dnorm(0, 0.01)    # log(mean count)
+
+    # Likelihood
+    for (i in 1:nyear){
+    for (j in 1:nsite){
+    C[i,j] ~ dpois(lambda[i,j])
+    lambda[i,j] <- exp(log.lambda[i,j])
+    log.lambda[i,j] <- alpha
+    }  #j
+    }  #i
+    }
+    ",fill = TRUE)
+sink()
+    
+```
+
+Be sure to change the name of the model file before running that code. Now modify the data and inits object as necessary to run the model in JAGS. Also note that in the `jagsUI::jags()` call you will need to reference the model file you just created rather than the model file from the previous example. 
+
+## Additional complexity
+
+Even with this relatively simple data set, you can create relatively complex models. On your own, try to fit the following models using the JAGS code from above as a starting point:
+
+- Fixed year and site effects  
+
+- Random site effects
+
+- Random year effects  
+
+- Random site and random year effects  
+
+- Random site and random year effects and fixed first-year observer effect
+
+- Random site and random year effects, linear year effect and fixed first-year observer effect
+
+If you need help, refer to chapter 4 of Kery & Schaub. You can also access the following model files from the `WILD6900` package: `GLM1.jags`, `GLM2.jags`, `GLMM1.jags`, `GLMM2.jags`, `GLMM3.jags`, `GLMM4.jags`, `GLMM%.jags`. These model files are for your own reference but it is up to you to translate the code into the model descriptions above. 
+
+One note about including multiple factors in the model. In the models with both site and year (as a factor), the model cannot estimate the predicted count for all combinations of both factors. Essentially, the model needs to set one level of one of the factors to a "reference" level to avoid over-parameterization. In JAGS, we have to do this manually by setting the prior for one level to zero:
+
+```{r eval = FALSE}
+eps[1] <- 0
+```
+
+You will see this in several of the above models and may need to include it in your own models as you write the code. 
+
