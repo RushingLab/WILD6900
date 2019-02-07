@@ -1,0 +1,20 @@
+sink("inst/jags/GLM1.jags")
+cat("
+    model {
+
+    # Priors
+    for (j in 1:nsite){
+    alpha[j] ~ dnorm(0, 0.01)     # Site effects
+    }
+
+    # Likelihood
+    for (i in 1:nyear){
+    for (j in 1:nsite){
+    C[i,j] ~ dpois(lambda[i,j])
+    lambda[i,j] <- exp(log.lambda[i,j])
+    log.lambda[i,j] <- alpha[j]
+    }  #j
+    }  #i
+    }
+    ",fill = TRUE)
+sink()

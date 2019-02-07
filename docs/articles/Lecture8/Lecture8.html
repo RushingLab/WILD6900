@@ -71,7 +71,7 @@ Definitions from Gelman &amp; Hill (2007) pg. 245
 ```
 model {
   # Priors
-  beta0 ~ dnorm(0, , 0.33)
+  beta0 ~ dnorm(0, 0.33)
   tau ~ dgamma(0.25, 0.25)
     
   # Likelihood
@@ -97,14 +97,14 @@ model {
 model {
   # Priors
   for(j in 1:J){
-    beta0 ~ dnorm(0, , 0.33)
+    beta0[j] ~ dnorm(0, 0.33)
   }
   tau ~ dgamma(0.25, 0.25)
     
   # Likelihood
   for (i in 1:N){
     y[i] ~ dnorm(mu[i], tau)        
-    mu[i] &lt;- beta0
+    mu[i] &lt;- beta0[group[j]]
   } #i
 }
 ```
@@ -141,7 +141,7 @@ This should look familiar - it's the means parameterization of the ANOVA model
 model {
   # Priors
   for(j in 1:J){
-    beta0 ~ dnorm(mu.beta, , tau.beta)
+    beta0[j] ~ dnorm(mu.beta, tau.beta)
   }
   mu.beta ~ dnorm(0, 0.33)
   tau.beta ~ dgamma(0.25, 0.25)
@@ -150,7 +150,7 @@ model {
   # Likelihood
   for (i in 1:N){
     y[i] ~ dnorm(mu[i], tau)        
-    mu[i] &lt;- beta0
+    mu[i] &lt;- beta0[group[j]]
   } #i
 }
 ```
