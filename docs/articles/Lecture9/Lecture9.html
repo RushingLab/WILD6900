@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 9</title>
+    <meta charset="utf-8">
+    <meta name="author" content="   WILD6900 (Spring 2019)" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="WILD6900.css" type="text/css" />
+    <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lecture 9
+## State-space models
+### <br/><br/><br/>WILD6900 (Spring 2019)
+
+---
+
+
+
+
+## Readings
+
+&gt; Kéry &amp; Schaub 115-131
+
+---
+## Ecological state variables
+
+#### **State variables** are the ecological quantities of interest in our model that change over space or time  
+
+--
+#### Abundance 
+
+&gt; the number of individual organisms in a population at a particular point in time   
+
+
+--
+
+#### Occurence
+
+&gt; the spatial distribution of organisms with a particular region at a particular point in time  
+
+--
+ 
+#### Richness
+
+&gt; the number of co-occuring species at a given location and a particular point in time  
+
+???
+
+`\(^2\)` These are not the only state variables, but are among the most common in ecological studies
+
+---
+## Ecological parameters
+
+#### **Parameters** determine how the state variables change over space and time
+
+--
+- Survival  
+&lt;br/&gt;
+
+--
+- Reproduction  
+&lt;br/&gt;
+
+--
+- Movement  
+&lt;br/&gt;
+
+--
+- Population growth rate  
+&lt;br/&gt;
+
+--
+- Carrying capacity  
+&lt;br/&gt;
+
+--
+- Colonization/extinction rate  
+
+---
+## Process models
+&lt;br/&gt;
+
+`$$\Huge [z|g(\theta_p, x), \sigma^2_p]$$`
+&lt;br/&gt;
+
+- Mathematical description of our hypothesis about how the *state variables* we are interested in change over space and time  
+&lt;br/&gt;
+
+--
+- Represent the **true** value of our state variables at any given point in space or time  
+&lt;br/&gt;
+
+--
+- Deterministic  
+&lt;br/&gt;
+
+--
+- Abstraction  
+
+---
+## Observation models
+
+- Rarely observe the true state perfectly  
+
+    + Animals are elusive and may hide from observers  
+    + Even plants may be cryptic and hard to find  
+    + Measurements may be taken with error  
+    + May count the same individual &gt; 1
+
+
+--
+- *Observation uncertainty* `\(\large (\sigma^2_o)\)` can lead to biased estimates of model parameters, so generally requires its own model  
+&lt;br/&gt;
+
+`$$\Huge [y_i|d(\Theta_o,z_i), \sigma^2_o]$$`
+
+---
+class: inverse, middle, center
+
+# State-space models
+
+---
+## State-space models
+
+- Hierarchical models  
+
+--
+- Decompose time series into:  
+
+    + process variation in state process  
+    + observation error  
+
+--
+- Generally used for *Markovian* state process models  
+
+    + Population dynamics  
+    + Survival  
+    + Occupancy  
+    
+
+&lt;img src="state_space.png" width="45%" style="display: block; margin: auto;" /&gt;
+
+---
+## Process models
+
+#### Population dynamics
+
+- `\(\Large N_{t+1} \sim Poisson(N_t \lambda_t)\)`  
+
+- `\(\Large N_{t+1} \sim Normal(N_t e^{\bigg[r_0 \bigg(1-\frac{N_t}{K}\bigg)\bigg]}, \sigma^2)\)`  
+
+
+--
+#### Survival
+
+- `\(\Large z_{t+1} \sim Bernoulli\big(z_t \phi_t\big)\)`  
+
+
+--
+#### Occupancy
+
+- `\(\Large z_{t+1} \sim Bernoulli\bigg(z_t (1-\epsilon_t) + (1 - z_t)\gamma_t\bigg)\)`  
+
+---
+## Observation models
+
+#### Population dynamics
+
+- `\(\Large C_{t} \sim Normal(N_t, \sigma_o^2)\)`  
+
+- `\(\Large C_{t} \sim Binomial(N_t, p)\)`  
+
+
+--
+#### Survival
+
+- `\(\Large y_{t} \sim Bernoulli\big(z_t p\big)\)`  
+
+
+--
+#### Occupancy
+
+- `\(\Large y_{t} \sim Bernoulli\big(z_t p_t\big)\)` 
+
+---
+## Including covariates
+
+#### For any of these models, we can use GLMs to include covariates effects on parameters:
+
+`$$\Large log(\lambda_t) = \alpha + \mathbf \beta \mathbf X + \varepsilon_t$$`
+
+`$$\Large logit(\phi_t/\gamma_t/\epsilon_t/p_t) = \alpha + \mathbf \beta \mathbf X + \varepsilon_t$$`
+
+--
+#### And random effect structure
+
+--
+`$$\Large \varepsilon_t \sim normal\big(\mu_{\lambda}, \tau_{\lambda}\big)$$`
+`$$\Large \mu_{\lambda} \sim normal\big(0, 0.1\big)$$`
+
+`$$\Large \tau_{\lambda} \sim gamma\big(0.25, 0.25\big)$$`
+---
+## Simple state-space population growth model
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

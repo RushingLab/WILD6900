@@ -1,0 +1,209 @@
+---
+title: "Lecture 9"
+subtitle: "State-space models"
+author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
+library(WILD6900)
+# library(gganimate)
+```
+
+## Readings
+
+> Kéry & Schaub 115-131
+
+---
+## Ecological state variables
+
+#### **State variables** are the ecological quantities of interest in our model that change over space or time  
+
+--
+#### Abundance 
+
+> the number of individual organisms in a population at a particular point in time   
+
+
+--
+
+#### Occurence
+
+> the spatial distribution of organisms with a particular region at a particular point in time  
+
+--
+ 
+#### Richness
+
+> the number of co-occuring species at a given location and a particular point in time  
+
+???
+
+$^2$ These are not the only state variables, but are among the most common in ecological studies
+
+---
+## Ecological parameters
+
+#### **Parameters** determine how the state variables change over space and time
+
+--
+- Survival  
+<br/>
+
+--
+- Reproduction  
+<br/>
+
+--
+- Movement  
+<br/>
+
+--
+- Population growth rate  
+<br/>
+
+--
+- Carrying capacity  
+<br/>
+
+--
+- Colonization/extinction rate  
+
+---
+## Process models
+<br/>
+
+$$\Huge [z|g(\theta_p, x), \sigma^2_p]$$
+<br/>
+
+- Mathematical description of our hypothesis about how the *state variables* we are interested in change over space and time  
+<br/>
+
+--
+- Represent the **true** value of our state variables at any given point in space or time  
+<br/>
+
+--
+- Deterministic  
+<br/>
+
+--
+- Abstraction  
+
+---
+## Observation models
+
+- Rarely observe the true state perfectly  
+
+    + Animals are elusive and may hide from observers  
+    + Even plants may be cryptic and hard to find  
+    + Measurements may be taken with error  
+    + May count the same individual > 1
+
+
+--
+- *Observation uncertainty* $\large (\sigma^2_o)$ can lead to biased estimates of model parameters, so generally requires its own model  
+<br/>
+
+$$\Huge [y_i|d(\Theta_o,z_i), \sigma^2_o]$$
+
+---
+class: inverse, middle, center
+
+# State-space models
+
+---
+## State-space models
+
+- Hierarchical models  
+
+--
+- Decompose time series into:  
+
+    + process variation in state process  
+    + observation error  
+
+--
+- Generally used for *Markovian* state process models  
+
+    + Population dynamics  
+    + Survival  
+    + Occupancy  
+    
+
+```{r out.width="45%"}
+knitr::include_graphics("state_space.png")
+```
+
+---
+## Process models
+
+#### Population dynamics
+
+- $\Large N_{t+1} \sim Poisson(N_t \lambda_t)$  
+
+- $\Large N_{t+1} \sim Normal(N_t e^{\bigg[r_0 \bigg(1-\frac{N_t}{K}\bigg)\bigg]}, \sigma^2)$  
+
+
+--
+#### Survival
+
+- $\Large z_{t+1} \sim Bernoulli\big(z_t \phi_t\big)$  
+
+
+--
+#### Occupancy
+
+- $\Large z_{t+1} \sim Bernoulli\bigg(z_t (1-\epsilon_t) + (1 - z_t)\gamma_t\bigg)$  
+
+---
+## Observation models
+
+#### Population dynamics
+
+- $\Large C_{t} \sim Normal(N_t, \sigma_o^2)$  
+
+- $\Large C_{t} \sim Binomial(N_t, p)$  
+
+
+--
+#### Survival
+
+- $\Large y_{t} \sim Bernoulli\big(z_t p\big)$  
+
+
+--
+#### Occupancy
+
+- $\Large y_{t} \sim Bernoulli\big(z_t p_t\big)$ 
+
+---
+## Including covariates
+
+#### For any of these models, we can use GLMs to include covariates effects on parameters:
+
+$$\Large log(\lambda_t) = \alpha + \mathbf \beta \mathbf X + \varepsilon_t$$
+
+$$\Large logit(\phi_t/\gamma_t/\epsilon_t/p_t) = \alpha + \mathbf \beta \mathbf X + \varepsilon_t$$
+
+--
+#### And random effect structure
+
+--
+$$\Large \varepsilon_t \sim normal\big(\mu_{\lambda}, \tau_{\lambda}\big)$$
+$$\Large \mu_{\lambda} \sim normal\big(0, 0.1\big)$$
+
+$$\Large \tau_{\lambda} \sim gamma\big(0.25, 0.25\big)$$
+---
+## Simple state-space population growth model
+
+
