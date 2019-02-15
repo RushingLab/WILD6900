@@ -207,3 +207,26 @@ $$\Large \tau_{\lambda} \sim gamma\big(0.25, 0.25\big)$$
 ## Simple state-space population growth model
 
 
+---
+## State-space models
+
+#### Advantages  
+
+- explicit decomposition of process and observation models  
+
+- flexible  
+
+- mechanistic "smoothing" of process model  
+
+- latent state (and uncertainty) can be monitored  
+
+- possible to "integrate" data on state/observation parameters
+
+
+#### Disadvantages
+
+- computationally intensive  
+
+- usually unbiased estimates of $N$  
+
+- 
