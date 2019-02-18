@@ -149,7 +149,7 @@ knitr::include_graphics("state_space.png")
 
 #### Population dynamics
 
-- $\Large N_{t+1} \sim Poisson(N_t \lambda_t)$  
+- $\Large N_{t+1} \sim Poisson(N_t \lambda)$  
 
 - $\Large N_{t+1} \sim Normal(N_t e^{\bigg[r_0 \bigg(1-\frac{N_t}{K}\bigg)\bigg]}, \sigma^2)$  
 
@@ -206,4 +206,211 @@ $$\Large \tau_{\lambda} \sim gamma\big(0.25, 0.25\big)$$
 ---
 ## Simple state-space population growth model
 
+#### Process model
+$$\Large N_{t+1} = N_t \lambda_t$$
 
+$$\Large \lambda_t \sim normal(\mu_{\lambda}, \tau_{\lambda})$$
+
+--
+#### Observation model
+$$\Large C_{t} = N_t + \epsilon_t$$
+
+$$\Large \epsilon_t\sim Normal(0, \sigma_o^2)$$
+
+---
+## Simple state-space population growth model
+
+```{r include=FALSE}
+n.years <- 25           # Number of years
+N1 <- 30                # Initial population size
+mean.lambda <- 1.02     # Mean annual population growth rate
+sigma2.lambda <- 0.02   # Process (temporal) variation of the growth rate
+sigma2.y <- 20          # Variance of the observation error
+
+y <- N <- numeric(n.years)
+N[1] <- N1
+lambda <- rnorm(n.years-1, mean.lambda, sqrt(sigma2.lambda))
+for (t in 1:(n.years-1)){
+   N[t+1] <- N[t] * lambda[t]
+   }
+
+for (t in 1:n.years){
+   y[t] <- rnorm(1, N[t], sqrt(sigma2.y))
+   }
+
+
+# Bundle data
+jags.data <- list(y = y, T = n.years)
+
+# Initial values
+inits <- function(){list(sigma.proc = runif(1, 0, 5), mean.lambda = runif(1, 0.1, 2), sigma.obs = runif(1, 0, 10), N.est = c(runif(1, 20, 40), rep(NA, (n.years-1))))} 
+
+# Parameters monitored
+parameters <- c("lambda", "mean.lambda", "sigma2.obs", "sigma2.proc", "N.est")
+
+# MCMC settings
+ni <- 25000
+nt <- 3
+nb <- 10000
+nc <- 3
+
+# Call WinBUGS from R (BRT <1 min)
+ssm <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = parameters, model.file = "ssm.jags", n.chains = nc, n.thin = nt, n.iter = ni, n.burnin = nb)
+
+df <- data.frame(Year = seq(1:length(N)), True = N, Observed = y, 
+                 Estimated = ssm$mean$N.est, LCI = ssm$q2.5$N.est, UCI = ssm$q97.5$N.est)
+```
+
+```{r fig.width=7, fig.height=7}
+(p <- ggplot() + 
+  geom_line(data = df, aes(x = Year, y = True), color = WILD6900_colors$value[WILD6900_colors$name=="warning"]) +
+  geom_line(data = df, aes(x = Year, y = Observed), color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
+   scale_y_continuous("N"))
+```
+
+---
+## Simple state-space population growth model
+
+```{r fig.width=7, fig.height=7}
+p +
+  geom_ribbon(data = df, aes(x = Year, ymin = LCI, ymax = UCI), fill = "grey20", alpha = 0.1) + 
+  geom_line(data = df, aes(x = Year, y = Estimated), 
+            color = WILD6900_colors$value[WILD6900_colors$name=="danger"]) 
+```
+
+---
+## Simple state-space population growth model
+
+#### What if instead of:
+
+$$\Large C_{t} = N_t + \epsilon_t$$
+
+$$\Large \epsilon_t\sim Normal(0, \sigma_o^2)$$
+
+--
+#### The observation model is:
+
+$$\Large C_{t} \sim binomial(N_t, p)$$
+
+#### and
+
+$$\Large N_t = 50$$
+
+---
+## Simple state-space population growth model
+
+```{r include = FALSE}
+N <- rep(50, n.years) 
+
+p <- 0.7
+y <- numeric(n.years)
+for (t in 1:n.years){
+   y[t] <- rbinom(1, N[t], p)
+   }
+y
+
+# Bundle data
+jags.data <- list(y = y, T = n.years)
+
+# Initial values
+inits <- function(){list(sigma.proc = runif(1, 0, 5), mean.lambda = runif(1, 0.1, 2), sigma.obs = runif(1, 0, 10), N.est = c(runif(1, 30, 60), rep(NA, (n.years-1))))}
+
+# Parameters monitored
+parameters <- c("lambda", "mean.lambda", "sigma2.obs", "sigma2.proc", "N.est")
+
+# MCMC settings
+ni <- 25000
+nt <- 3
+nb <- 10000
+nc <- 3
+
+# Call WinBUGS from R (BRT <1 min)
+ssm <- jagsUI::jags(jags.data, inits, parameters, "ssm.jags", n.chains = nc, n.thin = nt, n.iter = ni, n.burnin = nb)
+
+df2 <- data.frame(Year = seq(1:length(N)), True = 50, Observed = y, 
+                 Estimated = ssm$mean$N.est, LCI = ssm$q2.5$N.est, UCI = ssm$q97.5$N.est)
+```
+
+```{r fig.width=7, fig.height=7}
+(p <- ggplot() + 
+  geom_line(data = df2, aes(x = Year, y = True), color = WILD6900_colors$value[WILD6900_colors$name=="warning"]) +
+  geom_line(data = df2, aes(x = Year, y = Observed), color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
+   scale_y_continuous("N"))
+```
+
+---
+## Simple state-space population growth model
+
+```{r fig.width=7, fig.height=7}
+p +
+  geom_ribbon(data = df2, aes(x = Year, ymin = LCI, ymax = UCI), fill = "grey20", alpha = 0.1) + 
+  geom_line(data = df2, aes(x = Year, y = Estimated), 
+            color = WILD6900_colors$value[WILD6900_colors$name=="danger"]) 
+```
+
+---
+## Simple state-space population growth model
+
+#### What if instead of:
+
+$$\Large C_{t} \sim binomial(N_t, p)$$
+
+--
+#### The observation model is:
+
+$$\Large C_{t} \sim binomial(N_t, p_t)$$
+
+#### and
+
+$$\Large logit(p_{t}) = \alpha + \beta \times year_t$$
+
+---
+## Simple state-space population growth model
+
+```{r include = FALSE}
+N <- rep(50, n.years)
+
+lp <- -0.5 + 0.1*(1:n.years)  # Increasing trend of logit p
+p <- plogis(lp)
+y <- numeric(n.years)
+for (t in 1:n.years){
+   y[t] <- rbinom(1, N[t], p[t])
+   }
+
+# Bundle data
+jags.data <- list(y = y, T = n.years)
+
+# Call WinBUGS from R (BRT <1 min)
+ssm2 <- jagsUI::jags(jags.data, inits, parameters, "ssm.jags", n.chains = nc, n.thin = nt, n.iter = ni, n.burnin = nb)
+
+df3 <- data.frame(Year = seq(1:length(N)), True = 50, Observed = y, 
+                 Estimated = ssm2$mean$N.est, LCI = ssm2$q2.5$N.est, UCI = ssm2$q97.5$N.est)
+```
+
+```{r fig.width=7, fig.height=7}
+(p <- ggplot() + 
+  geom_line(data = df3, aes(x = Year, y = True), color = WILD6900_colors$value[WILD6900_colors$name=="warning"]) +
+  geom_line(data = df3, aes(x = Year, y = Observed), color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
+   scale_y_continuous("N"))
+```
+
+---
+## Simple state-space population growth model
+
+```{r fig.width=7, fig.height=7}
+p +
+  geom_ribbon(data = df3, aes(x = Year, ymin = LCI, ymax = UCI), fill = "grey20", alpha = 0.1) + 
+  geom_line(data = df3, aes(x = Year, y = Estimated), 
+            color = WILD6900_colors$value[WILD6900_colors$name=="danger"]) 
+```
+
+---
+## State-space models
+
+- Produce unbiased estimates of $N$ when counts are equally likely to be higher or lower than true abundance  
+
+--
+- Produce unbiased estimates of $Np$ when  
+
+--
+-   
