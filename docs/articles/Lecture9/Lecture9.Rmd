@@ -221,6 +221,7 @@ $$\Large \epsilon_t\sim Normal(0, \sigma_o^2)$$
 ## Simple state-space population growth model
 
 ```{r include=FALSE}
+set.seed(61)
 n.years <- 25           # Number of years
 N1 <- 30                # Initial population size
 mean.lambda <- 1.02     # Mean annual population growth rate
@@ -238,7 +239,6 @@ for (t in 1:n.years){
    y[t] <- rnorm(1, N[t], sqrt(sigma2.y))
    }
 
-
 # Bundle data
 jags.data <- list(y = y, T = n.years)
 
@@ -255,23 +255,27 @@ nb <- 10000
 nc <- 3
 
 # Call WinBUGS from R (BRT <1 min)
-ssm <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = parameters, model.file = "ssm.jags", n.chains = nc, n.thin = nt, n.iter = ni, n.burnin = nb)
+ssm <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = parameters, 
+                    model.file = "ssm.jags", n.chains = nc, n.thin = nt, 
+                    n.iter = ni, n.burnin = nb)
 
 df <- data.frame(Year = seq(1:length(N)), True = N, Observed = y, 
                  Estimated = ssm$mean$N.est, LCI = ssm$q2.5$N.est, UCI = ssm$q97.5$N.est)
 ```
 
-```{r fig.width=7, fig.height=7}
+```{r fig.width=7, fig.height=6}
 (p <- ggplot() + 
   geom_line(data = df, aes(x = Year, y = True), color = WILD6900_colors$value[WILD6900_colors$name=="warning"]) +
-  geom_line(data = df, aes(x = Year, y = Observed), color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
+  geom_line(data = df, aes(x = Year, y = Observed), color = WILD6900_colors$value[WILD6900_colors$name=="primary"], linetype = "dashed") +
+     geom_point(data = df, aes(x = Year, y = Observed), color = "white", size = 5) +
+  geom_point(data = df, aes(x = Year, y = Observed), color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
    scale_y_continuous("N"))
 ```
 
 ---
 ## Simple state-space population growth model
 
-```{r fig.width=7, fig.height=7}
+```{r fig.width=7, fig.height=6}
 p +
   geom_ribbon(data = df, aes(x = Year, ymin = LCI, ymax = UCI), fill = "grey20", alpha = 0.1) + 
   geom_line(data = df, aes(x = Year, y = Estimated), 
@@ -297,7 +301,7 @@ $$\Large C_{t} \sim binomial(N_t, p)$$
 $$\Large N_t = 50$$
 
 ---
-## Simple state-space population growth model
+## Systematic bias in state-space models
 
 ```{r include = FALSE}
 N <- rep(50, n.years) 
@@ -331,7 +335,7 @@ df2 <- data.frame(Year = seq(1:length(N)), True = 50, Observed = y,
                  Estimated = ssm$mean$N.est, LCI = ssm$q2.5$N.est, UCI = ssm$q97.5$N.est)
 ```
 
-```{r fig.width=7, fig.height=7}
+```{r fig.width=7, fig.height=6}
 (p <- ggplot() + 
   geom_line(data = df2, aes(x = Year, y = True), color = WILD6900_colors$value[WILD6900_colors$name=="warning"]) +
   geom_line(data = df2, aes(x = Year, y = Observed), color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
@@ -339,9 +343,9 @@ df2 <- data.frame(Year = seq(1:length(N)), True = 50, Observed = y,
 ```
 
 ---
-## Simple state-space population growth model
+## Systematic bias in state-space models
 
-```{r fig.width=7, fig.height=7}
+```{r fig.width=7, fig.height=6}
 p +
   geom_ribbon(data = df2, aes(x = Year, ymin = LCI, ymax = UCI), fill = "grey20", alpha = 0.1) + 
   geom_line(data = df2, aes(x = Year, y = Estimated), 
@@ -349,7 +353,7 @@ p +
 ```
 
 ---
-## Simple state-space population growth model
+## Systematic bias in state-space models
 
 #### What if instead of:
 
@@ -365,7 +369,7 @@ $$\Large C_{t} \sim binomial(N_t, p_t)$$
 $$\Large logit(p_{t}) = \alpha + \beta \times year_t$$
 
 ---
-## Simple state-space population growth model
+## Systematic bias in state-space models
 
 ```{r include = FALSE}
 N <- rep(50, n.years)
@@ -387,7 +391,7 @@ df3 <- data.frame(Year = seq(1:length(N)), True = 50, Observed = y,
                  Estimated = ssm2$mean$N.est, LCI = ssm2$q2.5$N.est, UCI = ssm2$q97.5$N.est)
 ```
 
-```{r fig.width=7, fig.height=7}
+```{r fig.width=7, fig.height=6}
 (p <- ggplot() + 
   geom_line(data = df3, aes(x = Year, y = True), color = WILD6900_colors$value[WILD6900_colors$name=="warning"]) +
   geom_line(data = df3, aes(x = Year, y = Observed), color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
@@ -395,9 +399,9 @@ df3 <- data.frame(Year = seq(1:length(N)), True = 50, Observed = y,
 ```
 
 ---
-## Simple state-space population growth model
+## Systematic bias in state-space models
 
-```{r fig.width=7, fig.height=7}
+```{r fig.width=7, fig.height=6}
 p +
   geom_ribbon(data = df3, aes(x = Year, ymin = LCI, ymax = UCI), fill = "grey20", alpha = 0.1) + 
   geom_line(data = df3, aes(x = Year, y = Estimated), 
@@ -407,10 +411,35 @@ p +
 ---
 ## State-space models
 
-- Produce unbiased estimates of $N$ when counts are equally likely to be higher or lower than true abundance  
+#### Produce unbiased estimates of $\Large N$ **only** when false-positives and false-negatives cancel each other out on average  
+<br/>
 
 --
-- Produce unbiased estimates of $Np$ when  
+#### Produce unbiased estimates of population **indices** $\Large (Np)$ if detection probability has no pattern ove time  
+<br/>
 
 --
--   
+#### Do **not** produce unbiased estimates of $\Large N$ or $\Large Np$ if their are temporal patterns in detection probability or false-positive rates 
+
+---
+## State-space models
+
+#### Advantages  
+
+- explicit decomposition of process and observation models  
+
+- flexible  
+
+- mechanistic "smoothing" of process model  
+
+- latent state (and uncertainty) can be monitored  
+
+- possible to "integrate" data on state/observation parameters
+
+
+#### Disadvantages
+
+- computationally intensive  
+
+- usually produce biased estimates of $N$  
+

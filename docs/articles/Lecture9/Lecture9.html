@@ -149,7 +149,7 @@ class: inverse, middle, center
 
 #### Population dynamics
 
-- `\(\Large N_{t+1} \sim Poisson(N_t \lambda_t)\)`  
+- `\(\Large N_{t+1} \sim Poisson(N_t \lambda)\)`  
 
 - `\(\Large N_{t+1} \sim Normal(N_t e^{\bigg[r_0 \bigg(1-\frac{N_t}{K}\bigg)\bigg]}, \sigma^2)\)`  
 
@@ -205,6 +205,122 @@ class: inverse, middle, center
 `$$\Large \tau_{\lambda} \sim gamma\big(0.25, 0.25\big)$$`
 ---
 ## Simple state-space population growth model
+
+#### Process model
+`$$\Large N_{t+1} = N_t \lambda_t$$`
+
+`$$\Large \lambda_t \sim normal(\mu_{\lambda}, \tau_{\lambda})$$`
+
+--
+#### Observation model
+`$$\Large C_{t} = N_t + \epsilon_t$$`
+
+`$$\Large \epsilon_t\sim Normal(0, \sigma_o^2)$$`
+
+---
+## Simple state-space population growth model
+
+
+
+&lt;img src="Lecture9_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Simple state-space population growth model
+
+&lt;img src="Lecture9_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Simple state-space population growth model
+
+#### What if instead of:
+
+`$$\Large C_{t} = N_t + \epsilon_t$$`
+
+`$$\Large \epsilon_t\sim Normal(0, \sigma_o^2)$$`
+
+--
+#### The observation model is:
+
+`$$\Large C_{t} \sim binomial(N_t, p)$$`
+
+#### and
+
+`$$\Large N_t = 50$$`
+
+---
+## Systematic bias in state-space models
+
+
+
+&lt;img src="Lecture9_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Systematic bias in state-space models
+
+&lt;img src="Lecture9_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Systematic bias in state-space models
+
+#### What if instead of:
+
+`$$\Large C_{t} \sim binomial(N_t, p)$$`
+
+--
+#### The observation model is:
+
+`$$\Large C_{t} \sim binomial(N_t, p_t)$$`
+
+#### and
+
+`$$\Large logit(p_{t}) = \alpha + \beta \times year_t$$`
+
+---
+## Systematic bias in state-space models
+
+
+
+&lt;img src="Lecture9_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## Systematic bias in state-space models
+
+&lt;img src="Lecture9_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+## State-space models
+
+#### Produce unbiased estimates of `\(\Large N\)` **only** when false-positives and false-negatives cancel each other out on average  
+&lt;br/&gt;
+
+--
+#### Produce unbiased estimates of population **indices** `\(\Large (Np)\)` if detection probability has no pattern ove time  
+&lt;br/&gt;
+
+--
+#### Do **not** produce unbiased estimates of `\(\Large N\)` or `\(\Large Np\)` if their are temporal patterns in detection probability or false-positive rates 
+
+---
+## State-space models
+
+#### Advantages  
+
+- explicit decomposition of process and observation models  
+
+- flexible  
+
+- mechanistic "smoothing" of process model  
+
+- latent state (and uncertainty) can be monitored  
+
+- possible to "integrate" data on state/observation parameters
+
+
+#### Disadvantages
+
+- computationally intensive  
+
+- usually produce biased estimates of `\(N\)`
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
