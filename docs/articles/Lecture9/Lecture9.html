@@ -199,12 +199,36 @@ class: inverse, middle, center
 #### And random effect structure
 
 --
-`$$\Large \varepsilon_t \sim normal\big(\mu_{\lambda}, \tau_{\lambda}\big)$$`
-`$$\Large \mu_{\lambda} \sim normal\big(0, 0.1\big)$$`
+`$$\Large \varepsilon_t \sim normal\big(0, \tau_{\lambda}\big)$$`
 
 `$$\Large \tau_{\lambda} \sim gamma\big(0.25, 0.25\big)$$`
 ---
 ## Simple state-space population growth model
+
+
+---
+## State-space models
+
+#### Advantages  
+
+- explicit decomposition of process and observation models  
+
+- flexible  
+
+- mechanistic "smoothing" of process model  
+
+- latent state (and uncertainty) can be monitored  
+
+- possible to "integrate" data on state/observation parameters
+
+
+#### Disadvantages
+
+- computationally intensive  
+
+- usually unbiased estimates of `\(N\)`  
+
+-
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
