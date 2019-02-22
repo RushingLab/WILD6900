@@ -38,6 +38,8 @@ navbar:
           href: articles/Lecture7/Lecture7.html
         - text: "Lecture 8: Introduction to hierarchical models"
           href: articles/Lecture8/Lecture8.html
+        - text: "Lecture 9: Introduction to state-space models"
+          href: articles/Lecture9/Lecture9.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:

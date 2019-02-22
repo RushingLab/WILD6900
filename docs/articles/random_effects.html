@@ -94,6 +94,9 @@
     <li>
       <a href="../articles/Lecture8/Lecture8.html">Lecture 8: Introduction to hierarchical models</a>
     </li>
+    <li>
+      <a href="../articles/Lecture9/Lecture9.html">Lecture 9: Introduction to state-space models</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -150,7 +153,7 @@
       <h1>Introduction to random effects and hierarchical models</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-02-07</h4>
+            <h4 class="date">2019-02-22</h4>
       
       
       <div class="hidden name"><code>random_effects.Rmd</code></div>
@@ -191,11 +194,11 @@
 <tbody>
 <tr class="odd">
 <td align="left">1</td>
-<td align="right">10</td>
+<td align="right">7</td>
 </tr>
 <tr class="even">
 <td align="left">2</td>
-<td align="right">16</td>
+<td align="right">19</td>
 </tr>
 <tr class="odd">
 <td align="left">3</td>
@@ -203,31 +206,31 @@
 </tr>
 <tr class="even">
 <td align="left">4</td>
-<td align="right">9</td>
+<td align="right">12</td>
 </tr>
 <tr class="odd">
 <td align="left">5</td>
-<td align="right">10</td>
+<td align="right">13</td>
 </tr>
 <tr class="even">
 <td align="left">6</td>
-<td align="right">8</td>
+<td align="right">13</td>
 </tr>
 <tr class="odd">
 <td align="left">7</td>
-<td align="right">7</td>
+<td align="right">6</td>
 </tr>
 <tr class="even">
 <td align="left">8</td>
-<td align="right">16</td>
+<td align="right">10</td>
 </tr>
 <tr class="odd">
 <td align="left">9</td>
-<td align="right">14</td>
+<td align="right">5</td>
 </tr>
 <tr class="even">
 <td align="left">10</td>
-<td align="right">9</td>
+<td align="right">8</td>
 </tr>
 <tr class="odd">
 <td align="left">11</td>
@@ -235,11 +238,11 @@
 </tr>
 <tr class="even">
 <td align="left">12</td>
-<td align="right">18</td>
+<td align="right">8</td>
 </tr>
 <tr class="odd">
 <td align="left">13</td>
-<td align="right">8</td>
+<td align="right">12</td>
 </tr>
 <tr class="even">
 <td align="left">14</td>
@@ -247,27 +250,27 @@
 </tr>
 <tr class="odd">
 <td align="left">15</td>
-<td align="right">8</td>
+<td align="right">9</td>
 </tr>
 <tr class="even">
 <td align="left">16</td>
-<td align="right">8</td>
+<td align="right">14</td>
 </tr>
 <tr class="odd">
 <td align="left">17</td>
-<td align="right">12</td>
-</tr>
-<tr class="even">
-<td align="left">18</td>
-<td align="right">8</td>
-</tr>
-<tr class="odd">
-<td align="left">19</td>
 <td align="right">5</td>
 </tr>
 <tr class="even">
+<td align="left">18</td>
+<td align="right">12</td>
+</tr>
+<tr class="odd">
+<td align="left">19</td>
+<td align="right">11</td>
+</tr>
+<tr class="even">
 <td align="left">20</td>
-<td align="right">8</td>
+<td align="right">10</td>
 </tr>
 </tbody>
 </table>
@@ -285,21 +288,21 @@
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">Xmat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/model.matrix">model.matrix</a></span>(<span class="op">~</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">as.factor</a></span>(plot) <span class="op">+</span><span class="st"> </span>Length <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">Xmat[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">21</span>)]</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt;   as.factor(plot)1 as.factor(plot)2 as.factor(plot)3  Length</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt; 1                0                0                0 1.00617</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; 2                0                0                0 0.07797</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt; 3                0                0                0 1.22469</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; 4                0                0                0 0.66403</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt; 5                0                0                0 1.72224</span></a></code></pre></div>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt; 1                0                1                0 -0.1506</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; 2                0                0                0  0.6955</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt; 3                0                0                0 -0.6659</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; 4                0                0                0 -1.3697</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt; 5                0                1                0  0.3922</span></a></code></pre></div>
 <p>Now use matrix multiplicaiton to create the linear predictor:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">linear.pred &lt;-<span class="st"> </span>Xmat <span class="op">%*%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(alpha, beta)</a>
 <a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(linear.pred)</a>
 <a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt;    [,1]</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; 1 30.42</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; 2 26.55</span></a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; 3 34.07</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; 4 29.51</span></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; 5 33.60</span></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; 6 30.98</span></a></code></pre></div>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; 1 26.71</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; 2 30.29</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; 3 15.75</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; 4 11.53</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; 5 29.97</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; 6 14.86</span></a></code></pre></div>
 <p>And finally generate the observations and combine the relevant vectors within a single data frame:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">mass &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(N, <span class="dt">mean =</span> linear.pred, <span class="dt">sd =</span> sigma)</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">mass_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">plot =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">as.factor</a></span>(plot), <span class="dt">length =</span> Length, <span class="dt">pred_length =</span> linear.pred, <span class="dt">mass =</span> mass)</a>
@@ -380,142 +383,28 @@ f
 mu.alpha
 </td>
 <td style="text-align:right;">
-23.442
+23.678
 </td>
 <td style="text-align:right;">
-0.5354
+0.5452
 </td>
 <td style="text-align:right;">
-22.386
+22.589
 </td>
 <td style="text-align:right;">
-23.094
+23.321
 </td>
 <td style="text-align:right;">
-23.444
+23.675
 </td>
 <td style="text-align:right;">
-23.790
+24.036
 </td>
 <td style="text-align:right;">
-24.487
-</td>
-<td style="text-align:right;">
-1.0005
-</td>
-<td style="text-align:right;">
-5091
-</td>
-<td style="text-align:right;">
-0
+24.761
 </td>
 <td style="text-align:right;">
 1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-sigma.alpha
-</td>
-<td style="text-align:right;">
-2.085
-</td>
-<td style="text-align:right;">
-0.4813
-</td>
-<td style="text-align:right;">
-1.313
-</td>
-<td style="text-align:right;">
-1.748
-</td>
-<td style="text-align:right;">
-2.025
-</td>
-<td style="text-align:right;">
-2.362
-</td>
-<td style="text-align:right;">
-3.197
-</td>
-<td style="text-align:right;">
-1.0007
-</td>
-<td style="text-align:right;">
-18428
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-alpha[1]
-</td>
-<td style="text-align:right;">
-22.536
-</td>
-<td style="text-align:right;">
-0.9174
-</td>
-<td style="text-align:right;">
-20.736
-</td>
-<td style="text-align:right;">
-21.920
-</td>
-<td style="text-align:right;">
-22.546
-</td>
-<td style="text-align:right;">
-23.142
-</td>
-<td style="text-align:right;">
-24.335
-</td>
-<td style="text-align:right;">
-1.0001
-</td>
-<td style="text-align:right;">
-22331
-</td>
-<td style="text-align:right;">
-0
-</td>
-<td style="text-align:right;">
-1
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-alpha[2]
-</td>
-<td style="text-align:right;">
-23.638
-</td>
-<td style="text-align:right;">
-0.7471
-</td>
-<td style="text-align:right;">
-22.174
-</td>
-<td style="text-align:right;">
-23.135
-</td>
-<td style="text-align:right;">
-23.637
-</td>
-<td style="text-align:right;">
-24.146
-</td>
-<td style="text-align:right;">
-25.094
-</td>
-<td style="text-align:right;">
-1.0000
 </td>
 <td style="text-align:right;">
 22500
@@ -529,31 +418,145 @@ alpha[2]
 </tr>
 <tr>
 <td style="text-align:left;">
+sigma.alpha
+</td>
+<td style="text-align:right;">
+2.173
+</td>
+<td style="text-align:right;">
+0.4652
+</td>
+<td style="text-align:right;">
+1.407
+</td>
+<td style="text-align:right;">
+1.847
+</td>
+<td style="text-align:right;">
+2.122
+</td>
+<td style="text-align:right;">
+2.446
+</td>
+<td style="text-align:right;">
+3.237
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+9982
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+alpha[1]
+</td>
+<td style="text-align:right;">
+22.204
+</td>
+<td style="text-align:right;">
+1.0426
+</td>
+<td style="text-align:right;">
+20.156
+</td>
+<td style="text-align:right;">
+21.509
+</td>
+<td style="text-align:right;">
+22.206
+</td>
+<td style="text-align:right;">
+22.905
+</td>
+<td style="text-align:right;">
+24.217
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+22500
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+alpha[2]
+</td>
+<td style="text-align:right;">
+26.456
+</td>
+<td style="text-align:right;">
+0.6962
+</td>
+<td style="text-align:right;">
+25.088
+</td>
+<td style="text-align:right;">
+25.991
+</td>
+<td style="text-align:right;">
+26.462
+</td>
+<td style="text-align:right;">
+26.925
+</td>
+<td style="text-align:right;">
+27.814
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+20030
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
 alpha[3]
 </td>
 <td style="text-align:right;">
-23.037
+24.637
 </td>
 <td style="text-align:right;">
-0.9541
+0.9484
 </td>
 <td style="text-align:right;">
-21.154
+22.785
 </td>
 <td style="text-align:right;">
-22.399
+23.996
 </td>
 <td style="text-align:right;">
-23.039
+24.638
 </td>
 <td style="text-align:right;">
-23.677
+25.275
 </td>
 <td style="text-align:right;">
-24.896
+26.493
 </td>
 <td style="text-align:right;">
-1.0000
+1
 </td>
 <td style="text-align:right;">
 22500
@@ -570,28 +573,28 @@ alpha[3]
 alpha[4]
 </td>
 <td style="text-align:right;">
-23.535
+26.092
 </td>
 <td style="text-align:right;">
-0.9619
+0.8585
 </td>
 <td style="text-align:right;">
-21.659
+24.430
 </td>
 <td style="text-align:right;">
-22.892
+25.510
 </td>
 <td style="text-align:right;">
-23.538
+26.087
 </td>
 <td style="text-align:right;">
-24.180
+26.661
 </td>
 <td style="text-align:right;">
-25.433
+27.800
 </td>
 <td style="text-align:right;">
-1.0000
+1
 </td>
 <td style="text-align:right;">
 22500
@@ -608,31 +611,31 @@ alpha[4]
 alpha[5]
 </td>
 <td style="text-align:right;">
-22.056
+23.921
 </td>
 <td style="text-align:right;">
-0.9286
+0.8028
 </td>
 <td style="text-align:right;">
-20.208
+22.345
 </td>
 <td style="text-align:right;">
-21.432
+23.381
 </td>
 <td style="text-align:right;">
-22.068
+23.922
 </td>
 <td style="text-align:right;">
-22.689
+24.458
 </td>
 <td style="text-align:right;">
-23.853
+25.475
 </td>
 <td style="text-align:right;">
-1.0001
+1
 </td>
 <td style="text-align:right;">
-15344
+5891
 </td>
 <td style="text-align:right;">
 0
@@ -646,31 +649,31 @@ alpha[5]
 alpha[6]
 </td>
 <td style="text-align:right;">
-24.683
+20.774
 </td>
 <td style="text-align:right;">
-1.0108
+0.8361
 </td>
 <td style="text-align:right;">
-22.721
+19.126
 </td>
 <td style="text-align:right;">
-23.996
+20.224
 </td>
 <td style="text-align:right;">
-24.676
+20.774
 </td>
 <td style="text-align:right;">
-25.366
+21.335
 </td>
 <td style="text-align:right;">
-26.680
+22.404
 </td>
 <td style="text-align:right;">
-1.0001
+1
 </td>
 <td style="text-align:right;">
-17776
+3927
 </td>
 <td style="text-align:right;">
 0
@@ -684,31 +687,31 @@ alpha[6]
 alpha[7]
 </td>
 <td style="text-align:right;">
-26.564
+26.197
 </td>
 <td style="text-align:right;">
-1.1278
+1.1323
 </td>
 <td style="text-align:right;">
-24.359
+24.026
 </td>
 <td style="text-align:right;">
-25.802
+25.415
 </td>
 <td style="text-align:right;">
-26.560
+26.196
 </td>
 <td style="text-align:right;">
-27.319
+26.958
 </td>
 <td style="text-align:right;">
-28.799
+28.423
 </td>
 <td style="text-align:right;">
-1.0000
+1
 </td>
 <td style="text-align:right;">
-22500
+17426
 </td>
 <td style="text-align:right;">
 0
@@ -722,28 +725,28 @@ alpha[7]
 alpha[8]
 </td>
 <td style="text-align:right;">
-21.307
+24.065
 </td>
 <td style="text-align:right;">
-0.7698
+0.9000
 </td>
 <td style="text-align:right;">
-19.789
+22.297
 </td>
 <td style="text-align:right;">
-20.789
+23.457
 </td>
 <td style="text-align:right;">
-21.309
+24.072
 </td>
 <td style="text-align:right;">
-21.823
+24.671
 </td>
 <td style="text-align:right;">
-22.800
+25.815
 </td>
 <td style="text-align:right;">
-0.9999
+1
 </td>
 <td style="text-align:right;">
 22500
@@ -816,28 +819,28 @@ f
 alpha[1]
 </td>
 <td style="text-align:right;">
-22.06
+21.44
 </td>
 <td style="text-align:right;">
-1.0061
+1.1787
 </td>
 <td style="text-align:right;">
-20.10
+19.10
 </td>
 <td style="text-align:right;">
-21.39
+20.65
 </td>
 <td style="text-align:right;">
-22.06
+21.45
 </td>
 <td style="text-align:right;">
-22.74
+22.24
 </td>
 <td style="text-align:right;">
-24.04
+23.73
 </td>
 <td style="text-align:right;">
-1
+1.0000
 </td>
 <td style="text-align:right;">
 22500
@@ -854,28 +857,28 @@ alpha[1]
 alpha[2]
 </td>
 <td style="text-align:right;">
-23.52
+26.63
 </td>
 <td style="text-align:right;">
-0.8054
+0.7171
 </td>
 <td style="text-align:right;">
-21.95
+25.22
 </td>
 <td style="text-align:right;">
-22.98
+26.15
 </td>
 <td style="text-align:right;">
-23.52
+26.63
 </td>
 <td style="text-align:right;">
-24.06
+27.13
 </td>
 <td style="text-align:right;">
-25.10
+28.01
 </td>
 <td style="text-align:right;">
-1
+1.0000
 </td>
 <td style="text-align:right;">
 22500
@@ -892,31 +895,31 @@ alpha[2]
 alpha[3]
 </td>
 <td style="text-align:right;">
-22.66
+24.63
 </td>
 <td style="text-align:right;">
-1.0731
+1.0414
 </td>
 <td style="text-align:right;">
-20.52
+22.58
 </td>
 <td style="text-align:right;">
-21.95
+23.93
 </td>
 <td style="text-align:right;">
-22.67
+24.63
 </td>
 <td style="text-align:right;">
-23.38
+25.32
 </td>
 <td style="text-align:right;">
-24.76
+26.67
 </td>
 <td style="text-align:right;">
-1
+1.0000
 </td>
 <td style="text-align:right;">
-11874
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -930,28 +933,28 @@ alpha[3]
 alpha[4]
 </td>
 <td style="text-align:right;">
-23.29
+26.38
 </td>
 <td style="text-align:right;">
-1.0884
+0.9038
 </td>
 <td style="text-align:right;">
-21.14
+24.61
 </td>
 <td style="text-align:right;">
-22.56
+25.77
 </td>
 <td style="text-align:right;">
-23.30
+26.38
 </td>
 <td style="text-align:right;">
-24.03
+26.99
 </td>
 <td style="text-align:right;">
-25.42
+28.14
 </td>
 <td style="text-align:right;">
-1
+1.0000
 </td>
 <td style="text-align:right;">
 22500
@@ -968,31 +971,31 @@ alpha[4]
 alpha[5]
 </td>
 <td style="text-align:right;">
-21.45
+23.75
 </td>
 <td style="text-align:right;">
-1.0170
+0.8724
 </td>
 <td style="text-align:right;">
-19.45
+22.04
 </td>
 <td style="text-align:right;">
-20.77
+23.16
 </td>
 <td style="text-align:right;">
-21.46
+23.75
 </td>
 <td style="text-align:right;">
-22.14
+24.34
 </td>
 <td style="text-align:right;">
-23.44
+25.45
 </td>
 <td style="text-align:right;">
-1
+1.0000
 </td>
 <td style="text-align:right;">
-11774
+21710
 </td>
 <td style="text-align:right;">
 0
@@ -1006,28 +1009,28 @@ alpha[5]
 alpha[6]
 </td>
 <td style="text-align:right;">
-24.76
+20.08
 </td>
 <td style="text-align:right;">
-1.1299
+0.8738
 </td>
 <td style="text-align:right;">
-22.54
+18.37
 </td>
 <td style="text-align:right;">
-24.00
+19.49
 </td>
 <td style="text-align:right;">
-24.76
+20.08
 </td>
 <td style="text-align:right;">
-25.52
+20.67
 </td>
 <td style="text-align:right;">
-26.96
+21.78
 </td>
 <td style="text-align:right;">
-1
+1.0000
 </td>
 <td style="text-align:right;">
 22500
@@ -1044,28 +1047,28 @@ alpha[6]
 alpha[7]
 </td>
 <td style="text-align:right;">
-27.33
+26.70
 </td>
 <td style="text-align:right;">
-1.2175
+1.2781
 </td>
 <td style="text-align:right;">
-24.95
+24.18
 </td>
 <td style="text-align:right;">
-26.52
+25.86
 </td>
 <td style="text-align:right;">
-27.32
+26.70
 </td>
 <td style="text-align:right;">
-28.14
+27.56
 </td>
 <td style="text-align:right;">
-29.73
+29.20
 </td>
 <td style="text-align:right;">
-1
+0.9999
 </td>
 <td style="text-align:right;">
 22500
@@ -1082,28 +1085,28 @@ alpha[7]
 alpha[8]
 </td>
 <td style="text-align:right;">
-20.80
+23.88
 </td>
 <td style="text-align:right;">
-0.8013
+0.9889
 </td>
 <td style="text-align:right;">
-19.20
+21.93
 </td>
 <td style="text-align:right;">
-20.26
+23.22
 </td>
 <td style="text-align:right;">
-20.81
+23.88
 </td>
 <td style="text-align:right;">
-21.34
+24.54
 </td>
 <td style="text-align:right;">
-22.36
+25.82
 </td>
 <td style="text-align:right;">
-1
+1.0000
 </td>
 <td style="text-align:right;">
 22500
@@ -1120,31 +1123,31 @@ alpha[8]
 alpha[9]
 </td>
 <td style="text-align:right;">
-22.89
+27.41
 </td>
 <td style="text-align:right;">
-0.8586
+1.3942
 </td>
 <td style="text-align:right;">
-21.21
+24.67
 </td>
 <td style="text-align:right;">
-22.31
+26.48
 </td>
 <td style="text-align:right;">
-22.90
+27.41
 </td>
 <td style="text-align:right;">
-23.48
+28.35
 </td>
 <td style="text-align:right;">
-24.55
+30.13
 </td>
 <td style="text-align:right;">
-1
+1.0001
 </td>
 <td style="text-align:right;">
-22500
+14728
 </td>
 <td style="text-align:right;">
 0
@@ -1158,31 +1161,31 @@ alpha[9]
 alpha[10]
 </td>
 <td style="text-align:right;">
-25.50
+20.72
 </td>
 <td style="text-align:right;">
-1.0695
+1.1134
 </td>
 <td style="text-align:right;">
-23.39
+18.57
 </td>
 <td style="text-align:right;">
-24.78
+19.96
 </td>
 <td style="text-align:right;">
-25.50
+20.71
 </td>
 <td style="text-align:right;">
-26.22
+21.48
 </td>
 <td style="text-align:right;">
-27.59
+22.90
 </td>
 <td style="text-align:right;">
-1
+1.0001
 </td>
 <td style="text-align:right;">
-14027
+11212
 </td>
 <td style="text-align:right;">
 0
