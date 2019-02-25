@@ -1,0 +1,133 @@
+---
+title: "Fitting state-space abundance models in JAGS"
+author: "WILD6900"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+header-includes:
+  - \usepackage{amsmath}
+  
+vignette: >
+  %\VignetteIndexEntry{state_space}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(fig.align = 'center', message = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+library(WILD6900)
+```
+
+As we learned in [lecture](https://rushinglab.github.io/WILD6900/articles/Lecture9/Lecture9.html#1), state-space models provide a powerful framework for decomposing time series data into process variation and observation error. In this lab, we will use JAGS to fit a variety of state-space models using both simulated and real data. 
+
+***
+**Objectives**
+
+* Simulate data sets with separate process and observation models   
+
+* Fit state-space models to count data 
+
+* Understand when and why state-space models produce biased estimates of abundance
+
+***
+
+## Fitting state-space models to simulated data
+
+```{r}
+n.years <- 25           # Number of years
+N1 <- 30                # Initial population size
+mean.lambda <- 1.02     # Mean annual population growth rate
+sigma2.lambda <- 0.02   # Process (temporal) variation of the growth rate
+sigma2.y <- 20          # Variance of the observation error
+
+y <- N <- numeric(n.years)
+N[1] <- N1
+lambda <- rnorm(n.years-1, mean.lambda, sqrt(sigma2.lambda))
+for (t in 1:(n.years-1)){
+   N[t+1] <- N[t] * lambda[t]
+   }
+
+for (t in 1:n.years){
+   y[t] <- rnorm(1, N[t], sqrt(sigma2.y))
+   }
+
+# Bundle data
+jags.data <- list(y = y, T = n.years)
+
+# Initial values
+inits <- function(){list(sigma.proc = runif(1, 0, 5), mean.lambda = runif(1, 0.1, 2), sigma.obs = runif(1, 0, 10), N.est = c(runif(1, 20, 40), rep(NA, (n.years-1))))} 
+
+# Parameters monitored
+parameters <- c("lambda", "mean.lambda", "sigma2.obs", "sigma2.proc", "N.est")
+
+# MCMC settings
+ni <- 25000
+nt <- 3
+nb <- 10000
+nc <- 3
+
+# Call WinBUGS from R (BRT <1 min)
+ssm <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = parameters, 
+                    model.file = "ssm.jags", n.chains = nc, n.thin = nt, 
+                    n.iter = ni, n.burnin = nb)
+
+df <- data.frame(Year = seq(1:length(N)), True = N, Observed = y, 
+                 Estimated = ssm$mean$N.est, LCI = ssm$q2.5$N.est, UCI = ssm$q97.5$N.est)
+```
+
+```{r fig.width=7, fig.height=6}
+(p <- ggplot() + 
+  geom_line(data = df, aes(x = Year, y = True), color = WILD6900_colors$value[WILD6900_colors$name=="warning"]) +
+  geom_line(data = df, aes(x = Year, y = Observed), color = WILD6900_colors$value[WILD6900_colors$name=="primary"], linetype = "dashed") +
+     geom_point(data = df, aes(x = Year, y = Observed), color = "white", size = 5) +
+  geom_point(data = df, aes(x = Year, y = Observed), color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
+   scale_y_continuous("N"))
+```
+
+## Estimating population dynamics of the Gunnison Island pelican colony
+
+```{r}
+counts <- pelicans[,2] # Counts
+
+year <- pelicans[,1] # Years counts were conducted and years we want to estimate
+  
+jags.data <- list(y = counts, nYears = length(year))
+
+inits <- function(){list(sigma.proc = runif(1, 0, 1),
+                         r0 = runif(1),
+                         K = runif(1, 12400, 12500),
+                         sigma.obs = runif(1, 0, 1),
+                         N.est = c(runif(1, 4450, 4550), rep(NA, (length(year)-1))))}
+
+params <- c("r0", "K", "sigma.obs", "sigma.proc", "r", "N.est")
+
+ni <- 30000
+nt <- 1    
+nb <- 5000
+nc <- 3
+
+
+awpe.ssm <- jagsUI::jags(data = jags.data,
+                 model.file = "inst/jags/AWPE_Ricker.jags",
+                 parameters.to.save = params,
+                 inits = inits,
+                 n.chains = nc,
+                 n.iter = ni,
+                 n.thin = nt, 
+                 n.burnin = nb, parallel = TRUE)
+
+pelicans <- dplyr::mutate(pelicans, N.est = awpe.ssm$mean$N.est, LCI = awpe.ssm$q2.5$N.est, UCI = awpe.ssm$q97.5$N.est)
+
+ggplot(pelicans, aes(x = year)) + 
+  geom_hline(yintercept = awpe.ssm$mean$K, color = "grey50") + 
+  geom_hline(yintercept = awpe.ssm$q2.5$K, color = "grey50", linetype = "longdash") + 
+  geom_hline(yintercept = awpe.ssm$q97.5$K, color = "grey50", linetype = "longdash") + 
+  geom_ribbon(aes(ymin = LCI, ymax = UCI)) + 
+  geom_line(aes(y = N.est), color = "white") +
+  geom_point(aes(y = count), color = "red") 
+  
+```
+
+## Estimating vital rates from age-specific count data

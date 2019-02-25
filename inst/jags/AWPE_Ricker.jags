@@ -1,0 +1,27 @@
+
+    model{
+    # Priors
+    N.est[1] ~ dunif(0, 10000)         # Prior for initial population size
+    r0 ~ dunif(0, 10)            # Prior for r0
+    K ~ dgamma(0.001, 0.001)               # Prior for K
+    alpha ~ dgamma(0.001, 0.001)
+
+    sigma.obs ~ dgamma(0.1, 0.1)      # Prior for sd of observation processes
+    tau.obs <- pow(sigma.obs, -2)
+
+    # Likelihood
+
+    # State process
+    for (t in 1:(nYears-1)){
+      r[t] <- r0 * (1 - N.est[t]/K)
+      lambda[t] <- N.est[t] * exp(r[t])
+      p[t] <- alpha/(alpha + lambda[t])
+      N.est[t+1] ~ dnegbin(p[t], alpha)
+    }
+
+    # Observation process
+    for (t in 1:nYears){
+      y[t] ~ dnorm(N.est[t], tau.obs)
+    }
+    }
+    
