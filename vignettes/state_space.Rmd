@@ -93,15 +93,15 @@ counts <- pelicans[,2] # Counts
 
 year <- pelicans[,1] # Years counts were conducted and years we want to estimate
   
-jags.data <- list(y = counts, nYears = length(year))
+jags.data <- list(y = log(counts), nYears = length(year))
 
 inits <- function(){list(sigma.proc = runif(1, 0, 1),
                          r0 = runif(1),
                          K = runif(1, 12400, 12500),
                          sigma.obs = runif(1, 0, 1),
-                         N.est = c(runif(1, 4450, 4550), rep(NA, (length(year)-1))))}
+                         logN.est = c(runif(1, 0, 10), rep(NA, (length(year)-1))))}
 
-params <- c("r0", "K", "sigma.obs", "sigma.proc", "r", "N.est")
+params <- c("r0", "K", "sigma.obs", "sigma.proc", "N.est")
 
 ni <- 30000
 nt <- 1    
@@ -118,6 +118,7 @@ awpe.ssm <- jagsUI::jags(data = jags.data,
                  n.thin = nt, 
                  n.burnin = nb, parallel = TRUE)
 
+
 pelicans <- dplyr::mutate(pelicans, N.est = awpe.ssm$mean$N.est, LCI = awpe.ssm$q2.5$N.est, UCI = awpe.ssm$q97.5$N.est)
 
 ggplot(pelicans, aes(x = year)) + 
@@ -126,6 +127,7 @@ ggplot(pelicans, aes(x = year)) +
   geom_hline(yintercept = awpe.ssm$q97.5$K, color = "grey50", linetype = "longdash") + 
   geom_ribbon(aes(ymin = LCI, ymax = UCI)) + 
   geom_line(aes(y = N.est), color = "white") +
+  geom_point(aes(y = N.est), color = "white") +
   geom_point(aes(y = count), color = "red") 
   
 ```
