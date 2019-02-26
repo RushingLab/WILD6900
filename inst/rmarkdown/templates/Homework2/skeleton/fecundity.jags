@@ -1,0 +1,14 @@
+
+model{
+  # Priors
+  alpha ~ dnorm(0, 0.01)
+  beta1 ~ dnorm(0, 0.01)
+  beta2 ~ dnorm(0, 0.01)
+
+  # Likelihood
+  for(t in 1:nyear){
+    y[t] ~ dpois(f[t] * N[t])
+    log(f[t]) <- alpha + beta1 * year[t] + beta2 * pow(year[t], 2)
+  }
+} # end of model
+

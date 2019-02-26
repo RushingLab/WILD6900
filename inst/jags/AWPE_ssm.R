@@ -1,0 +1,36 @@
+sink("inst/jags/AWPE_ssm.jags")
+cat("
+    model{
+    # Priors
+    logN.est[1] ~ dnorm(0, 0.01)      # Log nitial population size
+    
+    for (t in 1:(nYears - 1)){
+    r[t] ~ dnorm(mean.r, tau.r)
+    }
+    mean.r ~ dnorm(1, 0.001)          # Mean growth rate
+    
+    sigma.r ~ dunif(0, 10)            # SD of state processes
+    tau.r <- pow(sigma.r, -2)
+    
+    sigma.obs ~ dunif(0, 10)          # SD of observation processes
+    tau.obs <- pow(sigma.obs, -2)
+    
+    
+    # Likelihood
+    # State process
+    for (t in 1:(nYears-1)){
+    logN.est[t+1] <- logN.est[t] + r[t]
+    }
+    
+    # Observation process
+    for (t in 1:nYears){
+    y[t] ~ dnorm(logN.est[t], tau.obs)
+    }
+    
+    # Population sizes on real scale
+    for (t in 1:nYears){
+    N.est[t] <- exp(logN.est[t])
+    }
+    }
+    ", fill = TRUE)
+sink()

@@ -199,8 +199,7 @@ $$\Large logit(\phi_t/\gamma_t/\epsilon_t/p_t) = \alpha + \mathbf \beta \mathbf 
 #### And random effect structure
 
 --
-$$\Large \varepsilon_t \sim normal\big(\mu_{\lambda}, \tau_{\lambda}\big)$$
-$$\Large \mu_{\lambda} \sim normal\big(0, 0.1\big)$$
+$$\Large \varepsilon_t \sim normal\big(0, \tau_{\lambda}\big)$$
 
 $$\Large \tau_{\lambda} \sim gamma\big(0.25, 0.25\big)$$
 ---

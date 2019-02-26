@@ -94,6 +94,9 @@
     <li>
       <a href="../articles/Lecture8/Lecture8.html">Lecture 8: Introduction to hierarchical models</a>
     </li>
+    <li>
+      <a href="../articles/Lecture9/Lecture9.html">Lecture 9: Introduction to state-space models</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -126,6 +129,9 @@
     <li>
       <a href="../articles/random_effects.html">Random effects ANCOVA in JAGS</a>
     </li>
+    <li>
+      <a href="../articles/state_space.html">Simple state-space models in JAGS</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -150,7 +156,7 @@
       <h1>Introduction to random effects and hierarchical models</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-02-07</h4>
+            <h4 class="date">2019-02-26</h4>
       
       
       <div class="hidden name"><code>random_effects.Rmd</code></div>
@@ -176,13 +182,13 @@
 <p><span class="math display">\[\alpha_{[j]} \sim normal(\mu_{alpha}, \tau_{alpha})\]</span></p>
 <p><span class="math display">\[\epsilon_i \sim normal(0, \tau)\]</span></p>
 <p>First, set up the simulation parameters:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">J &lt;-<span class="st"> </span><span class="dv">20</span>               <span class="co"># Number of sites</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">N &lt;-<span class="st"> </span><span class="dv">200</span>              <span class="co"># Number of observations</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">Length &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(N)    <span class="co"># Scaled body length</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="co">## Randomly determine each individuals study plot</span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">plot &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span>J, <span class="dt">size =</span> N, <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(plot)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">J &lt;-<span class="st"> </span><span class="dv">20</span>               <span class="co"># Number of sites</span>
+N &lt;-<span class="st"> </span><span class="dv">200</span>              <span class="co"># Number of observations</span>
+Length &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(N)    <span class="co"># Scaled body length</span>
+
+## Randomly determine each individuals study plot
+plot &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(<span class="dt">x =</span> <span class="dv">1</span><span class="op">:</span>J, <span class="dt">size =</span> N, <span class="dt">replace =</span> <span class="ot">TRUE</span>)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(plot)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">plot</th>
@@ -191,23 +197,23 @@
 <tbody>
 <tr class="odd">
 <td align="left">1</td>
-<td align="right">10</td>
+<td align="right">9</td>
 </tr>
 <tr class="even">
 <td align="left">2</td>
-<td align="right">16</td>
+<td align="right">10</td>
 </tr>
 <tr class="odd">
 <td align="left">3</td>
-<td align="right">9</td>
+<td align="right">7</td>
 </tr>
 <tr class="even">
 <td align="left">4</td>
-<td align="right">9</td>
+<td align="right">18</td>
 </tr>
 <tr class="odd">
 <td align="left">5</td>
-<td align="right">10</td>
+<td align="right">9</td>
 </tr>
 <tr class="even">
 <td align="left">6</td>
@@ -215,27 +221,27 @@
 </tr>
 <tr class="odd">
 <td align="left">7</td>
-<td align="right">7</td>
+<td align="right">9</td>
 </tr>
 <tr class="even">
 <td align="left">8</td>
-<td align="right">16</td>
+<td align="right">13</td>
 </tr>
 <tr class="odd">
 <td align="left">9</td>
-<td align="right">14</td>
+<td align="right">11</td>
 </tr>
 <tr class="even">
 <td align="left">10</td>
-<td align="right">9</td>
+<td align="right">15</td>
 </tr>
 <tr class="odd">
 <td align="left">11</td>
-<td align="right">9</td>
+<td align="right">12</td>
 </tr>
 <tr class="even">
 <td align="left">12</td>
-<td align="right">18</td>
+<td align="right">9</td>
 </tr>
 <tr class="odd">
 <td align="left">13</td>
@@ -243,99 +249,99 @@
 </tr>
 <tr class="even">
 <td align="left">14</td>
-<td align="right">8</td>
+<td align="right">9</td>
 </tr>
 <tr class="odd">
 <td align="left">15</td>
-<td align="right">8</td>
+<td align="right">7</td>
 </tr>
 <tr class="even">
 <td align="left">16</td>
-<td align="right">8</td>
+<td align="right">9</td>
 </tr>
 <tr class="odd">
 <td align="left">17</td>
-<td align="right">12</td>
+<td align="right">10</td>
 </tr>
 <tr class="even">
 <td align="left">18</td>
-<td align="right">8</td>
+<td align="right">5</td>
 </tr>
 <tr class="odd">
 <td align="left">19</td>
-<td align="right">5</td>
+<td align="right">13</td>
 </tr>
 <tr class="even">
 <td align="left">20</td>
-<td align="right">8</td>
+<td align="right">9</td>
 </tr>
 </tbody>
 </table>
 <p>Now, let’s set the parameters in the model:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">mu.alpha &lt;-<span class="st"> </span><span class="dv">23</span>   <span class="co"># Overall mean body mass</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">sigma.alpha &lt;-<span class="st"> </span><span class="dv">2</span> <span class="co"># standard deviation of group-level means</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">tau.alpha &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>sigma.alpha<span class="op">^</span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">alpha &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(J, mu.alpha, sigma.alpha)</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">beta &lt;-<span class="st"> </span><span class="dv">6</span>     <span class="co"># Slope of body length on mass</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">sigma &lt;-<span class="st"> </span><span class="dv">3</span>    <span class="co"># Residual standard deviation</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9">tau &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>sigma<span class="op">^</span><span class="dv">2</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mu.alpha &lt;-<span class="st"> </span><span class="dv">23</span>   <span class="co"># Overall mean body mass</span>
+sigma.alpha &lt;-<span class="st"> </span><span class="dv">2</span> <span class="co"># standard deviation of group-level means</span>
+tau.alpha &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>sigma.alpha<span class="op">^</span><span class="dv">2</span>
+
+alpha &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(J, mu.alpha, sigma.alpha)
+
+beta &lt;-<span class="st"> </span><span class="dv">6</span>     <span class="co"># Slope of body length on mass</span>
+sigma &lt;-<span class="st"> </span><span class="dv">3</span>    <span class="co"># Residual standard deviation</span>
+tau &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>sigma<span class="op">^</span><span class="dv">2</span></code></pre></div>
 <p>To create the linear predictor, we’ll use the <code><a href="https://www.rdocumentation.org/packages/stats/topics/model.matrix">model.matrix()</a></code> function to create the model matrix corresponding to our model and then multiply it by our parameters:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">Xmat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/model.matrix">model.matrix</a></span>(<span class="op">~</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">as.factor</a></span>(plot) <span class="op">+</span><span class="st"> </span>Length <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">Xmat[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">21</span>)]</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="co">#&gt;   as.factor(plot)1 as.factor(plot)2 as.factor(plot)3  Length</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">#&gt; 1                0                0                0 1.00617</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; 2                0                0                0 0.07797</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt; 3                0                0                0 1.22469</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; 4                0                0                0 0.66403</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt; 5                0                0                0 1.72224</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Xmat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/model.matrix">model.matrix</a></span>(<span class="op">~</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">as.factor</a></span>(plot) <span class="op">+</span><span class="st"> </span>Length <span class="op">-</span><span class="st"> </span><span class="dv">1</span>)
+Xmat[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">21</span>)]
+<span class="co">#&gt;   as.factor(plot)1 as.factor(plot)2 as.factor(plot)3  Length</span>
+<span class="co">#&gt; 1                0                0                0  1.3625</span>
+<span class="co">#&gt; 2                0                0                0  0.8338</span>
+<span class="co">#&gt; 3                0                0                0 -0.6749</span>
+<span class="co">#&gt; 4                0                0                0  0.2460</span>
+<span class="co">#&gt; 5                0                0                0 -0.9785</span></code></pre></div>
 <p>Now use matrix multiplicaiton to create the linear predictor:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">linear.pred &lt;-<span class="st"> </span>Xmat <span class="op">%*%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(alpha, beta)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(linear.pred)</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="co">#&gt;    [,1]</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co">#&gt; 1 30.42</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; 2 26.55</span></a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; 3 34.07</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; 4 29.51</span></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; 5 33.60</span></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; 6 30.98</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">linear.pred &lt;-<span class="st"> </span>Xmat <span class="op">%*%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(alpha, beta)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(linear.pred)
+<span class="co">#&gt;    [,1]</span>
+<span class="co">#&gt; 1 34.00</span>
+<span class="co">#&gt; 2 27.36</span>
+<span class="co">#&gt; 3 20.72</span>
+<span class="co">#&gt; 4 25.36</span>
+<span class="co">#&gt; 5 14.26</span>
+<span class="co">#&gt; 6 19.78</span></code></pre></div>
 <p>And finally generate the observations and combine the relevant vectors within a single data frame:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">mass &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(N, <span class="dt">mean =</span> linear.pred, <span class="dt">sd =</span> sigma)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">mass_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">plot =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">as.factor</a></span>(plot), <span class="dt">length =</span> Length, <span class="dt">pred_length =</span> linear.pred, <span class="dt">mass =</span> mass)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw">ggplot</span>(mass_df, <span class="kw">aes</span>(<span class="dt">x =</span> length, <span class="dt">y =</span> mass, <span class="dt">color =</span> plot)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> alpha, <span class="dt">slope =</span> beta) <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="st">  </span><span class="kw">scale_color_brewer</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="st">"none"</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mass &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(N, <span class="dt">mean =</span> linear.pred, <span class="dt">sd =</span> sigma)
+mass_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">plot =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">as.factor</a></span>(plot), <span class="dt">length =</span> Length, <span class="dt">pred_length =</span> linear.pred, <span class="dt">mass =</span> mass)
+
+<span class="kw">ggplot</span>(mass_df, <span class="kw">aes</span>(<span class="dt">x =</span> length, <span class="dt">y =</span> mass, <span class="dt">color =</span> plot)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_abline</span>(<span class="dt">intercept =</span> alpha, <span class="dt">slope =</span> beta) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_color_brewer</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">guides</span>(<span class="dt">color =</span> <span class="st">"none"</span>)</code></pre></div>
 <p><img src="random_effects_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 <div id="fitting-the-model" class="section level2">
 <h2 class="hasAnchor">
 <a href="#fitting-the-model" class="anchor"></a>Fitting the model</h2>
 <p>Now we’re ready to fit the model in JAGS. Code for this model can be accessed with:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">model.file &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"jags/random_ancova.jags"</span>, <span class="dt">package =</span> <span class="st">"WILD6900"</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model.file &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"jags/random_ancova.jags"</span>, <span class="dt">package =</span> <span class="st">"WILD6900"</span>)</code></pre></div>
 <p>Next, prepare the data, initial values, and MCMC settings. Notice the need to generate <span class="math inline">\(J\)</span> starting values of <span class="math inline">\(\alpha\)</span>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">jags_data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">y =</span> mass_df<span class="op">$</span>mass, <span class="dt">N =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(mass_df), </a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">                  <span class="dt">J =</span> J,</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">                  <span class="dt">plot =</span> plot,</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">                  <span class="dt">x =</span> mass_df<span class="op">$</span>length)</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">jags_inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">mu.alpha =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb7-7" data-line-number="7">                              <span class="dt">sigma.alpha =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb7-8" data-line-number="8">                              <span class="dt">alpha =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(J), <span class="co"># Notice we need J initial values </span></a>
-<a class="sourceLine" id="cb7-9" data-line-number="9">                              <span class="dt">beta =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb7-10" data-line-number="10">                              <span class="dt">tau =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>))}</a>
-<a class="sourceLine" id="cb7-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb7-12" data-line-number="12">params &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"mu.alpha"</span>, <span class="st">"sigma.alpha"</span>, <span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"tau"</span>, <span class="st">"sigma"</span>)</a>
-<a class="sourceLine" id="cb7-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb7-14" data-line-number="14">re_fit &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags_data, <span class="dt">inits =</span> jags_inits,</a>
-<a class="sourceLine" id="cb7-15" data-line-number="15">                    <span class="dt">parameters.to.save =</span> params, </a>
-<a class="sourceLine" id="cb7-16" data-line-number="16">                    <span class="dt">model.file =</span> model.file,</a>
-<a class="sourceLine" id="cb7-17" data-line-number="17">                    <span class="dt">n.chains =</span> <span class="dv">3</span>, <span class="dt">n.iter =</span> <span class="dv">10000</span>, <span class="dt">n.burnin =</span> <span class="dv">2500</span>, <span class="dt">n.thin =</span> <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb7-18" data-line-number="18"></a>
-<a class="sourceLine" id="cb7-19" data-line-number="19"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(re_fit)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">jags_data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">y =</span> mass_df<span class="op">$</span>mass, <span class="dt">N =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(mass_df), 
+                  <span class="dt">J =</span> J,
+                  <span class="dt">plot =</span> plot,
+                  <span class="dt">x =</span> mass_df<span class="op">$</span>length)
+
+jags_inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">mu.alpha =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1</span>),
+                              <span class="dt">sigma.alpha =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>),
+                              <span class="dt">alpha =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(J), <span class="co"># Notice we need J initial values </span>
+                              <span class="dt">beta =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1</span>),
+                              <span class="dt">tau =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>))}
+
+params &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"mu.alpha"</span>, <span class="st">"sigma.alpha"</span>, <span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"tau"</span>, <span class="st">"sigma"</span>)
+
+re_fit &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags_data, <span class="dt">inits =</span> jags_inits,
+                    <span class="dt">parameters.to.save =</span> params, 
+                    <span class="dt">model.file =</span> model.file,
+                    <span class="dt">n.chains =</span> <span class="dv">3</span>, <span class="dt">n.iter =</span> <span class="dv">10000</span>, <span class="dt">n.burnin =</span> <span class="dv">2500</span>, <span class="dt">n.thin =</span> <span class="dv">1</span>)
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(re_fit)</code></pre></div>
 <table class="table">
 <thead><tr>
 <th style="text-align:left;">
@@ -380,31 +386,31 @@ f
 mu.alpha
 </td>
 <td style="text-align:right;">
-23.442
+22.495
 </td>
 <td style="text-align:right;">
-0.5354
+0.5450
 </td>
 <td style="text-align:right;">
-22.386
+21.412
 </td>
 <td style="text-align:right;">
-23.094
+22.141
 </td>
 <td style="text-align:right;">
-23.444
+22.501
 </td>
 <td style="text-align:right;">
-23.790
+22.854
 </td>
 <td style="text-align:right;">
-24.487
+23.564
 </td>
 <td style="text-align:right;">
-1.0005
+1.000
 </td>
 <td style="text-align:right;">
-5091
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -418,31 +424,31 @@ mu.alpha
 sigma.alpha
 </td>
 <td style="text-align:right;">
-2.085
+2.125
 </td>
 <td style="text-align:right;">
-0.4813
+0.4586
 </td>
 <td style="text-align:right;">
-1.313
+1.378
 </td>
 <td style="text-align:right;">
-1.748
+1.803
 </td>
 <td style="text-align:right;">
-2.025
+2.074
 </td>
 <td style="text-align:right;">
-2.362
+2.386
 </td>
 <td style="text-align:right;">
-3.197
+3.167
 </td>
 <td style="text-align:right;">
-1.0007
+1.001
 </td>
 <td style="text-align:right;">
-18428
+7023
 </td>
 <td style="text-align:right;">
 0
@@ -456,31 +462,31 @@ sigma.alpha
 alpha[1]
 </td>
 <td style="text-align:right;">
-22.536
+23.277
 </td>
 <td style="text-align:right;">
-0.9174
+0.9789
 </td>
 <td style="text-align:right;">
-20.736
+21.350
 </td>
 <td style="text-align:right;">
-21.920
+22.613
 </td>
 <td style="text-align:right;">
-22.546
+23.273
 </td>
 <td style="text-align:right;">
-23.142
+23.929
 </td>
 <td style="text-align:right;">
-24.335
+25.200
 </td>
 <td style="text-align:right;">
-1.0001
+1.000
 </td>
 <td style="text-align:right;">
-22331
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -494,28 +500,28 @@ alpha[1]
 alpha[2]
 </td>
 <td style="text-align:right;">
-23.638
+20.719
 </td>
 <td style="text-align:right;">
-0.7471
+0.9428
 </td>
 <td style="text-align:right;">
-22.174
+18.878
 </td>
 <td style="text-align:right;">
-23.135
+20.092
 </td>
 <td style="text-align:right;">
-23.637
+20.725
 </td>
 <td style="text-align:right;">
-24.146
+21.348
 </td>
 <td style="text-align:right;">
-25.094
+22.568
 </td>
 <td style="text-align:right;">
-1.0000
+1.000
 </td>
 <td style="text-align:right;">
 22500
@@ -532,28 +538,28 @@ alpha[2]
 alpha[3]
 </td>
 <td style="text-align:right;">
-23.037
+22.839
 </td>
 <td style="text-align:right;">
-0.9541
+1.0634
 </td>
 <td style="text-align:right;">
-21.154
+20.743
 </td>
 <td style="text-align:right;">
-22.399
+22.118
 </td>
 <td style="text-align:right;">
-23.039
+22.848
 </td>
 <td style="text-align:right;">
-23.677
+23.554
 </td>
 <td style="text-align:right;">
-24.896
+24.914
 </td>
 <td style="text-align:right;">
-1.0000
+1.000
 </td>
 <td style="text-align:right;">
 22500
@@ -570,31 +576,31 @@ alpha[3]
 alpha[4]
 </td>
 <td style="text-align:right;">
-23.535
+21.573
 </td>
 <td style="text-align:right;">
-0.9619
+0.7263
 </td>
 <td style="text-align:right;">
-21.659
+20.145
 </td>
 <td style="text-align:right;">
-22.892
+21.087
 </td>
 <td style="text-align:right;">
-23.538
+21.573
 </td>
 <td style="text-align:right;">
-24.180
+22.063
 </td>
 <td style="text-align:right;">
-25.433
+22.979
 </td>
 <td style="text-align:right;">
-1.0000
+1.000
 </td>
 <td style="text-align:right;">
-22500
+17445
 </td>
 <td style="text-align:right;">
 0
@@ -608,31 +614,31 @@ alpha[4]
 alpha[5]
 </td>
 <td style="text-align:right;">
-22.056
+25.811
 </td>
 <td style="text-align:right;">
-0.9286
+1.0224
 </td>
 <td style="text-align:right;">
-20.208
+23.792
 </td>
 <td style="text-align:right;">
-21.432
+25.128
 </td>
 <td style="text-align:right;">
-22.068
+25.807
 </td>
 <td style="text-align:right;">
-22.689
+26.491
 </td>
 <td style="text-align:right;">
-23.853
+27.841
 </td>
 <td style="text-align:right;">
-1.0001
+1.000
 </td>
 <td style="text-align:right;">
-15344
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -646,31 +652,31 @@ alpha[5]
 alpha[6]
 </td>
 <td style="text-align:right;">
-24.683
+24.673
 </td>
 <td style="text-align:right;">
-1.0108
+1.0381
 </td>
 <td style="text-align:right;">
-22.721
+22.661
 </td>
 <td style="text-align:right;">
-23.996
+23.983
 </td>
 <td style="text-align:right;">
-24.676
+24.667
 </td>
 <td style="text-align:right;">
-25.366
+25.358
 </td>
 <td style="text-align:right;">
-26.680
+26.760
 </td>
 <td style="text-align:right;">
-1.0001
+1.000
 </td>
 <td style="text-align:right;">
-17776
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -684,31 +690,31 @@ alpha[6]
 alpha[7]
 </td>
 <td style="text-align:right;">
-26.564
+22.060
 </td>
 <td style="text-align:right;">
-1.1278
+0.9842
 </td>
 <td style="text-align:right;">
-24.359
+20.118
 </td>
 <td style="text-align:right;">
-25.802
+21.398
 </td>
 <td style="text-align:right;">
-26.560
+22.066
 </td>
 <td style="text-align:right;">
-27.319
+22.713
 </td>
 <td style="text-align:right;">
-28.799
+23.962
 </td>
 <td style="text-align:right;">
-1.0000
+1.000
 </td>
 <td style="text-align:right;">
-22500
+14905
 </td>
 <td style="text-align:right;">
 0
@@ -722,31 +728,31 @@ alpha[7]
 alpha[8]
 </td>
 <td style="text-align:right;">
-21.307
+24.868
 </td>
 <td style="text-align:right;">
-0.7698
+0.8573
 </td>
 <td style="text-align:right;">
-19.789
+23.206
 </td>
 <td style="text-align:right;">
-20.789
+24.293
 </td>
 <td style="text-align:right;">
-21.309
+24.865
 </td>
 <td style="text-align:right;">
-21.823
+25.454
 </td>
 <td style="text-align:right;">
-22.800
+26.532
 </td>
 <td style="text-align:right;">
-0.9999
+1.000
 </td>
 <td style="text-align:right;">
-22500
+11115
 </td>
 <td style="text-align:right;">
 0
@@ -758,20 +764,20 @@ alpha[8]
 </tbody>
 </table>
 <p>Just for kicks, let’s fit the same data to a model that assumes fixed-effects on the <span class="math inline">\(\alpha\)</span>’s:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">model.file &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"jags/fixed_ancova.jags"</span>, <span class="dt">package =</span> <span class="st">"WILD6900"</span>)</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">jags_inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">alpha =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(J), <span class="co"># Notice we need J initial values </span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">                              <span class="dt">beta =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">                              <span class="dt">tau =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>))}</a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb8-7" data-line-number="7">params &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"tau"</span>, <span class="st">"sigma"</span>)</a>
-<a class="sourceLine" id="cb8-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb8-9" data-line-number="9">fe_fit &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags_data, <span class="dt">inits =</span> jags_inits,</a>
-<a class="sourceLine" id="cb8-10" data-line-number="10">                    <span class="dt">parameters.to.save =</span> params, </a>
-<a class="sourceLine" id="cb8-11" data-line-number="11">                    <span class="dt">model.file =</span> model.file,</a>
-<a class="sourceLine" id="cb8-12" data-line-number="12">                    <span class="dt">n.chains =</span> <span class="dv">3</span>, <span class="dt">n.iter =</span> <span class="dv">10000</span>, <span class="dt">n.burnin =</span> <span class="dv">2500</span>, <span class="dt">n.thin =</span> <span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb8-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(fe_fit)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model.file &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"jags/fixed_ancova.jags"</span>, <span class="dt">package =</span> <span class="st">"WILD6900"</span>)
+
+jags_inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">alpha =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(J), <span class="co"># Notice we need J initial values </span>
+                              <span class="dt">beta =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1</span>),
+                              <span class="dt">tau =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>))}
+
+params &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"tau"</span>, <span class="st">"sigma"</span>)
+
+fe_fit &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags_data, <span class="dt">inits =</span> jags_inits,
+                    <span class="dt">parameters.to.save =</span> params, 
+                    <span class="dt">model.file =</span> model.file,
+                    <span class="dt">n.chains =</span> <span class="dv">3</span>, <span class="dt">n.iter =</span> <span class="dv">10000</span>, <span class="dt">n.burnin =</span> <span class="dv">2500</span>, <span class="dt">n.thin =</span> <span class="dv">1</span>)
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(fe_fit)</code></pre></div>
 <table class="table">
 <thead><tr>
 <th style="text-align:left;">
@@ -816,28 +822,28 @@ f
 alpha[1]
 </td>
 <td style="text-align:right;">
-22.06
+23.22
 </td>
 <td style="text-align:right;">
-1.0061
+1.1058
 </td>
 <td style="text-align:right;">
-20.10
+21.06
 </td>
 <td style="text-align:right;">
-21.39
+22.48
 </td>
 <td style="text-align:right;">
-22.06
+23.22
 </td>
 <td style="text-align:right;">
-22.74
+23.96
 </td>
 <td style="text-align:right;">
-24.04
+25.39
 </td>
 <td style="text-align:right;">
-1
+1.0000
 </td>
 <td style="text-align:right;">
 22500
@@ -854,31 +860,31 @@ alpha[1]
 alpha[2]
 </td>
 <td style="text-align:right;">
-23.52
+20.03
 </td>
 <td style="text-align:right;">
-0.8054
+1.0451
 </td>
 <td style="text-align:right;">
-21.95
+17.97
 </td>
 <td style="text-align:right;">
-22.98
+19.32
 </td>
 <td style="text-align:right;">
-23.52
+20.03
 </td>
 <td style="text-align:right;">
-24.06
+20.74
 </td>
 <td style="text-align:right;">
-25.10
+22.09
 </td>
 <td style="text-align:right;">
-1
+1.0001
 </td>
 <td style="text-align:right;">
-22500
+11889
 </td>
 <td style="text-align:right;">
 0
@@ -892,31 +898,31 @@ alpha[2]
 alpha[3]
 </td>
 <td style="text-align:right;">
-22.66
+22.59
 </td>
 <td style="text-align:right;">
-1.0731
+1.2374
 </td>
 <td style="text-align:right;">
-20.52
+20.15
 </td>
 <td style="text-align:right;">
-21.95
+21.76
 </td>
 <td style="text-align:right;">
-22.67
+22.59
 </td>
 <td style="text-align:right;">
-23.38
+23.42
 </td>
 <td style="text-align:right;">
-24.76
+25.01
 </td>
 <td style="text-align:right;">
-1
+1.0000
 </td>
 <td style="text-align:right;">
-11874
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -930,28 +936,28 @@ alpha[3]
 alpha[4]
 </td>
 <td style="text-align:right;">
-23.29
+21.31
 </td>
 <td style="text-align:right;">
-1.0884
+0.7783
 </td>
 <td style="text-align:right;">
-21.14
+19.78
 </td>
 <td style="text-align:right;">
-22.56
+20.78
 </td>
 <td style="text-align:right;">
-23.30
+21.31
 </td>
 <td style="text-align:right;">
-24.03
+21.83
 </td>
 <td style="text-align:right;">
-25.42
+22.83
 </td>
 <td style="text-align:right;">
-1
+1.0000
 </td>
 <td style="text-align:right;">
 22500
@@ -968,31 +974,31 @@ alpha[4]
 alpha[5]
 </td>
 <td style="text-align:right;">
-21.45
+26.48
 </td>
 <td style="text-align:right;">
-1.0170
+1.0933
 </td>
 <td style="text-align:right;">
-19.45
+24.34
 </td>
 <td style="text-align:right;">
-20.77
+25.75
 </td>
 <td style="text-align:right;">
-21.46
+26.48
 </td>
 <td style="text-align:right;">
-22.14
+27.22
 </td>
 <td style="text-align:right;">
-23.44
+28.62
 </td>
 <td style="text-align:right;">
-1
+1.0000
 </td>
 <td style="text-align:right;">
-11774
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -1006,31 +1012,31 @@ alpha[5]
 alpha[6]
 </td>
 <td style="text-align:right;">
-24.76
+25.07
 </td>
 <td style="text-align:right;">
-1.1299
+1.1667
 </td>
 <td style="text-align:right;">
-22.54
+22.81
 </td>
 <td style="text-align:right;">
-24.00
+24.28
 </td>
 <td style="text-align:right;">
-24.76
+25.07
 </td>
 <td style="text-align:right;">
-25.52
+25.85
 </td>
 <td style="text-align:right;">
-26.96
+27.35
 </td>
 <td style="text-align:right;">
-1
+1.0001
 </td>
 <td style="text-align:right;">
-22500
+14485
 </td>
 <td style="text-align:right;">
 0
@@ -1044,31 +1050,31 @@ alpha[6]
 alpha[7]
 </td>
 <td style="text-align:right;">
-27.33
+21.66
 </td>
 <td style="text-align:right;">
-1.2175
+1.1063
 </td>
 <td style="text-align:right;">
-24.95
+19.47
 </td>
 <td style="text-align:right;">
-26.52
+20.93
 </td>
 <td style="text-align:right;">
-27.32
+21.67
 </td>
 <td style="text-align:right;">
-28.14
+22.41
 </td>
 <td style="text-align:right;">
-29.73
+23.80
 </td>
 <td style="text-align:right;">
-1
+1.0003
 </td>
 <td style="text-align:right;">
-22500
+11798
 </td>
 <td style="text-align:right;">
 0
@@ -1082,28 +1088,28 @@ alpha[7]
 alpha[8]
 </td>
 <td style="text-align:right;">
-20.80
+25.14
 </td>
 <td style="text-align:right;">
-0.8013
+0.9155
 </td>
 <td style="text-align:right;">
-19.20
+23.35
 </td>
 <td style="text-align:right;">
-20.26
+24.52
 </td>
 <td style="text-align:right;">
-20.81
+25.15
 </td>
 <td style="text-align:right;">
-21.34
+25.76
 </td>
 <td style="text-align:right;">
-22.36
+26.94
 </td>
 <td style="text-align:right;">
-1
+0.9999
 </td>
 <td style="text-align:right;">
 22500
@@ -1120,28 +1126,28 @@ alpha[8]
 alpha[9]
 </td>
 <td style="text-align:right;">
-22.89
+22.44
 </td>
 <td style="text-align:right;">
-0.8586
+0.9957
 </td>
 <td style="text-align:right;">
-21.21
+20.49
 </td>
 <td style="text-align:right;">
-22.31
+21.77
 </td>
 <td style="text-align:right;">
-22.90
+22.44
 </td>
 <td style="text-align:right;">
-23.48
+23.12
 </td>
 <td style="text-align:right;">
-24.55
+24.38
 </td>
 <td style="text-align:right;">
-1
+1.0001
 </td>
 <td style="text-align:right;">
 22500
@@ -1158,31 +1164,31 @@ alpha[9]
 alpha[10]
 </td>
 <td style="text-align:right;">
-25.50
+20.33
 </td>
 <td style="text-align:right;">
-1.0695
+0.8695
 </td>
 <td style="text-align:right;">
-23.39
+18.62
 </td>
 <td style="text-align:right;">
-24.78
+19.73
 </td>
 <td style="text-align:right;">
-25.50
+20.33
 </td>
 <td style="text-align:right;">
-26.22
+20.92
 </td>
 <td style="text-align:right;">
-27.59
+22.03
 </td>
 <td style="text-align:right;">
-1
+1.0000
 </td>
 <td style="text-align:right;">
-14027
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -1194,22 +1200,22 @@ alpha[10]
 </tbody>
 </table>
 <p>Finally, combine results from the two models to visualize differences in the <span class="math inline">\(\alpha\)</span> estimates:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">compare_mods &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">alpha_mean =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(re_fit<span class="op">$</span>mean<span class="op">$</span>alpha, fe_fit<span class="op">$</span>mean<span class="op">$</span>alpha),</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">                           <span class="dt">CI_2.5 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(re_fit<span class="op">$</span>q2<span class="fl">.5</span><span class="op">$</span>alpha, fe_fit<span class="op">$</span>q2<span class="fl">.5</span><span class="op">$</span>alpha),</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">                           <span class="dt">CI_97.5 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(re_fit<span class="op">$</span>q97<span class="fl">.5</span><span class="op">$</span>alpha, fe_fit<span class="op">$</span>q97<span class="fl">.5</span><span class="op">$</span>alpha), </a>
-<a class="sourceLine" id="cb9-5" data-line-number="5">                           <span class="dt">n =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(plot) <span class="op">-</span><span class="st"> </span><span class="fl">0.15</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(plot) <span class="op">+</span><span class="st"> </span><span class="fl">0.15</span>),</a>
-<a class="sourceLine" id="cb9-6" data-line-number="6">                           <span class="dt">model =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Random"</span>, <span class="st">"Fixed"</span>), <span class="dt">each =</span> J))</a>
-<a class="sourceLine" id="cb9-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="kw">ggplot</span>(compare_mods, <span class="kw">aes</span>(<span class="dt">x =</span> alpha_mean, <span class="dt">color =</span> model, <span class="dt">y =</span> n)) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb9-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> mu.alpha, <span class="dt">color =</span> <span class="st">"grey50"</span>, <span class="dt">linetype =</span> <span class="st">"longdash"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> re_fit<span class="op">$</span>mean<span class="op">$</span>mu.alpha, <span class="dt">color =</span> <span class="st">"#CD0200"</span>, <span class="dt">alpha =</span> <span class="fl">0.75</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-11" data-line-number="11"><span class="st">  </span><span class="kw">geom_errorbarh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> CI_<span class="fl">2.5</span>, <span class="dt">xmax =</span> CI_<span class="fl">97.5</span>), <span class="dt">height =</span> <span class="dv">0</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-12" data-line-number="12"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">color =</span> <span class="st">"white"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-13" data-line-number="13"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-14" data-line-number="14"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"#446E9B"</span>, <span class="st">"#D47500"</span>, <span class="st">"black"</span>)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-15" data-line-number="15"><span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(alpha)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-16" data-line-number="16"><span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">"Sample size"</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+compare_mods &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">alpha_mean =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(re_fit<span class="op">$</span>mean<span class="op">$</span>alpha, fe_fit<span class="op">$</span>mean<span class="op">$</span>alpha),
+                           <span class="dt">CI_2.5 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(re_fit<span class="op">$</span>q2.<span class="dv">5</span><span class="op">$</span>alpha, fe_fit<span class="op">$</span>q2.<span class="dv">5</span><span class="op">$</span>alpha),
+                           <span class="dt">CI_97.5 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(re_fit<span class="op">$</span>q97.<span class="dv">5</span><span class="op">$</span>alpha, fe_fit<span class="op">$</span>q97.<span class="dv">5</span><span class="op">$</span>alpha), 
+                           <span class="dt">n =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(plot) <span class="op">-</span><span class="st"> </span><span class="fl">0.15</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/table">table</a></span>(plot) <span class="op">+</span><span class="st"> </span><span class="fl">0.15</span>),
+                           <span class="dt">model =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Random"</span>, <span class="st">"Fixed"</span>), <span class="dt">each =</span> J))
+
+<span class="kw">ggplot</span>(compare_mods, <span class="kw">aes</span>(<span class="dt">x =</span> alpha_mean, <span class="dt">color =</span> model, <span class="dt">y =</span> n)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> mu.alpha, <span class="dt">color =</span> <span class="st">"grey50"</span>, <span class="dt">linetype =</span> <span class="st">"longdash"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_vline</span>(<span class="dt">xintercept =</span> re_fit<span class="op">$</span>mean<span class="op">$</span>mu.alpha, <span class="dt">color =</span> <span class="st">"#CD0200"</span>, <span class="dt">alpha =</span> <span class="fl">0.75</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_errorbarh</span>(<span class="kw">aes</span>(<span class="dt">xmin =</span> CI_<span class="fl">2.5</span>, <span class="dt">xmax =</span> CI_<span class="fl">97.5</span>), <span class="dt">height =</span> <span class="dv">0</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">color =</span> <span class="st">"white"</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"#446E9B"</span>, <span class="st">"#D47500"</span>, <span class="st">"black"</span>)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expression">expression</a></span>(alpha)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">scale_y_continuous</span>(<span class="st">"Sample size"</span>)</code></pre></div>
 <p><img src="random_effects_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 <div id="quantifying-changes-in-coal-tit-periparus-ater-abundance" class="section level1">
@@ -1221,9 +1227,9 @@ alpha[10]
 Photo by Andreas Eichler via WikiCommons
 </p>
 </div>
-<p>A data frame containing the counts and some additional information about each site (elevation and percent forest cover) and count (observer ID and whether it was an observers first time doing a BBS survey) is included in the <code>WILD6900</code> package <a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"tits"</span>)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tits)</a></code></pre></div>
+<p>A data frame containing the counts and some additional information about each site (elevation and percent forest cover) and count (observer ID and whether it was an observers first time doing a BBS survey) is included in the <code>WILD6900</code> package <a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"tits"</span>)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tits)</code></pre></div>
 <table class="table">
 <thead><tr>
 <th style="text-align:left;">
@@ -1897,19 +1903,19 @@ NA
 <h2 class="hasAnchor">
 <a href="#preparing-the-data" class="anchor"></a>Preparing the data</h2>
 <p>Before running any models, we will first prepare the data. JAGS will take the counts and predictor variables as matrices with dimensions of <code>nSites x nYears</code>. Those matrices can easily be created from the data frame:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">C &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(tits[<span class="dv">5</span><span class="op">:</span><span class="dv">13</span>])</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">obs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(tits[<span class="dv">14</span><span class="op">:</span><span class="dv">22</span>])</a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">first &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(tits[<span class="dv">23</span><span class="op">:</span><span class="dv">31</span>])</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/matplot">matplot</a></span>(<span class="dv">1999</span><span class="op">:</span><span class="dv">2007</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(C), <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">main =</span> <span class="st">""</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">ylab =</span> <span class="st">"Territory counts"</span>, <span class="dt">xlab =</span> <span class="st">"Year"</span>, <span class="dt">ylim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">80</span>), <span class="dt">frame =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">C &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(tits[<span class="dv">5</span><span class="op">:</span><span class="dv">13</span>])
+obs &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(tits[<span class="dv">14</span><span class="op">:</span><span class="dv">22</span>])
+first &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(tits[<span class="dv">23</span><span class="op">:</span><span class="dv">31</span>])
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/matplot">matplot</a></span>(<span class="dv">1999</span><span class="op">:</span><span class="dv">2007</span>, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(C), <span class="dt">type =</span> <span class="st">"l"</span>, <span class="dt">lty =</span> <span class="dv">1</span>, <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">main =</span> <span class="st">""</span>, <span class="dt">las =</span> <span class="dv">1</span>, <span class="dt">ylab =</span> <span class="st">"Territory counts"</span>, <span class="dt">xlab =</span> <span class="st">"Year"</span>, <span class="dt">ylim =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">0</span>, <span class="dv">80</span>), <span class="dt">frame =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <p><img src="random_effects_files/figure-html/unnamed-chunk-18-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>One issue with the <code>obs</code> and <code>first</code> matrices is that they contain <code>NA</code> values, which JAGS will not allow in predictor variables (they are ok in the response variable, as we will soon see). Some of the <code>NA</code> values correspond to years when a sites was not surveyed (in these cases, there will also be a <code>NA</code> in the <code>C</code> matrix). In addition, JAGS will want the observer ID as a continuous variable rather than a factor. We will first convert the <code>obs</code> levels into a numeric vector and the create a new matrix containing the correct numberic IDs:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">a &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">as.numeric</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/levels">levels</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(obs)))     <span class="co"># All the levels, numeric</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">newobs &lt;-<span class="st"> </span>obs                            <span class="co"># Gets ObsID from 1:271</span></a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(a)){newobs[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(obs<span class="op">==</span>a[j])] &lt;-<span class="st"> </span>j }</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">a &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">as.numeric</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/levels">levels</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/factor">factor</a></span>(obs)))     <span class="co"># All the levels, numeric</span>
+newobs &lt;-<span class="st"> </span>obs                            <span class="co"># Gets ObsID from 1:271</span>
+<span class="cf">for</span> (j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(a)){newobs[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(obs<span class="op">==</span>a[j])] &lt;-<span class="st"> </span>j }</code></pre></div>
 <p>Next, we need to fill in the <code>NA</code> values. For the observer ID, we’ll lump all missing values as a single value corresponding to the number of observers + 1. For the <code>first</code> matrix, we will code the <code>NA</code> values as <code>0</code>, which corresponds to an ‘experienced’ observer. This will decrease our power to quantify the effect of being a novice observer but not to the extent that it will substaintially alter our conclusions.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">newobs[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(newobs)] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(a) <span class="op">+</span><span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">first[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(first)] &lt;-<span class="st"> </span><span class="dv">0</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">newobs[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(newobs)] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(a) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+first[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(first)] &lt;-<span class="st"> </span><span class="dv">0</span></code></pre></div>
 </div>
 <div id="the-simplest-count-model" class="section level2">
 <h2 class="hasAnchor">
@@ -1919,35 +1925,35 @@ NA
 <p><strong>On your own</strong>, write out the distribution, link function, and linear predictor for the intercept-only model. What parameters does this model include? What prior distribution(s) would be most appropriate for these parameters?</p>
 <hr>
 <p>You can view the JAGS code for this model by running:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">glm0_mod &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"jags/GLM0.jags"</span>, <span class="dt">package =</span> <span class="st">"WILD6900"</span>)</a>
-<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.show">file.show</a></span>(glm0)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">glm0_mod &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/system.file">system.file</a></span>(<span class="st">"jags/GLM0.jags"</span>, <span class="dt">package =</span> <span class="st">"WILD6900"</span>)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/file.show">file.show</a></span>(glm0)</code></pre></div>
 <p>Now prepare the data and MCMC settings to run this model:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="co"># Bundle data</span></a>
-<a class="sourceLine" id="cb15-2" data-line-number="2">glm0_data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">C =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(C), <span class="dt">nsite =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(C), <span class="dt">nyear =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">ncol</a></span>(C))</a>
-<a class="sourceLine" id="cb15-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="co"># Initial values</span></a>
-<a class="sourceLine" id="cb15-5" data-line-number="5">glm0_inits &lt;-<span class="st"> </span><span class="cf">function</span>() <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">alpha =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">-10</span>, <span class="dv">10</span>))</a>
-<a class="sourceLine" id="cb15-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb15-7" data-line-number="7"><span class="co"># Parameters monitored</span></a>
-<a class="sourceLine" id="cb15-8" data-line-number="8">params &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"alpha"</span>)</a>
-<a class="sourceLine" id="cb15-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb15-10" data-line-number="10"><span class="co"># MCMC settings</span></a>
-<a class="sourceLine" id="cb15-11" data-line-number="11">ni &lt;-<span class="st"> </span><span class="dv">1200</span></a>
-<a class="sourceLine" id="cb15-12" data-line-number="12">nt &lt;-<span class="st"> </span><span class="dv">2</span></a>
-<a class="sourceLine" id="cb15-13" data-line-number="13">nb &lt;-<span class="st"> </span><span class="dv">200</span></a>
-<a class="sourceLine" id="cb15-14" data-line-number="14">nc &lt;-<span class="st"> </span><span class="dv">3</span></a>
-<a class="sourceLine" id="cb15-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb15-16" data-line-number="16"><span class="co"># Call JAGS from R</span></a>
-<a class="sourceLine" id="cb15-17" data-line-number="17">glm0 &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> glm0_data, <span class="dt">inits =</span>  glm0_inits,</a>
-<a class="sourceLine" id="cb15-18" data-line-number="18">                     <span class="dt">parameters.to.save =</span> params, </a>
-<a class="sourceLine" id="cb15-19" data-line-number="19">                     <span class="dt">model.file =</span> glm0_mod, <span class="dt">n.chains =</span> nc, </a>
-<a class="sourceLine" id="cb15-20" data-line-number="20">                     <span class="dt">n.thin =</span> nt, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb)</a>
-<a class="sourceLine" id="cb15-21" data-line-number="21"></a>
-<a class="sourceLine" id="cb15-22" data-line-number="22"><span class="co"># Summarize posteriors</span></a>
-<a class="sourceLine" id="cb15-23" data-line-number="23"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(glm0, <span class="dt">digits =</span> <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb15-24" data-line-number="24"></a>
-<a class="sourceLine" id="cb15-25" data-line-number="25"><span class="co"># Check trace plots</span></a>
-<a class="sourceLine" id="cb15-26" data-line-number="26">jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/traceplot">traceplot</a></span>(glm0)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Bundle data</span>
+glm0_data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">C =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/t">t</a></span>(C), <span class="dt">nsite =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(C), <span class="dt">nyear =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">ncol</a></span>(C))
+
+<span class="co"># Initial values</span>
+glm0_inits &lt;-<span class="st"> </span><span class="cf">function</span>() <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">alpha =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="op">-</span><span class="dv">10</span>, <span class="dv">10</span>))
+
+<span class="co"># Parameters monitored</span>
+params &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"alpha"</span>)
+
+<span class="co"># MCMC settings</span>
+ni &lt;-<span class="st"> </span><span class="dv">1200</span>
+nt &lt;-<span class="st"> </span><span class="dv">2</span>
+nb &lt;-<span class="st"> </span><span class="dv">200</span>
+nc &lt;-<span class="st"> </span><span class="dv">3</span>
+
+<span class="co"># Call JAGS from R</span>
+glm0 &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> glm0_data, <span class="dt">inits =</span>  glm0_inits,
+                     <span class="dt">parameters.to.save =</span> params, 
+                     <span class="dt">model.file =</span> glm0_mod, <span class="dt">n.chains =</span> nc, 
+                     <span class="dt">n.thin =</span> nt, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb)
+
+<span class="co"># Summarize posteriors</span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(glm0, <span class="dt">digits =</span> <span class="dv">3</span>)
+
+<span class="co"># Check trace plots</span>
+jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/traceplot">traceplot</a></span>(glm0)</code></pre></div>
 </div>
 <div id="fixed-site-effects" class="section level2">
 <h2 class="hasAnchor">
@@ -1955,26 +1961,26 @@ NA
 <p>The intercept-only model is obviously not a very good model of these counts but serves as a useful starting point for developing more complex models. As a start for building a better model, let’s add site as a fixed effect. In other words:</p>
 <p><span class="math display">\[y_{ij} \sim Poisson(\lambda_j)\]</span> <span class="math display">\[log(\lambda_j) = \alpha_j\]</span></p>
 <p>Modify the JAGS model from the previous example to run this fixed-site model. As a starting point:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"jags/GLM0.jags"</span>)</a>
-<a class="sourceLine" id="cb16-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span></a>
-<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="st">    model {</span></a>
-<a class="sourceLine" id="cb16-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb16-6" data-line-number="6"><span class="st">    # Prior</span></a>
-<a class="sourceLine" id="cb16-7" data-line-number="7"><span class="st">    alpha ~ dnorm(0, 0.01)    # log(mean count)</span></a>
-<a class="sourceLine" id="cb16-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb16-9" data-line-number="9"><span class="st">    # Likelihood</span></a>
-<a class="sourceLine" id="cb16-10" data-line-number="10"><span class="st">    for (i in 1:nyear){</span></a>
-<a class="sourceLine" id="cb16-11" data-line-number="11"><span class="st">    for (j in 1:nsite){</span></a>
-<a class="sourceLine" id="cb16-12" data-line-number="12"><span class="st">    C[i,j] ~ dpois(lambda[i,j])</span></a>
-<a class="sourceLine" id="cb16-13" data-line-number="13"><span class="st">    lambda[i,j] &lt;- exp(log.lambda[i,j])</span></a>
-<a class="sourceLine" id="cb16-14" data-line-number="14"><span class="st">    log.lambda[i,j] &lt;- alpha</span></a>
-<a class="sourceLine" id="cb16-15" data-line-number="15"><span class="st">    }  #j</span></a>
-<a class="sourceLine" id="cb16-16" data-line-number="16"><span class="st">    }  #i</span></a>
-<a class="sourceLine" id="cb16-17" data-line-number="17"><span class="st">    }</span></a>
-<a class="sourceLine" id="cb16-18" data-line-number="18"><span class="st">    "</span>,<span class="dt">fill =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb16-19" data-line-number="19"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()</a>
-<a class="sourceLine" id="cb16-20" data-line-number="20">    </a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"jags/GLM0.jags"</span>)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span>
+<span class="st">    model {</span>
+
+<span class="st">    # Prior</span>
+<span class="st">    alpha ~ dnorm(0, 0.01)    # log(mean count)</span>
+
+<span class="st">    # Likelihood</span>
+<span class="st">    for (i in 1:nyear){</span>
+<span class="st">    for (j in 1:nsite){</span>
+<span class="st">    C[i,j] ~ dpois(lambda[i,j])</span>
+<span class="st">    lambda[i,j] &lt;- exp(log.lambda[i,j])</span>
+<span class="st">    log.lambda[i,j] &lt;- alpha</span>
+<span class="st">    }  #j</span>
+<span class="st">    }  #i</span>
+<span class="st">    }</span>
+<span class="st">    "</span>,<span class="dt">fill =</span> <span class="ot">TRUE</span>)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()
+    </code></pre></div>
 <p>Be sure to change the name of the model file before running that code. Now modify the data and inits object as necessary to run the model in JAGS. Also note that in the <code><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jagsUI::jags()</a></code> call you will need to reference the model file you just created rather than the model file from the previous example.</p>
 </div>
 <div id="additional-complexity" class="section level2">
@@ -1991,14 +1997,14 @@ NA
 </ul>
 <p>If you need help, refer to chapter 4 of Kery &amp; Schaub. You can also access the following model files from the <code>WILD6900</code> package: <code>GLM1.jags</code>, <code>GLM2.jags</code>, <code>GLMM1.jags</code>, <code>GLMM2.jags</code>, <code>GLMM3.jags</code>, <code>GLMM4.jags</code>, <code>GLMM%.jags</code>. These model files are for your own reference but it is up to you to translate the code into the model descriptions above.</p>
 <p>One note about including multiple factors in the model. In the models with both site and year (as a factor), the model cannot estimate the predicted count for all combinations of both factors. Essentially, the model needs to set one level of one of the factors to a “reference” level to avoid over-parameterization. In JAGS, we have to do this manually by setting the prior for one level to zero:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">eps[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="dv">0</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">eps[<span class="dv">1</span>] &lt;-<span class="st"> </span><span class="dv">0</span></code></pre></div>
 <p>You will see this in several of the above models and may need to include it in your own models as you write the code.</p>
 </div>
 </div>
 <div class="footnotes">
 <hr>
 <ol>
-<li id="fn1"><p>Data and code from Kéry &amp; Schaub 2015. <em>Bayesian Population Analysis using WinBugs</em><a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p>Data and code from Kéry &amp; Schaub 2015. <em>Bayesian Population Analysis using WinBugs</em><a href="#fnref1">↩</a></p></li>
 </ol>
 </div>
   </div>
@@ -2030,7 +2036,7 @@ NA
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
 </div>
