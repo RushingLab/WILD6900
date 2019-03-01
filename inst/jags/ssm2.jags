@@ -1,0 +1,28 @@
+
+    model { 
+    # Priors and constraints
+    mu[1] ~ dunif(0, 500)  # Initial population size
+    N.est[1] ~ dpois(mu[1])
+    for (t in 1:(nYears-1)){
+    lambda[t] ~ dnorm(mu.lambda, tau.lambda) 
+    }
+    
+    mu.lambda ~ dnorm(0, 0.1)          # Mean growth rate
+    sigma.lambda ~ dgamma(0.25, 0.25)  # SD of state process
+    tau.lambda <- pow(sigma.lambda, -2)
+    
+    p ~ dunif(0, 1)
+    
+    # Likelihood
+    # State process
+    # 
+    for (t in 2:(nYears)){
+    mu[t] <- N.est[t-1] * lambda[t-1] 
+    N.est[t] ~ dpois(mu[t])
+    }
+    # Observation process
+    for (t in 1:nYears) {
+    y[t] ~ dbin(p, N.est[t])
+    }
+    }
+    

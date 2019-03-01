@@ -1,5 +1,4 @@
-sink("inst/jags/AWPE_ssm.jags")
-cat("
+
     model{
     # Priors
     logN.est[1] ~ dnorm(0, 0.01)      # Log nitial population size
@@ -32,5 +31,4 @@ cat("
     N.est[t] <- exp(logN.est[t])
     }
     }
-    ", fill = TRUE)
-sink()
+    

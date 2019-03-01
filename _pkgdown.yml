@@ -57,6 +57,8 @@ navbar:
           href: articles/poisson_glm.html
         - text: "Random effects ANCOVA in JAGS"
           href: articles/random_effects.html
+        - text: "Simple state-space models in JAGS"
+          href: articles/state_space.html
     - icon: fas fa-pencil-square-o
       text: "Assignments"
       href: articles/homework.html
