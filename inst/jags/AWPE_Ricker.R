@@ -2,38 +2,45 @@ sink("inst/jags/AWPE_Ricker.jags")
 cat("
     model{
     # Priors
-    logN.est[1] ~ dunif(0, 10)         # Prior for initial population size
-    r0 ~ dgamma(1, 1)            # Prior for r0
-    K ~ dgamma(0.001, 0.001)           # Prior for K
+    logN.est[1] ~ dnorm(0, 0.1)         # Prior for initial population size
+    r0 ~ dunif(0, 1)             # Prior for r0
+    K ~ dnorm(0, 0.1)
+    alpha <- r0/K#~ dnorm(0, 16)               # Prior for alpha
 
-    sigma.obs ~ dgamma(1, 1)      # Prior for sd of observation processes
+    sigma.obs ~ dunif(0, 1)      # Prior for sd of observation processes
     tau.obs <- pow(sigma.obs, -2)
 
     for(t in 1:nYears){
       epsilon[t] ~ dnorm(0, tau.proc)
     }
 
-    sigma.proc ~ dgamma(1, 1)      # Prior for sd of observation processes
+    sigma.proc ~ dunif(0, 1)      # Prior for sd of observation processes
     tau.proc <- pow(sigma.proc, -2)
-
-    b <- r0/K
 
     # Likelihood
 
     for (t in 1:(nYears-1)){
-      logN.est[t+1] <- logN.est[t] + r0 - b * N.est[t] + epsilon[t]
+      # logr[t] <- r0 - alpha * N.est[t]
+      # r[t] <- exp(logr[t])
+      logN.est[t+1] <- logN.est[t] + r0 - alpha * N.est[t] + epsilon[t]
     }
 
     # Observation process
     for (t in 1:nYears){
+      # y[t] ~ dnorm(N.est[t], tau.obs)
       y[t] ~ dnorm(logN.est[t], tau.obs)
     }
+
+
+    ## Derived variables
+    # Carrying capacity
+    # K <- r0/alpha
 
     # Population sizes on real scale
     for (t in 1:nYears){
      N.est[t] <- exp(logN.est[t])
     }
-    }
+  } # End model
     ", fill = TRUE)
 
 sink()
