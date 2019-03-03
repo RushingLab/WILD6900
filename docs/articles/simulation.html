@@ -132,6 +132,9 @@
     <li>
       <a href="../articles/state_space.html">Simple state-space models in JAGS</a>
     </li>
+    <li>
+      <a href="../articles/state_space2.html">Age-structured state-space models</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -156,7 +159,7 @@
       <h1>Simulating linear regression data</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-02-26</h4>
+            <h4 class="date">2019-03-02</h4>
       
       
       <div class="hidden name"><code>simulation.Rmd</code></div>
@@ -315,7 +318,7 @@ y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumenta
 <p>You can see that <code>ggplot</code> created a figure with the correct axes and labels. But no data. That’s because we didn’t tell <code>ggplot</code> what type of <em>geometry</em> to use to represent the data. Geometry refers to the actual type geometric object(s) we want to use to display the data. Common geometries include points (e.g., scatterplot), lines (e.g., timeseries), and bars (e.g., histograms). There are many others. Once we add a geometry, we can see the data:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(<span class="dt">data =</span> sim_df, <span class="kw">aes</span>(<span class="dt">x =</span> visits, <span class="dt">y =</span> mu)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</code></pre></div>
 <p><img src="simulation_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;"></p>
-<p>So we can see that our model predicts seed counts ranging from 153.62 individuals to 331.37. Is that reasonable? Who knows, this is a made up species. But if it wasn’t, this would be a good time to go back and play with different parameter values to generate abundances that are consistent with our domain expertise. For example, the model predicts <span class="math inline">\(\approx\)</span> 153.62 seeds for a flower with 0 pollination visits. Maybe that makes sense (perhaps the orchids can self-pollinate if necessary) or maybe it doesn’t. If it doesn’t, we need to re-think the model structure.</p>
+<p>So we can see that our model predicts seed counts ranging from 162.24 individuals to 336.55. Is that reasonable? Who knows, this is a made up species. But if it wasn’t, this would be a good time to go back and play with different parameter values to generate abundances that are consistent with our domain expertise. For example, the model predicts <span class="math inline">\(\approx\)</span> 162.24 seeds for a flower with 0 pollination visits. Maybe that makes sense (perhaps the orchids can self-pollinate if necessary) or maybe it doesn’t. If it doesn’t, we need to re-think the model structure.</p>
 </div>
 </div>
 </div>

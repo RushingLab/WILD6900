@@ -1,0 +1,44 @@
+
+    model { 
+    # Priors and constraints
+    for(i in 1:nHerds){
+      mu.lamb[i] ~ dunif(0, 300)
+      N.lamb[1, i] ~ dpois(mu.lamb[i])  # Initial lamb abundance
+
+      mu.ewe[i] ~ dunif(0, 300)
+      N.ewe[1, i] ~ dpois(mu.ewe[i])   # Initial ewe abundance
+
+      N.tot[1, i] <- N.lamb[1, i] + N.ewe[1, i] # Total abundance
+    }
+    
+    F ~ dgamma(0.25, 0.25) # Recruitment
+    phi ~ dbeta(1, 1)      # Survival
+    
+    sigma.obs ~ dunif(0, 25)  # SD of observation process
+    tau.obs <- pow(sigma.obs, -2)
+    
+    # Likelihood
+    for(i in 1:nHerds){
+     ###################
+     ### State process
+     ###################
+      for (t in 2:(nYears)){
+       N.tot[t, i] <- N.ewe[t, i] + N.lamb[t, i]
+
+       ## Number of juveniles
+        N.lamb[t, i] ~ dpois(N.ewe[t-1, i] * F)
+      
+       ## Number of adults
+        N.ewe[t, i] ~ dbinom(phi, N.tot[t - 1, i])
+      } # end t loop
+
+     ########################
+     ### Observation process
+     ########################
+      for (t in 1:nYears) {
+        y.lamb[t, i] ~ dnorm(N.lamb[t, i], tau.obs)
+        y.ewe[t, i] ~ dnorm(N.ewe[t, i], tau.obs)
+      }
+    } # end i loop
+    }
+    

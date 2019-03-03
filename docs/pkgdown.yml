@@ -12,6 +12,7 @@ articles:
   schedule: schedule.html
   simulation: simulation.html
   state_space: state_space.html
+  state_space2: state_space2.html
   syllabus: syllabus.html
   wrangling_bbs: wrangling_bbs.html
 
