@@ -160,7 +160,7 @@
             <h3 class="subtitle">Estimating vital rates from count data</h3>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-03-02</h4>
+            <h4 class="date">2019-03-04</h4>
       
       
       <div class="hidden name"><code>state_space2.Rmd</code></div>
@@ -226,12 +226,12 @@ Big horn sheep photo courtesy of Bureau of Land Management, via Wikicommons
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(ewe_counts)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
-<th align="right">year</th>
-<th align="right">Pancakes</th>
-<th align="right">Snowstorms</th>
-<th align="right">Rivers</th>
-<th align="right">SheepCreeks</th>
-<th align="right">Slate</th>
+<th align="right">Year</th>
+<th align="right">Waffles</th>
+<th align="right">Thunders</th>
+<th align="right">Streams</th>
+<th align="right">GoatLake</th>
+<th align="right">Graphite</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -361,7 +361,7 @@ sheep_mod &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span cl
 <p>Now check the model for convergence.</p>
 <p>Can can also visualize the observed and estimated counts:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Create data frame with observed and estimated counts
-sheep_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">Year =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(ewe_counts<span class="op">$</span>year, <span class="dv">10</span>),
+sheep_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">Year =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(ewe_counts<span class="op">$</span>Year, <span class="dv">10</span>),
                        <span class="dt">Age =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Ewe"</span>, <span class="st">"Lamb"</span>), <span class="dt">each =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(ewe_counts[,<span class="op">-</span><span class="dv">1</span>]))),
                        <span class="dt">Herd =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(ewe_counts[,<span class="op">-</span><span class="dv">1</span>]), <span class="dt">each =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(ewe_counts)),
                        <span class="dt">Count =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(ewe_counts[,<span class="op">-</span><span class="dv">1</span>])), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(lamb_counts[,<span class="op">-</span><span class="dv">1</span>]))),

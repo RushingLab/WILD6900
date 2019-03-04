@@ -15,7 +15,7 @@ SurvPriorData <- dplyr::rename(SurvPriorDat, phi = AF, se = AFse)
 
 ## BBS data
 
-bbs <- BBS.tenstop::get_BBS10()
+# bbs <- BBS.tenstop::get_BBS10()
 
 bbs_routes <- dplyr::filter(bbs$routes, BCR %in% c(9, 10, 16))
 
@@ -50,12 +50,11 @@ pelicans <- read.csv("data-raw/colony_count_simple.csv")
 ### Sheep ----
 
 ewe_counts <- read.csv("data-raw/EweMatrix_KSinclair.csv")
-ewe_counts <- dplyr::select(ewe_counts, -X.1)
-ewe_counts <- dplyr::rename(ewe_counts, year = X)
+ewe_counts <- dplyr::select(ewe_counts, -X)
+
 
 lamb_counts <- read.csv("data-raw/LambMatrix_KSinclair.csv")
-lamb_counts <- dplyr::select(lamb_counts, -X.1)
-lamb_counts <- dplyr::rename(lamb_counts, year = X)
+lamb_counts <- dplyr::select(lamb_counts, -X)
 
 usethis::use_data(WILD6900_colors, SurvPriorData, bbs_data, bcr, falcons, tits, pelicans, ewe_counts, lamb_counts, overwrite = TRUE)
 

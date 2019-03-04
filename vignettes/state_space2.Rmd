@@ -80,7 +80,7 @@ The really cool advance of the age-structured state-space model is that with jus
 data("ewe_counts")
 ```
 
-To see how this model works, we will use a data set of Big horn sheep counts generously provided by Wildland Resources graduate student Kylie Sinclair and her adviser Kezia Manlove. Counts of adults females (ewes) and juveniles (lambs) from 5 herds were performed (almost) annually from `r min(ewe_counts$year)` to `r max(ewe_counts$year)`. There are some gaps in the counts in certain years but as we learned in the last exercise, missing counts are not a huge problem in state-space models as long as they are relatively rare. 
+To see how this model works, we will use a data set of Big horn sheep counts generously provided by Wildland Resources graduate student Kylie Sinclair and her adviser Kezia Manlove. Counts of adults females (ewes) and juveniles (lambs) from 5 herds were performed (almost) annually from `r min(ewe_counts$Year)` to `r max(ewe_counts$Year)`. There are some gaps in the counts in certain years but as we learned in the last exercise, missing counts are not a huge problem in state-space models as long as they are relatively rare. 
 
 ```{r out.width="80%", fig.cap = "Big horn sheep photo courtesy of Bureau of Land Management, via Wikicommons", echo = FALSE}
 knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/f/ff/Big_Horn_Sheep_on_Abert_Rim_%288736465058%29.jpg")
@@ -206,7 +206,7 @@ Can can also visualize the observed and estimated counts:
 
 ```{r eval = FALSE}
 ## Create data frame with observed and estimated counts
-sheep_df <- data.frame(Year = rep(ewe_counts$year, 10),
+sheep_df <- data.frame(Year = rep(ewe_counts$Year, 10),
                        Age = rep(c("Ewe", "Lamb"), each = length(as.matrix(ewe_counts[,-1]))),
                        Herd = rep(names(ewe_counts[,-1]), each = nrow(ewe_counts)),
                        Count = c(c(as.matrix(ewe_counts[,-1])), c(as.matrix(lamb_counts[,-1]))),
