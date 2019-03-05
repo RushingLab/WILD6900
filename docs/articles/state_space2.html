@@ -160,7 +160,7 @@
             <h3 class="subtitle">Estimating vital rates from count data</h3>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-03-04</h4>
+            <h4 class="date">2019-03-05</h4>
       
       
       <div class="hidden name"><code>state_space2.Rmd</code></div>
@@ -207,10 +207,10 @@ Juvenile male American Restart. See the difference?. Image courtesy of Andy Reag
 <p>Note here that we are assuming the observation error is the same for adults and juveniles. Whether this is a reasonable assumption will depend on the specifics of the study organisms but this assumption could be relaxed by modeling age-specific observation errors (e.g., <span class="math inline">\(\tau^{Juv}_{obs}\)</span> and <span class="math inline">\(\tau^{Ad}_{obs}\)</span>).</p>
 <p>The really cool advance of the age-structured state-space model is that with just the four equations outlined above, we have derived mechanistic models that explain variation in abundance via the underlying vital rates and link our imperfect counts to the true abundances! For additional background the concepts that underlie this model, see the <a href="https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=lQLmXK8JwG8AAAAA:Qo7W0yFUH5Db_yRMDuNEj7ob-xnhhgJsr5fv_F_37t7YprY6X8fLxyB2Oy7VoKM1n26D7AuLwvdgbaFquRaaQgUa5UQZuhC3nSan0U7-DmZ6KA74JLc">original paper</a> describing open population count models by Dail and Madsen as well a <a href="https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=lQLmXK8JwG8AAAAA:Qo7W0yFUH5Db_yRMDuNEj7ob-xnhhgJsr5fv_F_37t7YprY6X8fLxyB2Oy7VoKM1n26D7AuLwvdgbaFquRaaQgUa5UQZuhC3nSan0U7-DmZ6KA74JLc">more recent paper</a> by Zipkin et al. describing an age-structured model similar to the one described above.</p>
 </div>
-<div id="estimating-recruitment-and-survival-of-big-horn-sheep" class="section level2">
+<div id="estimating-recruitment-and-survival-of-bighorn-sheep" class="section level2">
 <h2 class="hasAnchor">
-<a href="#estimating-recruitment-and-survival-of-big-horn-sheep" class="anchor"></a>Estimating recruitment and survival of Big horn sheep</h2>
-<p>To see how this model works, we will use a data set of Big horn sheep counts generously provided by Wildland Resources graduate student Kylie Sinclair and her adviser Kezia Manlove. Counts of adults females (ewes) and juveniles (lambs) from 5 herds were performed (almost) annually from 1996 to 2015. There are some gaps in the counts in certain years but as we learned in the last exercise, missing counts are not a huge problem in state-space models as long as they are relatively rare.</p>
+<a href="#estimating-recruitment-and-survival-of-bighorn-sheep" class="anchor"></a>Estimating recruitment and survival of Bighorn sheep</h2>
+<p>To see how this model works, we will use a data set of Bighorn sheep (<em>Ovis canadensis</em>) counts generously provided by Wildland Resources graduate student Kylie Sinclair and her adviser Kezia Manlove. Counts of adults females (ewes) and juveniles (lambs) from 5 herds were performed (almost) annually from 1996 to 2015. There are some gaps in the counts in certain years but as we learned in the last exercise, missing counts are not a huge problem in state-space models as long as they are relatively rare.</p>
 <div class="figure" style="text-align: center">
 <img src="https://upload.wikimedia.org/wikipedia/commons/f/ff/Big_Horn_Sheep_on_Abert_Rim_%288736465058%29.jpg" alt="Big horn sheep photo courtesy of Bureau of Land Management, via Wikicommons" width="80%"><p class="caption">
 Big horn sheep photo courtesy of Bureau of Land Management, via Wikicommons
@@ -405,7 +405,7 @@ sheep_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdo
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#from-population-growth-to-vital-rates">From population growth to vital rates</a></li>
-      <li><a href="#estimating-recruitment-and-survival-of-big-horn-sheep">Estimating recruitment and survival of Big horn sheep</a></li>
+      <li><a href="#estimating-recruitment-and-survival-of-bighorn-sheep">Estimating recruitment and survival of Bighorn sheep</a></li>
       <li><a href="#adding-complexity">Adding complexity</a></li>
       </ul>
 </div>

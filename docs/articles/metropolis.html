@@ -159,7 +159,7 @@
       <h1>Metroplis sampler for a simple linear regression</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-03-04</h4>
+            <h4 class="date">2019-03-05</h4>
       
       
       <div class="hidden name"><code>metropolis.Rmd</code></div>
@@ -519,28 +519,28 @@ likelihood &lt;-<span class="st"> </span><span class="kw">calc_like</span>(<span
 <p><img src="metropolis_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>That looks better. Now we can estimate the mean and 95% credible interval of the posterior:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(mcmc_df<span class="op">$</span>alpha)
-<span class="co">#&gt; [1] 250.2</span>
+<span class="co">#&gt; [1] 250.1</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(mcmc_df<span class="op">$</span>alpha, <span class="dt">probs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))
 <span class="co">#&gt;  2.5% 97.5% </span>
-<span class="co">#&gt; 249.0 251.3</span></code></pre></div>
+<span class="co">#&gt; 249.1 251.2</span></code></pre></div>
 <p>Pretty close to the data generating value of 250. Now let’s check <span class="math inline">\(\beta\)</span>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(mcmc_df, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> beta)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_path</span>()</code></pre></div>
 <p><img src="metropolis_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>and</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(mcmc_df<span class="op">$</span>beta)
-<span class="co">#&gt; [1] 49.63</span>
+<span class="co">#&gt; [1] 50.84</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(mcmc_df<span class="op">$</span>beta, <span class="dt">probs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))
 <span class="co">#&gt;  2.5% 97.5% </span>
-<span class="co">#&gt; 48.48 50.72</span></code></pre></div>
+<span class="co">#&gt; 49.82 51.92</span></code></pre></div>
 <p>Also pretty close to the data generating value of 50. Finally, <span class="math inline">\(\tau\)</span></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">ggplot</span>(mcmc_df, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> tau)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_path</span>()</code></pre></div>
 <p><img src="metropolis_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(mcmc_df<span class="op">$</span>tau)
-<span class="co">#&gt; [1] 0.01781</span>
+<span class="co">#&gt; [1] 0.02113</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(mcmc_df<span class="op">$</span>tau, <span class="dt">probs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))
 <span class="co">#&gt;    2.5%   97.5% </span>
-<span class="co">#&gt; 0.01425 0.02167</span></code></pre></div>
+<span class="co">#&gt; 0.01691 0.02588</span></code></pre></div>
 <p>The chain looks like it converged on a stationary distribution but what was the data generating value? Remember that we parameterized the simulated data in terms of the standard deviation, which was 7.5. Because <span class="math inline">\(\sigma = \sqrt{\frac{1}{\tau}}\)</span>, we can simply derive the posterior distribution of <span class="math inline">\(\sigma\)</span> from <span class="math inline">\(\tau\)</span>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mcmc_df &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(mcmc_df, <span class="dt">sigma =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt</a></span>(<span class="dv">1</span><span class="op">/</span>tau))
 
@@ -548,10 +548,10 @@ likelihood &lt;-<span class="st"> </span><span class="kw">calc_like</span>(<span
 <p><img src="metropolis_files/figure-html/unnamed-chunk-20-1.png" width="700" style="display: block; margin: auto;"></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(mcmc_df<span class="op">$</span>sigma)
-<span class="co">#&gt; [1] 7.527</span>
+<span class="co">#&gt; [1] 6.91</span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(mcmc_df<span class="op">$</span>sigma, <span class="dt">probs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))
 <span class="co">#&gt;  2.5% 97.5% </span>
-<span class="co">#&gt; 6.794 8.377</span></code></pre></div>
+<span class="co">#&gt; 6.216 7.691</span></code></pre></div>
 <p>Wasn’t that easy?</p>
 </div>
   </div>

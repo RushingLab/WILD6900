@@ -75,12 +75,12 @@ Note here that we are assuming the observation error is the same for adults and 
 
 The really cool advance of the age-structured state-space model is that with just the four equations outlined above, we have derived mechanistic models that explain variation in abundance via the underlying vital rates and link our imperfect counts to the true abundances! For additional background the concepts that underlie this model, see the [original paper](https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=lQLmXK8JwG8AAAAA:Qo7W0yFUH5Db_yRMDuNEj7ob-xnhhgJsr5fv_F_37t7YprY6X8fLxyB2Oy7VoKM1n26D7AuLwvdgbaFquRaaQgUa5UQZuhC3nSan0U7-DmZ6KA74JLc) describing open population count models by Dail and Madsen as well a [more recent paper](https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=lQLmXK8JwG8AAAAA:Qo7W0yFUH5Db_yRMDuNEj7ob-xnhhgJsr5fv_F_37t7YprY6X8fLxyB2Oy7VoKM1n26D7AuLwvdgbaFquRaaQgUa5UQZuhC3nSan0U7-DmZ6KA74JLc) by Zipkin et al. describing an age-structured model similar to the one described above. 
 
-## Estimating recruitment and survival of Big horn sheep
+## Estimating recruitment and survival of Bighorn sheep
 ```{r include = FALSE}
 data("ewe_counts")
 ```
 
-To see how this model works, we will use a data set of Big horn sheep counts generously provided by Wildland Resources graduate student Kylie Sinclair and her adviser Kezia Manlove. Counts of adults females (ewes) and juveniles (lambs) from 5 herds were performed (almost) annually from `r min(ewe_counts$Year)` to `r max(ewe_counts$Year)`. There are some gaps in the counts in certain years but as we learned in the last exercise, missing counts are not a huge problem in state-space models as long as they are relatively rare. 
+To see how this model works, we will use a data set of Bighorn sheep (*Ovis canadensis*) counts generously provided by Wildland Resources graduate student Kylie Sinclair and her adviser Kezia Manlove. Counts of adults females (ewes) and juveniles (lambs) from 5 herds were performed (almost) annually from `r min(ewe_counts$Year)` to `r max(ewe_counts$Year)`. There are some gaps in the counts in certain years but as we learned in the last exercise, missing counts are not a huge problem in state-space models as long as they are relatively rare. 
 
 ```{r out.width="80%", fig.cap = "Big horn sheep photo courtesy of Bureau of Land Management, via Wikicommons", echo = FALSE}
 knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/f/ff/Big_Horn_Sheep_on_Abert_Rim_%288736465058%29.jpg")
