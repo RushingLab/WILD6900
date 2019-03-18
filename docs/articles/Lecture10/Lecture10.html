@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="author" content="   WILD6900 (Spring 2019)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
     <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
   </head>
@@ -109,7 +110,7 @@ class: middle, center, inverse
 --
     + Observation model:  
     
-`$$\Large y_j \sim binomial(N_j, p)$$`
+`$$\Large y_{j,k} \sim binomial(N_j, p)$$`
 
 ---
 ## N-mixture models
@@ -250,7 +251,7 @@ model{
 
 - Integrated N-mixture/known fate model ([Schmidt et al. 2015](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1890/15-0385.1))  
     
-- Integrated N-mixture/mark-recapture ([Hostetter et al. 2019](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecs2.2586))  
+- Integrated N-mixture/distance sampling model ([Hostetter et al. 2019](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecs2.2586))  
 
 
 ---
@@ -264,7 +265,7 @@ model{
 
 4) Observers do not double count individuals
 
-5) All `\(N\)` individuals have the same detection probability `\(p\)`
+5) All `\(\large N\)` individuals have the same detection probability `\(\large p\)`
 
 ---
 ## Advantages and disadvantages of the N-mixture model
@@ -281,7 +282,7 @@ model{
 
 #### Disadvantages
 
-- Count data has less information about `\(p\)` than mark-recapture data
+- Count data has less information about `\(\large p\)` than mark-recapture data
 
 - Requires lots of replication
 
@@ -294,9 +295,9 @@ model{
 
 #### [Barker et al. (2017)](https://onlinelibrary.wiley.com/doi/full/10.1111/biom.12734)
 
-- Mark-recapture data provides auxillary information about `\(p\)` without reference to `\(N\)`
+- Mark-recapture data provides auxillary information about `\(\large p\)` without reference to `\(\large N\)`
 
-- Without auxillary information about `\(p\)`, count data cannot distinguish between N-mixture model or other possible models of `\(N\)`
+- Without auxillary information about `\(\large p\)`, count data cannot distinguish between N-mixture model or other possible models of `\(\large N\)`
 
 ---
 ## Controversy 
@@ -321,9 +322,9 @@ model{
 
 #### [Link et al. (2018)](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1002/ecy.2362)
 
-- Estimates from N-mixture models sensitive to violation of double counting and constant `\(\lambda\)`/$p$
+- Estimates from N-mixture models sensitive to violation of double counting and constant `\(\large \lambda/p\)`
 
-- Small violations unlikely to be detected using goodness‐of‐fit tests but can influence inference about `\(N\)`
+- Small violations unlikely to be detected using goodness‐of‐fit tests but can influence inference about `\(\large N\)`
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

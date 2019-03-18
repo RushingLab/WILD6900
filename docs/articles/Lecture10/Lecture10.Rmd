@@ -142,7 +142,7 @@ $$\Large N_j \sim Poisson(\lambda)$$
 --
     + Observation model:  
     
-$$\Large y_j \sim binomial(N_j, p)$$
+$$\Large y_{j,k} \sim binomial(N_j, p)$$
 
 ---
 ## N-mixture models
@@ -261,7 +261,7 @@ $$\large G_{j,t} \sim Poisson(\gamma N_{j,t-1})$$
 
 4) Observers do not double count individuals
 
-5) All $N$ individuals have the same detection probability $p$
+5) All $\large N$ individuals have the same detection probability $\large p$
 
 ---
 ## Advantages and disadvantages of the N-mixture model
@@ -278,7 +278,7 @@ $$\large G_{j,t} \sim Poisson(\gamma N_{j,t-1})$$
 
 #### Disadvantages
 
-- Count data has less information about $p$ than mark-recapture data
+- Count data has less information about $\large p$ than mark-recapture data
 
 - Requires lots of replication
 
@@ -291,9 +291,9 @@ $$\large G_{j,t} \sim Poisson(\gamma N_{j,t-1})$$
 
 #### [Barker et al. (2017)](https://onlinelibrary.wiley.com/doi/full/10.1111/biom.12734)
 
-- Mark-recapture data provides auxillary information about $p$ without reference to $N$
+- Mark-recapture data provides auxillary information about $\large p$ without reference to $\large N$
 
-- Without auxillary information about $p$, count data cannot distinguish between N-mixture model or other possible models of $N$
+- Without auxillary information about $\large p$, count data cannot distinguish between N-mixture model or other possible models of $\large N$
 
 ---
 ## Controversy 
@@ -318,8 +318,8 @@ $$\large G_{j,t} \sim Poisson(\gamma N_{j,t-1})$$
 
 #### [Link et al. (2018)](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1002/ecy.2362)
 
-- Estimates from N-mixture models sensitive to violation of double counting and constant $\lambda$/$p$
+- Estimates from N-mixture models sensitive to violation of double counting and constant $\large \lambda/p$
 
-- Small violations unlikely to be detected using goodness‐of‐fit tests but can influence inference about $N$
+- Small violations unlikely to be detected using goodness‐of‐fit tests but can influence inference about $\large N$
 
 

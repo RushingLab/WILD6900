@@ -23,8 +23,473 @@ class: center, middle, inverse, title-slide
 
 ## Readings
 
+&gt; Kéry &amp; Schaub 38-40; 58-64
+
+
 ---
-#
+class: inverse, middle, center
+
+# From custom MCMC to BUGS
+
+---
+## The BUGS language
+
+#### **B**ayesian **A**nalysis **U**sing **G**ibbs **S**ampling  
+
+--
+#### Language/program invented in the 1990's by epidemiologists in Cambridge  
+
+--
+#### Later became WinBUGS  
+
+- First customizable MCMC software  
+&lt;/br&gt;
+
+--
+- Revolutionized the use of Bayesian methods in applied statistics
+
+---
+## The BUGS language
+
+#### Since the development of WinBUGS, other Bayesian software programs have been developed:
+
+- OpenBugs
+
+- [JAGS](https://sourceforge.net/projects/mcmc-jags/files/)
+
+- [Nimble](https://r-nimble.org/)
+
+- [Stan](https://mc-stan.org/)
+
+
+--
+#### For the remainder of the course, we will fit models using JAGS  
+
+- **J**ust **A**nother **G**ibbs **S**ampler  
+
+- Uses BUGS language (easy to learn, lots of online documentation)  
+
+- Often out-performs WinBUGS  
+
+- Available for all operating systems
+
+---
+## The BUGS language
+
+#### Last week, we learned how to:  
+
+--
+- Determine the *full conditional distributions* for a linear regression model  
+&lt;/br&gt;
+
+--
+- Write a custom MCMC sampler to produce samples from the joint posterior distribution  
+
+
+--
+### Given a statistical model and user-specified prior distributions, JAGS does these steps for you! 
+
+--
+- Possible to fit arbitrarily complex models `\(^1\)`  
+&lt;/br&gt;
+
+--
+- "Frees the modeler in you"  
+
+
+???
+
+`\(^1\)` remember, just because you *can* fit it doesn't mean it will return robust inferences. As we have already discussed, complex models often suffer from lack of identifiability and poor sampling of the joint posterior distribution. But, if you can write out a valid statistical model, JAGS can create a sampler and draw samples from the joint posterior distribution
+
+---
+## Running JAGS from R
+
+### JAGS is a stand alone software program
+
+- Can be run from GUI or command line  
+
+
+--
+### JAGS can also be run from `R` using the `jagsUI` package (among others)  
+
+--
+- Write model in `R` script and save as `.jags` file  
+&lt;/br&gt;
+
+--
+- Provide `jagsUI` with data, initial values, and MCMC settings  
+&lt;/br&gt;
+
+--
+- model run in JAGS  
+&lt;/br&gt;
+
+--
+- model output brought back in to `R` for diagnostics/analysis/visualization  
+
+---
+## The BUGS language
+
+### Very similar to `R` (but more limited)  
+
+- Limited ability to vectorize operations  
+
+
+--
+### If you can write your model on the whiteboard, you can write it in JAGS
+
+- Stochasitic relationships represented by `~`
+
+- Deterministic relationships represented by `&lt;-`
+
+---
+## The BUGS language
+
+### Linear regression model
+&lt;br/&gt;
+&lt;br/&gt;
+
+`$$\LARGE y_i = \alpha + \beta \times x_i + \epsilon_i$$`
+&lt;/br&gt;
+
+`$$\LARGE \epsilon_i \sim Normal(0, \tau)$$`
+
+---
+## The BUGS language
+
+### Linear regression model
+
+&lt;br/&gt;
+&lt;br/&gt;
+
+`$$\LARGE y_i = \underbrace{\alpha + \beta \times x_i}_{Deterministic} + \underbrace{\epsilon_i}_{Stochastic}$$`
+
+
+???
+
+Remember that `\(\tau = \frac{1}{\sigma^2}\)`
+
+---
+## The BUGS language
+
+### Linear regression model
+&lt;br/&gt;
+&lt;br/&gt;
+
+`$$\underbrace{\LARGE \mu_i = \alpha + \beta \times x_i}_{Deterministic}$$`
+&lt;/br&gt;
+
+`$$\underbrace{\LARGE y_i \sim Normal(\mu_i, \tau)}_{Stochastic}$$`
+&lt;/br&gt;
+
+--
+
+Remember that these equations define the *likelihood* of our data given values of `\(\alpha\)`, `\(\beta\)`, and `\(\tau\)`
+
+
+---
+## The BUGS language
+
+### Linear regression model
+
+To specificy a fully Bayesian model, we also need to define the likelihoods:
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+
+--
+
+
+`$$\LARGE [\alpha] \sim Normal(\alpha|0, 0.001)$$`
+&lt;/br&gt;
+
+`$$\LARGE [\beta] \sim Normal(\alpha|0, 0.001)$$`
+&lt;/br&gt;
+
+`$$\LARGE [\tau] \sim Gamma(\tau|0.01, 0.01)$$`
+&lt;/br&gt;
+
+---
+## The BUGS language
+
+### Linear regression model 
+
+```
+model{
+  ## Priors
+    alpha ~ dnorm(0, 0.001)
+    beta ~ dnorm(0, 0.001)
+    tau ~ dgamma(.001,.001) # Precision
+    sigma &lt;- 1/sqrt(tau)      # Calculate sd from precision
+    
+  ## Likelihood
+    for(i in 1:N){
+      mu[i] &lt;- alpha + beta * x[i]
+      y[i] ~ dnorm(mu[i], tau)
+    }
+} #end of model
+```
+
+---
+## Writing model files
+
+
+```r
+sink(file="jags/linear_regression.jags")
+cat("
+  model{
+    ## Priors
+    alpha ~ dnorm(0, 0.001)
+    beta ~ dnorm(0, 0.001)
+    tau ~ dgamma(.001,.001) # Precision
+    sigma &lt;- 1/sqrt(tau)      # Calculate sd from precision
+    ## Likelihood
+    for(i in 1:N){
+      mu[i] &lt;- alpha + beta * x[i]
+      y[i] ~ dnorm(mu[i], tau)
+    }
+  } #end of model
+    ", fill=TRUE)
+sink()
+```
+
+---
+## Preparing the data
+
+
+```r
+## Read simulated data frame
+dat &lt;- readRDS("data/sim_seed_counts.rds")
+
+## Store data for JAGS as list
+jags_data &lt;- list(y = dat$y, x = dat$visits.c, N = nrow(dat))
+
+## Create function that returns random initial values
+jags_inits &lt;- function(){list(alpha = runif(1, 200, 300), 
+                              beta = runif(1, 25, 75), 
+                              tau = runif(1))}
+
+## Tell JAGS which parameters we want to monitor
+params &lt;- c("alpha", "beta", "tau", "sigma")
+```
+
+---
+## Run the model
+
+
+```r
+## Run the model
+jags_fit &lt;- jagsUI::jags(data = jags_data, inits = jags_inits, 
+                      parameters.to.save = params, 
+                      model.file = "jags/linear_regression.jags", 
+                      n.chains = 3, n.iter = 10000, 
+                      n.burnin = 2500, n.thin = 1)
+```
+
+
+
+---
+## Diagnostics
+
+
+```r
+print(jags_fit)
+```
+
+```
+## JAGS output for model '/Library/Frameworks/R.framework/Versions/3.5/Resources/library/WILD6900/jags/linear_regression.jags', generated by jagsUI.
+## Estimates based on 3 chains of 10000 iterations,
+## adaptation = 100 iterations (sufficient),
+## burn-in = 2500 iterations and thin rate = 1,
+## yielding 22500 total samples from the joint posterior. 
+## MCMC ran for 0.013 minutes at time 2019-01-25 16:12:34.
+## 
+##              mean    sd     2.5%      50%    97.5% overlap0 f Rhat n.eff
+## alpha     249.983 0.547  248.909  249.984  251.059    FALSE 1    1 11789
+## beta       50.132 0.545   49.060   50.136   51.196    FALSE 1    1 15283
+## tau         0.020 0.002    0.016    0.020    0.024    FALSE 1    1 22500
+## sigma       7.136 0.387    6.428    7.117    7.935    FALSE 1    1 22500
+## deviance 1184.093 2.518 1181.233 1183.434 1190.547    FALSE 1    1 13806
+## 
+## Successful convergence based on Rhat values (all &lt; 1.1). 
+## Rhat is the potential scale reduction factor (at convergence, Rhat=1). 
+## For each parameter, n.eff is a crude measure of effective sample size. 
+## 
+## overlap0 checks if 0 falls in the parameter's 95% credible interval.
+## f is the proportion of the posterior with the same sign as the mean;
+## i.e., our confidence that the parameter is positive or negative.
+## 
+## DIC info: (pD = var(deviance)/2) 
+## pD = 3.2 and DIC = 1187 
+## DIC is an estimate of expected predictive error (lower is better).
+```
+
+---
+## Diagnostics
+
+
+```r
+jagsUI::traceplot(jags_fit)
+```
+
+&lt;img src="Lecture6_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;&lt;img src="Lecture6_files/figure-html/unnamed-chunk-6-2.png" style="display: block; margin: auto;" /&gt;&lt;img src="Lecture6_files/figure-html/unnamed-chunk-6-3.png" style="display: block; margin: auto;" /&gt;&lt;img src="Lecture6_files/figure-html/unnamed-chunk-6-4.png" style="display: block; margin: auto;" /&gt;&lt;img src="Lecture6_files/figure-html/unnamed-chunk-6-5.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Structure of the JAGS output
+
+
+```r
+class(jags_fit)
+```
+
+```
+## [1] "jagsUI"
+```
+
+```r
+names(jags_fit)
+```
+
+```
+##  [1] "sims.list"   "mean"        "sd"          "q2.5"        "q25"        
+##  [6] "q50"         "q75"         "q97.5"       "overlap0"    "f"          
+## [11] "Rhat"        "n.eff"       "pD"          "DIC"         "summary"    
+## [16] "samples"     "modfile"     "model"       "parameters"  "mcmc.info"  
+## [21] "run.date"    "parallel"    "bugs.format" "calc.DIC"
+```
+
+---
+## Structure of the JAGS output
+
+
+```r
+str(jags_fit$sims.list)
+```
+
+```
+## List of 5
+##  $ alpha   : num [1:22500] 249 248 250 250 251 ...
+##  $ beta    : num [1:22500] 50.3 49.7 50.5 50.8 49.3 ...
+##  $ tau     : num [1:22500] 0.0234 0.0159 0.0207 0.0189 0.0167 ...
+##  $ sigma   : num [1:22500] 6.53 7.94 6.96 7.28 7.74 ...
+##  $ deviance: num [1:22500] 1185 1194 1182 1183 1187 ...
+```
+
+```r
+head(jags_fit$sims.list$alpha)
+```
+
+```
+## [1] 249.5 248.3 250.1 250.4 250.7 251.2
+```
+
+---
+## Structure of the JAGS output
+
+
+```r
+jags_fit$mean$alpha
+```
+
+```
+## [1] 250
+```
+
+```r
+jags_fit$f$alpha
+```
+
+```
+## [1] 1
+```
+
+---
+## Structure of the JAGS output
+
+
+```r
+jags_fit$summary
+```
+
+```
+##               mean       sd      2.5%       25%       50%       75%
+## alpha    2.500e+02 0.546903 2.489e+02 2.496e+02 2.500e+02 2.504e+02
+## beta     5.013e+01 0.544795 4.906e+01 4.977e+01 5.014e+01 5.050e+01
+## tau      1.981e-02 0.002131 1.588e-02 1.833e-02 1.975e-02 2.121e-02
+## sigma    7.136e+00 0.386568 6.428e+00 6.867e+00 7.117e+00 7.386e+00
+## deviance 1.184e+03 2.517824 1.181e+03 1.182e+03 1.183e+03 1.185e+03
+##              97.5% Rhat n.eff overlap0 f
+## alpha     251.0588    1 11789        0 1
+## beta       51.1960    1 15283        0 1
+## tau         0.0242    1 22500        0 1
+## sigma       7.9352    1 22500        0 1
+## deviance 1190.5472    1 13806        0 1
+```
+
+
+---
+## Structure of the JAGS output
+
+
+```r
+str(jags_fit$samples)
+```
+
+```
+## List of 3
+##  $ : 'mcmc' num [1:7500, 1:5] 249 248 250 250 251 ...
+##   ..- attr(*, "dimnames")=List of 2
+##   .. ..$ : NULL
+##   .. ..$ : chr [1:5] "alpha" "beta" "tau" "sigma" ...
+##   ..- attr(*, "mcpar")= num [1:3] 2501 10000 1
+##  $ : 'mcmc' num [1:7500, 1:5] 250 250 250 250 251 ...
+##   ..- attr(*, "dimnames")=List of 2
+##   .. ..$ : NULL
+##   .. ..$ : chr [1:5] "alpha" "beta" "tau" "sigma" ...
+##   ..- attr(*, "mcpar")= num [1:3] 2501 10000 1
+##  $ : 'mcmc' num [1:7500, 1:5] 249 250 250 251 251 ...
+##   ..- attr(*, "dimnames")=List of 2
+##   .. ..$ : NULL
+##   .. ..$ : chr [1:5] "alpha" "beta" "tau" "sigma" ...
+##   ..- attr(*, "mcpar")= num [1:3] 2501 10000 1
+##  - attr(*, "class")= chr "mcmc.list"
+```
+
+---
+## Structure of the JAGS output
+
+
+```r
+str(jags_fit$mcmc.info)
+```
+
+```
+## List of 9
+##  $ n.chains        : num 3
+##  $ n.adapt         : num 100
+##  $ sufficient.adapt: logi TRUE
+##  $ n.iter          : num 10000
+##  $ n.burnin        : num 2500
+##  $ n.thin          : num 1
+##  $ n.samples       : num 22500
+##  $ end.values      :List of 3
+##   ..$ : Named num [1:5] 2.50e+02 5.02e+01 1.18e+03 6.84 2.13e-02
+##   .. ..- attr(*, "names")= chr [1:5] "alpha" "beta" "deviance" "sigma" ...
+##   ..$ : Named num [1:5] 2.49e+02 5.01e+01 1.19e+03 7.38 1.84e-02
+##   .. ..- attr(*, "names")= chr [1:5] "alpha" "beta" "deviance" "sigma" ...
+##   ..$ : Named num [1:5] 2.50e+02 5.09e+01 1.18e+03 7.22 1.92e-02
+##   .. ..- attr(*, "names")= chr [1:5] "alpha" "beta" "deviance" "sigma" ...
+##  $ elapsed.mins    : num 0.013
+```
+
+---
+## Saving model output
+
+
+```r
+saveRDS(jags_fit, "output/regression_out.rds")
+```
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({

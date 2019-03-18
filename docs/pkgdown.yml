@@ -1,9 +1,11 @@
-pandoc: 1.19.2.1
-pkgdown: 1.3.0
-pkgdown_sha: ~
+pandoc: '2.3'
+pkgdown: 1.2.0.9000
+pkgdown_sha: c980e84a573614087c6e151d5e6e19a22748b761
 articles:
   homework: homework.html
   metropolis: metropolis.html
+  n-mixture1: n-mixture1.html
+  n-mixture2: n-mixture2.html
   poisson_glm: poisson_glm.html
   priors: priors.html
   projects_and_directories: projects_and_directories.html

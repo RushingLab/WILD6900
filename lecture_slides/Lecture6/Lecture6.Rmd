@@ -21,5 +21,348 @@ library(WILD6900)
 
 ## Readings
 
+> Kéry & Schaub 38-40; 58-64
+
+
 ---
-# From custom MCMC to Bugs
+class: inverse, middle, center
+
+# From custom MCMC to BUGS
+
+---
+## The BUGS language
+
+#### **B**ayesian **A**nalysis **U**sing **G**ibbs **S**ampling  
+
+--
+#### Language/program invented in the 1990's by epidemiologists in Cambridge  
+
+--
+#### Later became WinBUGS  
+
+- First customizable MCMC software  
+</br>
+
+--
+- Revolutionized the use of Bayesian methods in applied statistics
+
+---
+## The BUGS language
+
+#### Since the development of WinBUGS, other Bayesian software programs have been developed:
+
+- OpenBugs
+
+- [JAGS](https://sourceforge.net/projects/mcmc-jags/files/)
+
+- [Nimble](https://r-nimble.org/)
+
+- [Stan](https://mc-stan.org/)
+
+
+--
+#### For the remainder of the course, we will fit models using JAGS  
+
+- **J**ust **A**nother **G**ibbs **S**ampler  
+
+- Uses BUGS language (easy to learn, lots of online documentation)  
+
+- Often out-performs WinBUGS  
+
+- Available for all operating systems
+
+---
+## The BUGS language
+
+#### Last week, we learned how to:  
+
+--
+- Determine the *full conditional distributions* for a linear regression model  
+</br>
+
+--
+- Write a custom MCMC sampler to produce samples from the joint posterior distribution  
+
+
+--
+### Given a statistical model and user-specified prior distributions, JAGS does these steps for you! 
+
+--
+- Possible to fit arbitrarily complex models $^1$  
+</br>
+
+--
+- "Frees the modeler in you"  
+
+
+???
+
+$^1$ remember, just because you *can* fit it doesn't mean it will return robust inferences. As we have already discussed, complex models often suffer from lack of identifiability and poor sampling of the joint posterior distribution. But, if you can write out a valid statistical model, JAGS can create a sampler and draw samples from the joint posterior distribution
+
+---
+## Running JAGS from R
+
+### JAGS is a stand alone software program
+
+- Can be run from GUI or command line  
+
+
+--
+### JAGS can also be run from `R` using the `jagsUI` package (among others)  
+
+--
+- Write model in `R` script and save as `.jags` file  
+</br>
+
+--
+- Provide `jagsUI` with data, initial values, and MCMC settings  
+</br>
+
+--
+- model run in JAGS  
+</br>
+
+--
+- model output brought back in to `R` for diagnostics/analysis/visualization  
+
+---
+## The BUGS language
+
+### Very similar to `R` (but more limited)  
+
+- Limited ability to vectorize operations  
+
+
+--
+### If you can write your model on the whiteboard, you can write it in JAGS
+
+- Stochasitic relationships represented by `~`
+
+- Deterministic relationships represented by `<-`
+
+---
+## The BUGS language
+
+### Linear regression model
+<br/>
+<br/>
+
+$$\LARGE y_i = \alpha + \beta \times x_i + \epsilon_i$$
+</br>
+
+$$\LARGE \epsilon_i \sim Normal(0, \tau)$$
+
+---
+## The BUGS language
+
+### Linear regression model
+
+<br/>
+<br/>
+
+$$\LARGE y_i = \underbrace{\alpha + \beta \times x_i}_{Deterministic} + \underbrace{\epsilon_i}_{Stochastic}$$
+
+
+???
+
+Remember that $\tau = \frac{1}{\sigma^2}$
+
+---
+## The BUGS language
+
+### Linear regression model
+<br/>
+<br/>
+
+$$\underbrace{\LARGE \mu_i = \alpha + \beta \times x_i}_{Deterministic}$$
+</br>
+
+$$\underbrace{\LARGE y_i \sim Normal(\mu_i, \tau)}_{Stochastic}$$
+</br>
+
+--
+
+Remember that these equations define the *likelihood* of our data given values of $\alpha$, $\beta$, and $\tau$
+
+
+---
+## The BUGS language
+
+### Linear regression model
+
+To specificy a fully Bayesian model, we also need to define the likelihoods:
+<br/>
+<br/>
+<br/>
+
+--
+
+
+$$\LARGE [\alpha] \sim Normal(\alpha|0, 0.001)$$
+</br>
+
+$$\LARGE [\beta] \sim Normal(\alpha|0, 0.001)$$
+</br>
+
+$$\LARGE [\tau] \sim Gamma(\tau|0.01, 0.01)$$
+</br>
+
+---
+## The BUGS language
+
+### Linear regression model 
+
+```
+model{
+  ## Priors
+    alpha ~ dnorm(0, 0.001)
+    beta ~ dnorm(0, 0.001)
+    tau ~ dgamma(.001,.001) # Precision
+    sigma <- 1/sqrt(tau)      # Calculate sd from precision
+    
+  ## Likelihood
+    for(i in 1:N){
+      mu[i] <- alpha + beta * x[i]
+      y[i] ~ dnorm(mu[i], tau)
+    }
+} #end of model
+```
+
+---
+## Writing model files
+
+```{r eval = FALSE, echo = TRUE}
+sink(file="jags/linear_regression.jags")
+cat("
+  model{
+    ## Priors
+    alpha ~ dnorm(0, 0.001)
+    beta ~ dnorm(0, 0.001)
+    tau ~ dgamma(.001,.001) # Precision
+    sigma <- 1/sqrt(tau)      # Calculate sd from precision
+    ## Likelihood
+    for(i in 1:N){
+      mu[i] <- alpha + beta * x[i]
+      y[i] ~ dnorm(mu[i], tau)
+    }
+  } #end of model
+    ", fill=TRUE)
+sink()
+
+```
+
+---
+## Preparing the data
+
+```{r eval = FALSE, echo = TRUE}
+## Read simulated data frame
+dat <- readRDS("data/sim_seed_counts.rds")
+
+## Store data for JAGS as list
+jags_data <- list(y = dat$y, x = dat$visits.c, N = nrow(dat))
+
+## Create function that returns random initial values
+jags_inits <- function(){list(alpha = runif(1, 200, 300), 
+                              beta = runif(1, 25, 75), 
+                              tau = runif(1))}
+
+## Tell JAGS which parameters we want to monitor
+params <- c("alpha", "beta", "tau", "sigma")
+```
+
+---
+## Run the model
+
+```{r eval = FALSE, echo = TRUE}
+## Run the model
+jags_fit <- jagsUI::jags(data = jags_data, inits = jags_inits, 
+                      parameters.to.save = params, 
+                      model.file = "jags/linear_regression.jags", 
+                      n.chains = 3, n.iter = 10000, 
+                      n.burnin = 2500, n.thin = 1)
+```
+
+```{r echo = FALSE, include = FALSE}
+dat <- readRDS(here::here("data/sim_seed_counts.rds"))
+
+jags_data <- list(y = dat$y, x = dat$visits.c, N = nrow(dat))
+
+jags_inits <- function(){list(alpha = runif(1, 200, 300), beta = runif(1, 25, 75), tau = runif(1))}
+
+params <- c("alpha", "beta", "tau", "sigma")
+
+file <- system.file("jags/linear_regression.jags", package = "WILD6900")
+jags_fit <- jagsUI::jags(data = jags_data, inits = jags_inits, parameters.to.save = params, 
+                         model.file = file, 
+                         n.chains = 3, n.iter = 10000, n.burnin = 2500, n.thin = 1)
+```
+
+---
+## Diagnostics
+
+```{r echo = TRUE}
+print(jags_fit)
+```
+
+---
+## Diagnostics
+
+```{r echo = TRUE, fig.height = 6.5}
+jagsUI::traceplot(jags_fit)
+```
+
+
+---
+## Structure of the JAGS output
+
+```{r echo=TRUE}
+class(jags_fit)
+
+names(jags_fit)
+```
+
+---
+## Structure of the JAGS output
+
+```{r echo=TRUE}
+str(jags_fit$sims.list)
+
+head(jags_fit$sims.list$alpha)
+```
+
+---
+## Structure of the JAGS output
+
+```{r echo=TRUE}
+jags_fit$mean$alpha
+
+jags_fit$f$alpha
+```
+
+---
+## Structure of the JAGS output
+
+```{r echo=TRUE}
+jags_fit$summary
+```
+
+
+---
+## Structure of the JAGS output
+
+```{r echo=TRUE}
+str(jags_fit$samples)
+```
+
+---
+## Structure of the JAGS output
+
+```{r echo = TRUE}
+str(jags_fit$mcmc.info)
+```
+
+---
+## Saving model output
+
+```{r, eval = FALSE, echo=TRUE}
+saveRDS(jags_fit, "output/regression_out.rds")

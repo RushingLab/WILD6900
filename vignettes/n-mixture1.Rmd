@@ -115,10 +115,6 @@ Nmix_fit <- jagsUI::jags(data = jags_data, inits = jags_inits,
                     n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, parallel = TRUE)
 ```
 
-```{r}
-print(Nmix_fit)
-```
-
 Looks good! 
 
 ## Adding covariates
@@ -137,7 +133,7 @@ Notice that because $\lambda$ is a site-level parameter (it varies among sites b
 
 In contrast, $p$ can vary both among sites *and* among occasions (it's indexed by $j$ and $k$). This means that we can include both site-level covariates (possibly including the same site-level covariates that influence $\lambda_j$) and occasion-level covariates (e.g., weather, observer, etc.). Again, the equation above could be expanded to include additional covariates. 
 
-When we write this model in JAGS (and any other model that includes covariates), it is often beneficial to parameterize the GLMs using a vector of coefficients rather than writing out the equations by hand. The data then goes in as a matrix (in this case, a $J \times K$ matrix) and we use vectorization or matrix algebra to compute the linear predictor. In this case:
+When we write this model in JAGS (and any other model that includes covariates), it is often beneficial to parameterize the GLMs using a vector of coefficients rather than scalars. The data then goes in as a matrix or array and we use vectorization or matrix algebra to compute the linear predictor. In this case:
 
 ```{r eval = FALSE}
 sink("jags/N-mixture2.jags")
@@ -180,7 +176,7 @@ sim_data <-sim_Nmix(J = 150, K = 4, alpha = c(0.2, 1.2, 0.75), beta = c(0.25, -1
 
 You can play with different values of $J$ and $K$ and change the number of covariates by adding or removing slope terms in the `alpha` and `beta` vectors. 
 
-With the data simulated, all you have to do next is package the data, set the MCMC settings, and run the model. Notice that we set `nAlpha` and `nBeta` based on the dimensions of the covariate arrays so that if we change the simulation, the data list will automatically update to the correct number of parameters. 
+With the data simulated, all you have to do is package the data, set the MCMC settings, and run the model. Notice that we set `nAlpha` and `nBeta` based on the dimensions of the covariate arrays so that if we change the simulation, the data list will automatically update to the correct number of parameters. 
 
 ```{r eval = FALSE}
 jags_data <- list(y = sim_data$y, XN = sim_data$XN, Xp = sim_data$Xp,
@@ -221,13 +217,11 @@ mod.file <- system.file("jags/N-mixture2.jags", package = "WILD6900")
 Nmix_fit <- jagsUI::jags(data = jags_data, inits = jags_inits,
                     parameters.to.save = parameters, model.file = mod.file,
                     n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt, parallel = TRUE)
-
-print(Nmix_fit)
 ```
 
 You may need to run longer chains for this model to converge but the parameter estimates should look pretty close to the data-generating values. For example, the expected abundance at each site: 
 
-```{r}
+```{r fig.width=6, fig.height=6}
 plot(Nmix_fit$mean$lambda ~ sim_data$lam)
 abline(0, 1)
 ```
