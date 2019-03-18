@@ -1,0 +1,325 @@
+---
+title: "Lecture 10"
+subtitle: "Estimating abundance: N-mixture models"
+author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
+library(WILD6900)
+# library(gganimate)
+```
+
+## Readings
+
+> Kéry & Schaub 383-411
+
+
+> [Powell & Gale chp. 18](https://docs.wixstatic.com/ugd/95e73b_233898561a20413687b6b7236b77e371.pdf)
+
+
+---
+## Systematic bias in state-space models
+
+```{r include = FALSE}
+n.years <- 25
+N <- rep(50, n.years) 
+
+p <- 0.7
+y <- numeric(n.years)
+for (t in 1:n.years){
+   y[t] <- rbinom(1, N[t], p)
+   }
+
+# Bundle data
+jags.data <- list(y = y, T = n.years)
+
+# Initial values
+inits <- function(){list(sigma.proc = runif(1, 0, 5), mean.lambda = runif(1, 0.1, 2), sigma.obs = runif(1, 0, 10), N.est = c(runif(1, 30, 60), rep(NA, (n.years-1))))}
+
+# Parameters monitored
+parameters <- c("lambda", "mean.lambda", "sigma2.obs", "sigma2.proc", "N.est")
+
+# MCMC settings
+ni <- 25000
+nt <- 3
+nb <- 10000
+nc <- 3
+
+# Call WinBUGS from R (BRT <1 min)
+ssm <- jagsUI::jags(jags.data, inits, parameters, "ssm.jags", n.chains = nc, n.thin = nt, n.iter = ni, n.burnin = nb)
+
+df2 <- data.frame(Year = seq(1:length(N)), True = 50, Observed = y, 
+                 Estimated = ssm$mean$N.est, LCI = ssm$q2.5$N.est, UCI = ssm$q97.5$N.est)
+```
+
+```{r fig.width=7, fig.height=6}
+(p <- ggplot() + 
+  geom_line(data = df2, aes(x = Year, y = True), color = WILD6900_colors$value[WILD6900_colors$name=="warning"]) +
+  geom_line(data = df2, aes(x = Year, y = Observed), color = WILD6900_colors$value[WILD6900_colors$name=="primary"]) +
+   scale_y_continuous("N"))
+```
+
+
+---
+## State-space models
+
+#### Produce unbiased estimates of $\Large N$ **only** when false-positives and false-negatives cancel each other out on average  
+<br/>
+
+#### Produce unbiased estimates of population **indices** $\Large (Np)$ if detection probability has no pattern ove time  
+<br/>
+
+#### Do **not** produce unbiased estimates of $\Large N$ or $\Large Np$ if their are temporal patterns in detection probability or false-positive rates 
+
+---
+## Estimating abundance
+
+#### Unbiased estimates of $\large N$ require estimating $\large p$
+
+#### *Many* methods available:
+
+- Mark-recapture  
+
+- Removal sampling  
+
+- Distance sampling  
+
+- Double observer  
+
+- N-mixture models
+
+---
+## Estimating abundance
+
+#### Unbiased estimates of $\large N$ require estimating $\large p$
+
+#### *Many* methods available:
+
+- Mark-recapture  
+
+- Removal sampling  
+
+- Distance sampling  
+
+- Double observer  
+
+- **N-mixture models ([Royle 2004](https://www.jstor.org/stable/pdf/3695558.pdf?casa_token=VmzoVcHywNkAAAAA:L2gjCIWETinhTyRUYVrexii5S6sD3oHYFIhb7ZNMdXQuTGeSckUtF6Yg360fsPkILD2-KW0cosorvn-BJ4t07629KUaH1ekcm6l5ZSoI0raU_1Vfje8))**
+
+---
+class: middle, center, inverse
+
+# N-mixture models
+
+---
+## N-mixture models
+
+#### The basic idea
+
+- $\large \mathbf J$ sites surveyed
+
+    + Each site has an expected abundance $\large \lambda$
+
+--
+    + State model:  
+    
+$$\Large N_j \sim Poisson(\lambda)$$
+
+--
+- Each site is surveyed $\large \mathbf K$ times
+
+    + During each visit, probability $\large p$ of detecting each individual
+
+--
+    + Observation model:  
+    
+$$\Large y_j \sim binomial(N_j, p)$$
+
+---
+## N-mixture models
+
+#### The data
+
+```{r}
+library(kableExtra)
+N_df <- data.frame(Site = c(1, 2, 3, 4),
+                   N = c(3, 5, 1, 1),
+                   Visit1 = c(0, 4, 0, 0),
+                   Visit2 = c(1, 2, 0, 0),
+                   Visit3 = c(1, 2, 1, 0),
+                   Visit4 = c(2, 2, 0, 1),
+                   Visit5 = c(0, 1, 0, 1))
+
+knitr::kable(N_df,format = 'html') %>%
+  kable_styling(full_width = F) %>%
+  column_spec(2, bold = T, border_right = T) %>%
+  column_spec(c(3:7), background = "yellow")
+```
+
+---
+## N-mixture models
+
+#### JAGS code
+
+```
+model{
+  # Priors
+  lambda ~ dgamma(0.01, 0.01)
+  p ~ dbeta(1, 1)
+  
+  # Likelihood
+  for(j in 1:J){
+    ## State model
+    N[j] ~ dpois(lambda)
+    
+    ## Observation model
+    for(k in 1:K){
+      y[j, k] ~ dbinom(p, N[j])
+    } # end k loop
+  } # end j loop
+  
+} # end model
+```
+
+---
+## N-mixture models
+
+#### Extensions
+
+1) Covariates and random effects
+
+$$\large log(\lambda_j) = \alpha_0 + \alpha_1x_j + \epsilon_j$$
+
+$$\large \epsilon_j \sim normal(0, \tau)$$
+
+$$\large logit(p_{j,k}) = \beta_0 + \beta_1x_j + \beta_2x_{j,k}$$
+
+---
+## N-mixture models
+
+#### Extensions
+
+1) Covariates and random effects
+
+2) Open N-mixture model ([Dail & Madsen 2011](https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=Y3RTUwUZKs8AAAAA:QFHRWtxjqlOQfRoAaw_3Z5qkbbXZ3WMcjnwFW1pf04FDmhgAPQBn44eGWi4mLASdYpgVUMmKt3_oUX7MKTHZKUfJReftyPUNwQL6oATonf7uTGc3rZ4))
+
+$$\large N_{j,1} \sim Poisson(\lambda)$$
+$$\large N_{j,t} = S_{j,t} + G_{j,t}$$
+
+$$\large S_{j,t} \sim binomial(N_{j,t-1}, \phi)$$
+$$\large G_{j,t} \sim Poisson(\gamma N_{j,t-1})$$
+
+
+---
+## N-mixture models
+
+#### Extensions
+
+1) Covariates and random effects
+
+2) Open N-mixture model ([Dail & Madsen 2011](https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=Y3RTUwUZKs8AAAAA:QFHRWtxjqlOQfRoAaw_3Z5qkbbXZ3WMcjnwFW1pf04FDmhgAPQBn44eGWi4mLASdYpgVUMmKt3_oUX7MKTHZKUfJReftyPUNwQL6oATonf7uTGc3rZ4))
+
+3) Other distributions
+
+- negative binomial, zero-inflated Poisson, multinomial
+
+---
+## N-mixture models
+
+#### Extensions
+
+1) Covariates and random effects
+
+2) Open N-mixture model ([Dail & Madsen 2011](https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=Y3RTUwUZKs8AAAAA:QFHRWtxjqlOQfRoAaw_3Z5qkbbXZ3WMcjnwFW1pf04FDmhgAPQBn44eGWi4mLASdYpgVUMmKt3_oUX7MKTHZKUfJReftyPUNwQL6oATonf7uTGc3rZ4))
+
+3) Other distributions
+
+4) Integrated N-mixture models  
+
+- Integrated N-mixture/known fate model ([Schmidt et al. 2015](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1890/15-0385.1))  
+    
+- Integrated N-mixture/distance sampling model ([Hostetter et al. 2019](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecs2.2586))  
+
+
+---
+## Assumptions of the N-mixture model
+
+1) Poisson and binomial distributions are true descriptions of state/observation processes
+
+2) Abundance at each site is random and independent of abundance at all other sites
+
+3) Population is closed between surveys
+
+4) Observers do not double count individuals
+
+5) All $N$ individuals have the same detection probability $p$
+
+---
+## Advantages and disadvantages of the N-mixture model
+
+#### Advantages
+
+- Count data is "cheap" to collect (relative to mark-recapture)
+
+- Does not require auxillary information (distance, double observer, etc.)
+
+- Analysis is straightforward
+
+--
+
+#### Disadvantages
+
+- Count data has less information about $p$ than mark-recapture data
+
+- Requires lots of replication
+
+- Trade-off between temporal replication and spatial replication
+
+- Inference can be sensitive to violating assumptions
+
+---
+## Controversy 
+
+#### [Barker et al. (2017)](https://onlinelibrary.wiley.com/doi/full/10.1111/biom.12734)
+
+- Mark-recapture data provides auxillary information about $p$ without reference to $N$
+
+- Without auxillary information about $p$, count data cannot distinguish between N-mixture model or other possible models of $N$
+
+---
+## Controversy 
+
+#### [Barker et al. (2017)](https://onlinelibrary.wiley.com/doi/full/10.1111/biom.12734)
+
+#### [Kery (2017)](https://esajournals.onlinelibrary.wiley.com/doi/pdf/10.1002/ecy.2093)
+
+- No issues with identifiability of Poisson N-mixture model based on 137 bird data sets from 2,037 sites
+
+- Some parameters not identifiability with negative binomial model (especially with small sample sizes)  
+
+    + problematic because NB often selected based on AIC
+    
+
+---
+## Controversy 
+
+#### [Barker et al. (2017)](https://onlinelibrary.wiley.com/doi/full/10.1111/biom.12734)
+
+#### [Kery (2017)](https://esajournals.onlinelibrary.wiley.com/doi/pdf/10.1002/ecy.2093)
+
+#### [Link et al. (2018)](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1002/ecy.2362)
+
+- Estimates from N-mixture models sensitive to violation of double counting and constant $\lambda$/$p$
+
+- Small violations unlikely to be detected using goodness‐of‐fit tests but can influence inference about $N$
+
+

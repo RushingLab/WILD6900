@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 10</title>
+    <meta charset="utf-8">
+    <meta name="author" content="   WILD6900 (Spring 2019)" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="WILD6900.css" type="text/css" />
+    <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lecture 10
+## Estimating abundance: N-mixture models
+### <br/><br/><br/>WILD6900 (Spring 2019)
+
+---
+
+
+
+
+## Readings
+
+&gt; Kéry &amp; Schaub 383-411
+
+
+&gt; [Powell &amp; Gale chp. 18](https://docs.wixstatic.com/ugd/95e73b_233898561a20413687b6b7236b77e371.pdf)
+
+
+---
+## Systematic bias in state-space models
+
+
+
+&lt;img src="Lecture10_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+## State-space models
+
+#### Produce unbiased estimates of `\(\Large N\)` **only** when false-positives and false-negatives cancel each other out on average  
+&lt;br/&gt;
+
+#### Produce unbiased estimates of population **indices** `\(\Large (Np)\)` if detection probability has no pattern ove time  
+&lt;br/&gt;
+
+#### Do **not** produce unbiased estimates of `\(\Large N\)` or `\(\Large Np\)` if their are temporal patterns in detection probability or false-positive rates 
+
+---
+## Estimating abundance
+
+#### Unbiased estimates of `\(\large N\)` require estimating `\(\large p\)`
+
+#### *Many* methods available:
+
+- Mark-recapture  
+
+- Removal sampling  
+
+- Distance sampling  
+
+- Double observer  
+
+- N-mixture models
+
+---
+## Estimating abundance
+
+#### Unbiased estimates of `\(\large N\)` require estimating `\(\large p\)`
+
+#### *Many* methods available:
+
+- Mark-recapture  
+
+- Removal sampling  
+
+- Distance sampling  
+
+- Double observer  
+
+- **N-mixture models ([Royle 2004](https://www.jstor.org/stable/pdf/3695558.pdf?casa_token=VmzoVcHywNkAAAAA:L2gjCIWETinhTyRUYVrexii5S6sD3oHYFIhb7ZNMdXQuTGeSckUtF6Yg360fsPkILD2-KW0cosorvn-BJ4t07629KUaH1ekcm6l5ZSoI0raU_1Vfje8))**
+
+---
+class: middle, center, inverse
+
+# N-mixture models
+
+---
+## N-mixture models
+
+#### The basic idea
+
+- `\(\large \mathbf J\)` sites surveyed
+
+    + Each site has an expected abundance `\(\large \lambda\)`
+
+--
+    + State model:  
+    
+`$$\Large N_j \sim Poisson(\lambda)$$`
+
+--
+- Each site is surveyed `\(\large \mathbf K\)` times
+
+    + During each visit, probability `\(\large p\)` of detecting each individual
+
+--
+    + Observation model:  
+    
+`$$\Large y_j \sim binomial(N_j, p)$$`
+
+---
+## N-mixture models
+
+#### The data
+
+&lt;table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; Site &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; N &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Visit1 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Visit2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Visit3 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Visit4 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Visit5 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;border-right:1px solid;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;border-right:1px solid;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;border-right:1px solid;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 0 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;font-weight: bold;border-right:1px solid;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;background-color: yellow;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+## N-mixture models
+
+#### JAGS code
+
+```
+model{
+  # Priors
+  lambda ~ dgamma(0.01, 0.01)
+  p ~ dbeta(1, 1)
+  
+  # Likelihood
+  for(j in 1:J){
+    ## State model
+    N[j] ~ dpois(lambda)
+    
+    ## Observation model
+    for(k in 1:K){
+      y[j, k] ~ dbinom(p, N[j])
+    } # end k loop
+  } # end j loop
+  
+} # end model
+```
+
+---
+## N-mixture models
+
+#### Extensions
+
+1) Covariates and random effects
+
+`$$\large log(\lambda_j) = \alpha_0 + \alpha_1x_j + \epsilon_j$$`
+
+`$$\large \epsilon_j \sim normal(0, \tau)$$`
+
+`$$\large logit(p_{j,k}) = \beta_0 + \beta_1x_j + \beta_2x_{j,k}$$`
+
+---
+## N-mixture models
+
+#### Extensions
+
+1) Covariates and random effects
+
+2) Open N-mixture model ([Dail &amp; Madsen 2011](https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=Y3RTUwUZKs8AAAAA:QFHRWtxjqlOQfRoAaw_3Z5qkbbXZ3WMcjnwFW1pf04FDmhgAPQBn44eGWi4mLASdYpgVUMmKt3_oUX7MKTHZKUfJReftyPUNwQL6oATonf7uTGc3rZ4))
+
+`$$\large N_{j,1} \sim Poisson(\lambda)$$`
+`$$\large N_{j,t} = S_{j,t} + G_{j,t}$$`
+
+`$$\large S_{j,t} \sim binomial(N_{j,t-1}, \phi)$$`
+`$$\large G_{j,t} \sim Poisson(\gamma N_{j,t-1})$$`
+
+
+---
+## N-mixture models
+
+#### Extensions
+
+1) Covariates and random effects
+
+2) Open N-mixture model ([Dail &amp; Madsen 2011](https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=Y3RTUwUZKs8AAAAA:QFHRWtxjqlOQfRoAaw_3Z5qkbbXZ3WMcjnwFW1pf04FDmhgAPQBn44eGWi4mLASdYpgVUMmKt3_oUX7MKTHZKUfJReftyPUNwQL6oATonf7uTGc3rZ4))
+
+3) Other distributions
+
+- negative binomial, zero-inflated Poisson, multinomial
+
+---
+## N-mixture models
+
+#### Extensions
+
+1) Covariates and random effects
+
+2) Open N-mixture model ([Dail &amp; Madsen 2011](https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=Y3RTUwUZKs8AAAAA:QFHRWtxjqlOQfRoAaw_3Z5qkbbXZ3WMcjnwFW1pf04FDmhgAPQBn44eGWi4mLASdYpgVUMmKt3_oUX7MKTHZKUfJReftyPUNwQL6oATonf7uTGc3rZ4))
+
+3) Other distributions
+
+4) Integrated N-mixture models  
+
+- Integrated N-mixture/known fate model ([Schmidt et al. 2015](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1890/15-0385.1))  
+    
+- Integrated N-mixture/mark-recapture ([Hostetter et al. 2019](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecs2.2586))  
+
+
+---
+## Assumptions of the N-mixture model
+
+1) Poisson and binomial distributions are true descriptions of state/observation processes
+
+2) Abundance at each site is random and independent of abundance at all other sites
+
+3) Population is closed between surveys
+
+4) Observers do not double count individuals
+
+5) All `\(N\)` individuals have the same detection probability `\(p\)`
+
+---
+## Advantages and disadvantages of the N-mixture model
+
+#### Advantages
+
+- Count data is "cheap" to collect (relative to mark-recapture)
+
+- Does not require auxillary information (distance, double observer, etc.)
+
+- Analysis is straightforward
+
+--
+
+#### Disadvantages
+
+- Count data has less information about `\(p\)` than mark-recapture data
+
+- Requires lots of replication
+
+- Trade-off between temporal replication and spatial replication
+
+- Inference can be sensitive to violating assumptions
+
+---
+## Controversy 
+
+#### [Barker et al. (2017)](https://onlinelibrary.wiley.com/doi/full/10.1111/biom.12734)
+
+- Mark-recapture data provides auxillary information about `\(p\)` without reference to `\(N\)`
+
+- Without auxillary information about `\(p\)`, count data cannot distinguish between N-mixture model or other possible models of `\(N\)`
+
+---
+## Controversy 
+
+#### [Barker et al. (2017)](https://onlinelibrary.wiley.com/doi/full/10.1111/biom.12734)
+
+#### [Kery (2017)](https://esajournals.onlinelibrary.wiley.com/doi/pdf/10.1002/ecy.2093)
+
+- No issues with identifiability of Poisson N-mixture model based on 137 bird data sets from 2,037 sites
+
+- Some parameters not identifiability with negative binomial model (especially with small sample sizes)  
+
+    + problematic because NB often selected based on AIC
+    
+
+---
+## Controversy 
+
+#### [Barker et al. (2017)](https://onlinelibrary.wiley.com/doi/full/10.1111/biom.12734)
+
+#### [Kery (2017)](https://esajournals.onlinelibrary.wiley.com/doi/pdf/10.1002/ecy.2093)
+
+#### [Link et al. (2018)](https://esajournals.onlinelibrary.wiley.com/doi/abs/10.1002/ecy.2362)
+
+- Estimates from N-mixture models sensitive to violation of double counting and constant `\(\lambda\)`/$p$
+
+- Small violations unlikely to be detected using goodness‐of‐fit tests but can influence inference about `\(N\)`
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
