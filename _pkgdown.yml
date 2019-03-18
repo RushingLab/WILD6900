@@ -40,6 +40,8 @@ navbar:
           href: articles/Lecture8/Lecture8.html
         - text: "Lecture 9: Introduction to state-space models"
           href: articles/Lecture9/Lecture9.html
+        - text: "Lecture 10: Estimating abundance: N-mixture models"
+          href: articles/Lecture10/Lecture10.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:

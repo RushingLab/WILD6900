@@ -21,5 +21,6 @@ Imports:
     sf,
     maps,
     mapproj,
-    lubridate
+    lubridate,
+    abind
 RoxygenNote: 6.1.1

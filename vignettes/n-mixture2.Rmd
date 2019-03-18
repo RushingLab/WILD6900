@@ -1,0 +1,25 @@
+---
+title: "Advanced N-mixture models"
+author: "WILD6900"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+header-includes:
+  - \usepackage{amsmath}
+  
+vignette: >
+  %\VignetteIndexEntry{N-mixture2}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(fig.align = 'center', message = FALSE, warning = FALSE,
+  collapse = TRUE,
+  comment = "#>"
+)
+library(WILD6900)
+```
+
+
+## Posterior predictive checks
+
