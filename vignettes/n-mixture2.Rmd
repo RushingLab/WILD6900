@@ -13,12 +13,24 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(fig.align = 'center', message = FALSE, warning = FALSE,
+knitr::opts_chunk$set(fig.align = 'center', message = FALSE, warning = FALSE, eval = FALSE,
   collapse = TRUE,
   comment = "#>"
 )
 library(WILD6900)
 ```
+
+In this lab, we will continue to explore some of the possible ways to model count data using N-mixture models. Specifically, we will investigate how to deal with zero-inflated count data, which commonly occurs in ecological data. We will also learn about one way to measure goodness-of-fit (GOF) in a Bayesian context, so-called *posterior predictive checks*. 
+
+## The data
+
+For this lab, we will use a published data set[^1] containing replicate counts of Lanza’s Alpine Salamander (*Salamandra lanzai*), an endemic species to the Alps of northwestern Italy and eastern France, found only in a small area with altitudes of 1200–2650 m. 
+
+```{r out.width = "80%", eval = TRUE}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/2/2f/Salamandra_lanzai_%28Franco_Andreone%29.jpeg")
+```
+
+[^1]: Ficetola, G.F., Barzaghi, B., Melotto, A., Muraro, M., Lunghi, E., Canedoli, C., Parrino, E.L., Nanni, V., Silva-Rocha, I., Urso, A. and Carretero, M.A., 2018. N-mixture models reliably estimate the abundance of small vertebrates. *Scientific reports*, 8(1), p.10357.
 
 ```{r}
 data("salamanders")
@@ -95,7 +107,7 @@ inits <- function(){list(lambda = runif(1, 0, 1),
                          beta0 = rnorm(1), beta1 = rnorm(1),
                          N = apply(y, 1, max, na.rm = TRUE))}
 
-parameters <- c("omega", "lambda", "beta0", "beta1", "N", "fit", "fit.new")
+parameters <- c("omega", "lambda", "beta0", "beta1", "N", "fit", "fit.new", "y.new")
 
 ni <- 10000
 nc <- 3
@@ -117,7 +129,7 @@ jags_dat <- list(y = y, hours = hours_c, J = dim(y)[1], K = dim(y)[2])
 
 inits <- function(){list(lambda = runif(1, 0, 1),
                          omega = runif(1),
-                         sd.p = runif(0, 1),
+                         sd.p = runif(0, 0.25),
                          beta0 = rnorm(1), beta1 = rnorm(1),
                          N = apply(y, 1, max, na.rm = TRUE))}
 
