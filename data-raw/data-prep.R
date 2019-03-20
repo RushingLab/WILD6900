@@ -56,5 +56,11 @@ ewe_counts <- dplyr::select(ewe_counts, -X)
 lamb_counts <- read.csv("data-raw/LambMatrix_KSinclair.csv")
 lamb_counts <- dplyr::select(lamb_counts, -X)
 
-usethis::use_data(WILD6900_colors, SurvPriorData, bbs_data, bcr, falcons, tits, pelicans, ewe_counts, lamb_counts, overwrite = TRUE)
+
+### Salamanders ----
+
+salamanders <- read.csv("data-raw/salamander.csv")
+
+
+usethis::use_data(WILD6900_colors, SurvPriorData, bbs_data, bcr, falcons, tits, pelicans, ewe_counts, lamb_counts, salamanders, overwrite = TRUE)
 

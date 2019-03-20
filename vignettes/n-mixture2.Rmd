@@ -20,6 +20,119 @@ knitr::opts_chunk$set(fig.align = 'center', message = FALSE, warning = FALSE,
 library(WILD6900)
 ```
 
+```{r}
+data("salamanders")
+```
 
+```{r}
+### Store counts as JxK matrix
+y <- as.matrix(salamanders[,2:4])
+
+### Store hour of survey as JxK matrix
+hours <- as.matrix(salamanders[,5:7])
+
+### Fill in NA hours with mean survey time
+hours[is.na(hours)] <- mean(hours, na.rm = TRUE)
+
+### Standardize hours
+hours_c <- (hours - mean(hours))/sd(hours)
+```
+
+```{r}
+sink("jags/salamander_Nmixture.jags")
+cat("
+    # Priors
+    lambda ~ dgamma(0.25, 0.25)
+    beta0 ~ dnorm(0, 0.1)
+    beta1 ~ dnorm(0, 0.1)
+
+    # Likelihood
+    for(j in 1:J){
+     N[j] ~ dpois(lambda)
+
+     for(k in 1:K){
+        y[j, k] ~ dbinom(p[j,k], N[j])
+        logit(p[j, k]) <- beta0 + beta1 * hours[j,k]
+     }
+    }
+    ", fill = TRUE)
+sink()
+```
+
+
+```{r}
+
+jags_dat <- list(y = y, hours = hours_c, J = dim(y)[1], K = dim(y)[2])
+
+inits <- function(){list(lambda = runif(0, 3),
+                         beta0 = rnorm(1), beta1 = rnorm(1),
+                         N = apply(y, 1, max, na.rm = TRUE) + 1)}
+
+parameters <- c("lambda", "beta0", "beta1", "N", "fit", "fit.new")
+
+ni <- 10000
+nc <- 3
+nb <- 2500
+nt <- 1
+
+sal1 <- jagsUI::jags(data = jags_dat, inits = inits, parameters.to.save = parameters, model.file = "inst/jags/salamander_Nmixture.jags", n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt)
+```
 ## Posterior predictive checks
 
+```{r}
+plot(sal1$sims.list$fit.new~sal1$sims.list$fit)
+abline(0, 1)
+```
+
+
+
+```{r}
+
+jags_dat <- list(y = y, hours = hours_c, J = dim(y)[1], K = dim(y)[2])
+
+inits <- function(){list(lambda = runif(1, 0, 1),
+                         omega = runif(1),
+                         beta0 = rnorm(1), beta1 = rnorm(1),
+                         N = apply(y, 1, max, na.rm = TRUE))}
+
+parameters <- c("omega", "lambda", "beta0", "beta1", "N", "fit", "fit.new")
+
+ni <- 10000
+nc <- 3
+nb <- 2500
+nt <- 1
+
+sal2 <- jagsUI::jags(data = jags_dat, inits = inits, parameters.to.save = parameters, model.file = "inst/jags/salamander_Nmixture_ZIP.jags", n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt)
+```
+## Posterior predictive checks
+
+```{r}
+plot(sal2$sims.list$fit.new~sal2$sims.list$fit)
+abline(0, 1)
+```
+
+```{r}
+
+jags_dat <- list(y = y, hours = hours_c, J = dim(y)[1], K = dim(y)[2])
+
+inits <- function(){list(lambda = runif(1, 0, 1),
+                         omega = runif(1),
+                         sd.p = runif(0, 1),
+                         beta0 = rnorm(1), beta1 = rnorm(1),
+                         N = apply(y, 1, max, na.rm = TRUE))}
+
+parameters <- c("omega", "lambda", "beta0", "beta1", "N", "fit", "fit.new")
+
+ni <- 10000
+nc <- 3
+nb <- 2500
+nt <- 1
+
+sal3 <- jagsUI::jags(data = jags_dat, inits = inits, parameters.to.save = parameters, model.file = "inst/jags/salamander_Nmixture_ZIP_OD.jags", n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt)
+```
+## Posterior predictive checks
+
+```{r}
+plot(sal3$sims.list$fit.new~sal3$sims.list$fit)
+abline(0, 1)
+```
