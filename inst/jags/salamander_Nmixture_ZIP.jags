@@ -18,13 +18,13 @@ model{
         exp[j, k] <- N[j] * p[j, k]
         E[j, k] <- pow((y[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)
 
-        y.new[j, k] ~ dbinom(p[j, k], N[j])
-        E.new[j, k] <- pow((y.new[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)
+        y.rep[j, k] ~ dbinom(p[j, k], N[j])
+        E.rep[j, k] <- pow((y.rep[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)
       } # end k loop
     } # end j loop
 
     # Derived variables
     fit <- sum(E[,])
-    fit.new <- sum(E.new[,])
+    fit.rep <- sum(E.rep[,])
 }
     

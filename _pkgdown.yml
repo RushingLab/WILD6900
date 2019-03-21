@@ -65,6 +65,8 @@ navbar:
           href: articles/state_space2.html
         - text: "Introduction to N-mixture models"
           href: articles/n-mixture1.html
+        - text: "Advanced N-mixture models: Zero-inflation and posterior predictive checks"
+          href: articles/n-mixture2.html
     - icon: fas fa-pencil-square-o
       text: "Assignments"
       href: articles/homework.html

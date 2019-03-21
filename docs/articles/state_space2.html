@@ -141,6 +141,9 @@
     <li>
       <a href="../articles/n-mixture1.html">Introduction to N-mixture models</a>
     </li>
+    <li>
+      <a href="../articles/n-mixture2.html">Advanced N-mixture models: Zero-inflation and posterior predictive checks</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -166,7 +169,7 @@
             <h3 class="subtitle">Estimating vital rates from count data</h3>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-03-18</h4>
+            <h4 class="date">2019-03-21</h4>
       
       
       <div class="hidden name"><code>state_space2.Rmd</code></div>
@@ -197,7 +200,7 @@ Adult male American Restart (Setophaga ruticilla), aka the best warbler. Image c
 Juvenile male American Restart. See the difference?. Image courtesy of Andy Reago and Chrissy McClarren, via Wikicommons
 </p>
 </div>
-<p>Unlike the previous count data that we have seen, which included a single count of the total number of individuals in the population each year, counts that separate juveniles and adults allow us to think more mechanistically about changes in abundance. The key to the age-structured state-space model is that knowing the number of juveniles and adults in the population allows us to directly model changes in abundance as functions of vital rates (survival and reproduction). In particular, if we assume the population is closed to movement, we know that juveniles can only be added to the population via births and juvenile survival, i.e. recruitment<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. At any given time <span class="math inline">\(t\)</span>, we therefore expect there to be <span class="math inline">\(N^{Ad}_{t-1} \times F_{t-1}\)</span> juveniles in the population (where <span class="math inline">\(F_t\)</span> is the per capita recruitment rate in year <span class="math inline">\(t\)</span>). Of course, we also expect some process variance to occur and thus <span class="math inline">\(N^{Juv}_t \neq N^{Ad}_{t-1} \times F_{t-1}\)</span>. However, we can model this process variance by assuming the juvenile abundance arises from a Poisson distribution:</p>
+<p>Unlike the previous count data that we have seen, which included a single count of the total number of individuals in the population each year, counts that separate juveniles and adults allow us to think more mechanistically about changes in abundance. The key to the age-structured state-space model is that knowing the number of juveniles and adults in the population allows us to directly model changes in abundance as functions of vital rates (survival and reproduction). In particular, if we assume the population is closed to movement, we know that juveniles can only be added to the population via births and juvenile survival, i.e. recruitment<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>. At any given time <span class="math inline">\(t\)</span>, we therefore expect there to be <span class="math inline">\(N^{Ad}_{t-1} \times F_{t-1}\)</span> juveniles in the population (where <span class="math inline">\(F_t\)</span> is the per capita recruitment rate in year <span class="math inline">\(t\)</span>). Of course, we also expect some process variance to occur and thus <span class="math inline">\(N^{Juv}_t \neq N^{Ad}_{t-1} \times F_{t-1}\)</span>. However, we can model this process variance by assuming the juvenile abundance arises from a Poisson distribution:</p>
 <p><span class="math display">\[\large N^{Juv}_{t} \sim Poisson(N^{Ad}_{t - 1}F_{t-1}) \tag{1}\]</span> Equation 1 should look familiar <span class="math inline">\(-\)</span> this is the same model you used in homework 2 to estimate fecundity of the Peregrine falcon population in France. The only differences are that now:</p>
 <ol style="list-style-type: decimal">
 <li><p>we are estimating recruitment rather than fecundity (our interpretation of <span class="math inline">\(F\)</span> changes slightly, though the way we estimate it remains the same); and</p></li>
@@ -211,7 +214,7 @@ Juvenile male American Restart. See the difference?. Image courtesy of Andy Reag
 <p>We again link the true adult abundance to our counts of adults using the now familiar state-space structure:</p>
 <p><span class="math display">\[\large y^{Ad}_t \sim normal(N^{Ad}_t, \tau_{obs}) \tag{4}\]</span></p>
 <p>Note here that we are assuming the observation error is the same for adults and juveniles. Whether this is a reasonable assumption will depend on the specifics of the study organisms but this assumption could be relaxed by modeling age-specific observation errors (e.g., <span class="math inline">\(\tau^{Juv}_{obs}\)</span> and <span class="math inline">\(\tau^{Ad}_{obs}\)</span>).</p>
-<p>The really cool advance of the age-structured state-space model is that with just the four equations outlined above, we have derived mechanistic models that explain variation in abundance via the underlying vital rates and link our imperfect counts to the true abundances! For additional background the concepts that underlie this model, see the <a href="https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=lQLmXK8JwG8AAAAA:Qo7W0yFUH5Db_yRMDuNEj7ob-xnhhgJsr5fv_F_37t7YprY6X8fLxyB2Oy7VoKM1n26D7AuLwvdgbaFquRaaQgUa5UQZuhC3nSan0U7-DmZ6KA74JLc">original paper</a> describing open population count models by Dail and Madsen as well a <a href="https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=lQLmXK8JwG8AAAAA:Qo7W0yFUH5Db_yRMDuNEj7ob-xnhhgJsr5fv_F_37t7YprY6X8fLxyB2Oy7VoKM1n26D7AuLwvdgbaFquRaaQgUa5UQZuhC3nSan0U7-DmZ6KA74JLc">more recent paper</a> by Zipkin et al. describing an age-structured model similar to the one described above.</p>
+<p>The really cool advance of the age-structured state-space model is that with just the four equations outlined above, we have derived mechanistic models that explain variation in abundance via the underlying vital rates and link our imperfect counts to the true abundances! For additional background the concepts that underlie this model, see the <a href="https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=lQLmXK8JwG8AAAAA:Qo7W0yFUH5Db_yRMDuNEj7ob-xnhhgJsr5fv_F_37t7YprY6X8fLxyB2Oy7VoKM1n26D7AuLwvdgbaFquRaaQgUa5UQZuhC3nSan0U7-DmZ6KA74JLc">original paper</a> describing open population count models by Dail and Madsen as well a <a href="https://www.jstor.org/stable/pdf/41242495.pdf?casa_token=lQLmXK8JwG8AAAAA:Qo7W0yFUH5Db_yRMDuNEj7ob-xnhhgJsr5fv_F_37t7YprY6X8fLxyB2Oy7VoKM1n26D7AuLwvdgbaFquRaaQgUa5UQZuhC3nSan0U7-DmZ6KA74JLc">more recent paper</a> by Zipkin et al. describing an age-structured model similar to the one described above.</p>
 </div>
 <div id="estimating-recruitment-and-survival-of-bighorn-sheep" class="section level2">
 <h2 class="hasAnchor">
@@ -226,10 +229,10 @@ Big horn sheep photo courtesy of Bureau of Land Management, via Wikicommons
 <h3 class="hasAnchor">
 <a href="#data" class="anchor"></a>Data</h3>
 <p>The ewe and lamb counts can be loaded directly into <code>R</code> using the following code (note that if you get an error message, you may need to install an updated version of the <code>WILD6900</code> package):</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"ewe_counts"</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"lamb_counts"</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(ewe_counts)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"ewe_counts"</span>)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"lamb_counts"</span>)
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(ewe_counts)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">Year</th>
@@ -301,18 +304,18 @@ Big horn sheep photo courtesy of Bureau of Land Management, via Wikicommons
 <li><p><span class="math inline">\(\large \phi\)</span></p></li>
 <li><p><span class="math inline">\(\large \sigma_{obs}\)</span></p></li>
 </ul>
-<p>What priors do you think are most appropriate for these parameters? Once you have decided, using the following code to start a JAGS models with these priors<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"jags/sheep_ssm.jags"</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="st">model{</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="st">  ## Priors</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="st">  </span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="st">  ## Likelihood</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="st">  </span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="st">  ## Derived parameters</span></a>
-<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="st">}</span></a>
-<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="st">"</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()</a></code></pre></div>
+<p>What priors do you think are most appropriate for these parameters? Once you have decided, using the following code to start a JAGS models with these priors<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"jags/sheep_ssm.jags"</span>)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span>
+<span class="st">model{</span>
+<span class="st">  ## Priors</span>
+<span class="st">  </span>
+<span class="st">  ## Likelihood</span>
+<span class="st">  </span>
+<span class="st">  ## Derived parameters</span>
+<span class="st">}</span>
+<span class="st">"</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()</code></pre></div>
 <p>As in the previous state-space models, we also need priors for the initial populations sizes for each herd. Here, though, we need to be careful. Our previous models assumed, somewhat simplistically, that abundance <span class="math inline">\(N\)</span> could be any real number. This was a result of assuming normal process variance. In the age-structured model, however, we are assuming that juvenile abundance arises from a Poisson distribution and the adult abundance arises from a binomial. What do these distributions have in common? They are both <em>discrete</em> probability distributions. This means we need to ensure that our priors for initial abundances generate integer values. We will do this in a two step process. First we define a uniform prior for the <em>expected</em> abundance in year 1 for each herd <span class="math inline">\(i\)</span>:</p>
 <p><span class="math display">\[\large \mu^{lamb}_{i} \sim uniform(0, 300)\]</span></p>
 <p><span class="math display">\[\large \mu^{ewe}_{i} \sim uniform(0, 300)\]</span></p>
@@ -337,53 +340,53 @@ Big horn sheep photo courtesy of Bureau of Land Management, via Wikicommons
 <p>For a time series of abundances, the average growth rate can be estimated as:</p>
 <p><span class="math display">\[\large \lambda = \bigg[\frac{N_T}{N_0}\bigg]^{\frac{1}{T}}\]</span></p>
 <p>where <span class="math inline">\(T\)</span> is the number of years and <span class="math inline">\(N_0\)</span> is the initial abundance. We can estimate the posterior distribution of <span class="math inline">\(\lambda\)</span> for each herd by simply converting the above equation into working JAGS code:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">lambda &lt;-<span class="st"> </span>(N.tot[nYears,]<span class="op">/</span>N.tot[<span class="dv">1</span>,])<span class="op">^</span>(<span class="dv">1</span><span class="op">/</span>nYears)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lambda &lt;-<span class="st"> </span>(N.tot[nYears,]<span class="op">/</span>N.tot[<span class="dv">1</span>,])<span class="op">^</span>(<span class="dv">1</span><span class="op">/</span>nYears)</code></pre></div>
 <p>which will return a vector of length 5.</p>
 </div>
 <div id="running-the-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#running-the-model" class="anchor"></a>Running the model</h3>
 <p>Finally we’re ready to prepare the data and initial values and fit the model, steps which are hopefully becoming familiar. On your own, complete the following code:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># Bundle data</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">jags.data &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="co"># Initial values</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">inits &lt;-<span class="st"> </span><span class="cf">function</span>(){}</a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co"># Parameters monitored</span></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8">parameters &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co"># MCMC settings</span></a>
-<a class="sourceLine" id="cb4-11" data-line-number="11">ni &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb4-12" data-line-number="12">nt &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb4-13" data-line-number="13">nb &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb4-14" data-line-number="14">nc &lt;-<span class="st"> </span></a>
-<a class="sourceLine" id="cb4-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co"># Call JAGS from R </span></a>
-<a class="sourceLine" id="cb4-17" data-line-number="17">sheep_mod &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(jags.data, inits, </a>
-<a class="sourceLine" id="cb4-18" data-line-number="18">                          parameters, <span class="st">"jags/sheep_ssm.jags"</span>, </a>
-<a class="sourceLine" id="cb4-19" data-line-number="19">                          <span class="dt">n.chains =</span> nc, <span class="dt">n.thin =</span> nt, <span class="dt">n.iter =</span> ni, </a>
-<a class="sourceLine" id="cb4-20" data-line-number="20">                          <span class="dt">n.burnin =</span> nb, <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Bundle data</span>
+jags.data &lt;-<span class="st"> </span>
+
+<span class="co"># Initial values</span>
+inits &lt;-<span class="st"> </span><span class="cf">function</span>(){}
+
+<span class="co"># Parameters monitored</span>
+parameters &lt;-<span class="st"> </span>
+
+<span class="co"># MCMC settings</span>
+ni &lt;-<span class="st"> </span>
+nt &lt;-<span class="st"> </span>
+nb &lt;-<span class="st"> </span>
+nc &lt;-<span class="st"> </span>
+
+<span class="co"># Call JAGS from R </span>
+sheep_mod &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(jags.data, inits, 
+                          parameters, <span class="st">"jags/sheep_ssm.jags"</span>, 
+                          <span class="dt">n.chains =</span> nc, <span class="dt">n.thin =</span> nt, <span class="dt">n.iter =</span> ni, 
+                          <span class="dt">n.burnin =</span> nb, <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</code></pre></div>
 <p>Now check the model for convergence.</p>
 <p>Can can also visualize the observed and estimated counts:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## Create data frame with observed and estimated counts</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">sheep_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">Year =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(ewe_counts<span class="op">$</span>Year, <span class="dv">10</span>),</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">                       <span class="dt">Age =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Ewe"</span>, <span class="st">"Lamb"</span>), <span class="dt">each =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(ewe_counts[,<span class="op">-</span><span class="dv">1</span>]))),</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">                       <span class="dt">Herd =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(ewe_counts[,<span class="op">-</span><span class="dv">1</span>]), <span class="dt">each =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(ewe_counts)),</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">                       <span class="dt">Count =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(ewe_counts[,<span class="op">-</span><span class="dv">1</span>])), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(lamb_counts[,<span class="op">-</span><span class="dv">1</span>]))),</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">                       <span class="dt">N =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sheep<span class="op">$</span>mean<span class="op">$</span>N.ewe), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sheep<span class="op">$</span>mean<span class="op">$</span>N.lamb)), </a>
-<a class="sourceLine" id="cb5-7" data-line-number="7">                       <span class="dt">LCI =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sheep<span class="op">$</span>q2<span class="fl">.5</span><span class="op">$</span>N.ewe), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sheep<span class="op">$</span>q2<span class="fl">.5</span><span class="op">$</span>N.lamb)),</a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">                       <span class="dt">UCI =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sheep<span class="op">$</span>q97<span class="fl">.5</span><span class="op">$</span>N.ewe), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sheep<span class="op">$</span>q97<span class="fl">.5</span><span class="op">$</span>N.lamb)))</a>
-<a class="sourceLine" id="cb5-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">## Plot herd-specific counts</span></a>
-<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="kw">ggplot</span>(sheep_df, <span class="kw">aes</span>(<span class="dt">x =</span> Year, <span class="dt">y =</span> Count, <span class="dt">group =</span> Herd, <span class="dt">color =</span> Herd, <span class="dt">fill =</span> Herd)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Year, <span class="dt">y =</span> N)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Year, <span class="dt">ymin =</span> LCI, <span class="dt">ymax =</span> UCI), <span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="st">  </span><span class="kw">facet_grid</span>(Herd<span class="op">~</span>Age) <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="st">  </span><span class="kw">theme</span>(<span class="dt">strip.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">12</span>),</a>
-<a class="sourceLine" id="cb5-17" data-line-number="17">        <span class="dt">strip.text.y =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">12</span>),</a>
-<a class="sourceLine" id="cb5-18" data-line-number="18">        <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">10</span>))</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Create data frame with observed and estimated counts
+sheep_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">Year =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(ewe_counts<span class="op">$</span>Year, <span class="dv">10</span>),
+                       <span class="dt">Age =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Ewe"</span>, <span class="st">"Lamb"</span>), <span class="dt">each =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(ewe_counts[,<span class="op">-</span><span class="dv">1</span>]))),
+                       <span class="dt">Herd =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(ewe_counts[,<span class="op">-</span><span class="dv">1</span>]), <span class="dt">each =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(ewe_counts)),
+                       <span class="dt">Count =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(ewe_counts[,<span class="op">-</span><span class="dv">1</span>])), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(lamb_counts[,<span class="op">-</span><span class="dv">1</span>]))),
+                       <span class="dt">N =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sheep<span class="op">$</span>mean<span class="op">$</span>N.ewe), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sheep<span class="op">$</span>mean<span class="op">$</span>N.lamb)), 
+                       <span class="dt">LCI =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sheep<span class="op">$</span>q2.<span class="dv">5</span><span class="op">$</span>N.ewe), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sheep<span class="op">$</span>q2.<span class="dv">5</span><span class="op">$</span>N.lamb)),
+                       <span class="dt">UCI =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sheep<span class="op">$</span>q97.<span class="dv">5</span><span class="op">$</span>N.ewe), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sheep<span class="op">$</span>q97.<span class="dv">5</span><span class="op">$</span>N.lamb)))
+
+## Plot herd-specific counts
+<span class="kw">ggplot</span>(sheep_df, <span class="kw">aes</span>(<span class="dt">x =</span> Year, <span class="dt">y =</span> Count, <span class="dt">group =</span> Herd, <span class="dt">color =</span> Herd, <span class="dt">fill =</span> Herd)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Year, <span class="dt">y =</span> N)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Year, <span class="dt">ymin =</span> LCI, <span class="dt">ymax =</span> UCI), <span class="dt">alpha =</span> <span class="fl">0.2</span>) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_grid</span>(Herd<span class="op">~</span>Age) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">strip.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">12</span>),
+        <span class="dt">strip.text.y =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">12</span>),
+        <span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">10</span>))</code></pre></div>
 <p><img src="images/sheep_ssm.png" width="80%" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -399,8 +402,8 @@ Big horn sheep photo courtesy of Bureau of Land Management, via Wikicommons
 <div class="footnotes">
 <hr>
 <ol>
-<li id="fn1"><p>Historically, per capita fecundity (i.e., the average number of offspring produced per female) is denoted <span class="math inline">\(m\)</span> and the survival of those offspring is denoted <span class="math inline">\(S_0\)</span>. Recruitment, which is the average number of juveniles in the population per female is thus <span class="math inline">\(m \times S_0 = F\)</span><a href="#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p>State-space models often need some type of weakly informative priors to estimate parameters (we’re asking <em>a lot</em> out of count data after all) and this one is no different. Trial and error indicated that the prior for <span class="math inline">\(\sigma_{obs}\)</span> needs to be somewhat restrictive in order for the model to converge. In test cases of the this model, <span class="math inline">\(uniform(0,25)\)</span> performed relatively well by ensuring that the model can’t sample unrealistically large values for this parameter while also not appearing to artificially truncate the posterior distribution.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p>Historically, per capita fecundity (i.e., the average number of offspring produced per female) is denoted <span class="math inline">\(m\)</span> and the survival of those offspring is denoted <span class="math inline">\(S_0\)</span>. Recruitment, which is the average number of juveniles in the population per female is thus <span class="math inline">\(m \times S_0 = F\)</span><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>State-space models often need some type of weakly informative priors to estimate parameters (we’re asking <em>a lot</em> out of count data after all) and this one is no different. Trial and error indicated that the prior for <span class="math inline">\(\sigma_{obs}\)</span> needs to be somewhat restrictive in order for the model to converge. In test cases of the this model, <span class="math inline">\(uniform(0,25)\)</span> performed relatively well by ensuring that the model can’t sample unrealistically large values for this parameter while also not appearing to artificially truncate the posterior distribution.<a href="#fnref2">↩</a></p></li>
 </ol>
 </div>
   </div>
@@ -425,7 +428,7 @@ Big horn sheep photo courtesy of Bureau of Land Management, via Wikicommons
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
 </div>
