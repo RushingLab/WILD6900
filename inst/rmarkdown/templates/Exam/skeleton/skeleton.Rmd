@@ -1,0 +1,145 @@
+---
+title: "WILD6900"
+subtitle: "Mid-term exam"
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output: html_document
+
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warning = FALSE, eval = FALSE)
+library(WILD6900)
+```
+
+***
+
+**Due date: 26 February, 2019 before class**
+
+After you have modified the code according to the instructions, change `eval = FALSE` to `eval = TRUE` in the `setup` chunk above (line 12). Once this option is changed, **do not** modify any of the chunk options below.  
+
+Refer to the [instructions for submitted homework assignments](https://rushinglab.github.io/WILD6900/articles/homework.html) prior to submission
+
+***
+
+[Earlier in the semester](https://rushinglab.github.io/WILD6900/articles/poisson_glm.html), we learned about fitting generalized linear models in JAGS by modeling changes in the number of peregrine falcons nesting in the French Jura from 1964 to 2003. In this homework assignment, you will use the same data set to quantify changes in per capita fecundity of this population across the same time period. 
+
+```{r  out.width="50%", eval = TRUE, echo = FALSE}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/7/7b/Peregrine_falcon_%28Australia%29.JPG")
+```
+
+
+Start by loading the data:
+
+```{r}
+data("falcons")
+```
+
+
+The `Eyasses` column provides the total number of fledglings produced by the entire population in each year (i.e., the `Pairs` column). We can think of these values as the product of per capita fecundity $f$ times the number of individuals $N$, plus some random noise. In other words, the *expected* number of eyasses in a given year is $f_tN_t$ but the *observed* number will differ from this expectation due to random process variation. 
+
+**1) What distribution would be appropriate for linking the observed number of eyasses in each year (call that $E_t$) to the per capita fecundity $f_t$ and current population size $N_t$? Type the equation below inside of the double dollar signs (note - the command `\sim` will create the $\sim$ (tilda) symbol)**
+
+$$insert\; equation\; here$$
+
+In the previous lab, we modeled the counts as a non-linear function of year by including polynomial terms in the linear predictor. Given the non-linear changes in abundance, we might expect non-linear changes in fecundity over the same time period. 
+
+**2a) In the equation below, replace `?` with the appropriate link function for modeling per capita fecundity $f_t$ as a linear function of covariates.**  
+
+**2b) On the right hand side of the equation, write the linear predictor assuming we want to model fecundity as a function of $year$ and $year^2$. Use whatever symbols you would like to represent intercept/slope parameters**
+
+$$?(f_t) =$$
+
+
+Next you will need to covert the above model into functioning JAGS code. Complete the code statement below by filling in:
+
+**3a) The appropriate priors distributions for each parameter in the model**  
+
+**3b) The correct likelihood for the model above**
+
+***
+**Important** - in order for the .Rmd file to knit properly, complete the model code below and then manually run the code to create the .jags file (highlighting the chunk below and clicking `Run` or `command + return`). Leave the `eval = FALSE` option set to false so that `knitr` does **not** try to run the code when you knit the document!
+
+***
+
+```{r eval = FALSE}
+sink("fecundity.jags")
+cat("
+model{
+  # Priors
+
+  # Likelihood
+  for(t in 1:nyear){
+
+  }
+} # end of model
+", fill = TRUE)
+sink()
+```
+
+Now create the objects that JAGS needs to fit the model:
+
+**4a) Complete the `jags_data <- list()` object to include all necessary input to run the model**
+
+```{r}
+jags_data <- list()
+```
+
+**4b) Complete the `jags_inits` function to include all necessary input to run the model**
+
+```{r}
+jags_inits <- function(){list()}
+```
+
+
+**4c) Complete the `params <- c()` object to include parameters you would like to monitor**
+
+```{r}
+params <- c()
+```
+
+**4d) Complete the MCMC settings. Run 3 chains for 25,000 iterations, discarding the first 1000 samples as burn-in**
+
+```{r}
+ni <- 
+nc <- 
+nb <- 
+```
+
+Assuming all information above is completed correctly, the following code should run without error:
+
+```{r include = FALSE}
+fecundity_mod <- jagsUI::jags(data = jags_data, inits = jags_inits, 
+                              parameters.to.save = params, model.file = "fecundity.jags",
+                              n.chains = nc, n.iter = ni, n.thin = 1, n.burnin = nb)
+```
+
+
+Check the model for convergence. 
+
+**5) Did the model coverge? Type your answer in __bold__ below, providing at least two sources of evidence for convergence. If the model did not converge, change your settings above and re-run. What did you change?**
+
+
+
+Finally, plot the expected and predicted fecundity over time.  
+
+**6) Complete the following code to add the predicted fecundity for each year from the model, plus the upper and lower 95% credible intervals. Remember that the posterior mean and 2.5/97.5% quantiles for each monitored paramter is stored within the `fecundity_mod` object**
+
+```{r}
+falcons <- dplyr::mutate(falcons, f = , 
+                                  q2.5 = , 
+                                  q97.5 = )
+```
+
+If the above code was run without error, the code below should produce a figure showing changes to the observed and predicted fecundity. 
+
+```{r fig.width=6, fig.height=4}
+ggplot(falcons) + 
+  geom_ribbon(aes(x = Year, ymin = q2.5, ymax = q97.5), fill = "grey90") +
+  geom_path(aes(x = Year, y = f), color = "red") +
+  geom_point(aes(x = Year, y = Eyasses/Pairs)) +
+  scale_y_continuous("Fecundity")
+```
+
+**7) From an ecological perspective, how do you interpret the changes in fecundity over time? For additional context, refer to the plot from the previous lab showing changes in the abundance of nesting pairs over this time period. Type your answer in __bold__ below**
