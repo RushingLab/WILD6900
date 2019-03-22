@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>sim_Nmix — sim_Nmix • WILD6900</title>
+<title>Salamander data — salamanders • WILD6900</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,9 +30,10 @@
 
 
 
-<meta property="og:title" content="sim_Nmix — sim_Nmix" />
+<meta property="og:title" content="Salamander data — salamanders" />
 
-<meta property="og:description" content="Simulate data for the N-mixture model with site-level covariats on lambda and occasion-level covariates on p" />
+<meta property="og:description" content="Repeated counts of Lanza’s Alpine salamander (Salamandra lanzai) from Ficetola et al. (2018)
+Repeated counts of Lanza’s Alpine salamander (Salamandra lanzai) from Ficetola et al. (2018)" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -175,12 +176,9 @@
     <li>
       <a href="../articles/n-mixture1.html">Introduction to N-mixture models</a>
     </li>
-<<<<<<< HEAD
-=======
     <li>
       <a href="../articles/n-mixture2.html">Advanced N-mixture models: Zero-inflation and posterior predictive checks</a>
     </li>
->>>>>>> 0dba94041637b3caefad726901556f33d03a11e2
   </ul>
 </li>
 <li>
@@ -202,52 +200,48 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>sim_Nmix</h1>
+    <h1>Salamander data</h1>
     
-    <div class="hidden name"><code>sim_Nmix.Rd</code></div>
+    <div class="hidden name"><code>salamanders.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Simulate data for the N-mixture model with site-level covariats on lambda and occasion-level covariates on p</p>
+    <p>Repeated counts of Lanza’s Alpine salamander (Salamandra lanzai) from Ficetola et al. (2018)</p>
+<p>Repeated counts of Lanza’s Alpine salamander (Salamandra lanzai) from Ficetola et al. (2018)</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>sim_Nmix</span>(<span class='kw'>J</span> <span class='kw'>=</span> <span class='fl'>200</span>, <span class='kw'>K</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>alpha</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>3</span>), <span class='kw'>beta</span> <span class='kw'>=</span> <span class='fu'><a href='https://www.rdocumentation.org/packages/base/topics/c'>c</a></span>(<span class='fl'>0</span>, -<span class='fl'>5</span>))</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>J:</th>
-      <td><p>number of sites at which counts were made</p></td>
-    </tr>
-    <tr>
-      <th>K:</th>
-      <td><p>number of times that counts were made at each site</p></td>
-    </tr>
-    <tr>
-      <th>alpha:</th>
-      <td><p>vector containing the intercept and slopes of log-linear regression relating abundance to the site covariate A</p></td>
-    </tr>
-    <tr>
-      <th>beta:</th>
-      <td><p>ivector containing the intercept and slopes of logistic-linear regression of detection probability on B</p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <pre class="usage"><span class='no'>salamanders</span>
 
-    <p>List containing the simulated data (y, XN, Xp) and the data-generating values</p>
+<span class='no'>salamanders</span></pre>
+        
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
+
+    <p>A data frame with 7 columns</p><dl class='dl-horizontal'>
+  <dt>ID</dt><dd><p>Plot ID</p></dd>
+  <dt>nsal1</dt><dd><p>Number of salamanders counted on the first occasion</p></dd>
+  <dt>nsal2</dt><dd><p>Number of salamanders counted on the second occasion</p></dd>
+  <dt>nsal3</dt><dd><p>Number of salamanders counted on the third occasion</p></dd>
+  <dt>Hour1</dt><dd><p>Hour that first survey was conducted</p></dd>
+  <dt>Hour2</dt><dd><p>Hour that second survey was conducted</p></dd>
+  <dt>Hour3</dt><dd><p>Hour that third survey was conducted</p></dd>
+</dl>
+    
+    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+
+    <p><a href='https://www.nature.com/articles/s41598-018-28432-8#Sec7'>https://www.nature.com/articles/s41598-018-28432-8#Sec7</a></p>
+<p><a href='https://www.nature.com/articles/s41598-018-28432-8#Sec7'>https://www.nature.com/articles/s41598-018-28432-8#Sec7</a></p>
     
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
       
-      <li><a href="#value">Value</a></li>
+      <li><a href="#format">Format</a></li>
+
+      <li><a href="#source">Source</a></li>
           </ul>
 
   </div>
@@ -259,11 +253,7 @@
 </div>
 
 <div class="pkgdown">
-<<<<<<< HEAD
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
-=======
   <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
->>>>>>> 0dba94041637b3caefad726901556f33d03a11e2
 </div>
       </footer>
    </div>
