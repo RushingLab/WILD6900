@@ -1,0 +1,364 @@
+---
+title: "Lecture 11"
+subtitle: "Estimating abundance: Hierarchical distance sampling"
+author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+output:
+  xaringan::moon_reader:
+    css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
+library(WILD6900)
+# library(gganimate)
+```
+
+## Readings
+
+> [Powell & Gale chp. 19](https://docs.wixstatic.com/ugd/95e73b_873e8bade7934a8388d5e21bee43a2bf.pdf)
+
+#### Also recommended: Kery & Royle *Applied hierarchical modeling in ecology*, chp. 8
+
+---
+## Estimating abundance
+
+#### Unbiased estimates of $\large N$ require estimating $\large p$
+
+#### *Many* methods available:
+
+- Mark-recapture  
+
+- Removal sampling  
+
+- Distance sampling  
+
+- Double observer  
+
+- N-mixture models
+
+---
+## Estimating abundance
+
+#### Unbiased estimates of $\large N$ require estimating $\large p$
+
+#### *Many* methods available:
+
+- Mark-recapture  
+
+- Removal sampling  
+
+- **Distance sampling**  
+
+- Double observer  
+
+- N-mixture models
+
+---
+class: middle, center, inverse
+
+# Distance sampling
+
+---
+## Distance sampling
+
+#### Basic idea
+
+- Assume a population of $\large N$ individuals
+    + $N \sim Poisson(\lambda)$
+    + $n \sim binomial(N, \bar{p})$ 
+    
+--
+- Each of the $N$ individuals is defined by:
+      + $x_i$: the distance from the individual to a transect/point
+      + $y_i$, whether the individual was detected or not during a survey
+      
+--
+- Resonable to assume that detection probability $\large p_i$ is related to $\large x_i$   
+    + i.e., $Pr(y_i = 1|x_i)$  
+
+    + objects that are further away are harder to detect  
+
+
+--
+- Sample only includes individuals with $\large y = 1$
+    + we only see distances $x_1, x_2, x_3, ...,x_n$ 
+    
+---
+## Distance sampling
+
+#### What does a histogram of the observed distances look like?
+
+--
+```{r fig.width=6, fig.height=6, echo = FALSE}
+x <- runif(100, 0, 100)
+sigma <- 30
+p <- exp(-x^2/(2*sigma^2))
+
+y <- rbinom(n = 100, size = 1, prob = p)
+
+x.obs <- x[y==1]
+hist(x.obs)
+```
+
+
+---
+## Distance sampling
+
+#### What is the probability of $\large x$ given $\large y = 1$? 
+
+$$\Large [x|y=1]=\frac{[y=1|x][x]}{[y=1]}$$
+
+--
+- $\large [y=1|x]$ is a user-specified specified detection function
+    + usually denoted $g(x, \theta)$
+<br/>  
+
+
+--
+- $\large [x]$ is the *population distribution of distances*
+<br/>  
+
+
+--
+- $\large [y=1]$ is the average detection probabilty over some interval $\large [0,B]$
+    + aka $\bar{p}$
+    + $\large \int_x^Bg(x,\theta)[x]dx$
+    
+
+---
+## Distance sampling
+
+#### One way to think about distance sampling is as a type of state-space model
+
+1) The observation model is $\large g(x, \theta)$
+
+- defined as the probability of detecting individuals as a function of distance
+
+- describes how individuals **appear in the sample**
+
+2) The state model is $\large [x]$
+
+- defined as the probability that an individual is distance $x$ from the observer
+
+- directly related to how individuals are distributed across the landscape
+
+---
+## Distance sampling
+
+#### Models of detection probability
+
+- Must be monotonically decreasing 
+
+- Common models:
+    + half normal: $\large e^{-x^2/2\sigma^2}$
+    + negative exponential: $\large e^{-x/\sigma}$
+    + hazard rate: $\large 1-e^{(x/\sigma)^{-b}}$
+    
+- Each model implies different relationship between $p$ and $x$
+    + often multiple models are fit and compared using model selection
+
+- All assume $g(0) = 1$ (detection is perfect at the transect)
+
+- $\large \sigma$ defines shape of curve; must be estimated as a parameter in the model
+
+---
+## Distance sampling
+
+#### How do we define the distribution $\large [x]$?
+
+- Assume a line transect with length $L$ and maximum detection distance $B$
+
+```{r out.width = "80%", fig.align='center'}
+knitr::include_graphics("figs/distance_transect.png")
+```
+
+--
+- The area of the search are is $L \times 2B$
+
+
+--
+- If individuals are distributed uniformly with the sample region, then distance to the transect also has a uniform distribution
+$$\Large [x] \sim uniform(0, B)$$
+
+---
+class: inverse, middle, center
+
+# Data augmentation
+
+---
+## Data augmentation
+
+### Imagine an occupancy study:
+
+- $\large M$ sites are surveyed  
+    + $\large N$ sites are occupied $\large (z = 1)$
+    + $\large M - N$ sites are unoccupied $\large (z = 0)$  
+
+--
+- species is detected $(y_i=1)$ at $n$ sites
+    + species is not detected $(y_i=0)$ at $M-n$ sites  
+    
+--
+$$\Large y_i \sim Bernoulli(z_i p)$$
+
+---
+## Data augmentation
+
+### Imagine an occupancy study:
+
+#### How many sites are actually occupied $\large (N)$?  
+
+- if $\large \psi$ is the probability of occupancy
+
+$$\Large z_i \sim Bernoulli(\psi)$$
+
+--
+- and
+
+$$\Large N = \sum_{i=1}^M z_i$$
+
+---
+## Data augmentation
+
+#### These ideas can be applied to distance sampling
+
+#### Imagine a distance sampling study: 
+
+- $\large n$ individuals were detected during the study
+
+--
+- $\large N-n$ individuals were not detected
+    + how do we know how many individuals were not detected?  
+
+--
+- Add $\large M-n$ individuals to the data
+    + Choose $M \gt \gt N$
+    + All of these "augmented" individuals have $\large y=0$
+    + Distances $\large x$ for augmented individuals are `NA` but have $uniform(0, B)$ prior
+
+--
+$$\large z_i \sim Bernoulli(\psi)$$
+
+$$\large N = \sum_{i = 1}^M z_i$$
+
+---
+## Distance sampling
+
+#### Bayesian formulation
+
+- Process model:
+
+$$\large z_i \sim Bernoulli(\psi)$$
+$$\large x_i \sim uniform(0, B)$$
+
+- Observation model:
+
+$$\large p_i = g(x_i, \theta)$$
+
+$$\large y_i \sim Bernoulli(z_i p_i)$$
+
+- Derived variables
+
+$$\large N = \sum_{i=1}^M z_i$$
+
+$$\large D = \frac{N}{A}$$
+
+---
+## Distance sampling
+
+```{r eval = FALSE, echo = TRUE}
+model{
+  # Priors 
+  sigma ~ dunif(0, 1000)
+  psi ~ dbeta(1, 1)
+  
+  # Likelihood
+  for(i in 1:M){
+    z[i] ~ dbern(psi)
+    x[i] ~ dunif(0, B)
+    
+    ## Observation model
+    log(p[i]) <- -((x[i] * x[i])/(2*sigma*sigma))
+    y[i] ~ dbern(p[i] * z[i])
+  }
+  
+  # Derived variables
+  N <- sum(z[A:M])
+  D <- N/A
+}
+```
+
+
+---
+## Distance sampling
+
+#### Binned data
+
+- Often, distances are recorded into $\large H$ "bins" rather than continuous $\large x$
+    + 0-25m  
+    + 26-50m  
+    + 51-75m  
+    + 76-100m  
+
+--
+- $\large y_h$ is the number of individuals detected in bin $\large h$
+    + $\large \mathbf y = (y_1, y_2, ...,y_H)$
+    + $\large n = \sum y_h$  
+
+--
+$$\Large \mathbf y|N \sim multinomial(N, \{\pi_h\})$$
+
+---
+## Distance sampling
+
+#### Binned data
+
+- $\large \{\pi_h\}$ is a vector of $H$ *cell probabilities*
+    + "the probability that an individual occurs and is detected in distance bin $h$"
+    + $\pi_h = \bar{p}_h \psi_h$
+
+--
+$$\Large \bar{p}_h = \int_{x \in h}Pr(y=1|x)/(b_{h+1}-b_h)dx$$
+
+$$\Large \psi_h = (b_{h+1}-b_h)/B$$
+
+$$\Large \pi_h = (1/B) \int_{x \in h}Pr(y=1|x, x \in h)$$ 
+
+---
+## Distance sampling
+
+```{r eval = FALSE, echo = TRUE}
+model{
+  # Priors 
+  sigma ~ dunif(0, 1000)
+  psi ~ dbeta(1, 1)
+  
+  # Likelihood
+  for(h in 1:H){
+    log(p[h]) <- -(midpt[h]*midpt[h])/(2*sigma*sigma)
+    pi[j] <- delta/B
+  }
+  
+  for(i in 1:M){
+    z[i] ~ dbern(psi)
+    x[i] ~ dunif(0, B)
+    
+    ## Observation model
+    p[i] <- exp(-((x[i] * x[i])/(2*sigma*sigma)))
+    dclass[i] ~ dcat(pi[])
+    y[i] ~ dbern(p[dclass[i]] * z[i])
+  }
+}
+```
+
+---
+## Distance sampling
+
+### Assumptions
+

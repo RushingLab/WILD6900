@@ -61,6 +61,18 @@ lamb_counts <- dplyr::select(lamb_counts, -X)
 
 salamanders <- read.csv("data-raw/salamander.csv")
 
+### Exam data ----
+#### Questions 1
+
+J <- 8
+mu.alpha <- 400   # Overall mean AGB
+sigma.alpha <- 25 # standard deviation of group-level means
+
+alpha <- rnorm(J, mu.alpha, sigma.alpha)
+
+beta <- 12     # Slope of rainfall on AGB
+sigma <- 30    # Residual standard deviation
+
 
 usethis::use_data(WILD6900_colors, SurvPriorData, bbs_data, bcr, falcons, tits, pelicans, ewe_counts, lamb_counts, salamanders, overwrite = TRUE)
 
