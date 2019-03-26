@@ -22,5 +22,7 @@ Imports:
     maps,
     mapproj,
     lubridate,
-    abind
+    abind,
+    ggforce,
+    glue
 RoxygenNote: 6.1.1

@@ -42,6 +42,8 @@ navbar:
           href: articles/Lecture9/Lecture9.html
         - text: "Lecture 10: Estimating abundance: N-mixture models"
           href: articles/Lecture10/Lecture10.html
+        - text: "Lecture 11: Estimating abundance: Hierarchical distance sampling"
+          href: articles/Lecture11/Lecture11.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:

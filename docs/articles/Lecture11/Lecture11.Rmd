@@ -179,7 +179,7 @@ knitr::include_graphics("figs/distance_transect.png")
 ```
 
 --
-- The area of the search are is $L \times 2B$
+- The area of the search is $L \times 2B$
 
 
 --
@@ -298,67 +298,114 @@ model{
 ---
 ## Distance sampling
 
-#### Binned data
+```{r include = FALSE}
+N <- 1000
+sigma <- 1
+B <- 3
+u1 <- runif(N, 0, 2*B)
+u2 <- runif(N, 0, 2*B)
 
-- Often, distances are recorded into $\large H$ "bins" rather than continuous $\large x$
-    + 0-25m  
-    + 26-50m  
-    + 51-75m  
-    + 76-100m  
+d <- sqrt((u1-B)^2 + (u2 - B)^2)
+d2 <- d[d <= B]
+
+N.real <- length(d2)
+
+p <- exp(-d2*d2/(2*sigma^2))
+
+y <- rbinom(N.real, 1, p)
+
+ptd <- data.frame(distance = c(d2, d2[y==1]),
+                  group = c(rep("True", N.real), rep("Observed", length(d2[y==1]))))
+
+circ_df <- data.frame(x = u1[d <= B],
+                      y = u2[d <= B],
+                      p = p)
+```
+
+#### Point transect data
+
+- With line transect data & assumption of uniform distribution:
+
+$$\Large Pr(x)= 1/B$$
 
 --
-- $\large y_h$ is the number of individuals detected in bin $\large h$
-    + $\large \mathbf y = (y_1, y_2, ...,y_H)$
-    + $\large n = \sum y_h$  
+- But with circular point counts, distances are not uniformly distributed because area gets bigger as $x$ gets bigger:
 
---
-$$\Large \mathbf y|N \sim multinomial(N, \{\pi_h\})$$
-
----
-## Distance sampling
-
-#### Binned data
-
-- $\large \{\pi_h\}$ is a vector of $H$ *cell probabilities*
-    + "the probability that an individual occurs and is detected in distance bin $h$"
-    + $\pi_h = \bar{p}_h \psi_h$
-
---
-$$\Large \bar{p}_h = \int_{x \in h}Pr(y=1|x)/(b_{h+1}-b_h)dx$$
-
-$$\Large \psi_h = (b_{h+1}-b_h)/B$$
-
-$$\Large \pi_h = (1/B) \int_{x \in h}Pr(y=1|x, x \in h)$$ 
-
----
-## Distance sampling
-
-```{r eval = FALSE, echo = TRUE}
-model{
-  # Priors 
-  sigma ~ dunif(0, 1000)
-  psi ~ dbeta(1, 1)
-  
-  # Likelihood
-  for(h in 1:H){
-    log(p[h]) <- -(midpt[h]*midpt[h])/(2*sigma*sigma)
-    pi[j] <- delta/B
-  }
-  
-  for(i in 1:M){
-    z[i] ~ dbern(psi)
-    x[i] ~ dunif(0, B)
-    
-    ## Observation model
-    p[i] <- exp(-((x[i] * x[i])/(2*sigma*sigma)))
-    dclass[i] ~ dcat(pi[])
-    y[i] ~ dbern(p[dclass[i]] * z[i])
-  }
-}
+$$\Large Pr(x) = \frac{2x}{B^2}$$
+```{r, fig.height=4, fig.width=4}
+library(ggforce)
+circles <- data.frame(
+  x0 = rep(3, 3),
+  y0 = rep(3, 3),
+  r = 1:3
+)
+ggplot() + 
+  geom_circle(aes(x0 = x0, y0 = y0, r = r), data = circles) +
+  geom_point(data = circ_df, aes(x, y, color = p), size = 1) +
+  coord_fixed()
 ```
 
 ---
 ## Distance sampling
 
-### Assumptions
+#### Observed vs. true distances
+
+```{r, fig.height=5, fig.width=7}
+ggplot(ptd, aes(x = distance, color = group)) + geom_freqpoly(size = 1.5)
+```
+
+
+---
+## Putting the *hierarchy* in HDS
+
+#### Typical distance sampling data
+
+```{r}
+library(kableExtra)
+N_df <- data.frame(Transect = c(1, 2, 3, "S"),
+                   dclass1 = c(2, 3, 2, 4),
+                   dclass2 = c(0, 0, 1, 2),
+                   dclass3 = c(1,0, 1, 0),
+                   X1 = c("x11", "x21", "x31", "xs1"),
+                   XS = c("x12", "x22", "x32", "xs2"))
+
+knitr::kable(N_df,format = 'html') %>%
+  kable_styling(full_width = F)
+```
+
+---
+## Putting the *hierarchy* in HDS
+
+#### Model structure - binned data
+
+$$\Large N_s \sim Poisson(\lambda_s)$$
+
+$$\Large log(\lambda_s) = \beta_0 + \beta1 x_{s1}$$
+--
+$$\Large (y_{s1}, y_{s2}, y_{s3}) \sim multinomial(N_s, \{\pi_s\})$$
+--
+$$\Large \pi_{s,h}= \underbrace{\bar{p}_h}_{average\; detection\; prob} \underbrace{\frac{b_{h+1}-b_h}{B}}_{prob. \; x \; in\; h}$$
+
+$$\Large log(\sigma_s) = \alpha_0 + \alpha_1 x_{s2}$$
+
+---
+## Putting the *hierarchy* in HDS
+
+#### Model structure - data augmentation
+
+$$\Large N_x \sim Poisson(\lambda_s)$$
+
+$$\Large log(\lambda_s) = \beta_0 + \beta1 x_{s1}$$
+
+--
+$$\Large z_i \sim Bermoulli(\psi)$$
+$$\Large \psi = \frac{\sum_{s=1}^S\lambda}{M}$$
+
+--
+$$\Large y_i \sim Bernoulli(z_ip_i)$$
+
+$$\Large p_i = e^{-d_i^2/2\sigma^2_{s[i]}}$$
+
+$$\Large log(\sigma_s) = \alpha_0 + \alpha_1 x_{s2}$$
+
 

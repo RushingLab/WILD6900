@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="author" content="   WILD6900 (Spring 2019)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
     <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
   </head>
@@ -170,7 +171,7 @@ class: middle, center, inverse
 &lt;img src="figs/distance_transect.png" width="80%" style="display: block; margin: auto;" /&gt;
 
 --
-- The area of the search are is `\(L \times 2B\)`
+- The area of the search is `\(L \times 2B\)`
 
 
 --
@@ -290,66 +291,114 @@ model{
 ---
 ## Distance sampling
 
-#### Binned data
 
-- Often, distances are recorded into `\(\large H\)` "bins" rather than continuous `\(\large x\)`
-    + 0-25m  
-    + 26-50m  
-    + 51-75m  
-    + 76-100m  
 
---
-- `\(\large y_h\)` is the number of individuals detected in bin `\(\large h\)`
-    + `\(\large \mathbf y = (y_1, y_2, ...,y_H)\)`
-    + `\(\large n = \sum y_h\)`  
+#### Point transect data
+
+- With line transect data &amp; assumption of uniform distribution:
+
+`$$\Large Pr(x)= 1/B$$`
 
 --
-`$$\Large \mathbf y|N \sim multinomial(N, \{\pi_h\})$$`
+- But with circular point counts, distances are not uniformly distributed because area gets bigger as `\(x\)` gets bigger:
+
+`$$\Large Pr(x) = \frac{2x}{B^2}$$`
+&lt;img src="Lecture11_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Distance sampling
 
-#### Binned data
+#### Observed vs. true distances
 
-- `\(\large \{\pi_h\}\)` is a vector of `\(H\)` *cell probabilities*
-    + "the probability that an individual occurs and is detected in distance bin `\(h\)`"
-    + `\(\pi_h = \bar{p_h} \psi_h\)`
+&lt;img src="Lecture11_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Putting the *hierarchy* in HDS
+
+#### Typical distance sampling data
+
+&lt;table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Transect &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dclass1 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dclass2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; dclass3 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; X1 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; XS &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; x11 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; x12 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; x21 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; x22 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; x31 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; x32 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; S &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; xs1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; xs2 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+## Putting the *hierarchy* in HDS
+
+#### Model structure - binned data
+
+`$$\Large N_s \sim Poisson(\lambda_s)$$`
+
+`$$\Large log(\lambda_s) = \beta_0 + \beta1 x_{s1}$$`
+--
+`$$\Large (y_{s1}, y_{s2}, y_{s3}) \sim multinomial(N_s, \{\pi_s\})$$`
+--
+`$$\Large \pi_{s,h}= \underbrace{\bar{p}_h}_{average\; detection\; prob} \underbrace{\frac{b_{h+1}-b_h}{B}}_{prob. \; x \; in\; h}$$`
+
+`$$\Large log(\sigma_s) = \alpha_0 + \alpha_1 x_{s2}$$`
+
+---
+## Putting the *hierarchy* in HDS
+
+#### Model structure - data augmentation
+
+`$$\Large N_x \sim Poisson(\lambda_s)$$`
+
+`$$\Large log(\lambda_s) = \beta_0 + \beta1 x_{s1}$$`
 
 --
-`$$\Large pi_h = (1/B) \int_{x \in h}Pr(y=1|x, x \in h)$$` 
+`$$\Large z_i \sim Bermoulli(\psi)$$`
+`$$\Large \psi = \frac{\sum_{s=1}^S\lambda}{M}$$`
 
----
-## Distance sampling
+--
+`$$\Large y_i \sim Bernoulli(z_ip_i)$$`
 
+`$$\Large p_i = e^{-d_i^2/2\sigma^2_{s[i]}}$$`
 
-```r
-model{
-  # Priors 
-  sigma ~ dunif(0, 1000)
-  psi ~ dbeta(1, 1)
-  
-  # Likelihood
-  for(h in 1:H){
-    log(p[h]) &lt;- -(midpt[h]*midpt[h])/(2*sigma*sigma)
-    pi[j] &lt;- delta/B
-  }
-  
-  for(i in 1:M){
-    z[i] ~ dbern(psi)
-    x[i] ~ dunif(0, B)
-    
-    ## Observation model
-    p[i] &lt;- exp(-((x[i] * x[i])/(2*sigma*sigma)))
-    dclass[i] ~ dcat(pi[])
-    y[i] ~ dbern(p[dclass[i]] * z[i])
-  }
-}
-```
-
----
-## Distance sampling
-
-### Assumptions
+`$$\Large log(\sigma_s) = \alpha_0 + \alpha_1 x_{s2}$$`
     </textarea>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
