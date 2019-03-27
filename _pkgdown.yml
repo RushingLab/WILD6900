@@ -44,6 +44,8 @@ navbar:
           href: articles/Lecture10/Lecture10.html
         - text: "Lecture 11: Estimating abundance: Hierarchical distance sampling"
           href: articles/Lecture11/Lecture11.html
+        - text: "Lecture 12: Estimating abundance: Occupancy modeling"
+          href: articles/Lecture12/Lecture12.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:
