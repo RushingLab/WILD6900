@@ -189,7 +189,7 @@ model{
 model{
   alpha0 ~ dnorm(0, 0.1)
   alpha1 ~ dnorm(0, 0.1)
-  mu.p ~ dnorm(0, 0.1)
+  mu.lp ~ dnorm(0, 0.1)
   tau.p ~ dunif(0, 10)
 
   for(i in 1:M){

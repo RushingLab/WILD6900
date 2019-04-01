@@ -1,0 +1,146 @@
+---
+title: "Vignette Title"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r}
+## Number of species (richness)
+R <- 120
+
+## Number of sites surveyed 
+J <- 15
+
+
+## Number of visits per site
+K <- 3
+
+## Mean occupancy probability
+mu.psi <- 0.6
+lmu.psi <- qlogis(mu.psi)
+sd.psi <- 1.25
+tau.psi <- 1/sd.psi^2
+
+## Species-specific occupancy probability
+lpsi <- rnorm(n = R, mean = lmu.psi, sd = sd.psi)
+psi <- plogis(lpsi)
+# hist(psi)
+
+
+## True occupancy at each sites
+z <- matrix(NA, nrow = R, ncol = J)
+
+for(i in 1:R){
+  z[i, ] <- rbinom(n = N, size = 1, prob = psi[i])
+}
+
+## Mean detection probability
+mu.p <- 0.2
+lmu.p <- qlogis(mu.p)
+sd.p <- 1
+tau.p <- 1/sd.p^2
+
+## Species-specific occupancy probability
+lp <- rnorm(n = R, mean = lmu.p, sd = sd.p)
+p <- plogis(lp)
+# hist(p)
+
+
+## Observed occupancy at each sites
+y <- matrix(NA, nrow = R, ncol = J)
+
+for(i in 1:R){
+  for(j in 1:J){
+      y[i, j] <- rbinom(n = 1, size = K, prob = z[i,j] * p[i])
+  }
+}
+
+## Remove species that were never observed
+no <- which(apply(y, 1, max)==0)
+y <- y[-no,]
+
+## 
+nAug <- 40
+aug.y <- matrix(0, nrow = nAug, ncol = J)
+
+y.aug <- rbind(y, aug.y)
+
+
+```
+
+
+```{r}
+sink("inst/jags/Mult_spp_occ.jags")
+cat("
+model{
+  # Priors
+  omega ~ dbeta(1, 1)
+  
+  for(i in 1:M){
+    lpsi[i] ~ dnorm(mu.lpsi, tau.psi)
+    logit(psi[i]) <- lpsi[i]
+
+    lp[i] ~ dnorm(mu.lp, tau.p)
+    logit(p[i]) <- lp[i]
+  }
+
+  mu.psi ~ dbeta(1, 1)
+  mu.lpsi <- log(mu.psi) - log(1 - mu.psi)
+
+  sd.psi ~ dgamma(0.01, 0.01)
+  tau.psi <- pow(sd.psi, -2)
+
+  mu.p ~ dbeta(1, 1)
+  mu.lp <- log(mu.p) - log(1 - mu.p)
+
+  sd.p ~ dgamma(0.01, 0.01)
+  tau.p <- pow(sd.p, -2)
+
+  for(i in 1:M){
+   x[i] ~ dbern(omega)
+
+    for(j in 1:J){
+      z[i, j] ~ dbern(x[i] * psi[i])
+
+      y[i, j] ~ dbinom(z[i, j] * p[i], K)
+    }
+  }
+
+  R <- sum(x[1:M])
+}
+    ", fill = TRUE)
+sink()
+```
+
+
+```{r}
+jags.data <- list(M = dim(y.aug)[1], J = dim(y.aug)[2], K = K, y = y.aug)
+
+z.init <- y.aug
+z.init[z.init > 0] <- 1
+
+inits <- function(){list(omega = runif(1), mu.psi = runif(1), mu.p = runif(1), 
+                         sd.psi = runif(1, 0, 1), sd.p = runif(1, 0, 1),
+                         z = z.init,
+                         x = apply(z.init, 1, max))}
+
+params <- c("mu.psi", "mu.p", "sd.psi", "sd.p", "omega", "R")
+
+fit <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = params, 
+                    model.file = "inst/jags/Mult_spp_occ.jags", 
+                    n.chains = 3, n.iter = 50000, n.burnin = 2500, n.thin = 1, 
+                    parallel = TRUE)
+print(fit)
+```
