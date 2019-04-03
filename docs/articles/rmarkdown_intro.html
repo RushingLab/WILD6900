@@ -150,6 +150,9 @@
     <li>
       <a href="../articles/n-mixture2.html">Advanced N-mixture models: Zero-inflation and posterior predictive checks</a>
     </li>
+    <li>
+      <a href="../articles/multi_spp_occ.html">Estimating species richness using hierarchical occupancy models</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -174,7 +177,7 @@
       <h1>Introduction to R Markdown</h1>
             <h3 class="subtitle">WILD6900</h3>
             
-            <h4 class="date">updated on 2019-03-27</h4>
+            <h4 class="date">updated on 2019-04-01</h4>
       
       
       <div class="hidden name"><code>rmarkdown_intro.Rmd</code></div>
@@ -279,7 +282,7 @@ output: html_document
 <pre><code>title: "WILD6900"
 subtitle: "Homework 1"
 author: "YOUR NAME HERE"
-date: "2019-03-27"
+date: "2019-04-01"
 output: 
   pdf_document:
     latex_engine: xelatex
@@ -326,7 +329,7 @@ This is the next line</code></pre>
 <div id="code-type" class="section level2">
 <h2 class="hasAnchor">
 <a href="#code-type" class="anchor"></a>Code type</h2>
-<p>To highlight code (note, this does not actually insert functioning code, just formats text to show that it is code rather than plain text), surround the text with back ticks ": <code><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean()</a></code></p>
+<p>To highlight code (note, this does not actually insert functioning code, just formats text to show that it is code rather than plain text), surround the text with back ticks “: <code><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean()</a></code></p>
 <p>You can include muliple lines of code by including three back ticks on the line before the code and then three back ticks on the line after the code:</p>
 <pre><code>Multiple lines of code
 look like 
@@ -337,14 +340,10 @@ this</code></pre>
 <a href="#bulleted-lists" class="anchor"></a>Bulleted lists</h2>
 <ul>
 <li><p>Bulleted lists can be included by starting a line with an asterisk</p></li>
-<li>
-<p>You can also start the lines with a single dash <code>-</code></p>
-<ul>
+<li><p>You can also start the lines with a single dash <code>-</code></p></li>
 <li>for sub-bullets, indent the line and start it with <code>+</code>
 <ul>
 <li>for sub-sub-bullets, indent twice (press <code>tab</code> two times) and start with <code>-</code>
-</li>
-</ul>
 </li>
 </ul>
 </li>
@@ -472,8 +471,8 @@ opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
 <h3 class="hasAnchor">
 <a href="#tables" class="anchor"></a>Tables</h3>
 <p>To nicely print matrices and data frames in R Markdown document, use the <code><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable()</a></code> function:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(knitr)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(mtcars))</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(knitr)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(mtcars))</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th></th>
@@ -656,7 +655,7 @@ opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
 </div>
