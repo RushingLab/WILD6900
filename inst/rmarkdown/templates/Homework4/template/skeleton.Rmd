@@ -1,0 +1,137 @@
+---
+title: "WILD6900"
+subtitle: "Homework 4: Integrated count-occupancy model"
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output: html_document
+
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warning = FALSE, eval = FALSE)
+library(WILD6900)
+```
+
+***
+
+**Due date: 11 April, 2019 before class**
+
+Refer to the [instructions for submitting homework assignments](https://rushinglab.github.io/WILD6900/articles/homework.html) prior to submission
+
+***
+
+In this homework assignment, you will practice simulation data and fitting a dynamic occupancy model. In the chunk below, translate the "psuedo-code" steps into working code. Then following directions to write and fit the JAGS model to the data. 
+
+```{r sim_data}
+N <- 100
+K <- 3
+nYears <- 5
+
+mu.psi <- 0.65
+alpha0 <- qlogis(mu.psi)
+alpha1 <- 0.65
+
+mu.epsilon <- 0.2
+beta0 <- qlogis(mu.epsilon)
+beta1 <- 0.15
+
+mu.gamma <- 0.3
+delta0 <- qlogis(mu.gamma)
+delta1 <- 0.3
+
+mu.p <- 0.4
+mu.lp <- qlogis(mu.p)
+sd.p <- 0.1
+tau.p <- 1/(sd.p * sd.p)
+
+X1 <- rnorm(N)
+X2 <- rnorm(N)
+
+z <- matrix(NA, nrow = N, ncol = nYears)
+
+psi <- plogis(alpha0 + alpha1*X1)
+z[,1] <- rbinom(N, 1, psi)
+
+eps <- plogis(beta0 + beta1*X2)
+gamma <- plogis(delta0 + delta1*X1)
+
+for(t in 2:nYears){
+  z[,t] <- rbinom(N, 1, z[,t-1] * (1 - eps) + (1-z[,t-1])*gamma)
+}
+
+y <- array(NA, dim = c(N, nYears, K))
+
+for(i in 1:N){
+  for(j in 1:K){
+    lp <- rnorm(1, mu.lp, sd.p)
+    y[i,j,] <- rbinom(K, 1, plogis(lp) * z[i, j])
+  }
+}
+```
+
+
+```{r eval = FALSE}
+sink("DynOcc.jags")
+cat("
+model{
+    # Priors
+    alpha0 ~ dnorm(0, 0.1)
+    alpha1 ~ dnorm(0, 0.1)
+
+    beta0 ~ dnorm(0, 0.1)
+    beta1 ~ dnorm(0, 0.1)
+
+    delta0 ~ dnorm(0, 0.1)
+    delta1 ~ dnorm(0, 0.1)
+
+    mu.lp ~ dnorm(0, 0.1)
+    sd.p ~ dunif(0, 10)
+    tau.p <- 1/(sd.p * sd.p)
+
+    # Likelihood
+    for(i in 1:N){
+     z[i,1] ~ dbern(psi[i])
+     logit(psi[i]) <- alpha0 + alpha1 * X1[i]
+
+     for(k in 1:K){
+       logit(p[i, 1, k]) <- lp[i, 1, k] 
+       lp[i, 1, k] ~ dnorm(mu.lp, tau.p)
+       y[i,1,k] ~ dbern(z[i,1] * p[i, 1, k])
+     }
+
+     logit(eps[i]) <- beta0 + beta1 * X2[i]
+     logit(gamma[i]) <- delta0 + delta1 * X1[i]
+
+     for(t in 2:nYears){
+       z[i, t] ~ dbern(z[i, t - 1] * (1 - eps[i]) + (1 - z[i, t-1]) * gamma[i])
+
+        for(k in 1:K){
+          logit(p[i, t, k]) <- lp[i, t, k] 
+          lp[i, t, k] ~ dnorm(mu.lp, tau.p)
+          y[i,t,k] ~ dbern(z[i,t] * p[i, t, k])
+        }
+     }
+    }
+}
+    ", fill = TRUE)
+sink()
+```
+
+
+```{r fit}
+jags.data <- list(N = N, nYears = nYears, K = K, y = y, X1 = X1, X2 = X2)
+
+inits <- function(){list(alpha0 = rnorm(1), alpha1 = rnorm(1),
+                         beta0 = rnorm(1), beta1 = rnorm(1),
+                         delta0 = rnorm(1), delta1 = rnorm(1),
+                         mu.lp = rnorm(1), sd.p = runif(1),
+                         z = z)}
+
+parameters <- c("alpha0", "alpha1", "beta0", "beta1", "delta0", "delta1", "mu.lp", "sd.p")
+
+fit <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = parameters,
+                    model.file = "DynOcc.jags", n.chains = 3, n.iter = 20000, n.burnin = 5000, 
+                    n.thin = 1, parallel = TRUE)
+print(fit)
+```
