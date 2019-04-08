@@ -1,0 +1,168 @@
+---
+title: "WILD6900"
+subtitle: "Homework 3: Estimating fecundity"
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output: html_document
+
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warning = FALSE, eval = FALSE)
+library(WILD6900)
+```
+
+***
+
+**Due date: 4 April, 2019 before class**
+
+After you have modified the code according to the instructions, change `eval = FALSE` to `eval = TRUE` in the `setup` chunk above (line 12). Once this option is changed, **do not** modify any of the chunk options below.  
+
+Refer to the [instructions for submitted homework assignments](https://rushinglab.github.io/WILD6900/articles/homework.html) prior to submission
+
+***
+
+For this assignment, you need to translate the "psuedo-code" below into a working simulation study. The objective is to use simulated data to investigate how the number of survey occasions influences uncertainty about $\psi$, $p$, and the power to detect whether occupancy probability differs among habitats.  
+
+
+First, you will simulate the "full" data set, which includes the true state (0/1) of each study site and the observed state (0/1) for each of the $K$ occasions:
+
+```{r data_sim}
+set.seed(53) # Do not change
+
+### 1) Create variables to store the number of sites per habitat type (set to 150) and the number of visits (set to 10)
+
+### 2) Set the habitat-specific occupancy probabilities (set psi1 to 0.75 and psi2 to 0.6)
+
+### 3) Set the detection probability (constant for both habitats, set to 0.4)
+
+### 4a) Randomly generate the true state of sites in habitat 1 (hint - the rbinom function with size = 1 will generate n values from a Bernoulli distribution)
+
+### 4b) Randomly generate the true state of sites in habitat 2 
+
+### 4c) Combine the objects you just created into a single vector indicating the true state of all 150 sites
+
+### 4d) Create a vector indicating whether each point was in habitat type 1 (value = 1) or habitat type 2 (value = 2)
+
+### 5a) Create an empty NxK matrix to store the observations for each site
+
+### 5b) Loop over each site to randomly generate observations 
+####    hint 1: use the rbinom function to fill in the entire row of observations for each site with a single line of code)
+####    hint 2: Remember that we can use the state-space formulation to ensure that sites with z = 0 always have y = 0
+
+```
+
+With the simulated data created, you're now ready to write the JAGS model. In the model, be sure to:
+
+- Create separate priors for `psi[1]` and `psi[2]`
+
+- Inside the likelihood, use the habitat type vector you created in step 4d to index the correct `psi` value for each site
+
+- Create a derived variable called `delta_psi` that is the difference between `psi[1]` and `psi[2]`
+
+***
+**Important** - in order for the .Rmd file to knit properly, complete the model code below and then manually run the code to create the .jags file (highlighting the chunk below and clicking `Run` or `command + return`). Leave the `eval = FALSE` option set to false so that `knitr` does **not** try to run the code when you knit the document!
+
+***
+
+```{r eval = FALSE}
+sink("Occ.jags")
+cat("
+model{
+  # Priors
+
+  # Likelihood
+  for(i in 1:M){
+
+  }
+} # end of model
+", fill = TRUE)
+sink()
+```
+
+Now create the objects that JAGS needs to fit the full model. One thing that is key to getting this model to run is providing good initial values for `x[i]`. To do this, use the `apply` function to set the initial value of `x` as a vector containing the maximum observed value at each site:
+
+
+```{r}
+## Bundle data
+jags_data <- list()
+
+## Initial values; be sure to include initial values for x
+jags_inits <- function(){list()}
+
+## Parameters to model
+params <- c()
+
+## MCMC settings
+ni <- 
+nc <- 
+nb <- 
+```
+
+Assuming all information above is completed correctly, the following code should run without error:
+
+```{r include = FALSE}
+fit_full <- jagsUI::jags(data = jags_data, inits = inits, 
+                         parameters.to.save = params, model.file = "occ.jags",
+                         n.chains = nc, n.iter = ni, n.thin = 1, n.burnin = nb)
+```
+
+
+Be sure to check the model for convergence and refit if necessary 
+
+### "Power analysis" - detecting differences in $\psi$ as a function of $K$
+
+In the chunks below, refit the same model as you did above but this time only using a subset of the occasions. Rather than re-simulating the data, you can simply change the $k$ loop in JAGS so that you only loop over a subset of the columns in $y$. In fact, you don't even have the change the model code at all $-$ simply change the value of $K$ in the data object. This trick not only saves you from having to re-simulate the data, it ensures that the true state $z$ is the same for all of the data you analyze, ensuring that the only source of variation between models is the number of observations. 
+
+In each chunk, copy whatever lines of code you need to re-bundle the data and refit the model, reducing the number of occasions by 1 in each chunk (if you're feeling clever you can do this using a loop instead). Be sure to change the name of the fitted model objects so you end up with 9 separate model objects. 
+
+```{r k9}
+# Enter code for k = 9 here
+```
+
+```{r k8}
+# Enter code for k = 8 here
+```
+
+```{r k7}
+# Enter code for k = 7 here
+```
+
+```{r k6}
+# Enter code for k = 6 here
+```
+
+```{r k5}
+# Enter code for k = 5 here
+```
+
+```{r k4}
+# Enter code for k = 4 here
+```
+
+```{r k3}
+# Enter code for k = 3 here
+```
+
+```{r k2}
+# Enter code for k = 2 here
+```
+
+Finally, make a plot showing the estimated $\Delta_{\psi}$ for each model as a function of $K$. This plot should be "publication quality" so be sure that:
+
+1) The axes are labeled correctly
+
+2) The graph shows both the posterior mean of $\Delta_{\psi}$ as well as the 95% credible interval
+
+3) There are horizontal lines showing the true $\Delta_{\psi}$ and 0
+
+```{r fig.width=6, fig.height=6}
+# Enter figure code here
+```
+
+### Questions
+
+**1) How did your estimate of $\Delta_{\psi}$ change as the number of occasions increased? Provide a brief explanation for the link between $K$ and $\Delta_{\psi}$**
+
+**2) This not a very good power analysis because we just looked at a single realization of a stochastic process and because we only simulated data under a single combination of parameters. Briefly describe how you would design a more informative  analysis to examine the factors that influence your power to detect differences in $\psi$ between two habitat types**
