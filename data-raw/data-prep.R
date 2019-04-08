@@ -64,15 +64,30 @@ salamanders <- read.csv("data-raw/salamander.csv")
 ### Exam data ----
 #### Questions 1
 
-J <- 8
+J <- 12               # Number of sites
+N <- 120              # Number of observations
+rain <- rnorm(N)    # Scaled body length
+
+## Randomly determine each individuals study plot
+plot <- c(12, 6, 5, 2, 3, 3, 11, 3, 6, 11, 2, 4, 2, 6, 6, 9, 1, 5, 1, 11, 1, 6, 12, 11, 6, 8, 12, 12,
+          11, 8, 5, 6, 3, 7, 2, 2, 8, 8, 3, 5, 6, 1, 5, 2, 4, 9, 1, 2, 10, 3, 5, 2, 12, 2, 5, 5, 2, 2, 
+          3, 4, 1, 9, 9, 6,
+          11, 5, 12, 6, 1, 6, 11, 5, 9, 4, 5, 10, 12, 3, 9, 1, 11, 9, 6, 9, 12, 6, 1, 3, 12, 12, 11,
+          11, 8, 12, 5, 12, 7, 6, 12, 8, 10, 5, 3, 6, 11, 9, 12, 2, 11, 8, 9, 6, 12, 4, 1, 8, 8, 12, 6, 11)
+
 mu.alpha <- 400   # Overall mean AGB
 sigma.alpha <- 25 # standard deviation of group-level means
 
 alpha <- rnorm(J, mu.alpha, sigma.alpha)
 
-beta <- 12     # Slope of rainfall on AGB
+mu.beta <- 4.5
+sigma.beta <- 2
+beta <- rnorm(J, mu.beta, sigma.beta)     # Slope of rainfall on AGB
 sigma <- 30    # Residual standard deviation
 
+Xmat <- model.matrix(~as.factor(plot)*rain - 1)
+linear.pred <- Xmat %*% c(alpha, beta)
+plot(linear.pred ~ rain)
 
 usethis::use_data(WILD6900_colors, SurvPriorData, bbs_data, bcr, falcons, tits, pelicans, ewe_counts, lamb_counts, salamanders, overwrite = TRUE)
 

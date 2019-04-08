@@ -150,6 +150,9 @@
     <li>
       <a href="../articles/n-mixture2.html">Advanced N-mixture models: Zero-inflation and posterior predictive checks</a>
     </li>
+    <li>
+      <a href="../articles/multi_spp_occ.html">Estimating species richness using hierarchical occupancy models</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -175,7 +178,7 @@
             <h3 class="subtitle">Population growth of Eurasian collared-doves in Utah</h3>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-03-27</h4>
+            <h4 class="date">2019-04-01</h4>
       
       
       <div class="hidden name"><code>wrangling_bbs.Rmd</code></div>
@@ -232,6 +235,7 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 </p>
 </div>
 <p>For this exercise, we will use data from the North American <a href="https://www.mbr-pwrc.usgs.gov/bbs/">Breeding Bird Survey</a> to examine the rapid population growth of Eurasian collared-doves (<em>Streptopelia decaocto</em>) in the state of Utah. Preparing the raw BBS data for analysis is challenging due the complexity and idiosyncrasies of data. For these reasons, preparing these data offers many good lessons for data manipulation in general. These data also lend themselves to a number of the models we will discuss this semester so this lab will form the basis for future labs.</p>
+<pre><code>#&gt; Warning: package 'maps' was built under R version 3.3.2</code></pre>
 <p><img src="wrangling_bbs_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Eurasian collared-doves are an introduced species that, as you will soon see, have been rapidly expanding westward across the United States. In this lab, we will focus on cleaning and visualizing the raw data. In future labs, we will use these data and code to quantify population growth of this and other species.</p>
 <div id="create-a-new-project" class="section level2">
@@ -251,11 +255,11 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <h2 class="hasAnchor">
 <a href="#getting-the-data" class="anchor"></a>Getting the data</h2>
 <p>First, let’s load the packages we will need for this exercise:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(WILD6900)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggplot2)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(WILD6900)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(ggplot2)</code></pre></div>
 <p>Rather that starting from the survey-wide data, the <code>WILD6900</code> package includes data from just the BBS routes within the <a href="http://nabci-us.org/resources/bird-conservation-regions-map/">Bird Conservation Regions</a> that make up the state of Utah. You can access those data using the <code><a href="https://www.rdocumentation.org/packages/utils/topics/data">data()</a></code> function:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"bbs_data"</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"bbs_data"</span>)</code></pre></div>
 </div>
 <div id="data-structure" class="section level2">
 <h2 class="hasAnchor">
@@ -283,11 +287,11 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <li>1 row per route per year</li>
 </ul>
 <p>The example data we will used is included as a list with the three files as separate data frames. You can see the fields included in each data frame using:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>routes)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>weather)</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>counts)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>routes)
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>weather)
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(bbs_data<span class="op">$</span>counts)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">countrynum</th>
@@ -552,18 +556,18 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <a href="#subsetting-the-utah-routes" class="anchor"></a>Subsetting the Utah routes</h2>
 <p>The <code>bbs_data</code> file contains counts from three BCRs (9, 10, and 16) but right now we only want data from Utah. There are many ways to subset data in <code>R</code> but for the sake of consistency, we will use the <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> function from the <code>dplyr</code> package.</p>
 <p>The BBS state number for Utah is 85 so we filter based on the <code>statenum</code> field in the <code>routes</code> data frame:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">ut_routes &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(bbs_data<span class="op">$</span>routes, statenum <span class="op">==</span><span class="st"> </span><span class="dv">85</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ut_routes &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(bbs_data<span class="op">$</span>routes, statenum <span class="op">==</span><span class="st"> </span><span class="dv">85</span>)</code></pre></div>
 <p>Unfortunately, neither the <code>weather</code> nor the <code>counts</code> data frames contain the <code>statenum</code> field. How do we subset the correct routes in this case? By using the one field common to all three data sets: <code>routeID</code>. So the challenge is to tell <code>R</code> to keep only the routes that are shared by the new <code>ut_routes</code> object and the <code>weather</code> and <code>counts</code> data frames. There are a few ways this could be done but one easy way is to filter using the <code>%in%</code> expression rather than <code>==</code> (<code>%in%</code> compares a vector <code>x</code> on the left-hand side to a second vector <code>y</code> on the right-hand side, returning <code>TRUE</code> for all values of <code>x</code> that are in <code>y</code> and <code>FALSE</code> otherwise):</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co">## Subset weather and count using Utah routes</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">ut_weather &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(bbs_data<span class="op">$</span>weather, routeID <span class="op">%in%</span><span class="st"> </span>ut_routes<span class="op">$</span>routeID)</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">ut_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(bbs_data<span class="op">$</span>counts, routeID <span class="op">%in%</span><span class="st"> </span>ut_routes<span class="op">$</span>routeID)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Subset weather and count using Utah routes
+ut_weather &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(bbs_data<span class="op">$</span>weather, routeID <span class="op">%in%</span><span class="st"> </span>ut_routes<span class="op">$</span>routeID)
+ut_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(bbs_data<span class="op">$</span>counts, routeID <span class="op">%in%</span><span class="st"> </span>ut_routes<span class="op">$</span>routeID)</code></pre></div>
 <p>The <code>routeID</code> field is critical because it is the sole variable that links all three data frames together. It is common practice to divide up data into multiple files so having an <code>ID</code> field of some sort that links observational units across all files is critical!</p>
 </div>
 <div id="subsetting-the-dove-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#subsetting-the-dove-data" class="anchor"></a>Subsetting the dove data</h2>
 <p>At present, <code>ut_counts</code> contains counts of all species. Each column (aside from <code>Year</code> and <code>routeID</code>) gives the number of individuals of each species counted on each route in each year. The column names refer to the numeric <code>aou</code> code used by BBS to identify species (Eurasian collared-dove is 22860). To get those data, we could use <code><a href="https://dplyr.tidyverse.org/reference/select.html">dplyr::select()</a></code>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">eucd_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(ut_counts, aou <span class="op">==</span><span class="st"> </span><span class="dv">22860</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">eucd_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(ut_counts, aou <span class="op">==</span><span class="st"> </span><span class="dv">22860</span>)</code></pre></div>
 <p>However, there are a number of problems with the resulting data frame.</p>
 <div id="what-is-tidy-data" class="section level3">
 <h3 class="hasAnchor">
@@ -571,9 +575,9 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <p>The first problem with this data frame is that one of the column names is numeric. That’s not technically illegal (the data frame exists, after all), but it’s not great practice. At the very least, you have to put back ticks around the column name to reference it (as we did above). Better to stick with non-numeric names, at least for the first character of a column name.</p>
 <p>The bigger issue, however, is that this data frame isn’t <strong>tidy</strong>. What does it mean for data to be tidy? <a href="http://vita.had.co.nz/papers/tidy-data.html">Essentially</a>, “each variable is a column, each observation is a row.” In the <code>ut_counts</code> data frame, we have four main variables: year, routeID, the <code>aou</code> codes, and the counts themselves. Each observation is the count of a single species at a single route in a single year. As formatted, we have one variable (<code>aos</code> code) spread across multiple columns and multiple observations per row. That format makes it hard to use the data. How would you plot the counts of a given species by year? How would you write a model for <code>counts ~ Year</code> by species? The short answer is you can’t without a lot of intermediate steps. In contrast, having tidy data makes these tasks much easier and consistent (as we will soon see). They are easier because many <code>R</code> functions take vectors as input. In a tidy data frame, each column</p>
 <p>So before we subset the dove data, let’s tidy the <code>ut_counts</code> data frame. We can do this with a single functions from the <code>tidyr</code> package:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">tidy_counts &lt;-<span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/gather.html">gather</a></span>(ut_counts, <span class="dt">key =</span> <span class="st">"aou"</span>, <span class="dt">value =</span> <span class="st">"count"</span>, <span class="op">-</span>Year, <span class="op">-</span>routeID)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tidy_counts)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tidy_counts &lt;-<span class="st"> </span>tidyr<span class="op">::</span><span class="kw"><a href="https://tidyr.tidyverse.org/reference/gather.html">gather</a></span>(ut_counts, <span class="dt">key =</span> <span class="st">"aou"</span>, <span class="dt">value =</span> <span class="st">"count"</span>, <span class="op">-</span>Year, <span class="op">-</span>routeID)
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(tidy_counts)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">Year</th>
@@ -623,7 +627,7 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <p>Gather turns a “wide” data frame into a “long” data frame (awesome animations courtesy of <a href="https://github.com/gadenbuie/tidyexplain">Garrick Aden-Buie</a>).</p>
 <p><img src="images/tidyr-spread-gather.gif" style="display: block; margin: auto;"></p>
 <p>Now we can simply use <code><a href="https://dplyr.tidyverse.org/reference/filter.html">dplyr::filter()</a></code> to subset the dove counts:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(tidy_counts, aou <span class="op">==</span><span class="st"> </span><span class="dv">22860</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(tidy_counts, aou <span class="op">==</span><span class="st"> </span><span class="dv">22860</span>)</code></pre></div>
 </div>
 </div>
 </div>
@@ -654,11 +658,11 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <a href="#mutating-joins" class="anchor"></a>Mutating joins</h3>
 <p>Mutating joins include <code><a href="https://dplyr.tidyverse.org/reference/join.html">inner_join()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/join.html">left_join()</a></code>, <code><a href="https://dplyr.tidyverse.org/reference/join.html">right_join()</a></code>, and <code><a href="https://dplyr.tidyverse.org/reference/join.html">full_join()</a></code> (note that all of these functions come from the <code>dplyr</code> package). Let’s start with <code><a href="https://dplyr.tidyverse.org/reference/join.html">full_join()</a></code>, which produces a new data frame that includes all rows and columns from the two original data frame (call them <code>x</code> and <code>y</code>):</p>
 <p><img src="images/full-join.gif" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">(x &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>)))</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">(y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>), <span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y4"</span>)))</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">full_join</a></span>(x, y)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(x &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>), <span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"x1"</span>, <span class="st">"x2"</span>, <span class="st">"x3"</span>)))
+
+(y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">id =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>), <span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"y1"</span>, <span class="st">"y2"</span>, <span class="st">"y4"</span>)))
+
+dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">full_join</a></span>(x, y)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">id</th>
@@ -731,7 +735,7 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <p>Note that if there is not a matching values (<code>id = 3</code> and <code>id=4</code>), <code><a href="https://dplyr.tidyverse.org/reference/join.html">full_join()</a></code> returns NA</p>
 <p>The remaining mutating joins do modified versions of what <code><a href="https://dplyr.tidyverse.org/reference/join.html">full_join()</a></code> does. <code><a href="https://dplyr.tidyverse.org/reference/join.html">left_join()</a></code> keeps all rows from <code>x</code> (or the “left” data frame in the arguments) and all columns from both <code>x</code> and <code>y</code>. Rows in <code>y</code> that are not shared with <code>x</code> (<code>id = 4</code>) are dropped from the resulting data frame:</p>
 <p><img src="images/left-join.gif" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(x, y)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(x, y)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">id</th>
@@ -759,7 +763,7 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <p><code><a href="https://dplyr.tidyverse.org/reference/join.html">right_join()</a></code> does the same thing but in reverse (so <code><a href="https://dplyr.tidyverse.org/reference/join.html">left_join(x,y)</a></code> produces the same output as <code><a href="https://dplyr.tidyverse.org/reference/join.html">right_join(y,x)</a></code>)</p>
 <p><code><a href="https://dplyr.tidyverse.org/reference/join.html">inner_join()</a></code> is the most restrictive the the mutating joins. It returns only rows from <code>x</code> where there are matching values in <code>y</code>:</p>
 <p><img src="images/inner-join.gif" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">inner_join</a></span>(x, y)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">inner_join</a></span>(x, y)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">id</th>
@@ -786,7 +790,7 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <a href="#filtering-joins" class="anchor"></a>Filtering joins</h3>
 <p>In the examples above, the resulting data frame contained all of the columns from both <code>x</code> and <code>y</code>. Filtering joins are different in that they only keep the columns from the first data frame. For example, <code><a href="https://dplyr.tidyverse.org/reference/join.html">semi_join()</a></code> returns all rows from <code>x</code> with matching values of <code>y</code> but only returns the original columns in <code>x</code>:</p>
 <p><img src="images/semi-join.gif" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">semi_join</a></span>(x, y)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">semi_join</a></span>(x, y)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">id</th>
@@ -806,7 +810,7 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <p>This is useful for getting rid of rows in <code>x</code> that are not shared with <code>y</code> (similar to the way we used <code><a href="https://dplyr.tidyverse.org/reference/filter.html">filter()</a></code> to keep only rows we wanted in the BBS data frames).</p>
 <p><code><a href="https://dplyr.tidyverse.org/reference/join.html">anti_join()</a></code> returns rows from <code>x</code> where there are <strong>not</strong> matching values in <code>y</code>:</p>
 <p><img src="images/anti-join.gif" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">anti_join</a></span>(x, y)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">anti_join</a></span>(x, y)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">id</th>
@@ -823,16 +827,16 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <h2 class="hasAnchor">
 <a href="#back-to-the-missing-counts" class="anchor"></a>Back to the missing counts</h2>
 <p>So how can we use a join to add the <code>NA</code> counts? First, we need a data frame that contains one row for <em>every</em> route/year combination.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="co">## Create vector containing all of the routeIDs in the dove count data frame</span></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2">routes &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(eucd_counts<span class="op">$</span>routeID)</a>
-<a class="sourceLine" id="cb16-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="co">## Create vector containing all of the years in the data set</span></a>
-<a class="sourceLine" id="cb16-5" data-line-number="5">years &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dt">from =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">min</a></span>(eucd_counts<span class="op">$</span>Year), <span class="dt">to =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(eucd_counts<span class="op">$</span>Year))</a>
-<a class="sourceLine" id="cb16-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb16-7" data-line-number="7"><span class="co">## Use expand.grid to create data frame with all route/year combinations</span></a>
-<a class="sourceLine" id="cb16-8" data-line-number="8">route_year &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expand.grid">expand.grid</a></span>(<span class="dt">routeID =</span> routes, <span class="dt">Year =</span> years)</a>
-<a class="sourceLine" id="cb16-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb16-10" data-line-number="10"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(route_year)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Create vector containing all of the routeIDs in the dove count data frame
+routes &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/unique">unique</a></span>(eucd_counts<span class="op">$</span>routeID)
+
+## Create vector containing all of the years in the data set
+years &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dt">from =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">min</a></span>(eucd_counts<span class="op">$</span>Year), <span class="dt">to =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(eucd_counts<span class="op">$</span>Year))
+
+## Use expand.grid to create data frame with all route/year combinations
+route_year &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/expand.grid">expand.grid</a></span>(<span class="dt">routeID =</span> routes, <span class="dt">Year =</span> years)
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(route_year)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">routeID</th>
@@ -867,10 +871,10 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 </table>
 <p><code><a href="https://www.rdocumentation.org/packages/base/topics/expand.grid">expand.grid()</a></code> is a useful function. It takes 2 or more vectors and creates a data frame with one row for each combination of values. This can be very useful for creating factorial combinations of different experimental treatments or simulation parameters.</p>
 <p>Now all we have to do is join this new data frame to <code>dove_counts</code> using the correct join function:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"></a>
-<a class="sourceLine" id="cb17-2" data-line-number="2">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">right_join</a></span>(eucd_counts, route_year)</a>
-<a class="sourceLine" id="cb17-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb17-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(dove_counts)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">right_join</a></span>(eucd_counts, route_year)
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(dove_counts)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">Year</th>
@@ -918,9 +922,9 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 </tbody>
 </table>
 <p>The <code>dove_counts</code> data frame is currently sorted by <code>Year</code> in increasing order, meaning that observations for each routes are mixed up throughout the data frame. It might be easier to view this data if it was sorted by <code>routeID</code> so that counts for each route are together. The tidyverse way to sort data frames is <code><a href="https://dplyr.tidyverse.org/reference/arrange.html">dplyr::arrange()</a></code></p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(dove_counts, routeID, <span class="op">-</span>Year)</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(dove_counts)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(dove_counts, routeID, <span class="op">-</span>Year)
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(dove_counts)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">Year</th>
@@ -974,10 +978,10 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <h1 class="hasAnchor">
 <a href="#adding-covariates" class="anchor"></a>Adding covariates</h1>
 <p>We can also use joins to add relevant covariates associated with each count. For example, it would be nice to have the lat/long of each route associated with the counts:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="co">## Add route location information</span></a>
-<a class="sourceLine" id="cb19-2" data-line-number="2">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(dove_counts, ut_routes)</a>
-<a class="sourceLine" id="cb19-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb19-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(dove_counts)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Add route location information
+dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(dove_counts, ut_routes)
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(dove_counts)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">Year</th>
@@ -1081,10 +1085,10 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 </tbody>
 </table>
 <p>We don’t need all of those columns so let’s remove some by using <code><a href="https://dplyr.tidyverse.org/reference/select.html">dplyr::select()</a></code>, which allows you to select only the columns you want to keep in a data frame (note - putting a minus sign before the column name <em>removes</em> the column):</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="co">## Remove unneeded columns</span></a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(dove_counts, <span class="op">-</span>countrynum, <span class="op">-</span>statenum, <span class="op">-</span>Route, <span class="op">-</span>Active)</a>
-<a class="sourceLine" id="cb20-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb20-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(dove_counts)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Remove unneeded columns
+dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(dove_counts, <span class="op">-</span>countrynum, <span class="op">-</span>statenum, <span class="op">-</span>Route, <span class="op">-</span>Active)
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(dove_counts)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">Year</th>
@@ -1160,13 +1164,13 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 </tbody>
 </table>
 <p>Now let’s add some of the relevant data from the <code>weather</code> data frame. We’ll use select first, then join:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="co">## Remove unneeded columns</span></a>
-<a class="sourceLine" id="cb21-2" data-line-number="2">ut_weather &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(ut_weather, RPID, Year, Month, Day, ObsN, RunType, routeID)</a>
-<a class="sourceLine" id="cb21-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb21-4" data-line-number="4"><span class="co">## Add run covariates to counts</span></a>
-<a class="sourceLine" id="cb21-5" data-line-number="5">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(dove_counts, ut_weather)</a>
-<a class="sourceLine" id="cb21-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb21-7" data-line-number="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(dove_counts)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Remove unneeded columns
+ut_weather &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(ut_weather, RPID, Year, Month, Day, ObsN, RunType, routeID)
+
+## Add run covariates to counts
+dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/join.html">left_join</a></span>(dove_counts, ut_weather)
+
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(dove_counts)</code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">Year</th>
@@ -1283,25 +1287,25 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <p>In the tidyverse, the workhorse of adding new variables in <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">dplyr::mutate()</a></code> (though other functions add new columns as we will see). Let’s use <code>mutate</code> to add a new variable that indicates whether it was a BBS observer’s first time running a BBS route (there is a well-known “learning” effect in the BBS. Observers tend to count fewer birds during their first year). We’ll call this column <code>novice</code> and it will contain a <code>1</code> if it’s the first time an observer is in <code>dove_counts</code> data frame and <code>0</code> otherwise.</p>
 <p>A quick way to see if a value has been repeated in a vector is the <code>duplicated</code> function which returns <code>0</code> for the first time a value occurs in the vector and <code>0</code> otherwise. That’s the opposite of what we want so we switch the values by again using the <code>!</code> operator.</p>
 <p>Before we add the new variable, remember that our data frame is sorted by <code>Year</code> in decreasing order (2015 first). <code><a href="https://www.rdocumentation.org/packages/base/topics/duplicated">duplicated()</a></code> doesn’t know this so it will give us a <code>1</code> for the <em>last</em> year of an observers service rather than the first. So before we at the new column, let’s use <code><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange()</a></code> again to sort by <code>Year</code> in increasing order:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(dove_counts, routeID, Year)</a>
-<a class="sourceLine" id="cb22-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="co"># dove_counts &lt;- dplyr::mutate(dove_counts, novice = !duplicated(ObsN))</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dove_counts &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span>(dove_counts, routeID, Year)
+
+<span class="co"># dove_counts &lt;- dplyr::mutate(dove_counts, novice = !duplicated(ObsN))</span></code></pre></div>
 <p>There are many other columns that could be created depending on the factors we think might influence counts (remember that the counts are a mix of the state and observation processes - factors of interest might influence the process, i.e., the actual number of birds, or the observations or both). One factor that could influence both the process and observation processes is the day of the year that a count took place (maybe individuals are more common at certain times of year or maybe they are more easily detected at certain times of year). Adding day of the year also provides an exercise in a particularly headache-inducing topics: dates.</p>
 <div id="working-with-dates" class="section level3">
 <h3 class="hasAnchor">
 <a href="#working-with-dates" class="anchor"></a>Working with dates</h3>
 <p>Dates are a perpetual headache in <code>R</code>. The tidyverse package <code>lubridate</code> at least attempts to make things easier by providing an intuitive, consistent way to handle dates. Let’s explore this package by converting the <code>Year</code>, <code>Month</code>, and <code>Day</code> columns into a specific object class called <code>Date</code>.</p>
 <p>To convert these columns as dates, we first need to combine them into a single variable that contains all three pieces of information. In the tidyverse, combining the values of multiple columns into a single value is done using <code><a href="https://tidyr.tidyverse.org/reference/unite.html">tidyr::unite()</a></code>. We need to tell <code>unite</code> the name of the new column (we’ll call it <code>date</code>), a vector with the columns we want to unite (<code><a href="https://www.rdocumentation.org/packages/base/topics/c">c("Month", "Day", "Year")</a></code>), and the separator to use between values (default is <code>_</code> but we’ll use <code>/</code>):</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="co">## Add date</span></a>
-<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="co"># dove_counts &lt;- tidyr::unite(dove_counts, "date", c("Month", "Day", "Year"), sep = "/", remove = FALSE)</span></a>
-<a class="sourceLine" id="cb23-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(dove_counts)C</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Add date
+<span class="co"># dove_counts &lt;- tidyr::unite(dove_counts, "date", c("Month", "Day", "Year"), sep = "/", remove = FALSE)</span>
+<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(dove_counts)C</code></pre></div>
 <p>Note that by default <code>unite</code> removes the original columns (we will need the <code>Year</code> column later which is why <code>remove = FALSE</code>).</p>
 <p>By default, <code>unite</code> makes the new column a character string. We need to tell <code>R</code> that these are actually dates. This is where the <code>lubridate</code> package comes in handy. There are a number of functions to covert character strings into dates depending on the format of the date. In this case, our dates are <code>Month/Day/Year</code> so the function we want is <code>mdy</code> (see the pattern?):</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="co">## Convert to date</span></a>
-<a class="sourceLine" id="cb24-2" data-line-number="2">dove_counts<span class="op">$</span>date &lt;-<span class="st"> </span>lubridate<span class="op">::</span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/ymd.html">mdy</a></span>(dove_counts<span class="op">$</span>date)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Convert to date
+dove_counts<span class="op">$</span>date &lt;-<span class="st"> </span>lubridate<span class="op">::</span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/ymd.html">mdy</a></span>(dove_counts<span class="op">$</span>date)</code></pre></div>
 <p>The <code>lubridate</code> functions that convert strings to dates (<code>dmy</code>, <code>ymd</code>, etc.) try to be smart about the separator used to separate months, days and years. If you work with dates in your own data, get in the habit of converting them into actual <code><a href="https://www.rdocumentation.org/packages/base/topics/class">class(Date)</a></code> using lubridate as part of your data preparation. This will make your life much easier when you need to use these dates in your modeling. Once you have a variable that is <code><a href="https://www.rdocumentation.org/packages/base/topics/class">class(Date)</a></code>, <code>lubridate</code> has many functions for converting dates into other formats. For example, raw dates are often not the covariate we will use in the model. We may not care about the specific month or year but instead the day of the year. We can easily covert the dates into day of the year (January 1st = 1; <code>lubridate</code> will automatically handle leap years)</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="co">## Convert to day</span></a>
-<a class="sourceLine" id="cb25-2" data-line-number="2">dove_counts<span class="op">$</span>day &lt;-<span class="st"> </span>lubridate<span class="op">::</span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/day.html">day</a></span>(dove_counts<span class="op">$</span>date)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Convert to day
+dove_counts<span class="op">$</span>day &lt;-<span class="st"> </span>lubridate<span class="op">::</span><span class="kw"><a href="http://lubridate.tidyverse.org/reference/day.html">day</a></span>(dove_counts<span class="op">$</span>date)</code></pre></div>
 </div>
 </div>
 <div id="grouped-variables" class="section level2">
@@ -1311,40 +1315,40 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <p>For example, maybe observers get worse as they get older because it’s harder from them to see/hear the birds. If we want to include “experience” of each observer in our model, we need a new column indicated the number of years of service for each observer (first year = 1, second year = 2, etc). This is harder than it sounds.</p>
 <p>For each time an observer in listed in the data frame, what we are trying to do is essentially sum the number of times the observer has already been listed. Something like this:</p>
 <p>What you might notice here is the the <code>experience</code> column is the cumulative sum of the <code>obs</code> column. <code>R</code> has a built in function called <code><a href="https://www.rdocumentation.org/packages/base/topics/cumsum">cumsum()</a></code> for estimating the cumulative sum of a vector:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="co"># x &lt;- seq(1:10)</span></a>
-<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="co"># cumsum(x)</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># x &lt;- seq(1:10)</span>
+<span class="co"># cumsum(x)</span></code></pre></div>
 <p>We need to perform the cumulative sum on each observer separately. But there’s a problem - some observers do more than one route per year. If we include those duplicated ObsN/Year combination, we will inflate the experience metric.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="co"># dplyr::filter(dove_counts, ObsN == 981319 &amp; Year == 2015)</span></a>
-<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="co"># nrow(dove_counts)</span></a>
-<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="co"># </span></a>
-<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="co"># ## Create a new data frame so we don't lose counts when we remove duplicates</span></a>
-<a class="sourceLine" id="cb27-5" data-line-number="5"><span class="co"># experience_df &lt;- dplyr::distinct(dove_counts, ObsN, Year)</span></a>
-<a class="sourceLine" id="cb27-6" data-line-number="6"><span class="co"># dplyr::filter(experience_df, ObsN == 981319 &amp; Year == 2015)</span></a>
-<a class="sourceLine" id="cb27-7" data-line-number="7"><span class="co"># nrow(experience_df)</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># dplyr::filter(dove_counts, ObsN == 981319 &amp; Year == 2015)</span>
+<span class="co"># nrow(dove_counts)</span>
+<span class="co"># </span>
+<span class="co"># ## Create a new data frame so we don't lose counts when we remove duplicates</span>
+<span class="co"># experience_df &lt;- dplyr::distinct(dove_counts, ObsN, Year)</span>
+<span class="co"># dplyr::filter(experience_df, ObsN == 981319 &amp; Year == 2015)</span>
+<span class="co"># nrow(experience_df)</span></code></pre></div>
 <p>Now we’re ready to estimate experience. Remember that we need to estimate experience for each observer separately. This is where <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code> comes in. We use <code><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by()</a></code> to tell <code>dplyr</code> that we want to perform all subsequent operations on each observer:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="co"># experience_df &lt;- dplyr::group_by(experience_df, ObsN)</span></a>
-<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="co"># </span></a>
-<a class="sourceLine" id="cb28-3" data-line-number="3"><span class="co"># experience_df</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># experience_df &lt;- dplyr::group_by(experience_df, ObsN)</span>
+<span class="co"># </span>
+<span class="co"># experience_df</span></code></pre></div>
 <p>Notice that when you view the data frame now you see a header saying <code>Groups: ObsN [196]</code>. This tells us that the data frame is grouped by <code>ObsN</code> and there are 196 groups (you may also have noticed the data frame has been converted to a <code>tibble</code>, which is a special type of data frame with some special properties (notice that we didn’t use <code><a href="https://www.rdocumentation.org/packages/utils/topics/head">head()</a></code> and yet we only see the first 10 rows on the data frame). We won’t go into that now but you can learn more with <code><a href="https://dplyr.tidyverse.org/reference/reexports.html">?tibble</a></code>).</p>
 <p>Now here’s the trick for estimating experience with <code>cumsum</code>. We will we add a column of ones to the <code>experience_df</code> data frame and use <code>cumsum</code> to sum that column for each observer (basically recreating the data frame above for each observer). Start by adding the ones column:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="co"># experience_df &lt;- dplyr::mutate(experience_df, ones = 1)</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># experience_df &lt;- dplyr::mutate(experience_df, ones = 1)</span></code></pre></div>
 <p>Now we’ll use <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> with <code>cumsum</code> to create the experience metric:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="co"># experience_df &lt;- dplyr::mutate(experience_df, experience = cumsum(ones))</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># experience_df &lt;- dplyr::mutate(experience_df, experience = cumsum(ones))</span></code></pre></div>
 <p>One last tweak - all of the <code>NA</code> counts have <code>NA</code> observers and our experience metric added up the ones for those values too. Let’s change those back to <code>NA</code> and then remove the <code>ones</code> column and join <code>experience_df</code> with <code>dove_counts</code> to add the experience metric back to the count data frame:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1"><span class="co"># experience_df$experience[is.na(experience_df$ObsN)] &lt;- NA</span></a>
-<a class="sourceLine" id="cb31-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb31-3" data-line-number="3"><span class="co"># experience_df &lt;- dplyr::select(experience_df, -ones)</span></a>
-<a class="sourceLine" id="cb31-4" data-line-number="4"><span class="co"># dove_counts &lt;- dplyr::left_join(dove_counts, experience_df)</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># experience_df$experience[is.na(experience_df$ObsN)] &lt;- NA</span>
+
+<span class="co"># experience_df &lt;- dplyr::select(experience_df, -ones)</span>
+<span class="co"># dove_counts &lt;- dplyr::left_join(dove_counts, experience_df)</span></code></pre></div>
 <p>What is the most number of years of service by one observer?</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="co"># max(dove_counts$experience, na.rm = TRUE)</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># max(dove_counts$experience, na.rm = TRUE)</span></code></pre></div>
 </div>
 <div id="save-the-data-frame" class="section level2">
 <h2 class="hasAnchor">
 <a href="#save-the-data-frame" class="anchor"></a>Save the data frame</h2>
 <p>Now that we have a clean data frame with all of the covariates of interest, let’s save this object so that we can use it in the future without having to rerun all of these steps. There are many ways to save objects in <code>R</code> but one of the most <a href="https://www.fromthebottomoftheheap.net/2012/04/01/saving-and-loading-r-objects/">well-behaved</a> is <code><a href="https://www.rdocumentation.org/packages/base/topics/readRDS">saveRDS()</a></code>.</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb33-1" data-line-number="1"><span class="co"># saveRDS(object = dove_counts, file = "data/dove_counts.rds")</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># saveRDS(object = dove_counts, file = "data/dove_counts.rds")</span></code></pre></div>
 <p>When you want to use this object in the future, all you have to do is run:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="co"># dove_counts &lt;- readRDS("data/dove_counts.rds")</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># dove_counts &lt;- readRDS("data/dove_counts.rds")</span></code></pre></div>
 </div>
 </div>
 <div id="data-summaries" class="section level1">
@@ -1352,18 +1356,18 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 <a href="#data-summaries" class="anchor"></a>Data summaries</h1>
 <p>Why stop here? Right now, our counts are at the route-level - ultimately, this is the way we want it. That allows us to build a model directly from the raw observations rather than derived variables. However, using the raw counts involves some modeling complexities that we have not discussed yet. So in the meantime, it might be useful to ignore the route-level variation in counts and just work with the total number of doves counted in each year.</p>
 <p>We already learned about using <code>group_by</code> to add new columns by performing operations on groups of data. In this case, we again need to group the data but this type by <code>Year</code>. But <code>mutate</code> won’t work for this purpose. We don’t want to add a new observation but instead summarize the counts in each year. In other words, we don’t want to add <code># routes x # years</code> new values, we want <code># years</code> new observations. This task is performed by <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">dplyr::summarise()</a></code>, which takes a data frame and creates a new data frame based on specified summaries of the original data. In our case, the summary we want is <code>sum</code>:</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="co">## Group by year</span></a>
-<a class="sourceLine" id="cb35-2" data-line-number="2"><span class="co"># total_dove_counts &lt;- dplyr::group_by(dove_counts, Year)</span></a>
-<a class="sourceLine" id="cb35-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb35-4" data-line-number="4"><span class="co">## Create annual total counts (note the need for na.rm = TRUE because we have NA counts)</span></a>
-<a class="sourceLine" id="cb35-5" data-line-number="5"><span class="co"># total_dove_counts &lt;- dplyr::summarise(total_dove_counts, Count = sum(count, na.rm = TRUE))</span></a>
-<a class="sourceLine" id="cb35-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb35-7" data-line-number="7"><span class="co"># total_dove_counts</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Group by year
+<span class="co"># total_dove_counts &lt;- dplyr::group_by(dove_counts, Year)</span>
+
+## Create annual total counts (note the need for na.rm = TRUE because we have NA counts)
+<span class="co"># total_dove_counts &lt;- dplyr::summarise(total_dove_counts, Count = sum(count, na.rm = TRUE))</span>
+
+<span class="co"># total_dove_counts</span></code></pre></div>
 <p>Again, creating summaries is a very common data cleaning task and <code>dplyr</code> has <em>a lot</em> of powerful functions for doing all kinds of summaries (check out this <a href="https://suzan.rbind.io/2018/01/dplyr-tutorial-1/">entire blog series</a> for some great lesser known <code>dplyr</code> functions). Getting to know these functions can save you a lot of lines of code for some of the more complex summaries you might need to make.</p>
 <p>Let’s quickly visualize how the number of collared-doves counted in Utah has changed over time:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="co"># ggplot(total_dove_counts, aes(x = Year, y = Count)) + geom_path()</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># ggplot(total_dove_counts, aes(x = Year, y = Count)) + geom_path()</span></code></pre></div>
 <p>That’s a big increase! We will look at this increase in more detail during later lectures when we learn to develop Bayesian models. For that reason, let’s save this data frame as well:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb37-1" data-line-number="1"><span class="co"># saveRDS(total_dove_counts, file = "data/total_dove_counts.rds")</span></a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># saveRDS(total_dove_counts, file = "data/total_dove_counts.rds")</span></code></pre></div>
 </div>
   </div>
 
@@ -1407,7 +1411,7 @@ Image courtesy of Charles J Sharp via Wikicommons (CC BY-SA 4.0)
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
 </div>
       </footer>
 </div>

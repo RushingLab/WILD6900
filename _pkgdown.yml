@@ -71,6 +71,8 @@ navbar:
           href: articles/n-mixture1.html
         - text: "Advanced N-mixture models: Zero-inflation and posterior predictive checks"
           href: articles/n-mixture2.html
+        - text: "Estimating species richness using hierarchical occupancy models"
+          href: articles/multi_spp_occ.html
     - icon: fas fa-pencil-square-o
       text: "Assignments"
       href: articles/homework.html
