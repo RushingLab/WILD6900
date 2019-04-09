@@ -1,38 +1,38 @@
 
-model{
-  # Priors
-  omega ~ dbeta(1, 1)
-  
-  for(i in 1:M){
+    model{
+    # Priors
+    omega ~ dbeta(1, 1)
+    
+    for(i in 1:M){
     lpsi[i] ~ dnorm(mu.lpsi, tau.psi)
     logit(psi[i]) <- lpsi[i]
-
+    
     lp[i] ~ dnorm(mu.lp, tau.p)
     logit(p[i]) <- lp[i]
-  }
-
-  mu.psi ~ dbeta(1, 1)
-  mu.lpsi <- log(mu.psi) - log(1 - mu.psi)
-
-  sd.psi ~ dgamma(0.01, 0.01)
-  tau.psi <- pow(sd.psi, -2)
-
-  mu.p ~ dbeta(1, 1)
-  mu.lp <- log(mu.p) - log(1 - mu.p)
-
-  sd.p ~ dgamma(0.01, 0.01)
-  tau.p <- pow(sd.p, -2)
-
-  for(i in 1:M){
-   x[i] ~ dbern(omega)
-
-    for(j in 1:J){
-      z[i, j] ~ dbern(x[i] * psi[i])
-
-      y[i, j] ~ dbinom(z[i, j] * p[i], K)
     }
-  }
-
-  R <- sum(x[1:M])
-}
+    
+    mu.psi ~ dbeta(1, 1)
+    mu.lpsi <- log(mu.psi) - log(1 - mu.psi)
+    
+    sd.psi ~ dgamma(0.01, 0.01)
+    tau.psi <- pow(sd.psi, -2)
+    
+    mu.p ~ dbeta(1, 1)
+    mu.lp <- log(mu.p) - log(1 - mu.p)
+    
+    sd.p ~ dgamma(0.01, 0.01)
+    tau.p <- pow(sd.p, -2)
+    
+    for(i in 1:M){
+    x[i] ~ dbern(omega)
+    
+    for(j in 1:J){
+    z[i, j] ~ dbern(x[i] * psi[i])
+    
+    y[i, j] ~ dbinom(z[i, j] * p[i], K)
+    }
+    }
+    
+    R <- sum(x[1:M])
+    }
     
