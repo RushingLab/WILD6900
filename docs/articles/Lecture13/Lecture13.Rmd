@@ -143,7 +143,7 @@ Photo Credit: Rick Kimble/USFWS
 #### CMR methods are not restricted to physical captures and recaptures
 
 ```{r out.width=600}
-knitr::include_graphics("figs/rosy-finch.JPG")
+knitr::include_graphics("figs/blrf.jpg")
 ```
 
 ???
