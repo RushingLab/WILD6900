@@ -106,6 +106,9 @@
     <li>
       <a href="../articles/Lecture12/Lecture12.html">Lecture 12: Estimating abundance: Occupancy modeling</a>
     </li>
+    <li>
+      <a href="../articles/Lecture13/Lecture13.html">Lecture 13: Estimating abundance: Closed-population capture-mark-recapture</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -177,7 +180,7 @@
       <h1>Developing informative priors</h1>
             <h3 class="subtitle">WILD6900</h3>
             
-            <h4 class="date">2019-04-01</h4>
+            <h4 class="date">2019-04-08</h4>
       
       
       <div class="hidden name"><code>priors.Rmd</code></div>
@@ -290,9 +293,9 @@ sim_phi &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdoc
 <p>Now hopefully you can see why this approach is so clever. We now have 30000 plausible values of adult female survival probability that are consistent with published studies and reflect multiple sources of uncertainty about this vital rate<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>.</p>
 <p>From these simulated values, we can now estimate “hyper-parameters” for a single beta distribution that will serve as our prior. First, we estimate the mean and variance of the simulated values:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(mu3 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(sim_phi))
-<span class="co">#&gt; [1] 0.9348</span>
+<span class="co">#&gt; [1] 0.9351</span>
 (var3 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/sd">sd</a></span>(sim_phi) <span class="op">^</span><span class="st"> </span><span class="dv">2</span>)
-<span class="co">#&gt; [1] 0.001126</span></code></pre></div>
+<span class="co">#&gt; [1] 0.001105</span></code></pre></div>
 <p>You can see that the variance of these samples is much larger than for approach 1, reflecting the additional source of uncertainty in approach 2. Now we use the same moment matching code as before to generate and visualize the prior:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Beta parameters
 alpha4 &lt;-<span class="st"> </span>mu3<span class="op">^</span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>((<span class="dv">1</span><span class="op">-</span>mu3)<span class="op">/</span>var3 <span class="op">-</span><span class="st"> </span>(<span class="dv">1</span><span class="op">/</span>mu3))

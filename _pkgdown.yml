@@ -46,6 +46,8 @@ navbar:
           href: articles/Lecture11/Lecture11.html
         - text: "Lecture 12: Estimating abundance: Occupancy modeling"
           href: articles/Lecture12/Lecture12.html
+        - text: "Lecture 13: Estimating abundance: Closed-population capture-mark-recapture"
+          href: articles/Lecture13/Lecture13.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:
