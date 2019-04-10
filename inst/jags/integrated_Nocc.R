@@ -19,7 +19,7 @@ model{
     }
     
     for(j in 1:J.occ){
-    psi[j] <- 1 - pow((1 - p), N[(J.count + j)])
+    psi[j] <- 1 - pow((1 - p), N[J.count + j])
     # for(k in 1:K.occ){
     y.occ[j] ~ dbern(psi[j])
     # }

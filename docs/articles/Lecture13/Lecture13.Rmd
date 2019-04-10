@@ -23,6 +23,9 @@ library(WILD6900)
 
 > ### Kéry & Schaub 134-170
 
+
+> ### [Powell & Gale chp. 8](https://docs.wixstatic.com/ugd/95e73b_6d832c61405d4b3cbd9d99bbb4530f7b.pdf)
+
 ---
 ## Estimating abundance
 
@@ -140,7 +143,7 @@ Photo Credit: Rick Kimble/USFWS
 #### CMR methods are not restricted to physical captures and recaptures
 
 ```{r out.width=600}
-knitr::include_graphics("figs/_1010813.JPG")
+knitr::include_graphics("figs/blrf.jpg")
 ```
 
 ???
@@ -190,4 +193,238 @@ Image courtesy of: GlacierNPS, via Wikimedia Commons
 
 #### *What ties all of these methods together is that we have individual-level capture-histories*
 
+---
+## Capture-mark-recapture
 
+#### Key to closed CMR is that because individuals do not enter or leave the population, we assume any 0 in the capture history is non-detection $\large (1-p)$
+
+- in simplest model, easy to translate capture history into probabilistic statements based only on $p$:
+
+.pull-left[
+##### Individual 1: $\large 101101$  
+##### Individual 2: $\large 011001$  
+]
+
+.pull-right[
+#### $\large p(1-p)pp(1-p)p$  
+#### $\large (1-p)pp(1-p)(1-p)p$
+]
+
+<br/>
+--
+
+#### In the CMR literature, the constant $\large p$ model is known at the $M_0$ model ([Otis et al. (1978)](https://www.jstor.org/stable/pdf/3830650.pdf?casa_token=Dr4Y3XD5DJAAAAAA:IQA7BkqTFg7_0h2kqbrn20CGZLBbTBBbuAsCWsvdRWD-muQDenn-UVYfpdL3q09ZTmiGGxQBm5vnFV9RomNxOdtBq2c98vOSELdt6-hRyoY52ipEYj4))
+
+---
+## The $\LARGE M_0$ model in JAGS
+
+#### In all closed CMR models, $\large N$ is unknown
+
+- we know $n$ but how many individuals were not detected at all?
+
+--
+- data augmentation!
+
+--
+$$\Large z_i \sim Bernoulli(\psi)$$
+
+--
+$$\Large y_{ik} \sim Bernoulli(z_ip)$$
+
+--
+$$\Large \psi \sim beta(1,1)$$
+
+$$\Large p \sim beta(1,1)$$
+
+--
+$$\Large N = \sum_{i=1}^M z_i$$
+
+---
+## Capture-mark-recapture
+
+####  In addition to the $\large M_0$ model, Otis et al. 1978 outlined 3 other basic *closed* CMR "models":
+
+--
+- $\large M_t$: variation in $p$ among occasions
+
+$$\large p_1(1-p_2)p_3p_4(1-p_5)p_6$$
+
+--
+- $\large M_h$: variation in $p$ among individuals
+
+$$\large p_i(1-p_i)p_ip_i(1-p_i)p_i$$
+
+--
+- $\large M_b$: behavioral responses (trap happiness/shyness)
+
+$$\large p(1-c)cc(1-c)c$$
+
+.footnote[
+[1] David Otis was a post-doc at USU in the Coop Unit when he wrote this seminal paper
+]
+
+
+---
+## Capture-mark-recapture
+
+#### Otis et al. 1978 was seminal because it clarified ways that $\large p$ might vary
+
+--
+However, $\large M_0$, $\large M_t$, $\large M_h$, $\large M_b$ are not single models but instead families of models that allow $p$ to vary for different reasons
+
+--
+#### In modern Bayesian analysis of closed CMR models, we can use the tools you learned so far in this course to model complex variation in $\large p$
+
+- group effects
+
+- hierarchical structure
+
+- continuous covariates (via GLM)
+
+---
+## The $\LARGE M_t$ model in JAGS
+
+#### How do we model $\large p$ as a function of occassion?
+
+```{r eval = FALSE, echo = TRUE}
+model{
+  omega ~ dbeta(1, 1)
+  for(t in 1:T){
+    p[t] ~ dbeta(1, 1)
+  }
+  
+  for(i in 1:M){
+    z[i] ~ dbern(psi)
+    
+    for(t in 1:T){
+      y[i, t] ~ dbern(p[t] * z[i])
+    } # end t
+  } # end i
+  
+  N <- sum(z[1:M])
+}
+```
+
+---
+## The $\LARGE M_t$ model in JAGS
+
+```{r eval = FALSE, echo = TRUE}
+model{
+  omega ~ dbeta(1, 1)
+  for(t in 1:T){
+    lp[t] ~ dnorm(mu.p, tau.p)
+    logit(p[t]) <- lp[t]
+  }
+  mu.p ~ dnorm(0, 0.1)
+  tau.p ~ dgamma(0.25, 0.25)
+  for(i in 1:M){
+    z[i] ~ dbern(psi)
+    
+    for(t in 1:T){
+      y[i, t] ~ dbern(p[t] * z[i])
+    } # end t
+  } # end i
+}
+```
+
+- What is the difference between this model and the previous? How will this change influence estimates of $p_t$?
+
+---
+## Model $\LARGE M_b$
+
+#### Behavioral responses are common in studies that require phyisical captures
+
+- probability of capture $\large \neq$ probability of recapture $(\large c)$
+
+- individuals learn to avoid traps (trap shy; $\large p > c$)
+
+- individuals learn to seek out traps (trap happy; $\large c > p$)
+
+
+--
+#### In the $\large M_b$ models, $\large p$ depends on whether an individual has previously been captured
+
+- response can be permanent or ephemeral 
+
+---
+## Model $\LARGE M_b$ in JAGS
+
+```{r eval = FALSE, echo = TRUE}
+model{
+  omega ~ dbeta(1, 1)
+  p ~ dbeta(1, 1)
+  c ~ dbeta(1, 1)
+  
+  for(i in 1:M){
+    z[i] ~ dbern(psi)
+    
+    y[i, 1] ~ dbern(p * z[i])
+    
+    for(t in 2:T){
+      y[i, t] ~ dbern(z[i] * ((1 - y[i, t-1]) * p + y[i, t-1] * c))
+    } # end t
+  } # end i
+  
+  N <- sum(z[1:M])
+  trap.response <- c - p
+}
+```
+
+
+---
+## Model $\LARGE M_h$
+
+#### Individual heterogeniety not captured by covariates 
+
+- treat individuals as random effect
+
+$$\large logit(p_i) \sim normal(logit(\mu_p), \tau_p)$$
+
+--
+- models with heterogeneity are not always identifiable 
+    + different assumptions about $p_i$ will give different estimates of $N$ but model selection does not differentiate between models 
+    
+--
+- however, *not* modeling individual heterogeneity leads to known bias
+    + assuming constant $p$ underestimates $N$
+
+
+---
+## Model $\LARGE M_h$ in JAGS
+
+```{r eval = FALSE, echo = TRUE}
+model{
+  omega ~ dbeta(1, 1)
+  mean.p ~ dbeta(1, 1)
+  mean.lp <- log(mean.p) - log(1 - mean.p)
+  tau.p ~ dgamma(0.25, 0.25)
+  
+  for(i in 1:M){
+    z[i] ~ dbern(psi)
+    logit(p[i]) ~ dnorm(mean.lp, tau.p)T(-5, 5)
+    
+    y[i] ~ dbin(p[i] * z[i], T)
+  } # end i
+  
+  N <- sum(z[1:M])
+}
+```
+
+---
+## Extensions of the Otis et al. models
+
+#### Many extensions possible
+
+- $\large M_{tb}$
+
+- $\large M_{th}$
+
+- $\large M_{tbh}$
+
+- and many more limited only by your data and your modeling skills
+
+
+--
+#### As additional variation is added, more data is needed to estimate parameters
+
+- all else equal, each new parameter results in lower precision for $\large N$ (no free lunch!)
