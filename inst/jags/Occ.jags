@@ -1,0 +1,21 @@
+
+    model{
+    # Priors 
+    psi[1] ~ dbeta(1, 1)
+    psi[2] ~ dbeta(1, 1)
+    p ~ dbeta(1, 1)
+    
+    # Likelihood
+    for(i in 1:M){
+    # State model
+    z[i] ~ dbern(psi[habitat[i]])
+    
+    # Observation model
+    for(k in 1:K){
+    y[i, k] ~ dbern(p * z[i])
+    }
+    }
+
+    delta.psi <- psi[1] - psi[2]
+    }
+    

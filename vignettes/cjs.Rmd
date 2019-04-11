@@ -1,10 +1,10 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "Estimating apparent survival: Basic Cormack-Jolly-Seber models"
+author: "WILD6900"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{CJS}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,19 +16,19 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r include=FALSE}
-library(RMark)
-data(dipper)
+In the lab, we'll fit several versions of the Cormack-Jolly-Seber model to estimate apparent survival and detection probability from capture-recapture data. 
 
-ch <- t(apply(as.matrix(dipper$ch, ncol = 1), 1, function(x) as.numeric(unlist(strsplit(x, "")))))
+### The data
+
+To learn more about the CJS model, we will use the famous dipper data set (Lebreton  et  al.  1992). The data comes from a population of European dippers in France and has been used in countless mark-recapture tutorials. Individual birds (n = 294) were captured and banded over 7 consecutive years during early summer along streams, providing 6 re-encounter occasions. 
+
+```{r out.width="60%", echo = FALSE, fig.align='center'}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/d/d9/Cinclus_cinclus_V%C3%ADzirig%C3%B3.JPG")
 ```
 
-```{r}
-prmatrix(ch, rowlab=rep("",dim(ch)[1]), collab=rep("",dim(ch)[2]))
-```
+We will treat the capture histories as a $294 \times 7$ matrix, which can be read into `R` by copying and pasting the following code:
 
 ```{r}
-
 ch <- matrix(c(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
   0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
   0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 
@@ -109,7 +109,118 @@ ch <- matrix(c(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0,
   1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 
   1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 
   1, 1, 1, 0), nrow = 294, ncol = 7, byrow = TRUE)
+```
 
+### The basic CJS model in JAGS
+
+Next, let's create a `.jags` file with the model code. To start, we'll fit the most simple CJS model available - constant $\phi$ and $p$. Remember that the state-space version of the CJS model can be written as: 
+
+#### Process model, capture occassion 1
+$$\large z_{i,f_1} = 1$$
+
+#### Process model, capture occasion 2+
+
+$$\large z_{i,t} \sim Bernoulli(z_{i,t-1}\phi)$$
+
+#### Observation model
+
+$$\large y_{i,t} \sim Bernoulli(z_{i,t}p)$$
+
+Notice that to write this model in JAGS, we need to start the likelihood at the first capture occasion of each individual (we ignore all occasions prior to the first capture). In the model statement above, we call this occasion $f_1$. In JAGS, we simply provide a vector of length $n$ called $f1$ as data and each element can take any integer value from 0-7. 
+
+```{r eval = FALSE}
+sink("jags/cjs.jags")
+cat("
+model{
+  # Priors
+   phi ~ dbeta(1, 1)
+   p ~ dbeta(1, 1)
+
+  # Likelihood
+  for(i in 1:nInd){
+   # Known to be alive on first occasion
+   z[i, f1[i]] <- 1
+
+   for(t in (f1[i] + 1):nOcc){
+    # State model
+    z[i, t] ~ dbern(phi * z[i, t - 1])
+
+    # Observation model
+    y[i, t] ~ dbern(p * z[i, t])
+   } # end t loop
+  } # end i loop
+} # end model
+    ", fill = TRUE)
+sink()
+```
+
+
+### Fitting the model
+
+Now we're ready to fit the model. First, we need to create the vector `f1`. We'll do this by using the `apply` function to determine, for each row, what is the first $1$ in the capture history:
+
+```{r}
+## The function min(which(x==1)) first returns which elements in the vector are 1 and then return the minimum of those values
+## The `apply` function allows us to apply this function to each row (MARGIN = 1)
+f1 <- apply(X = ch, MARGIN = 1, FUN = function(x) min(which(x == 1)))
+
+## Bundle data
+jags.data <- list(y = ch, nInd = dim(ch)[1], nOcc = dim(ch)[2], f1 = f1)
+```
+
+As we saw for occupancy and closed-population CMR models, it's important to provide good initial values for `z`. These initial values need to be stored in a matrix with the same dimensions as the capture history matrix. Also, we have to be sure **not** to provide initial values for any nodes that are deterministic (i.e., the first capture occasion, which we know is 1). So we'll create a matrix that has `NA` for occasions 1-f1 and then 1's after that:
+
+```{r}
+z.init <- matrix(NA, nrow = 294, ncol = 7)
+
+for(i in 1:dim(z.init)[1]){
+  z.init[i, f1[i]:dim(z.init)[2]] <- 1
+  z.init[i,f1[i]] <- NA
+}
+
+### Initial values
+inits <- function(){list(phi = runif(1), p = runif(1),
+                         z = z.init)}
+
+### Parameters
+params <- c("phi", "p")
+
+### MCMC settings
+nc <- 3
+ni <- 10000
+nb <- 2500
+nt <- 1
+```
+
+Now fit the model and look at the output:
+
+```{r eval = FALSE}
+dipper1 <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = params,
+                        model.file = "jags/cjs.jags", n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt,
+                        parallel = TRUE)
+
+jagsUI::traceplot(dipper1)
+print(dipper1)
+```
+
+
+```{r echo = FALSE, fig.width=6, fig.height=6}
+
+dipper1 <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = params,
+                        model.file = here::here("inst/jags/cjs.jags"), n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt,
+                        parallel = TRUE)
+jagsUI::traceplot(dipper1)
+print(dipper1)
+```
+
+Looks good!
+
+
+### Modeling group effects
+
+The original dipper data also includes information about the sex of each individual. Let's use these data to test whether survival differs for males vs. females. First, read in the sex data:
+
+```{r}
 sex <- c("Female", "Female", "Female", "Female", "Female", "Female", "Female", "Female", 
   "Female", "Female", "Female", "Female", "Female", "Female", "Female", "Female", 
   "Female", "Female", "Female", "Female", "Female", "Female", "Male", "Male", "Male", 
@@ -141,50 +252,99 @@ sex <- c("Female", "Female", "Female", "Female", "Female", "Female", "Female", "
   "Female", "Female", "Male" , "Male", "Male", "Male", "Female", "Female", "Male", "Female", "Male") 
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+### The model
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+For the sex-specific survival model, we'll simply estimate two separate survival probabilities and use a vector to index which survival probability applies to each individual:
 
-## Vignette Info
+```{r eval = FALSE}
+sink("jags/cjs_group.jags")
+cat("
+model{
+  # Priors
+   phi[1] ~ dbeta(1, 1)
+   phi[2] ~ dbeta(1, 1)
+   p ~ dbeta(1, 1)
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+  # Likelihood
+  for(i in 1:nInd){
+   # Known to be alive on first occasion
+   z[i, f1[i]] <- 1
 
-## Styles
+   for(t in (f1[i] + 1):nOcc){
+    # State model
+    z[i, t] ~ dbern(phi[sex[i]] * z[i, t - 1])
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+    # Observation model
+    y[i, t] ~ dbern(p * z[i, t])
+   } # end t loop
+  } # end i loop
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+  # Derived parameters
+  delta.phi <- phi[1] - phi[2]
+} # end model
+    ", fill = TRUE)
+sink()
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+### Fitting the model
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+No need to re-create the `f1` vector so all we need to do is add the vector with the sex information (though we do need to covert this to 1 (female) and 2 (male)):
 
-## More Examples
+```{r}
+sex <- as.numeric(as.factor(sex))
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+## Bundle data
+jags.data <- list(y = ch, nInd = dim(ch)[1], nOcc = dim(ch)[2], f1 = f1, sex = sex)
 ```
 
-Also a quote using `>`:
+As we saw for occupancy and closed-population CMR models, it's important to provide good initial values for `z`. These initial values need to be stored in a matrix with the same dimensions as the capture history matrix. Also, we have to be sure **not** to provide initial values for any nodes that are deterministic (i.e., the first capture occasion, which we know is 1). So we'll create a matrix that has `NA` for occasions 1-f1 and then 1's after that:
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+```{r}
+z.init <- matrix(NA, nrow = 294, ncol = 7)
+
+for(i in 1:dim(z.init)[1]){
+  z.init[i, f1[i]:dim(z.init)[2]] <- 1
+  z.init[i,f1[i]] <- NA
+}
+
+### Initial values
+inits <- function(){list(phi = runif(2), p = runif(1),
+                         z = z.init)}
+
+### Parameters
+params <- c("phi", "p", "delta.phi")
+
+### MCMC settings
+nc <- 3
+ni <- 10000
+nb <- 2500
+nt <- 1
+```
+
+Now fit the model and look at the output:
+
+```{r eval = FALSE}
+dipper2 <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = params,
+                        model.file = "jags/cjs_group.jags", n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt,
+                        parallel = TRUE)
+
+jagsUI::traceplot(dipper2)
+print(dipper2)
+```
+
+
+```{r echo = FALSE, fig.width=6, fig.height=6}
+
+dipper2 <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = params,
+                        model.file = here::here("inst/jags/cjs_group.jags"), n.chains = nc, n.iter = ni, n.burnin = nb, n.thin = nt,
+                        parallel = TRUE)
+jagsUI::traceplot(dipper2)
+print(dipper2)
+```
+
+So we can see that there's a 65% probability that male survival is higher than female survival. Not much evidence of a survival difference but see how simple it is to estimate derived parameters and their uncertainty? 
+
+### Other models
+
+As we've seen throughout the semester, once we have the basic model structure in place, it's relatively straightforward to add additional sources of complexity. For example, time effects, individual heterogeneity, covariates, trap responses, and interactions among these variables (though just remember that even though we can fit these models, that doesn't necessarily mean that we can reliably estimate all of the parameters). Next week, we'll explore a few of these more complex CJS models, as well as more efficient ways to parameterize the CJS model and ways to check for parameter identifiability. Stay tuned! 

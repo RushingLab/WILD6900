@@ -109,6 +109,9 @@
     <li>
       <a href="../articles/Lecture13/Lecture13.html">Lecture 13: Estimating abundance: Closed-population capture-mark-recapture</a>
     </li>
+    <li>
+      <a href="../articles/Lecture14/Lecture14.html">Lecture 14: Estimating survival: Open-population capture-mark-recapture</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -156,6 +159,9 @@
     <li>
       <a href="../articles/multi_spp_occ.html">Estimating species richness using hierarchical occupancy models</a>
     </li>
+    <li>
+      <a href="../articles/cjs.html">Cormack-Jolly-Seber models</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -180,7 +186,7 @@
       <h1>Estimating species richness using hierarchical occupancy models</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-04-08</h4>
+            <h4 class="date">2019-04-11</h4>
       
       
       <div class="hidden name"><code>multi_spp_occ.Rmd</code></div>
@@ -195,75 +201,75 @@
 <h2 class="hasAnchor">
 <a href="#simulating-the-data" class="anchor"></a>Simulating the data</h2>
 <p>As in all site-occupancy models, we imagine conducting <code>K</code> replicate surveys at <code>J</code> sites. In the multi-species model, we also need to set the true species richness <code>R</code>. For this example, we’ll assume:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Number of species (richness)
-R &lt;-<span class="st"> </span><span class="dv">120</span>
-
-## Number of sites surveyed 
-J &lt;-<span class="st"> </span><span class="dv">15</span>
-
-## Number of visits per site
-K &lt;-<span class="st"> </span><span class="dv">3</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">## Number of species (richness)</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">R &lt;-<span class="st"> </span><span class="dv">120</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co">## Number of sites surveyed </span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">J &lt;-<span class="st"> </span><span class="dv">15</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">## Number of visits per site</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">K &lt;-<span class="st"> </span><span class="dv">3</span></a></code></pre></div>
 <p>Next, we will simulate the species-specific occupancy and detection probabilities. We will do this in a hierarchical way: first set the overall mean occupancy probability for the entire community and the variance among species. Then generate the species-specific value from this distribution. Many communities are dominated by lots of rare and elusive species, with a few common species. As such, we’ll set the mean occupancy probability to a low values but allow for some high values:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Mean occupancy probability
-mu.psi &lt;-<span class="st"> </span><span class="fl">0.6</span>
-
-## Covert to logit-scale
-lmu.psi &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Logistic">qlogis</a></span>(mu.psi)
-
-## Occupancy sd (and precision)
-sd.psi &lt;-<span class="st"> </span><span class="fl">1.25</span>
-tau.psi &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>sd.psi<span class="op">^</span><span class="dv">2</span>
-
-## Species-specific occupancy probability
-lpsi &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dt">n =</span> R, <span class="dt">mean =</span> lmu.psi, <span class="dt">sd =</span> sd.psi)
-psi &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Logistic">plogis</a></span>(lpsi)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/hist">hist</a></span>(psi)</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">## Mean occupancy probability</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">mu.psi &lt;-<span class="st"> </span><span class="fl">0.6</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">## Covert to logit-scale</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">lmu.psi &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Logistic">qlogis</a></span>(mu.psi)</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">## Occupancy sd (and precision)</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">sd.psi &lt;-<span class="st"> </span><span class="fl">1.25</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">tau.psi &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>sd.psi<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">## Species-specific occupancy probability</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">lpsi &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dt">n =</span> R, <span class="dt">mean =</span> lmu.psi, <span class="dt">sd =</span> sd.psi)</a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">psi &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Logistic">plogis</a></span>(lpsi)</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/hist">hist</a></span>(psi)</a></code></pre></div>
 <p><img src="multi_spp_occ_files/figure-html/unnamed-chunk-2-1.png" width="576"></p>
 <p>Now the detection probabilities:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Mean detection probability
-mu.p &lt;-<span class="st"> </span><span class="fl">0.2</span>
-
-## Covert to logit-scale
-lmu.p &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Logistic">qlogis</a></span>(mu.p)
-
-## Detection sd (and precision)
-sd.p &lt;-<span class="st"> </span><span class="dv">1</span>
-tau.p &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>sd.p<span class="op">^</span><span class="dv">2</span>
-
-## Species-specific detection probability
-lp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dt">n =</span> R, <span class="dt">mean =</span> lmu.p, <span class="dt">sd =</span> sd.p)
-p &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Logistic">plogis</a></span>(lp)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/hist">hist</a></span>(p)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## Mean detection probability</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">mu.p &lt;-<span class="st"> </span><span class="fl">0.2</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">## Covert to logit-scale</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">lmu.p &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Logistic">qlogis</a></span>(mu.p)</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">## Detection sd (and precision)</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">sd.p &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">tau.p &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>sd.p<span class="op">^</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">## Species-specific detection probability</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">lp &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dt">n =</span> R, <span class="dt">mean =</span> lmu.p, <span class="dt">sd =</span> sd.p)</a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">p &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Logistic">plogis</a></span>(lp)</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/hist">hist</a></span>(p)</a></code></pre></div>
 <p><img src="multi_spp_occ_files/figure-html/unnamed-chunk-3-1.png" width="576"></p>
 <p>Next, we simulate the true occupancy status of each species at each site. First create an empty <span class="math inline">\(R \times J\)</span> matrix, then fill in the site-specific occupancy for each species using the <code><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom()</a></code> function and the species-specific occupancy probabilities:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## True occupancy at each sites
-z &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> R, <span class="dt">ncol =</span> J)
-
-<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>R){
-  z[i, ] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(<span class="dt">n =</span> J, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> psi[i])
-}</code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## True occupancy at each sites</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">z &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> R, <span class="dt">ncol =</span> J)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>R){</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">  z[i, ] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(<span class="dt">n =</span> J, <span class="dt">size =</span> <span class="dv">1</span>, <span class="dt">prob =</span> psi[i])</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">}</a></code></pre></div>
 <p>Finally, we simulate the observations. Last week, we treated each occasion <span class="math inline">\(K\)</span> as a separate Bernoulli trial. In the case, we’ll use a different formulation by noting that the number of successes out of <span class="math inline">\(K\)</span> Bernoulli trials (all with the same <span class="math inline">\(p\)</span>) can also be modeled using a binomial model with size <span class="math inline">\(K\)</span>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Observed occupancy at each sites
-y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> R, <span class="dt">ncol =</span> J)
-
-<span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>R){
-  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J){
-      y[i, j] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">size =</span> K, <span class="dt">prob =</span> z[i,j] <span class="op">*</span><span class="st"> </span>p[i])
-  }
-}</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## Observed occupancy at each sites</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> R, <span class="dt">ncol =</span> J)</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>R){</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J){</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">      y[i, j] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(<span class="dt">n =</span> <span class="dv">1</span>, <span class="dt">size =</span> K, <span class="dt">prob =</span> z[i,j] <span class="op">*</span><span class="st"> </span>p[i])</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">  }</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">}</a></code></pre></div>
 <p>This simulated data contains some species that have all <code>0</code> detections. In a real study, we would of course not have these entries. So the next step is to remove them from our data:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Remove species that were never observed
-nd &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(y, <span class="dv">1</span>, max)<span class="op">==</span><span class="dv">0</span>)
-y &lt;-<span class="st"> </span>y[<span class="op">-</span>nd,]</code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co">## Remove species that were never observed</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">nd &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(y, <span class="dv">1</span>, max)<span class="op">==</span><span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">y &lt;-<span class="st"> </span>y[<span class="op">-</span>nd,]</a></code></pre></div>
 <div id="data-augmentation" class="section level3">
 <h3 class="hasAnchor">
 <a href="#data-augmentation" class="anchor"></a>Data augmentation</h3>
 <p>The current object <code>y</code> is what we would “observe” in a real study. No species with all <code>0</code> detection histories. But to account for imperfect detection, we need to add some all <code>0</code> detections back into the data. So we will create a matrix with all <code>0</code> detections for some large-ish number of species (we choose a number that we suspect is bigger than the true number of “missing” species, keeping in mind that the more we add, the longer it will take to fit our model). In this case, we’ll augment our data with 40 “potentially fake” species:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Add augmented individuals
-nAug &lt;-<span class="st"> </span><span class="dv">40</span>
-aug_mat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="dv">0</span>, <span class="dt">nrow =</span> nAug, <span class="dt">ncol =</span> J)
-
-y.aug &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">rbind</a></span>(y, aug_mat)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co">## Add augmented individuals</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">nAug &lt;-<span class="st"> </span><span class="dv">40</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">aug_mat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="dv">0</span>, <span class="dt">nrow =</span> nAug, <span class="dt">ncol =</span> J)</a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">y.aug &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cbind">rbind</a></span>(y, aug_mat)</a></code></pre></div>
 <p>In the model, we will try to determine which of these augment species are real (they were in our sample but we didn’t detect them) and which are fake.</p>
 </div>
 </div>
@@ -285,61 +291,61 @@ y.aug &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocum
 <p>We can also define a derived variable to estimate richness:</p>
 <p><span class="math display">\[\Large R = \sum_{i=1}^M x_i\]</span></p>
 <p>Based on these details, let’s write the model in JAGS:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"jags/Mult_spp_occ.jags"</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span>
-<span class="st">model{</span>
-<span class="st">  # Priors</span>
-
-<span class="st">  # Likelihood</span>
-<span class="st">  for(i in 1:M){</span>
-<span class="st">   # Is species real or not?</span>
-
-<span class="st">    for(j in 1:J){</span>
-<span class="st">      # True occupancy at each site</span>
-
-<span class="st">      # Observed occupancy at each site</span>
-<span class="st">    }</span>
-<span class="st">  }</span>
-
-<span class="st">  # Richness</span>
-
-<span class="st">}</span>
-<span class="st">    "</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)
-<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()</code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"jags/Mult_spp_occ.jags"</span>)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="st">model{</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">  # Priors</span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="st">  # Likelihood</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="st">  for(i in 1:M){</span></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="st">   # Is species real or not?</span></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="st">    for(j in 1:J){</span></a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="st">      # True occupancy at each site</span></a>
+<a class="sourceLine" id="cb8-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="st">      # Observed occupancy at each site</span></a>
+<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="st">    }</span></a>
+<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="st">  }</span></a>
+<a class="sourceLine" id="cb8-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb8-17" data-line-number="17"><span class="st">  # Richness</span></a>
+<a class="sourceLine" id="cb8-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb8-19" data-line-number="19"><span class="st">}</span></a>
+<a class="sourceLine" id="cb8-20" data-line-number="20"><span class="st">    "</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb8-21" data-line-number="21"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()</a></code></pre></div>
 </div>
 <div id="model-fitting" class="section level2">
 <h2 class="hasAnchor">
 <a href="#model-fitting" class="anchor"></a>Model fitting</h2>
 <p>Now we’re ready to fit the model. As in the othe occupancy models we’ve seen, initial values for <span class="math inline">\(x\)</span> and <span class="math inline">\(z\)</span> are important (remember that we need <span class="math inline">\(x\)</span> and <span class="math inline">\(z\)</span> for the full augmented data set):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## Bundle data
-jags.data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">M =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(y.aug)[<span class="dv">1</span>], <span class="dt">J =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(y.aug)[<span class="dv">2</span>], <span class="dt">K =</span> K, <span class="dt">y =</span> y.aug)
-
-## Initial values 
-z.init &lt;-<span class="st"> </span>y.aug
-z.init[z.init <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>] &lt;-<span class="st"> </span><span class="dv">1</span>
-
-inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">omega =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>), <span class="dt">mu.psi =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>), <span class="dt">mu.p =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>), 
-                         <span class="dt">sd.psi =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">sd.p =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),
-                         <span class="dt">z =</span> z.init,
-                         <span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(z.init, <span class="dv">1</span>, max))}
-
-## Parameters to monitor
-params &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"mu.psi"</span>, <span class="st">"mu.p"</span>, <span class="st">"sd.psi"</span>, <span class="st">"sd.p"</span>, <span class="st">"omega"</span>, <span class="st">"R"</span>)
-
-## MCMC settings
-nc &lt;-<span class="st"> </span><span class="dv">3</span>
-ni &lt;-<span class="st"> </span><span class="dv">50000</span>
-nb &lt;-<span class="st"> </span><span class="dv">5000</span>
-nt &lt;-<span class="st"> </span><span class="dv">1</span>
-
-fit &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags.data, <span class="dt">inits =</span> inits, <span class="dt">parameters.to.save =</span> params, 
-                    <span class="dt">model.file =</span> <span class="st">"inst/jags/Mult_spp_occ.jags"</span>, 
-                    <span class="dt">n.chains =</span> nc, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb, <span class="dt">n.thin =</span> nt, 
-                    <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="co">## Bundle data</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">jags.data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">M =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(y.aug)[<span class="dv">1</span>], <span class="dt">J =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(y.aug)[<span class="dv">2</span>], <span class="dt">K =</span> K, <span class="dt">y =</span> y.aug)</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="co">## Initial values </span></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">z.init &lt;-<span class="st"> </span>y.aug</a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">z.init[z.init <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>] &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb9-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb9-8" data-line-number="8">inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">omega =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>), <span class="dt">mu.psi =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>), <span class="dt">mu.p =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>), </a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">                         <span class="dt">sd.psi =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">sd.p =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb9-10" data-line-number="10">                         <span class="dt">z =</span> z.init,</a>
+<a class="sourceLine" id="cb9-11" data-line-number="11">                         <span class="dt">x =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(z.init, <span class="dv">1</span>, max))}</a>
+<a class="sourceLine" id="cb9-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb9-13" data-line-number="13"><span class="co">## Parameters to monitor</span></a>
+<a class="sourceLine" id="cb9-14" data-line-number="14">params &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"mu.psi"</span>, <span class="st">"mu.p"</span>, <span class="st">"sd.psi"</span>, <span class="st">"sd.p"</span>, <span class="st">"omega"</span>, <span class="st">"R"</span>)</a>
+<a class="sourceLine" id="cb9-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb9-16" data-line-number="16"><span class="co">## MCMC settings</span></a>
+<a class="sourceLine" id="cb9-17" data-line-number="17">nc &lt;-<span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb9-18" data-line-number="18">ni &lt;-<span class="st"> </span><span class="dv">50000</span></a>
+<a class="sourceLine" id="cb9-19" data-line-number="19">nb &lt;-<span class="st"> </span><span class="dv">5000</span></a>
+<a class="sourceLine" id="cb9-20" data-line-number="20">nt &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb9-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb9-22" data-line-number="22">fit &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags.data, <span class="dt">inits =</span> inits, <span class="dt">parameters.to.save =</span> params, </a>
+<a class="sourceLine" id="cb9-23" data-line-number="23">                    <span class="dt">model.file =</span> <span class="st">"inst/jags/Mult_spp_occ.jags"</span>, </a>
+<a class="sourceLine" id="cb9-24" data-line-number="24">                    <span class="dt">n.chains =</span> nc, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb, <span class="dt">n.thin =</span> nt, </a>
+<a class="sourceLine" id="cb9-25" data-line-number="25">                    <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>As always, check for convergence:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(fit)
-
-jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/traceplot">traceplot</a></span>(fit)</code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(fit)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/traceplot">traceplot</a></span>(fit)</a></code></pre></div>
 <p>Assuming the model converged, how close was our estimated richness to the true value?</p>
 </div>
   </div>
@@ -364,7 +370,7 @@ jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumenta
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.3.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
 </div>
       </footer>
 </div>

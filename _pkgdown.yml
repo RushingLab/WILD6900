@@ -48,6 +48,8 @@ navbar:
           href: articles/Lecture12/Lecture12.html
         - text: "Lecture 13: Estimating abundance: Closed-population capture-mark-recapture"
           href: articles/Lecture13/Lecture13.html
+        - text: "Lecture 14: Estimating survival: Open-population capture-mark-recapture"
+          href: articles/Lecture14/Lecture14.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:
@@ -75,6 +77,8 @@ navbar:
           href: articles/n-mixture2.html
         - text: "Estimating species richness using hierarchical occupancy models"
           href: articles/multi_spp_occ.html
+        - text: "Cormack-Jolly-Seber models"
+          href: articles/cjs.html
     - icon: fas fa-pencil-square-o
       text: "Assignments"
       href: articles/homework.html
