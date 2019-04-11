@@ -82,13 +82,29 @@ Image courtesy of USFWS Mountain-Prairie, via Wikimedia Commons
 ---
 ## Open-population models
 
---
 #### In this lecture, we will focus on estimating survival/emigration
 
-- *Condition on first capture*
+--
+```{r out.width = "75%"}
+knitr::include_graphics("figs/cjs1.png")
+```
 
+---
+## Open-population models
+
+#### In this lecture, we will focus on estimating survival/emigration
+
+
+```{r out.width = "75%"}
+knitr::include_graphics("figs/cjs2.png")
+```
 
 --
+- *Condition on first capture*
+
+---
+## Open-population models
+
 #### On the occassion after release, 4 possible scenarios:
 
 - 1) Individual survives and is re-captured (capture history = `11`)  
@@ -249,5 +265,93 @@ cjs_df %>%
 --
 - survived occasion 1 $\large (\phi_1)$, not recaptured on occasion 2 $\large (1 - p_2)$, survived occasion 2 $\large (\phi_2)$, not recaptured on occasion 3 $\large (1 - p_3)$  
 
+---
+## CJS model as a state-space model
+
+#### Using the tools we've learned this semester, it's relativley straightfoward to write the CJS model as a state-space model:
+
+--
+#### Process model, capture occassion 1
+$$\large z_{i,f_1} = 1$$
+
+--
+#### Process model, capture occasion 2+
+
+--
+$$\large z_{i,t} \sim Bernoulli(z_{i,t-1}\phi)$$
+
+--
+#### Observation model
+
+$$\large y_{i,t} \sim Bernoulli(z_{i,t}p)$$
+
+---
+## CJS model with time-variation
+
+#### As for the other models we've seen this semester, it's possible to add temporal variation to the CJS model
+
+--
+$$\Large logit(\phi_t) = \mu + \epsilon_t$$
+
+$$\Large \epsilon_t \sim normal(0, \tau_{\phi})$$
+
+--
+$$\Large logit(p_t) = \mu + \xi_t$$
+
+$$\Large \xi_t \sim normal(0, \tau_{p})$$
 
 
+---
+## Identifiability of the CJS model with time-variation
+
+#### In the fully time-dependent model, $\large \phi_T$ and $\large p_T$ are not identifiable
+
+- the model will return posteriors for both parameters (because each has a prior) but the model will not be able to separately estimate both parameters
+    + posteriors will actually be for $\phi_T \times p_T$
+
+---
+## Identifiability of the CJS model with time-variation
+
+#### Why is this?
+
+--
+- In a CMR study with two occassions (**note** - never do this!):
+    + 100 individuals captured on first occasion
+    + 60 of those individuals recaptured on the second occasion
+
+--
+- Expected number of recaptures $= N \times \phi \times p$
+    + $60 = 100 \times 0.8 \times 0.75$
+    + $60 = 100 \times 0.9 \times 0.667$
+    + $60 = 100 \times 0.6 \times 1.00$
+
+--
+- No unique solution
+    + Separating $p$ from $\phi$ requires *internal* zeros
+    
+---
+## Identifiability of the CJS model with time-variation
+
+#### What can you do:
+
+1) Constant $\large p$
+
+2) Covariates on $\large \phi$ and $\large p$
+
+3) Informative priors
+
+
+---
+## Assumptions of the CJS model
+
+#### 1) Every animal has the same chance of capture, p
+
+#### 2) Every animal has same probability of surviving $\large \phi$
+
+#### 3) Marks are not lost 
+
+#### 4) Samples are instantaneous (short periods)  
+
+#### 5) All emigration is permanent (`101` must indicate $1-p$) 
+
+#### 6) Fates of animals  are independent of other animals 
