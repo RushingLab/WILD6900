@@ -112,6 +112,9 @@
     <li>
       <a href="../articles/Lecture14/Lecture14.html">Lecture 14: Estimating survival: Open-population capture-mark-recapture</a>
     </li>
+    <li>
+      <a href="../articles/Lecture15/Lecture15.html">Lecture 15: Multi-state models</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -162,6 +165,9 @@
     <li>
       <a href="../articles/cjs.html">Cormack-Jolly-Seber models</a>
     </li>
+    <li>
+      <a href="../articles/multi-state.html">Quantifying temporary emigration using multi-state modelss</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -186,7 +192,7 @@
       <h1>Simulating linear regression data</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-04-11</h4>
+            <h4 class="date">2019-04-16</h4>
       
       
       <div class="hidden name"><code>simulation.Rmd</code></div>
@@ -345,7 +351,7 @@
 <p>You can see that <code>ggplot</code> created a figure with the correct axes and labels. But no data. That’s because we didn’t tell <code>ggplot</code> what type of <em>geometry</em> to use to represent the data. Geometry refers to the actual type geometric object(s) we want to use to display the data. Common geometries include points (e.g., scatterplot), lines (e.g., timeseries), and bars (e.g., histograms). There are many others. Once we add a geometry, we can see the data:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">ggplot</span>(<span class="dt">data =</span> sim_df, <span class="kw">aes</span>(<span class="dt">x =</span> visits, <span class="dt">y =</span> mu)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>()</a></code></pre></div>
 <p><img src="simulation_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;"></p>
-<p>So we can see that our model predicts seed counts ranging from 169.46 individuals to 335.83. Is that reasonable? Who knows, this is a made up species. But if it wasn’t, this would be a good time to go back and play with different parameter values to generate abundances that are consistent with our domain expertise. For example, the model predicts <span class="math inline">\(\approx\)</span> 169.46 seeds for a flower with 0 pollination visits. Maybe that makes sense (perhaps the orchids can self-pollinate if necessary) or maybe it doesn’t. If it doesn’t, we need to re-think the model structure.</p>
+<p>So we can see that our model predicts seed counts ranging from 162.55 individuals to 331.37. Is that reasonable? Who knows, this is a made up species. But if it wasn’t, this would be a good time to go back and play with different parameter values to generate abundances that are consistent with our domain expertise. For example, the model predicts <span class="math inline">\(\approx\)</span> 162.55 seeds for a flower with 0 pollination visits. Maybe that makes sense (perhaps the orchids can self-pollinate if necessary) or maybe it doesn’t. If it doesn’t, we need to re-think the model structure.</p>
 </div>
 </div>
 </div>
