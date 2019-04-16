@@ -1,0 +1,68 @@
+
+    model {
+    
+    # ---------------------------------
+    # Parameters:
+    # phi: survival probability
+    # psiIO: probability to emigrate
+    # psiOI: probability to immigrate
+    # p: recapture probability
+    # ---------------------------------
+    # States (S):
+    # 1 alive and present
+    # 2 alive and absent
+    # 3 dead
+    # Observations (O):
+    # 1 seen 
+    # 2 not seen
+    # ---------------------------------
+    
+    # Priors and constraints
+    for (t in 1:(n.occasions-1)){
+    phi[t] <- mean.phi
+    psiIO[t] <- mean.psiIO
+    psiOI[t] <- mean.psiOI
+    p[t] <- mean.p
+    }
+    mean.phi ~ dunif(0, 1)       # Prior for mean survival
+    mean.psiIO ~ dunif(0, 1)     # Prior for mean temp. emigration
+    mean.psiOI ~ dunif(0, 1)     # Prior for mean temp. immigration
+    mean.p ~ dunif(0, 1)         # Prior for mean recapture
+    
+    # Define state-transition and observation matrices 	
+    for (i in 1:nind){
+    # Define probabilities of state S(t+1) given S(t)
+    for (t in f[i]:(n.occasions-1)){
+    ps[1,i,t,1] <- phi[t] * (1-psiIO[t])
+    ps[1,i,t,2] <- phi[t] * psiIO[t]
+    ps[1,i,t,3] <- 1-phi[t]
+    ps[2,i,t,1] <- phi[t] * psiOI[t]
+    ps[2,i,t,2] <- phi[t] * (1-psiOI[t])
+    ps[2,i,t,3] <- 1-phi[t]
+    ps[3,i,t,1] <- 0
+    ps[3,i,t,2] <- 0
+    ps[3,i,t,3] <- 1
+    
+    # Define probabilities of O(t) given S(t)
+    po[1,i,t,1] <- p[t]
+    po[1,i,t,2] <- 1-p[t]
+    po[2,i,t,1] <- 0
+    po[2,i,t,2] <- 1
+    po[3,i,t,1] <- 0
+    po[3,i,t,2] <- 1
+    } #t
+    } #i
+    
+    # Likelihood
+    for (i in 1:nind){
+    # Define latent state at first capture
+    z[i,f[i]] <- y[i,f[i]]
+    for (t in (f[i]+1):n.occasions){
+    # State process: draw S(t) given S(t-1)
+    z[i,t] ~ dcat(ps[z[i,t-1], i, t-1,])
+    # Observation process: draw O(t) given S(t)
+    y[i,t] ~ dcat(po[z[i,t], i, t-1,])
+    } #t
+    } #i
+    }
+    

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 15</title>
+    <meta charset="utf-8">
+    <meta name="author" content="   WILD6900 (Spring 2019)" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="WILD6900.css" type="text/css" />
+    <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lecture 15
+## Multi-state models
+### <br/><br/><br/>WILD6900 (Spring 2019)
+
+---
+
+
+
+
+## Readings
+
+&gt; ### Kéry &amp; Schaub 264-313
+
+---
+## What is a "state"
+
+#### Alive/dead
+- CJS model
+
+
+--
+#### Occupied/unoccupied
+- Occupancy model
+
+
+--
+#### Geographic location (location `\(1, 2, ...,S\)`)
+
+--
+#### Un-infected/infected/dead
+
+--
+#### Age class
+
+--
+#### Any combination of above states*
+
+.footnote[
+*At least in theory
+]
+
+---
+## Two states
+
+#### State model
+
+&lt;img src="figs/cjs1.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+
+`$$\Large z_{i,t} \sim Bernoulli(z_{i,t-1}\phi)$$`
+
+---
+## Two states
+
+#### Observation model
+
+&lt;img src="figs/cjs2.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+&lt;br/&gt;
+
+`$$\Large y_{i,t} \sim Bernoulli(z_{i,t}p)$$`
+
+---
+## Three states
+
+#### State model
+
+&lt;img src="figs/multi_state.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+## Three states
+
+#### State model
+
+&lt;img src="figs/multi_state2.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+## Three states - example
+
+#### Movement between two sites
+
+---
+## Three states - example
+
+#### Movement between two sites
+
+&lt;img src="figs/ms_AB.png" width="50%" style="display: block; margin: auto;" /&gt;
+
+- `\(\large \phi_A\)`: Probability alive at site A
+
+- `\(\large \phi_B\)`: Probability alive at site B
+
+- `\(\large \psi_{AB}\)`: Probability of moving from site A to site B
+
+- `\(\large \psi_{BA}\)`: Probability of mumoving from site B to site A
+
+---
+## Three states - example
+
+#### State model 
+
+.left-column[
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+#### True state at time *t*
+]
+
+.right-column[
+&lt;center&gt;
+#### True state at time *t + 1*
+&lt;/center&gt;
+&lt;table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 14px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt;  &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Site A &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Site B &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Dead &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Site A &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi_A (1 - \psi_{AB})\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi_A \psi_{AB}\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(1 - \phi_A\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Site B &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi_B \psi_{BA}\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi_B (1 - \psi_{BA})\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(1 - \phi_B\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Dead &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+
+---
+## Three states - example
+
+#### Observation model 
+
+.left-column[
+&lt;br/&gt;
+&lt;br/&gt;
+&lt;br/&gt;
+#### True state at time *t*
+]
+
+.right-column[
+&lt;center&gt;
+#### Observation at time *t*
+&lt;/center&gt;
+&lt;table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 14px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt;  &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Site A &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Site B &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Not Seen &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Site A &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(p_A\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(1 - p_A\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Site B &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(p_B\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(1 - p_B\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Dead &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 1 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+---
+## Three states - example
+
+#### The data
+
+
+
+
+- `\(1 =\)` Seen alive at site A
+
+- `\(2 =\)` Seen alive at site B
+
+- `\(3 =\)` Not seen
+
+--
+
+```r
+head(rCH)
+```
+
+```
+##      [,1] [,2] [,3] [,4] [,5] [,6]
+## [1,]    1    1    2    2    1    3
+## [2,]    1    1    3    3    3    3
+## [3,]    1    3    3    3    3    3
+## [4,]    1    2    1    3    3    3
+## [5,]    1    2    3    3    3    3
+## [6,]    1    3    3    3    3    3
+```
+
+---
+## Three states - example
+
+#### The data
+
+- `\(f =\)` First capture occasion
+
+
+```r
+tail(rCH)
+```
+
+```
+##        [,1] [,2] [,3] [,4] [,5] [,6]
+## [795,]    3    3    3    3    2    2
+## [796,]    3    3    3    3    2    1
+## [797,]    3    3    3    3    2    3
+## [798,]    3    3    3    3    2    3
+## [799,]    3    3    3    3    2    3
+## [800,]    3    3    3    3    2    3
+```
+
+```r
+tail(f)
+```
+
+```
+## [1] 5 5 5 5 5 5
+```
+
+---
+## Three states - example
+
+#### The likelihood
+- The Bernoulli distribution describes the probability of one (of two) outcomes
+
+--
+- The categorical distribution describes the probability of one (of `\(N\)`) outcomes
+    + `\(\Omega\)` and `\(\Theta\)` are matrices defining the state/observaton probabilities   
+
+--
+`$$\large z_{i, t+1}|z_{i,t} \sim categorical(\Omega_{z_{i,t},1:S})$$`
+
+`$$\large y_{i, t}|z_{i,t} \sim categorical(\Theta_{z_{i,t},1:S})$$`
+
+---
+## Analysis in JAGS
+
+
+```r
+sink("ms.jags")
+cat("
+model {
+  # Priors 
+   phiA ~ dunif(0, 1)
+   phiB ~ dunif(0, 1)
+   psiAB ~ dunif(0, 1)
+   psiBA ~ dunif(0, 1)
+   pA ~ dunif(0, 1)
+   pB ~ dunif(0, 1)
+```
+
+---
+## Analysis in JAGS
+
+
+```r
+  # Define state-transition and observation matrices
+   # Define probabilities of state S(t+1) given S(t)
+      ps[1,1] &lt;- phiA * (1-psiAB)
+      ps[1,2] &lt;- phiA * psiAB
+      ps[1,3] &lt;- 1-phiA
+      ps[2,1] &lt;- phiB * psiBA
+      ps[2,2] &lt;- phiB * (1-psiBA)
+      ps[2,3] &lt;- 1-phiB
+      ps[3,1] &lt;- 0
+      ps[3,2] &lt;- 0
+      ps[3,3] &lt;- 1
+```
+
+---
+## Analysis in JAGS
+
+
+```r
+      # Define probabilities of O(t) given S(t)
+      po[1,1] &lt;- pA
+      po[1,2] &lt;- 0
+      po[1,3] &lt;- 1-pA
+      po[2,1] &lt;- 0
+      po[2,2] &lt;- pB
+      po[2,3] &lt;- 1-pB
+      po[3,1] &lt;- 0
+      po[3,2] &lt;- 0
+      po[3,3] &lt;- 1
+```
+
+---
+## Analysis in JAGS
+
+
+```r
+# Likelihood 
+for (i in 1:nInd){
+   # Define latent state at first capture
+   z[i,f[i]] &lt;- y[i,f[i]]
+   for (t in (f[i]+1):nOcc){
+      # State process: draw S(t) given S(t-1)
+      z[i,t] ~ dcat(ps[z[i,t-1],])
+      # Observation process: draw O(t) given S(t)
+      y[i,t] ~ dcat(po[z[i,t],])
+      } #t
+   } #i
+}
+",fill = TRUE)
+sink()
+```
+
+---
+## Multi-state models
+
+#### Very flexible
+- Most capture-recapture models can be formulated as multi-state models
+
+- Can accomodate many states
+
+- Can include covariates and individual/temporal variation 
+
+#### But complexity comes at a cost
+- Data hungry
+
+- Often not fully identifiable
+
+- Computationally intensive
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

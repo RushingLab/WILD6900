@@ -50,6 +50,8 @@ navbar:
           href: articles/Lecture13/Lecture13.html
         - text: "Lecture 14: Estimating survival: Open-population capture-mark-recapture"
           href: articles/Lecture14/Lecture14.html
+        - text: "Lecture 15: Multi-state models"
+          href: articles/Lecture15/Lecture15.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:
@@ -79,6 +81,8 @@ navbar:
           href: articles/multi_spp_occ.html
         - text: "Cormack-Jolly-Seber models"
           href: articles/cjs.html
+        - text: "Quantifying temporary emigration using multi-state modelss"
+          href: articles/multi-state.html
     - icon: fas fa-pencil-square-o
       text: "Assignments"
       href: articles/homework.html

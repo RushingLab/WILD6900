@@ -1,0 +1,219 @@
+---
+title: "Quantifying temporary emigration using multi-state models"
+author: "WILD6900"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+header-includes:
+  - \usepackage{amsmath}
+  - \usepackage{blkarray}
+  - \usepackage{bigstrut}
+  
+vignette: >
+  %\VignetteIndexEntry{multi-state1}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(fig.align = 'center', message = FALSE, warning = FALSE, 
+  collapse = TRUE,
+  comment = "#>"
+)
+library(WILD6900)
+```
+
+As we discussed in the [open-population capture-recapture lecture lecture](https://rushinglab.github.io/WILD6900/articles/Lecture14/Lecture14.html#1), the CJS model assumes that all emigration is permanent. This assumption is necessary because our model assumes that if an individual is alive and present at the site, the probability that we detect the individual is $p$. If emigration is not permanent, that is if individuals temporarily leave the site, they are technically alive and "present" at our site but the probability we detect them is 0. 
+
+If this temporary emigration is random, estimates of $p$ will be too low (because all the instances where $p=0$ will be incorrectly 
+
+```{r echo = FALSE}
+library(kableExtra)
+ms_df <- data.frame(state = c("Present", "Absent", "Dead"),
+                 A = c("\\(\\phi (1 - \\psi_{IO})\\)", 
+                       "\\(\\phi \\psi_{OI}\\)", 
+                       "0"),
+                 B = c("\\(\\phi \\psi_{IO}\\)",
+                       "\\(\\phi (1 - \\psi_{OI})\\)", 
+                       "0"),
+                 Dead = c( "\\(1 - \\phi\\)",
+                           "\\(1 - \\phi\\)",
+                           "1"))
+
+names(ms_df) <- c("", "Present", "Absent", "Dead")
+ms_df %>%
+  kable("html", align = 'c', escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), 
+                full_width = TRUE, font_size = 14) 
+```
+
+```{r echo = FALSE}
+library(kableExtra)
+ms_df2 <- data.frame(state = c("Present", "Absent", "Dead"),
+                 seen = c("\\(p\\)", 
+                       "0", 
+                       "0"),
+                 ns = c("\\(1 - p\\)",
+                       "1", 
+                       "1"))
+
+names(ms_df2) <- c("", "Seen", "Not Seen")
+ms_df2 %>%
+  kable("html", align = 'c', escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), 
+                full_width = TRUE, font_size = 14) 
+```
+
+
+```{r}
+# Define function to simulate multistate capture-recapture data
+simul.ms <- function(PSI.STATE, PSI.OBS, marked, unobservable = NA){
+   # Unobservable: number of state that is unobservable
+   n.occasions <- dim(PSI.STATE)[4] + 1
+   CH <- CH.TRUE <- matrix(NA, ncol = n.occasions, nrow = sum(marked))
+   # Define a vector with the occasion of marking
+   mark.occ <- matrix(0, ncol = dim(PSI.STATE)[1], nrow = sum(marked))
+   g <- colSums(marked)
+   for (s in 1:dim(PSI.STATE)[1]){
+      if (g[s]==0) next  # To avoid error message if nothing to replace
+      mark.occ[(cumsum(g[1:s])-g[s]+1)[s]:cumsum(g[1:s])[s],s] <-
+      rep(1:n.occasions, marked[1:n.occasions,s])
+      } #s
+   for (i in 1:sum(marked)){
+      for (s in 1:dim(PSI.STATE)[1]){
+         if (mark.occ[i,s]==0) next
+         first <- mark.occ[i,s]
+         CH[i,first] <- s
+         CH.TRUE[i,first] <- s
+         } #s
+      for (t in (first+1):n.occasions){
+         # Multinomial trials for state transitions
+         if (first==n.occasions) next
+         state <- which(rmultinom(1, 1, PSI.STATE[CH.TRUE[i,t-1],,i,t-1])==1)
+         CH.TRUE[i,t] <- state
+         # Multinomial trials for observation process
+         event <- which(rmultinom(1, 1, PSI.OBS[CH.TRUE[i,t],,i,t-1])==1)
+         CH[i,t] <- event
+         } #t
+      } #i
+   # Replace the NA and the highest state number (dead) in the file by 0
+   CH[is.na(CH)] <- 0
+   CH[CH==dim(PSI.STATE)[1]] <- 0
+   CH[CH==unobservable] <- 0
+   id <- numeric(0)
+   for (i in 1:dim(CH)[1]){
+      z <- min(which(CH[i,]!=0))
+      ifelse(z==dim(CH)[2], id <- c(id,i), id <- c(id))
+      }
+   return(list(CH=CH[-id,], CH.TRUE=CH.TRUE[-id,]))
+   # CH: capture histories to be used
+   # CH.TRUE: capture histories with perfect observation
+}
+```
+
+```{r}
+# Define mean survival, transitions, recapture, as well as number of occasions, states, observations and released individuals
+phi <- 0.85
+psiIO <- 0.2
+psiOI <- 0.3
+p <- 0.7
+n.occasions <- 8  
+n.states <- 3
+n.obs <- 2
+marked <- matrix(NA, ncol = n.states, nrow = n.occasions)
+marked[,1] <- rep(70, n.occasions)	# Present
+marked[,2] <- rep(0, n.occasions)	# Absent
+marked[,3] <- rep(0, n.occasions)	# Dead 
+
+# Define matrices with survival, transition and recapture probabilities
+# These are 4-dimensional matrices, with 
+   # Dimension 1: state of departure
+   # Dimension 2: state of arrival
+   # Dimension 3: individual
+   # Dimension 4: time
+# 1. State process matrix
+totrel <- sum(marked)
+PSI.STATE <- array(NA, dim=c(n.states, n.states, totrel, n.occasions-1))
+for (i in 1:totrel){
+   for (t in 1:(n.occasions-1)){
+      PSI.STATE[,,i,t] <- matrix(c(
+      phi*(1-psiIO), phi*psiIO,     1-phi,
+      phi*psiOI,     phi*(1-psiOI), 1-phi,
+      0,             0,             1       ), nrow = n.states, byrow = TRUE)
+      } #t
+   } #i
+
+# 2.Observation process matrix
+PSI.OBS <- array(NA, dim=c(n.states, n.obs, totrel, n.occasions-1))
+for (i in 1:totrel){
+   for (t in 1:(n.occasions-1)){
+      PSI.OBS[,,i,t] <- matrix(c(
+      p, 1-p,
+      0, 1,
+      0, 1    ), nrow = n.states, byrow = TRUE)
+      } #t
+   } #i
+
+# Execute simulation function
+sim <- simul.ms(PSI.STATE, PSI.OBS, marked)
+CH <- sim$CH
+
+# Compute vector with occasion of first capture
+get.first <- function(x) min(which(x!=0))
+f <- apply(CH, 1, get.first)
+
+# Recode CH matrix: note, a 0 is not allowed!
+# 1 = seen alive, 2 = not seen
+rCH <- CH  # Recoded CH
+rCH[rCH==0] <- 2
+
+```
+
+```{r}
+known.state.ms <- function(ms, notseen){
+  # notseen: label for ënot seení
+  state <- ms
+  state[state==notseen] <- NA
+  for (i in 1:dim(ms)[1]){
+    m <- min(which(!is.na(state[i,])))
+    state[i,m] <- NA
+  }
+  return(state)
+}
+
+# Function to create initial values for unknown z
+ms.init.z <- function(ch, f){
+  for (i in 1:dim(ch)[1]){ch[i,1:f[i]] <- NA}
+  states <- max(ch, na.rm = TRUE)
+  known.states <- 1:(states-1)
+  v <- which(ch==states)
+  ch[-v] <- NA
+  ch[v] <- sample(known.states, length(v), replace = TRUE)
+  return(ch)
+}
+
+```
+
+```{r}
+# Bundle data
+jags.data <- list(y = rCH, f = f, n.occasions = dim(rCH)[2], nind = dim(rCH)[1], z = known.state.ms(rCH, 2))
+
+# Initial values
+inits <- function(){list(mean.phi = runif(1, 0, 1), mean.psiIO = runif(1, 0, 1), mean.psiOI = runif(1, 0, 1), mean.p = runif(1, 0, 1), z = ms.init.z(rCH, f))}  
+
+# Parameters monitored
+parameters <- c("mean.phi", "mean.psiIO", "mean.psiOI", "mean.p")
+
+# MCMC settings
+ni <- 500
+nt <- 10
+nb <- 100
+nc <- 3
+
+# Call WinBUGS from R (BRT 35 min)
+tempemi <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = parameters, 
+                        model.file = here::here("inst/jags/tempem.jags"), 
+                        n.chains = nc, n.thin = nt, n.iter = ni, n.burnin = nb, 
+                        parallel = TRUE)
+
+print(tempemi, digits = 3)
+```
