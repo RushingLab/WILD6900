@@ -54,7 +54,7 @@ cat("
     # State process: draw S(t) given S(t-1)
     z[i,t] ~ dcat(ps[z[i,t-1],])
     # Observation process: draw O(t) given S(t)
-    y[i,t] ~ dcat(po[z[i,t], )
+    y[i,t] ~ dcat(po[z[i,t],])
     } #t
     } #i
     }

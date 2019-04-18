@@ -166,7 +166,10 @@
       <a href="../articles/cjs.html">Cormack-Jolly-Seber models</a>
     </li>
     <li>
-      <a href="../articles/multi-state.html">Quantifying temporary emigration using multi-state modelss</a>
+      <a href="../articles/multi-state.html">Quantifying temporary emigration using multi-state models</a>
+    </li>
+    <li>
+      <a href="../articles/multi-state2.html">Multi-state model for survival/transition probability of a perennial plant</a>
     </li>
   </ul>
 </li>
@@ -192,7 +195,7 @@
       <h1>Quantifying temporary emigration using multi-state models</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-04-16</h4>
+            <h4 class="date">2019-04-17</h4>
       
       
       <div class="hidden name"><code>multi-state.Rmd</code></div>
@@ -403,7 +406,7 @@ Dead
 <a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co"># 1 = seen alive, 2 = not seen</span></a>
 <a class="sourceLine" id="cb4-17" data-line-number="17">rCH &lt;-<span class="st"> </span>CH  <span class="co"># Recoded CH</span></a>
 <a class="sourceLine" id="cb4-18" data-line-number="18">rCH[rCH<span class="op">==</span><span class="dv">0</span>] &lt;-<span class="st"> </span><span class="dv">2</span></a></code></pre></div>
-<p>Multi-state models can be very computationally expensive. One way to speed them up is the provide the latent matrix <code>z</code> as partially-observed data. When the individual is seen, we know that <code>z = 1</code>. When the individual is not seen, we don’t know the state so we code that as <code>z = NA</code>. The following function will take the observed capture history and create a matrix <code>z</code> with the partially-known states:</p>
+<p>Multi-state models can be very computationally expensive. One way to speed them up is the provide the latent matrix <code>z</code> as partially-observed data. When the individual is seen, we know <span class="math inline">\(z\)</span>. When the individual is not seen, we don’t know the state so we code that as <code>z = NA</code>. The following function will take the observed capture history and create a matrix <code>z</code> with the partially-known states:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">known.state.ms &lt;-<span class="st"> </span><span class="cf">function</span>(ms, notseen){</a>
 <a class="sourceLine" id="cb5-2" data-line-number="2">  <span class="co"># notseen: label for not seen</span></a>
 <a class="sourceLine" id="cb5-3" data-line-number="3">  state &lt;-<span class="st"> </span>ms</a>

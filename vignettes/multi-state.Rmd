@@ -180,7 +180,7 @@ rCH[rCH==0] <- 2
 
 ```
 
-Multi-state models can be very computationally expensive. One way to speed them up is the provide the latent matrix `z` as partially-observed data. When the individual is seen, we know that `z = 1`. When the individual is not seen, we don't know the state so we code that as `z = NA`. The following function will take the observed capture history and create a matrix `z` with the partially-known states:
+Multi-state models can be very computationally expensive. One way to speed them up is the provide the latent matrix `z` as partially-observed data. When the individual is seen, we know $z$. When the individual is not seen, we don't know the state so we code that as `z = NA`. The following function will take the observed capture history and create a matrix `z` with the partially-known states:
 
 ```{r}
 known.state.ms <- function(ms, notseen){
