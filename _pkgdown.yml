@@ -81,8 +81,10 @@ navbar:
           href: articles/multi_spp_occ.html
         - text: "Cormack-Jolly-Seber models"
           href: articles/cjs.html
-        - text: "Quantifying temporary emigration using multi-state modelss"
+        - text: "Quantifying temporary emigration using multi-state models"
           href: articles/multi-state.html
+        - text: "Multi-state model for survival/transition probability of a perennial plant"
+          href: articles/multi-state2.html
     - icon: fas fa-pencil-square-o
       text: "Assignments"
       href: articles/homework.html

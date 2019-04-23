@@ -112,6 +112,9 @@
     <li>
       <a href="../articles/Lecture14/Lecture14.html">Lecture 14: Estimating survival: Open-population capture-mark-recapture</a>
     </li>
+    <li>
+      <a href="../articles/Lecture15/Lecture15.html">Lecture 15: Multi-state models</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -162,6 +165,12 @@
     <li>
       <a href="../articles/cjs.html">Cormack-Jolly-Seber models</a>
     </li>
+    <li>
+      <a href="../articles/multi-state.html">Quantifying temporary emigration using multi-state models</a>
+    </li>
+    <li>
+      <a href="../articles/multi-state2.html">Multi-state model for survival/transition probability of a perennial plant</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -186,7 +195,7 @@
       <h1>Poisson GLM for modeling count data</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-04-11</h4>
+            <h4 class="date">2019-04-17</h4>
       
       
       <div class="hidden name"><code>poisson_glm.Rmd</code></div>
@@ -494,31 +503,31 @@ f
 alpha
 </td>
 <td style="text-align:right;">
-4.2311
+4.2308
 </td>
 <td style="text-align:right;">
-0.0299
+0.0301
 </td>
 <td style="text-align:right;">
-4.1715
+4.1713
 </td>
 <td style="text-align:right;">
-4.2110
+4.2103
 </td>
 <td style="text-align:right;">
-4.2313
+4.2309
 </td>
 <td style="text-align:right;">
-4.2513
+4.2512
 </td>
 <td style="text-align:right;">
-4.2893
+4.2889
 </td>
 <td style="text-align:right;">
-1.0001
+1
 </td>
 <td style="text-align:right;">
-14447
+6691
 </td>
 <td style="text-align:right;">
 0
@@ -532,31 +541,31 @@ alpha
 beta1
 </td>
 <td style="text-align:right;">
-1.1176
+1.1166
 </td>
 <td style="text-align:right;">
-0.0476
+0.0475
 </td>
 <td style="text-align:right;">
-1.0252
+1.0242
 </td>
 <td style="text-align:right;">
-1.0851
+1.0845
 </td>
 <td style="text-align:right;">
-1.1176
+1.1163
 </td>
 <td style="text-align:right;">
-1.1498
+1.1491
 </td>
 <td style="text-align:right;">
-1.2109
+1.2105
 </td>
 <td style="text-align:right;">
-1.0001
+1
 </td>
 <td style="text-align:right;">
-15366
+6601
 </td>
 <td style="text-align:right;">
 0
@@ -570,37 +579,37 @@ beta1
 beta2
 </td>
 <td style="text-align:right;">
-0.0062
+0.0067
 </td>
 <td style="text-align:right;">
-0.0242
+0.0241
 </td>
 <td style="text-align:right;">
--0.0417
+-0.0405
 </td>
 <td style="text-align:right;">
--0.0101
+-0.0096
 </td>
 <td style="text-align:right;">
-0.0065
+0.0067
 </td>
 <td style="text-align:right;">
-0.0225
+0.0232
 </td>
 <td style="text-align:right;">
-0.0527
-</td>
-<td style="text-align:right;">
-1.0000
-</td>
-<td style="text-align:right;">
-22500
+0.0536
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-0.6064
+3997
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+0.6089
 </td>
 </tr>
 <tr>
@@ -608,31 +617,31 @@ beta2
 beta3
 </td>
 <td style="text-align:right;">
--0.2336
+-0.2333
 </td>
 <td style="text-align:right;">
-0.0251
+0.0250
 </td>
 <td style="text-align:right;">
--0.2831
+-0.2825
 </td>
 <td style="text-align:right;">
--0.2505
+-0.2503
 </td>
 <td style="text-align:right;">
--0.2338
+-0.2332
 </td>
 <td style="text-align:right;">
--0.2167
+-0.2162
 </td>
 <td style="text-align:right;">
 -0.1845
 </td>
 <td style="text-align:right;">
-1.0001
+1
 </td>
 <td style="text-align:right;">
-19179
+5944
 </td>
 <td style="text-align:right;">
 0
@@ -646,31 +655,31 @@ beta3
 lambda[1]
 </td>
 <td style="text-align:right;">
-32.2481
+32.2814
 </td>
 <td style="text-align:right;">
-3.2181
+3.1990
 </td>
 <td style="text-align:right;">
-26.2677
+26.4324
 </td>
 <td style="text-align:right;">
-30.0119
+30.0621
 </td>
 <td style="text-align:right;">
-32.1474
+32.1495
 </td>
 <td style="text-align:right;">
-34.3655
+34.3547
 </td>
 <td style="text-align:right;">
-38.8579
+38.9538
 </td>
 <td style="text-align:right;">
-0.9999
+1
 </td>
 <td style="text-align:right;">
-22500
+4935
 </td>
 <td style="text-align:right;">
 0
@@ -684,31 +693,31 @@ lambda[1]
 lambda[2]
 </td>
 <td style="text-align:right;">
-30.1914
+30.2234
 </td>
 <td style="text-align:right;">
-2.5630
+2.5489
 </td>
 <td style="text-align:right;">
-25.3575
+25.5071
 </td>
 <td style="text-align:right;">
-28.4278
+28.4464
 </td>
 <td style="text-align:right;">
-30.1390
+30.1425
 </td>
 <td style="text-align:right;">
-31.8709
+31.9039
 </td>
 <td style="text-align:right;">
-35.3900
+35.4896
 </td>
 <td style="text-align:right;">
-0.9999
+1
 </td>
 <td style="text-align:right;">
-22500
+5167
 </td>
 <td style="text-align:right;">
 0
@@ -722,31 +731,31 @@ lambda[2]
 lambda[3]
 </td>
 <td style="text-align:right;">
-28.7424
+28.7731
 </td>
 <td style="text-align:right;">
-2.0832
+2.0733
 </td>
 <td style="text-align:right;">
-24.7537
+24.9177
 </td>
 <td style="text-align:right;">
-27.3237
+27.3399
 </td>
 <td style="text-align:right;">
-28.7119
+28.7183
 </td>
 <td style="text-align:right;">
-30.1188
+30.1457
 </td>
 <td style="text-align:right;">
-32.9208
+33.0100
 </td>
 <td style="text-align:right;">
-1.0000
+1
 </td>
 <td style="text-align:right;">
-22500
+5497
 </td>
 <td style="text-align:right;">
 0
@@ -760,31 +769,31 @@ lambda[3]
 lambda[4]
 </td>
 <td style="text-align:right;">
-27.7973
+27.8266
 </td>
 <td style="text-align:right;">
-1.7382
+1.7322
 </td>
 <td style="text-align:right;">
-24.4498
+24.5596
 </td>
 <td style="text-align:right;">
-26.6072
+26.6450
 </td>
 <td style="text-align:right;">
-27.7802
+27.7942
 </td>
 <td style="text-align:right;">
-28.9614
+28.9683
 </td>
 <td style="text-align:right;">
-31.2518
+31.3284
 </td>
 <td style="text-align:right;">
-1.0000
+1
 </td>
 <td style="text-align:right;">
-22500
+5963
 </td>
 <td style="text-align:right;">
 0
@@ -798,31 +807,31 @@ lambda[4]
 lambda[5]
 </td>
 <td style="text-align:right;">
-27.2840
+27.3120
 </td>
 <td style="text-align:right;">
-1.5005
+1.4981
 </td>
 <td style="text-align:right;">
-24.3872
+24.4705
 </td>
 <td style="text-align:right;">
-26.2587
+26.2848
 </td>
 <td style="text-align:right;">
-27.2679
+27.2836
 </td>
 <td style="text-align:right;">
-28.2818
+28.3023
 </td>
 <td style="text-align:right;">
-30.2619
+30.3171
 </td>
 <td style="text-align:right;">
-1.0000
+1
 </td>
 <td style="text-align:right;">
-22500
+6580
 </td>
 <td style="text-align:right;">
 0
@@ -836,31 +845,31 @@ lambda[5]
 lambda[6]
 </td>
 <td style="text-align:right;">
-27.1538
+27.1804
 </td>
 <td style="text-align:right;">
-1.3496
+1.3505
 </td>
 <td style="text-align:right;">
-24.5671
+24.6136
 </td>
 <td style="text-align:right;">
-26.2349
+26.2530
 </td>
 <td style="text-align:right;">
-27.1507
+27.1534
 </td>
 <td style="text-align:right;">
-28.0515
+28.0698
 </td>
 <td style="text-align:right;">
-29.8239
+29.8715
 </td>
 <td style="text-align:right;">
-1.0000
+1
 </td>
 <td style="text-align:right;">
-22500
+7287
 </td>
 <td style="text-align:right;">
 0
@@ -871,7 +880,7 @@ lambda[6]
 </tr>
 </tbody>
 </table>
-<p>Notice that all <code>Rhat</code> are less than 1.1, indicating that all parameters appear to have converged. Also note <code>f</code> for <code>beta2</code> - the posterior mean is 0.006 but there is only a 60.6% probability that it is greater than 0.</p>
+<p>Notice that all <code>Rhat</code> are less than 1.1, indicating that all parameters appear to have converged. Also note <code>f</code> for <code>beta2</code> - the posterior mean is 0.007 but there is only a 60.9% probability that it is greater than 0.</p>
 <p>As usual, let’s check the traceplots to see how they look:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># View traceplots for alpha, beta1, beta2, and beta3 (not for lambda)</span></a>
 <a class="sourceLine" id="cb10-2" data-line-number="2">jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/traceplot">traceplot</a></span>(falcon_mod, <span class="dt">parameters=</span>params[<span class="op">-</span><span class="dv">5</span>])</a></code></pre></div>
@@ -1004,31 +1013,31 @@ f
 alpha
 </td>
 <td style="text-align:right;">
-0.7849
+0.7838
 </td>
 <td style="text-align:right;">
-0.0565
+0.0571
 </td>
 <td style="text-align:right;">
-0.6737
+0.6724
 </td>
 <td style="text-align:right;">
-0.7461
+0.7450
 </td>
 <td style="text-align:right;">
-0.7855
+0.7839
 </td>
 <td style="text-align:right;">
-0.8235
+0.8226
 </td>
 <td style="text-align:right;">
-0.8934
+0.8959
 </td>
 <td style="text-align:right;">
-1.001
+1.000
 </td>
 <td style="text-align:right;">
-2733
+5126
 </td>
 <td style="text-align:right;">
 0
@@ -1042,37 +1051,37 @@ alpha
 beta1
 </td>
 <td style="text-align:right;">
-0.0574
+0.0609
 </td>
 <td style="text-align:right;">
-0.0442
+0.0454
 </td>
 <td style="text-align:right;">
--0.0285
+-0.0284
 </td>
 <td style="text-align:right;">
-0.0275
+0.0307
 </td>
 <td style="text-align:right;">
-0.0572
+0.0611
 </td>
 <td style="text-align:right;">
-0.0870
+0.0914
 </td>
 <td style="text-align:right;">
-0.1447
+0.1501
 </td>
 <td style="text-align:right;">
-1.004
+1.000
 </td>
 <td style="text-align:right;">
-496
+7401
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-0.9024
+0.9058
 </td>
 </tr>
 <tr>
@@ -1080,31 +1089,31 @@ beta1
 beta2
 </td>
 <td style="text-align:right;">
--0.3047
+-0.3062
 </td>
 <td style="text-align:right;">
-0.0418
+0.0425
 </td>
 <td style="text-align:right;">
--0.3880
+-0.3901
 </td>
 <td style="text-align:right;">
--0.3327
+-0.3348
 </td>
 <td style="text-align:right;">
--0.3046
+-0.3063
 </td>
 <td style="text-align:right;">
--0.2764
+-0.2776
 </td>
 <td style="text-align:right;">
--0.2237
+-0.2228
 </td>
 <td style="text-align:right;">
-1.002
+1.001
 </td>
 <td style="text-align:right;">
-1130
+2980
 </td>
 <td style="text-align:right;">
 0
@@ -1118,31 +1127,31 @@ beta2
 p[1]
 </td>
 <td style="text-align:right;">
-0.4606
+0.4579
 </td>
 <td style="text-align:right;">
-0.0363
+0.0374
 </td>
 <td style="text-align:right;">
-0.3894
+0.3852
 </td>
 <td style="text-align:right;">
-0.4362
+0.4326
 </td>
 <td style="text-align:right;">
-0.4605
+0.4580
 </td>
 <td style="text-align:right;">
-0.4854
+0.4828
 </td>
 <td style="text-align:right;">
-0.5322
+0.5318
 </td>
 <td style="text-align:right;">
-1.003
+1.000
 </td>
 <td style="text-align:right;">
-657
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -1156,31 +1165,31 @@ p[1]
 p[2]
 </td>
 <td style="text-align:right;">
-0.4828
+0.4803
 </td>
 <td style="text-align:right;">
-0.0336
+0.0347
 </td>
 <td style="text-align:right;">
-0.4162
+0.4124
 </td>
 <td style="text-align:right;">
-0.4602
+0.4567
 </td>
 <td style="text-align:right;">
-0.4828
+0.4804
 </td>
 <td style="text-align:right;">
-0.5059
+0.5034
 </td>
 <td style="text-align:right;">
-0.5488
+0.5485
 </td>
 <td style="text-align:right;">
-1.003
+1.000
 </td>
 <td style="text-align:right;">
-657
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -1194,31 +1203,31 @@ p[2]
 p[3]
 </td>
 <td style="text-align:right;">
-0.5040
+0.5016
 </td>
 <td style="text-align:right;">
-0.0310
+0.0320
 </td>
 <td style="text-align:right;">
-0.4425
+0.4390
 </td>
 <td style="text-align:right;">
-0.4830
+0.4801
 </td>
 <td style="text-align:right;">
-0.5040
+0.5018
 </td>
 <td style="text-align:right;">
-0.5253
+0.5230
 </td>
 <td style="text-align:right;">
-0.5647
+0.5642
 </td>
 <td style="text-align:right;">
-1.003
+1.000
 </td>
 <td style="text-align:right;">
-661
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -1232,31 +1241,31 @@ p[3]
 p[4]
 </td>
 <td style="text-align:right;">
-0.5241
+0.5219
 </td>
 <td style="text-align:right;">
-0.0285
+0.0294
 </td>
 <td style="text-align:right;">
-0.4676
+0.4641
 </td>
 <td style="text-align:right;">
-0.5050
+0.5021
 </td>
 <td style="text-align:right;">
-0.5241
+0.5221
 </td>
 <td style="text-align:right;">
-0.5438
+0.5415
 </td>
 <td style="text-align:right;">
-0.5795
+0.5792
 </td>
 <td style="text-align:right;">
-1.003
+1.000
 </td>
 <td style="text-align:right;">
-671
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -1270,31 +1279,31 @@ p[4]
 p[5]
 </td>
 <td style="text-align:right;">
-0.5430
+0.5410
 </td>
 <td style="text-align:right;">
-0.0261
+0.0269
 </td>
 <td style="text-align:right;">
-0.4914
+0.4883
 </td>
 <td style="text-align:right;">
-0.5255
+0.5229
 </td>
 <td style="text-align:right;">
-0.5429
+0.5413
 </td>
 <td style="text-align:right;">
-0.5609
+0.5589
 </td>
 <td style="text-align:right;">
-0.5936
+0.5933
 </td>
 <td style="text-align:right;">
-1.003
+1.000
 </td>
 <td style="text-align:right;">
-687
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -1308,31 +1317,31 @@ p[5]
 p[6]
 </td>
 <td style="text-align:right;">
-0.5608
+0.5589
 </td>
 <td style="text-align:right;">
-0.0238
+0.0246
 </td>
 <td style="text-align:right;">
-0.5137
+0.5106
 </td>
 <td style="text-align:right;">
-0.5447
+0.5424
 </td>
 <td style="text-align:right;">
-0.5608
+0.5591
 </td>
 <td style="text-align:right;">
-0.5772
+0.5752
 </td>
 <td style="text-align:right;">
-0.6068
+0.6065
 </td>
 <td style="text-align:right;">
-1.003
+1.000
 </td>
 <td style="text-align:right;">
-711
+22500
 </td>
 <td style="text-align:right;">
 0
@@ -1346,31 +1355,31 @@ p[6]
 p[7]
 </td>
 <td style="text-align:right;">
-0.5773
+0.5755
 </td>
 <td style="text-align:right;">
-0.0218
+0.0225
 </td>
 <td style="text-align:right;">
-0.5345
+0.5310
 </td>
 <td style="text-align:right;">
-0.5625
+0.5605
 </td>
 <td style="text-align:right;">
-0.5774
+0.5757
 </td>
 <td style="text-align:right;">
-0.5923
+0.5906
 </td>
 <td style="text-align:right;">
-0.6194
+0.6189
 </td>
 <td style="text-align:right;">
-1.003
+1.000
 </td>
 <td style="text-align:right;">
-748
+22500
 </td>
 <td style="text-align:right;">
 0

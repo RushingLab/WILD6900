@@ -5,6 +5,8 @@ articles:
   cjs: cjs.html
   homework: homework.html
   metropolis: metropolis.html
+  multi-state: multi-state.html
+  multi-state2: multi-state2.html
   multi_spp_occ: multi_spp_occ.html
   n-mixture1: n-mixture1.html
   n-mixture2: n-mixture2.html

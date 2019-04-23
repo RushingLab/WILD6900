@@ -22,9 +22,20 @@ knitr::opts_chunk$set(fig.align = 'center', message = FALSE, warning = FALSE,
 library(WILD6900)
 ```
 
-As we discussed in the [open-population capture-recapture lecture lecture](https://rushinglab.github.io/WILD6900/articles/Lecture14/Lecture14.html#1), the CJS model assumes that all emigration is permanent. This assumption is necessary because our model assumes that if an individual is alive and present at the site, the probability that we detect the individual is $p$. If emigration is not permanent, that is if individuals temporarily leave the site, they are technically alive and "present" at our site but the probability we detect them is 0. 
+As we discussed in the [open-population capture-recapture lecture lecture](https://rushinglab.github.io/WILD6900/articles/Lecture14/Lecture14.html#1), the CJS model assumes that all emigration is permanent. This assumption is necessary because if we get, for example, a capture history of `101`, we assume that the individual was present and *available to be detected* on the second occasion. We simply failed to detect it and that occurred with probability $1-p_2$. But what if the individual was not available to be detected? Maybe it's breeding territory spanned the study area boundary and it was simply off the plot on the second occasion. Maybe we're studying plants and an individual was dormant for the second year of the study. Or maybe we only sample during the breeding season and this individual skipped breeding in the second year. In all cases, the individual was *temporarily* unavailable for detection. In other words, on the second occasion $p_2 = 0$ for this individual.  
 
-If this temporary emigration is random, estimates of $p$ will be too low (because all the instances where $p=0$ will be incorrectly 
+If this temporary emigration is random, estimates of $p$ will be too low (because all the instances where $p=0$ will be incorrectly used to estimate $p$) but estimates of $\phi$ will be unbiased. However, if the temporary emigration process is *Markovian* $-$ that is, whether an individual is unavailable for detection depends on whether the individual was available/unavailable in the previous time step $-$ estimates of survival can be biased. 
+
+Kory & Schaub (2015) provide a nice example of using multi-state capture-recapture models to estimate (and correct for) temporary emigration that is caused by individuals leaving and re-entering the study site. In this model, individuals can be in one of three states: "alive and present", "alive and absent", and "dead". We can define the probabilities associated with each state using three parameters:
+
+- $\phi$: survival probability
+
+- $\psi_{IO}$: probability of moving from **I**n to **O**ut (i.e., from present to absent)
+
+- $\psi_{OI}$: probability of moving from **O**ut to **I**n (i.e., from absent to present)
+
+Based on these three parameters, we can create that state transition matrix:
+
 
 ```{r echo = FALSE}
 library(kableExtra)
@@ -46,6 +57,8 @@ ms_df %>%
                 full_width = TRUE, font_size = 14) 
 ```
 
+Although individuals can be in three states, there are only two observations $-$ "seen" and "not seen" $-$ and therefore a single detection parameter $p$. Note that $p$ is interpreted as the probability that an individual is captured *given that it is both **alive** and **present** on a given capture occassion*. As a result, we never detect individuals that are "alive and absent" or individuals that are dead:
+
 ```{r echo = FALSE}
 library(kableExtra)
 ms_df2 <- data.frame(state = c("Present", "Absent", "Dead"),
@@ -64,11 +77,44 @@ ms_df2 %>%
 ```
 
 
+## Simulated data
+
+Following Kéry & Schaub (2015), we will simulate data as if it came from a capture-recapture study of hibernating salamanders. Individuals are captured and photographed in a single cave where the species hibernates over winter. This cave is not, however, the only hibernation site so when we go out to sample, individuals may be hibernating in a different cave. We will assume the following parameters:
+
+
+```{r}
+# Define mean survival, transitions, recapture, as well as number of occasions, states, observations and released individuals
+phi <- 0.85
+psiIO <- 0.2
+psiOI <- 0.3
+p <- 0.7
+
+# Sampling parameters
+n.occasions <- 8   # Number of capture occasions
+n.states <- 3      # Number of true states
+n.obs <- 2         # Number of observed states
+```
+
+Next, create matrices to store the transition and observation probabilities:
+
+```{r}
+# 1. State process matrix
+PSI.STATE <- matrix(c(phi*(1-psiIO), phi*psiIO,     1-phi,
+                      phi*psiOI,     phi*(1-psiOI), 1-phi,
+                      0,             0,             1), 
+                    nrow = n.states, byrow = TRUE)
+# 2.Observation process matrix
+PSI.OBS <- matrix(c(p, 1-p,
+                    0, 1,
+                    0, 1), 
+      nrow = n.states, byrow = TRUE) 
+```
+
+To simulate the multi-state data, we'll use a custom function from the Kéry & Schaub (2015) book. This is a fairly complex function so we won't go through it in detail (though you are encouraged to walk through it on your own. Understanding how the data is simulated will no doubt help you understand the model better). Note that we simulate the `state` and `event` using `rmultinom`. This function takes three arguments: `n`, `size` and `prob`. In this case, we simulate one value (`n=1`) with a single trial (`size = 1`; this is equivalent to using a categorical distribution). For `prob`, we provide a vector with the probability of transitioning to each state, in this case using the rows in the state and observation matrices: 
+
 ```{r}
 # Define function to simulate multistate capture-recapture data
-simul.ms <- function(PSI.STATE, PSI.OBS, marked, unobservable = NA){
-   # Unobservable: number of state that is unobservable
-   n.occasions <- dim(PSI.STATE)[4] + 1
+simul.ms <- function(PSI.STATE, PSI.OBS, marked, n.occasions, unobservable = NA){
    CH <- CH.TRUE <- matrix(NA, ncol = n.occasions, nrow = sum(marked))
    # Define a vector with the occasion of marking
    mark.occ <- matrix(0, ncol = dim(PSI.STATE)[1], nrow = sum(marked))
@@ -88,10 +134,10 @@ simul.ms <- function(PSI.STATE, PSI.OBS, marked, unobservable = NA){
       for (t in (first+1):n.occasions){
          # Multinomial trials for state transitions
          if (first==n.occasions) next
-         state <- which(rmultinom(1, 1, PSI.STATE[CH.TRUE[i,t-1],,i,t-1])==1)
+         state <- which(rmultinom(n = 1, size = 1, prob = PSI.STATE[CH.TRUE[i,t-1],])==1)
          CH.TRUE[i,t] <- state
          # Multinomial trials for observation process
-         event <- which(rmultinom(1, 1, PSI.OBS[CH.TRUE[i,t],,i,t-1])==1)
+         event <- which(rmultinom(n = 1, size = 1, prob = PSI.OBS[CH.TRUE[i,t],])==1)
          CH[i,t] <- event
          } #t
       } #i
@@ -110,67 +156,35 @@ simul.ms <- function(PSI.STATE, PSI.OBS, marked, unobservable = NA){
 }
 ```
 
+Now we're ready to simulate the data. We first create a matrix with 70 individuals captured on each occasion (these individuals are by definition in state 1 "alive and present" on their first capture occasion). The data simulation function will then create capture histories for each individual. After simulating the capture histories, we create a vector with the first capture occasion for each individual and then recode the observed data: 
+
 ```{r}
-# Define mean survival, transitions, recapture, as well as number of occasions, states, observations and released individuals
-phi <- 0.85
-psiIO <- 0.2
-psiOI <- 0.3
-p <- 0.7
-n.occasions <- 8  
-n.states <- 3
-n.obs <- 2
 marked <- matrix(NA, ncol = n.states, nrow = n.occasions)
-marked[,1] <- rep(70, n.occasions)	# Present
-marked[,2] <- rep(0, n.occasions)	# Absent
-marked[,3] <- rep(0, n.occasions)	# Dead 
-
-# Define matrices with survival, transition and recapture probabilities
-# These are 4-dimensional matrices, with 
-   # Dimension 1: state of departure
-   # Dimension 2: state of arrival
-   # Dimension 3: individual
-   # Dimension 4: time
-# 1. State process matrix
-totrel <- sum(marked)
-PSI.STATE <- array(NA, dim=c(n.states, n.states, totrel, n.occasions-1))
-for (i in 1:totrel){
-   for (t in 1:(n.occasions-1)){
-      PSI.STATE[,,i,t] <- matrix(c(
-      phi*(1-psiIO), phi*psiIO,     1-phi,
-      phi*psiOI,     phi*(1-psiOI), 1-phi,
-      0,             0,             1       ), nrow = n.states, byrow = TRUE)
-      } #t
-   } #i
-
-# 2.Observation process matrix
-PSI.OBS <- array(NA, dim=c(n.states, n.obs, totrel, n.occasions-1))
-for (i in 1:totrel){
-   for (t in 1:(n.occasions-1)){
-      PSI.OBS[,,i,t] <- matrix(c(
-      p, 1-p,
-      0, 1,
-      0, 1    ), nrow = n.states, byrow = TRUE)
-      } #t
-   } #i
+marked[,1] <- rep(70, n.occasions) # Present
+marked[,2] <- rep(0, n.occasions)  # Absent
+marked[,3] <- rep(0, n.occasions)  # Dead 
 
 # Execute simulation function
-sim <- simul.ms(PSI.STATE, PSI.OBS, marked)
+sim <- simul.ms(PSI.STATE, PSI.OBS, marked, n.occasions)
 CH <- sim$CH
 
 # Compute vector with occasion of first capture
 get.first <- function(x) min(which(x!=0))
 f <- apply(CH, 1, get.first)
 
-# Recode CH matrix: note, a 0 is not allowed!
+# Currently, "not seen" is coded as 0 but that is not allowed (we can't index a matrix by row 0!)
+# So here we recode the values so that:
 # 1 = seen alive, 2 = not seen
 rCH <- CH  # Recoded CH
 rCH[rCH==0] <- 2
 
 ```
 
+Multi-state models can be very computationally expensive. One way to speed them up is the provide the latent matrix `z` as partially-observed data. When the individual is seen, we know $z$. When the individual is not seen, we don't know the state so we code that as `z = NA`. The following function will take the observed capture history and create a matrix `z` with the partially-known states:
+
 ```{r}
 known.state.ms <- function(ms, notseen){
-  # notseen: label for ënot seení
+  # notseen: label for not seen
   state <- ms
   state[state==notseen] <- NA
   for (i in 1:dim(ms)[1]){
@@ -179,7 +193,11 @@ known.state.ms <- function(ms, notseen){
   }
   return(state)
 }
+```
 
+We can also define a function to create initial values for `z` and thereby avoid the dreaded `Invalid parent node` error:
+
+```{r}
 # Function to create initial values for unknown z
 ms.init.z <- function(ch, f){
   for (i in 1:dim(ch)[1]){ch[i,1:f[i]] <- NA}
@@ -193,6 +211,78 @@ ms.init.z <- function(ch, f){
 
 ```
 
+## The model
+
+Here's the JAGS code to fit this model. Work through the code so you know what it's doing:
+
+```{r eval = FALSE}
+sink("jags/tempem.jags")
+cat("
+    model {
+
+    # ---------------------------------
+    # Parameters:
+    # phi: survival probability
+    # psiIO: probability to emigrate
+    # psiOI: probability to immigrate
+    # p: recapture probability
+    # ---------------------------------
+    # States (S):
+    # 1 alive and present
+    # 2 alive and absent
+    # 3 dead
+    # Observations (O):
+    # 1 seen
+    # 2 not seen
+    # ---------------------------------
+
+    # Priors and constraints
+    phi ~ dunif(0, 1)
+    psiIO ~ dunif(0, 1)
+    psiOI ~ dunif(0, 1)
+    p ~ dunif(0, 1)
+
+
+    # Define state-transition and observation matrices
+    # Define probabilities of state S(t+1) given S(t)
+    ps[1,1] <- phi * (1-psiIO)
+    ps[1,2] <- phi * psiIO
+    ps[1,3] <- 1-phi
+    ps[2,1] <- phi * psiOI
+    ps[2,2] <- phi * (1-psiOI)
+    ps[2,3] <- 1-phi
+    ps[3,1] <- 0
+    ps[3,2] <- 0
+    ps[3,3] <- 1
+
+    # Define probabilities of O(t) given S(t)
+    po[1,1] <- p
+    po[1,2] <- 1-p
+    po[2,1] <- 0
+    po[2,2] <- 1
+    po[3,1] <- 0
+    po[3,2] <- 1
+
+
+    # Likelihood
+    for (i in 1:nind){
+    # Define latent state at first capture
+    z[i,f[i]] <- y[i,f[i]]
+    for (t in (f[i]+1):n.occasions){
+    # State process: draw S(t) given S(t-1)
+    z[i,t] ~ dcat(ps[z[i,t-1],])
+    # Observation process: draw O(t) given S(t)
+    y[i,t] ~ dcat(po[z[i,t],])
+    } #t
+    } #i
+    }
+    ",fill = TRUE)
+sink()
+```
+### Running the model
+
+Now bundle the data and set the MCMC settings. Currently, `ni` and `nb` are set very low. This model takes a long time to run so these settings will allow us to work out any bugs without having to wait a long time to see the error message. Once you have the model running, increase these values to, say, 50,000 and 10,000:
+
 ```{r}
 # Bundle data
 jags.data <- list(y = rCH, f = f, n.occasions = dim(rCH)[2], nind = dim(rCH)[1], z = known.state.ms(rCH, 2))
@@ -203,17 +293,31 @@ inits <- function(){list(mean.phi = runif(1, 0, 1), mean.psiIO = runif(1, 0, 1),
 # Parameters monitored
 parameters <- c("mean.phi", "mean.psiIO", "mean.psiOI", "mean.p")
 
-# MCMC settings
+# MCMC settings (change these once you know the model is running)
 ni <- 500
 nt <- 10
 nb <- 100
 nc <- 3
+```
 
-# Call WinBUGS from R (BRT 35 min)
+Finally, fit the model:
+
+```{r eval = FALSE}
+# Call JAGS from R
 tempemi <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = parameters, 
-                        model.file = here::here("inst/jags/tempem.jags"), 
+                        model.file = here::here("jags/tempem.jags"), 
                         n.chains = nc, n.thin = nt, n.iter = ni, n.burnin = nb, 
                         parallel = TRUE)
 
 print(tempemi, digits = 3)
 ```
+
+```{r include = FALSE}
+# Call JAGS from R
+tempemi <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = parameters, 
+                        model.file = here::here("inst/jags/tempem.jags"), 
+                        n.chains = nc, n.thin = nt, n.iter = ni, n.burnin = nb, 
+                        parallel = TRUE)
+```
+
+Be sure to check the model for convergence and to determine whether the parameter estimates are consistent with the data generating values.
