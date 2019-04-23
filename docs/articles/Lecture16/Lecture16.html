@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Lecture 16</title>
+    <meta charset="utf-8">
+    <meta name="author" content="   WILD6900 (Spring 2019)" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link rel="stylesheet" href="WILD6900.css" type="text/css" />
+    <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Lecture 16
+## Integrated population models
+### <br/><br/><br/>WILD6900 (Spring 2019)
+
+---
+
+
+
+
+## Readings
+
+---
+#### Quantitative ecologist: \*slaps roof of IPM\* this bad boy can fit so many types of data in it.
+
+&lt;br/&gt;
+
+&lt;img src="figs/ipm_meme.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+
+---
+class: inverse, center, middle
+# What is population ecology?
+
+---
+class: center, middle
+
+&gt; ### Population ecology is the study of the distribution of individuals in a population over time and space
+
+---
+## The simplest population model
+
+&lt;br/&gt;
+`$$\LARGE N_{t+1} = N_t + B + I - D - E$$`
+
+--
+#### Population growth `\((\large \lambda)\)`
+
+- Realized growth rate
+
+`$$\Large \lambda = \frac{N_{t+1}}{N_t}$$`
+
+--
+- Expected growth rate
+
+`$$\Large \hat{\lambda} = \phi^{Ad}_t + f \phi^{Ju}_t + \omega_t$$`
+.footnote[
+`\(\phi\)` = apparent survival
+]
+
+---
+## Expected vs. realized growth
+
+&lt;br/&gt;
+
+&lt;table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 14px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Age class &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Expected  &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Realized &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; \(N^{Ad}_{t+1}\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi^{Ad}_t N_t\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(binomial(\phi^{Ad}_t, N_t)\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; \(N^{Ju}_{t+1}\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(0.5f\phi^{Ju}_t N_t\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(Poisson(f\phi^{Ju}_t, N_t)\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; \(N^{Imm}_{t+1}\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\omega_t\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(Poisson(\omega_t)\) &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+class: inverse, middle, center
+
+# Age-structured population dynamics
+## The classic approach
+
+---
+## Life tables
+
+.left-column[
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/f/f6/Phlox_drummondii_-_Archer_FL_02.jpg" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.right-column[
+&lt;img src="figs/phlox_lt.png" width="80%" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+## Leslie matrix
+
+&lt;br/&gt;
+&lt;br/&gt;
+
+`$$\Huge \mathbf A = \begin{bmatrix}
+    F_1 &amp; F_2 &amp; F_3\\
+    P_1 &amp; 0 &amp; 0\\
+    0 &amp;P_2 &amp; 0
+\end{bmatrix}$$`
+
+---
+## Leslie matrix
+
+&lt;br/&gt;
+
+`$$\Huge \mathbf N_{t+1} = \mathbf A \times \mathbf N_t$$` 
+
+&lt;br/&gt;
+
+`$$\LARGE \begin{bmatrix}
+    n_{1,t+1}\\
+    n_{2,t+1}\\
+    n_{3,t+1}
+\end{bmatrix}\LARGE =  \begin{bmatrix}
+    F_1 &amp; F_2 &amp; F_3\\
+    P_1 &amp; 0 &amp; 0\\
+    0 &amp;P_2 &amp; 0
+\end{bmatrix} \times \begin{bmatrix}
+    n_{1,t}\\
+    n_{2,t}\\
+    n_{3,t}
+\end{bmatrix}$$`
+
+---
+## Inference from projection matrix
+
+#### Stable stage distribution
+
+
+
+&lt;img src="Lecture16_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+
+--
+
+#### Asymptoptic growth rate
+
+`$$\Large \lambda = 1.428$$`
+
+---
+## Inference from projection matrix
+
+#### Sensitivity
+
+&gt; the change in `\(\large \lambda\)` caused by a small change in a vital rate
+
+`$$\Large s_{i,j} = \frac{\delta \lambda}{\delta a_{i,j}} = \frac{v_iw_j}{\sum_{k=1}v_kw_k}$$`
+
+
+#### Elasticity
+
+&gt; the change in `\(\large \lambda\)` caused by a small *proportional* change in a vital rate
+
+`$$\Large e_{i,j} = s_{i,j} \bigg[\frac{a_{i,j}}{\lambda}\bigg]$$`
+
+---
+## Inference from projection matrix
+
+#### Environmental stochasticity 
+
+- random variation in vital rates `\((\phi\)` and `\(f)\)` will decrease `\(\lambda\)` compared to population with constant rates
+
+
+--
+#### Accounting for env. stochasticity
+
+- sample `\(n\)` values of vital rates
+    + `\(\phi_{i} \sim beta(a,b)\)`
+    + `\(f_{i} \sim gamma(c,d)\)`
+
+- create `\(n\)` projection matrices
+
+- compute `\(\lambda\)`, SSD, sens., elas. for each matrix
+
+- summarize mean, quantiles
+
+---
+## Workflow - the classic approach
+
+1a) Collect data about vital rates, or:
+
+1b) Look up published estimates
+
+2) Create projection matrix/matrices
+
+3) Compute sensitivities/elasticities
+
+4) Publish in *Ecology*
+
+---
+class: inverse, middle, center
+
+# IPM meme
+
+---
+## The "canonical" integrated population model
+
+&lt;img src="figs/IPM1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+
+---
+## The "canonical" integrated population model
+
+&lt;img src="figs/IPM2.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+## Simple state-space population growth model
+
+#### In lecture 9 and labs 8/9, we learned to model changes in abundance using state-space growth models: 
+
+--
+#### Process model
+`$$\Large N_{t+1} = N_t \lambda_t$$`
+
+`$$\Large \lambda_t \sim normal(\mu_{\lambda}, \tau_{\lambda})$$`
+
+--
+#### Observation model
+`$$\Large y_{t} = N_t + \epsilon_t$$`
+
+`$$\Large \epsilon_t\sim Normal(0, \sigma_o^2)$$`
+
+---
+## Age-structured state-space model
+
+#### Process models
+`$$\Large N^{Ad}_{t+1} \sim binomial(\phi^{Ad}_t, N_t)$$`
+
+`$$\Large N^{Ju}_{t+1} \sim Poisson\bigg(\frac{f\phi^{Ju}_tN_t}{2}\bigg)$$`
+
+`$$\Large N^{Imm}_{t+1} \sim Poisson(\omega_t)$$`
+
+`$$\Large N_{t+1} = N^{Ad}_{t+1} + N^{Ju}_{t+1} + N^{Imm}_{t+1}$$`
+
+#### Observation model
+`$$\Large y_{t} = N_t + \epsilon_t$$`
+
+`$$\Large \epsilon_t\sim Normal(0, \sigma_o^2)$$`
+
+---
+## The "canonical" integrated population model
+
+&lt;img src="figs/IPM3.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+## Fecundity model
+
+#### In lecture 7 &amp; lab 6, we learned to model non-normal response variables using GLM's:
+
+--
+- `\(R_t\)` = number of individuals/nests monitored for reproductive success
+
+- `\(J_t\)` = total number of offspring produced by the `\(R_t\)` individual
+
+
+`$$\Large J_t \sim Poisson(R_tf_t)$$`
+
+`$$\Large log(f_t) \sim normal(\mu_f, \tau_f)$$`
+
+---
+## The "canonical" integrated population model
+
+&lt;img src="figs/IPM4.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+## Cormack-Jolly-Seber survival model
+
+#### In lecture 14, we learned to write the CJS model as a state-space model:
+
+--
+#### Process model, capture occassion 1
+`$$\large z_{i,f_1} = 1$$`
+
+#### Process model, capture occasion 2+
+
+`$$\large z_{i,t} \sim Bernoulli(z_{i,t-1}\phi_t)$$`
+
+`$$\large logit(\phi_t) \sim normal(\mu_{\phi}, \tau_{\phi})$$`
+
+#### Observation model
+
+`$$\large y_{i,t} \sim Bernoulli(z_{i,t}p)$$`
+
+.footnote[
+If possible, separate models for `\(\phi^{Ad}_t\)` and `\(\phi^{Ju}_t\)`
+]
+
+---
+## The "canonical" integrated population model
+
+&lt;img src="figs/IPM5.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+## The immigration model
+
+#### In most studies, immigration is treated as a latent variable
+
+- no data to directly estimate `\(\omega_t\)`
+
+--
+
+#### But we can create a model for `\(\large \omega_t\)`
+
+`$$\large log(\omega_t) \sim normal(\mu_{\omega}, \tau_{\omega})$$`
+
+--
+#### Model will "solve for" `\(\large N^{Imm}_{t}\)` 
+
+`$$\Large N_{t+1} = N^{Ad}_{t+1} + N^{Ju}_{t+1} + N^{Imm}_{t+1}$$`
+
+---
+## Fitting the IPM in JAGS
+
+
+```r
+model{
+#----------------------------------------
+# 1. Define the priors for the parameters
+#----------------------------------------
+# Initial population sizes
+NJu[1] ~ dnorm(100, 0.0001)I(0,)           # 1-year old individuals
+NAd[1] ~ dnorm(100, 0.0001)I(0,)      # Adults &gt;= 2 years
+NImm[1] ~ dnorm(100, 0.0001)I(0,)       # Immigrants
+```
+
+---
+## Fitting the IPM in JAGS
+
+
+```r
+# Mean demographic parameters (on appropriate scale)
+l.mphij ~ dnorm(0, 0.0001)I(-10,10)
+l.mphia ~ dnorm(0, 0.0001)I(-10,10)
+l.mfec ~ dnorm(0, 0.0001)I(-10,10)
+l.mim ~ dnorm(0, 0.0001)I(-10,10)
+p ~ dbeta(1, 1)
+
+# Precision of standard deviations of temporal variability
+sig.phij ~ dunif(0, 10)
+tau.phij &lt;- pow(sig.phij, -2)
+sig.phia ~ dunif(0, 10)
+tau.phia &lt;- pow(sig.phia, -2)
+sig.fec ~ dunif(0, 10)
+tau.fec &lt;- pow(sig.fec, -2)
+sig.im ~ dunif(0, 10)
+tau.im &lt;- pow(sig.im, -2)
+```
+
+---
+## Fitting the IPM in JAGS
+
+
+```r
+# Distribution of error terms (Bounded to help with convergence)
+  for (t in 1:(nyears-1)){
+   epsilon.phij[t] ~ dnorm(0, tau.phij)I(-15,15)	
+   epsilon.phia[t] ~ dnorm(0, tau.phia)I(-15,15)
+   epsilon.fec[t] ~ dnorm(0, tau.fec)I(-15,15)
+   epsilon.im[t] ~ dnorm(0, tau.im)I(-15,15)
+  }
+
+#-------------------------
+# 2. Constrain parameters
+#-------------------------
+for (t in 1:(nyears-1)){
+   logit(phij[t]) &lt;- l.mphij + epsilon.phij[t]  # Juv. apparent survival
+   logit(phia[t]) &lt;- l.mphia + epsilon.phia[t]  # Adult apparent survival
+   log(f[t]) &lt;- l.mfec + epsilon.fec[t]         # Productivity
+   log(omega[t]) &lt;- l.mim + epsilon.im[t]       # Immigration
+   }
+```
+
+---
+## Fitting the IPM in JAGS
+
+
+```r
+#-----------------------
+# 3. Derived parameters
+#-----------------------
+
+# Population growth rate
+for (t in 1:(nyears-1)){
+   lambda[t] &lt;- Ntot[t+1] / Ntot[t]
+   logla[t] &lt;- log(lambda[t])
+   }
+mlam &lt;- exp((1/(nyears-1))*sum(logla[1:(nyears-1)]))   # Geometric mean
+```
+
+---
+## Fitting the IPM in JAGS
+
+
+```r
+#--------------------------------------------
+# 4. The likelihoods of the single data sets
+#--------------------------------------------
+# 4.1. Likelihood for population population count data (state-space model)
+   # 4.1.1 System process
+    for(t in 2:nyears){
+      NJu[t] ~ dpois(0.5 * f[t-1] * phij[t-1] * Ntot[t-1])
+      NAd[t] ~ dbin(phia[t-1], Ntot[t-1])
+      NImm[t] ~ dpois(omega[t-1])
+    }
+
+   # 4.1.2 Observation process
+    for(t in 1:nyears){
+      Ntot[t] &lt;- NAd[t] + NJu[t] + NImm[t]
+      y[t] ~ dpois(Ntot[t])
+    }
+```
+
+---
+## Fitting the IPM in JAGS
+
+
+```r
+# 4.2 Likelihood for capture-recapture data: CJS model (2 age classes)
+for(i in 1:nJu){
+   # Define latent state at first capture
+   z[i,f[i]] &lt;- 1
+   for (t in (f[i]+1):n.occasions){
+      # State process
+      z[i,t] ~ dbern(phij[t-1] * z[i,t-1])
+     
+      # Observation process
+      y[i,t] ~ dbern(p[t-1] * z[i,t])
+      } #t
+   } #i
+```
+
+---
+## Fitting the IPM in JAGS
+
+
+```r
+for (i in 1:nAd){
+   # Define latent state at first capture
+   z[i,f[i]] &lt;- 1
+   for (t in (f[i]+1):n.occasions){
+      # State process
+      z[i,t] ~ dbern(phia[t-1] * z[i,t-1])
+     
+      # Observation process
+      y[i,t] ~ dbern(p[t-1] * z[i,t])
+      } #t
+   } #i
+```
+
+---
+## Fitting the IPM in JAGS
+
+
+```r
+# 4.3. Likelihood for productivity data: Poisson regression
+  for(t in 1:(nyears-1)){
+   J[t] ~ dpois(R[t] * f[t])
+  }
+}
+}
+```
+
+---
+## IPM assumptions
+
+#### All assumptions of the component models apply to the full model 
+- state-space mode
+
+- CJS model
+
+- GLMM
+
+--
+#### Ability to estimate latent parameters assumes all other parameters estimated without bias
+
+--
+#### Joint likelihood assumes independence of data sets
+
+---
+## Summary and recommendations
+
+#### IPM’s can do everything classic matrix models can do plus:
+- Increased precision of estimates
+- Ability to estimate latent demographic rates
+- Proper error propagation
+- “Easily” handle complex model structures
+- Natural framework for PVA
+
+#### But:
+- Data hungry
+- Require careful thought about what parameters mean
+- Bias can propagate in weird ways
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
