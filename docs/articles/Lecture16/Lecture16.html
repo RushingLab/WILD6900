@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="author" content="   WILD6900 (Spring 2019)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
     <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
   </head>
@@ -22,6 +23,8 @@ class: center, middle, inverse, title-slide
 
 
 ## Readings
+
+&gt; ### Kéry &amp; Schaub 348-380
 
 ---
 #### Quantitative ecologist: \*slaps roof of IPM\* this bad boy can fit so many types of data in it.
@@ -41,7 +44,7 @@ class: center, middle
 &gt; ### Population ecology is the study of the distribution of individuals in a population over time and space
 
 ---
-## The simplest population model
+## The most simple population model
 
 &lt;br/&gt;
 `$$\LARGE N_{t+1} = N_t + B + I - D - E$$`
@@ -56,9 +59,10 @@ class: center, middle
 --
 - Expected growth rate
 
-`$$\Large \hat{\lambda} = \phi^{Ad}_t + f \phi^{Ju}_t + \omega_t$$`
+`$$\Large \hat{\lambda} = \phi^{Ad}_t + \frac{f \phi^{Ju}_t}{2} + \omega_t$$`
 .footnote[
-`\(\phi\)` = apparent survival
+`\(\phi\)` = apparent survival  
+`\(\omega\)` = immigration rate
 ]
 
 ---
@@ -82,8 +86,8 @@ class: center, middle
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:center;"&gt; \(N^{Ju}_{t+1}\) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; \(0.5f\phi^{Ju}_t N_t\) &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; \(Poisson(f\phi^{Ju}_t, N_t)\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(0.5 \times f\phi^{Ju}_t N_t\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(Poisson(0.5 \times f\phi^{Ju}_t N_t)\) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:center;"&gt; \(N^{Imm}_{t+1}\) &lt;/td&gt;
@@ -93,6 +97,9 @@ class: center, middle
 &lt;/tbody&gt;
 &lt;/table&gt;
 
+.footnote[
+Demographic stochasticity
+]
 ---
 class: inverse, middle, center
 
@@ -112,7 +119,7 @@ class: inverse, middle, center
 
 
 ---
-## Leslie matrix
+## Projection matrix
 
 &lt;br/&gt;
 &lt;br/&gt;
@@ -124,7 +131,7 @@ class: inverse, middle, center
 \end{bmatrix}$$`
 
 ---
-## Leslie matrix
+## Projection matrix
 
 &lt;br/&gt;
 
@@ -214,7 +221,7 @@ class: inverse, middle, center
 ---
 class: inverse, middle, center
 
-# IPM meme
+&lt;img src="Lecture16_files/figure-html/unnamed-chunk-7-1.png" width="50%" style="display: block; margin: auto;" /&gt;
 
 ---
 ## The "canonical" integrated population model
@@ -430,7 +437,7 @@ mlam &lt;- exp((1/(nyears-1))*sum(logla[1:(nyears-1)]))   # Geometric mean
    # 4.1.2 Observation process
     for(t in 1:nyears){
       Ntot[t] &lt;- NAd[t] + NJu[t] + NImm[t]
-      y[t] ~ dpois(Ntot[t])
+      C[t] ~ dpois(Ntot[t])
     }
 ```
 
@@ -442,13 +449,13 @@ mlam &lt;- exp((1/(nyears-1))*sum(logla[1:(nyears-1)]))   # Geometric mean
 # 4.2 Likelihood for capture-recapture data: CJS model (2 age classes)
 for(i in 1:nJu){
    # Define latent state at first capture
-   z[i,f[i]] &lt;- 1
+   zJ[i,f[i]] &lt;- 1
    for (t in (f[i]+1):n.occasions){
       # State process
-      z[i,t] ~ dbern(phij[t-1] * z[i,t-1])
+      zJ[i,t] ~ dbern(phij[t-1] * zJ[i,t-1])
      
       # Observation process
-      y[i,t] ~ dbern(p[t-1] * z[i,t])
+      yJ[i,t] ~ dbern(p * zJ[i,t])
       } #t
    } #i
 ```
@@ -460,13 +467,13 @@ for(i in 1:nJu){
 ```r
 for (i in 1:nAd){
    # Define latent state at first capture
-   z[i,f[i]] &lt;- 1
+   zA[i,f[i]] &lt;- 1
    for (t in (f[i]+1):n.occasions){
       # State process
-      z[i,t] ~ dbern(phia[t-1] * z[i,t-1])
+      zA[i,t] ~ dbern(phia[t-1] * zA[i,t-1])
      
       # Observation process
-      y[i,t] ~ dbern(p[t-1] * z[i,t])
+      yA[i,t] ~ dbern(p * zA[i,t])
       } #t
    } #i
 ```
@@ -485,6 +492,55 @@ for (i in 1:nAd){
 ```
 
 ---
+## IPM extensions
+
+#### Covariates
+
+`$$\large log(f_t) = \alpha_0 + \alpha_1 X_{1,t} +\epsilon_{f_t}$$`
+
+`$$\large logit(\phi^{Ad}_t) = \beta_0 + \eta_1 X_{2,t} + \epsilon_{\phi^{Ad}_t}$$`
+
+--
+#### Density-dependence
+
+`$$\large log(f_t) = \alpha_0 + \alpha_1 X_{1,t} + \alpha_2 N_t + \epsilon_{f_t}$$`
+
+`$$\large logit(\phi^{Ad}_t) = \beta_0 + \eta_1 X_{2,t} + \beta_2 N_t +  \epsilon_{\phi^{Ad}_t}$$`
+
+`$$\large log(\lambda_t) = \beta_3 + \beta_4 N_t + \epsilon_{\lambda_t}$$`
+
+.footnote[
+DD on `\(\lambda\)` generally tested outside of IPM
+]
+
+
+
+---
+## IPM extensions
+
+#### Covariates
+
+`$$\large log(f_t) = \alpha_0 + \alpha_1 X_{1,t} +\epsilon_{f_t}$$`
+
+`$$\large logit(\phi^{Ad}_t) = \beta_0 + \eta_1 X_{2,t} + \epsilon_{\phi^{Ad}_t}$$`
+
+#### Density-dependence
+
+`$$\large log(f_t) = \alpha_0 + \alpha_1 X_{1,t} + \alpha_2 N_t + \epsilon_{f_t}$$`
+
+`$$\large logit(\phi^{Ad}_t) = \beta_0 + \eta_1 X_{2,t} + \beta_2 N_t +  \epsilon_{\phi^{Ad}_t}$$`
+
+`$$\large log(\lambda_t) = \beta_3 + \beta_4 N_t + \epsilon_{\lambda_t}$$`
+
+#### Population viability analysis
+
+- Include `\(n\)` years of `NA` counts (along with values of any covariates)
+
+- Predict `\(N\)` for future years (with all associated uncertainty)
+
+- Estimate PVA metrics (e.g., quasi-extinction prob.)
+
+---
 ## IPM assumptions
 
 #### All assumptions of the component models apply to the full model 
@@ -494,12 +550,18 @@ for (i in 1:nAd){
 
 - GLMM
 
+
 --
 #### Ability to estimate latent parameters assumes all other parameters estimated without bias
 
 --
 #### Joint likelihood assumes independence of data sets
 
+- Requires no individuals shared among data sets
+
+- In practice, violation has little influence on parameter estimates
+    + in severe cases, uncertainty in parameter estimates may be underestimated
+    
 ---
 ## Summary and recommendations
 

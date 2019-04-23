@@ -115,6 +115,9 @@
     <li>
       <a href="../articles/Lecture15/Lecture15.html">Lecture 15: Multi-state models</a>
     </li>
+    <li>
+      <a href="../articles/Lecture16/Lecture16.html">Lecture 16: Integrated population models</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -195,7 +198,7 @@
       <h1>Metroplis sampler for a simple linear regression</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-04-17</h4>
+            <h4 class="date">2019-04-23</h4>
       
       
       <div class="hidden name"><code>metropolis.Rmd</code></div>
@@ -555,28 +558,28 @@
 <p><img src="metropolis_files/figure-html/unnamed-chunk-15-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>That looks better. Now we can estimate the mean and 95% credible interval of the posterior:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(mcmc_df<span class="op">$</span>alpha)</a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">#&gt; [1] 249.9</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">#&gt; [1] 249.6</span></a>
 <a class="sourceLine" id="cb15-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(mcmc_df<span class="op">$</span>alpha, <span class="dt">probs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</a>
 <a class="sourceLine" id="cb15-4" data-line-number="4"><span class="co">#&gt;  2.5% 97.5% </span></a>
-<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="co">#&gt; 248.7 251.0</span></a></code></pre></div>
+<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="co">#&gt; 248.6 250.7</span></a></code></pre></div>
 <p>Pretty close to the data generating value of 250. Now let’s check <span class="math inline">\(\beta\)</span>:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">ggplot</span>(mcmc_df, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> beta)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_path</span>()</a></code></pre></div>
 <p><img src="metropolis_files/figure-html/unnamed-chunk-17-1.png" width="672" style="display: block; margin: auto;"></p>
 <p>and</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(mcmc_df<span class="op">$</span>beta)</a>
-<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="co">#&gt; [1] 50.23</span></a>
+<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="co">#&gt; [1] 49.93</span></a>
 <a class="sourceLine" id="cb17-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(mcmc_df<span class="op">$</span>beta, <span class="dt">probs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</a>
 <a class="sourceLine" id="cb17-4" data-line-number="4"><span class="co">#&gt;  2.5% 97.5% </span></a>
-<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="co">#&gt; 48.97 51.42</span></a></code></pre></div>
+<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="co">#&gt; 48.90 51.01</span></a></code></pre></div>
 <p>Also pretty close to the data generating value of 50. Finally, <span class="math inline">\(\tau\)</span></p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">ggplot</span>(mcmc_df, <span class="kw">aes</span>(<span class="dt">x =</span> x, <span class="dt">y =</span> tau)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_path</span>()</a></code></pre></div>
 <p><img src="metropolis_files/figure-html/unnamed-chunk-19-1.png" width="672" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"></a>
 <a class="sourceLine" id="cb19-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(mcmc_df<span class="op">$</span>tau)</a>
-<a class="sourceLine" id="cb19-3" data-line-number="3"><span class="co">#&gt; [1] 0.01624</span></a>
+<a class="sourceLine" id="cb19-3" data-line-number="3"><span class="co">#&gt; [1] 0.01997</span></a>
 <a class="sourceLine" id="cb19-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(mcmc_df<span class="op">$</span>tau, <span class="dt">probs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</a>
 <a class="sourceLine" id="cb19-5" data-line-number="5"><span class="co">#&gt;    2.5%   97.5% </span></a>
-<a class="sourceLine" id="cb19-6" data-line-number="6"><span class="co">#&gt; 0.01300 0.01975</span></a></code></pre></div>
+<a class="sourceLine" id="cb19-6" data-line-number="6"><span class="co">#&gt; 0.01600 0.02437</span></a></code></pre></div>
 <p>The chain looks like it converged on a stationary distribution but what was the data generating value? Remember that we parameterized the simulated data in terms of the standard deviation, which was 7.5. Because <span class="math inline">\(\sigma = \sqrt{\frac{1}{\tau}}\)</span>, we can simply derive the posterior distribution of <span class="math inline">\(\sigma\)</span> from <span class="math inline">\(\tau\)</span>:</p>
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">mcmc_df &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(mcmc_df, <span class="dt">sigma =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/MathFun">sqrt</a></span>(<span class="dv">1</span><span class="op">/</span>tau))</a>
 <a class="sourceLine" id="cb20-2" data-line-number="2"></a>
@@ -584,10 +587,10 @@
 <p><img src="metropolis_files/figure-html/unnamed-chunk-20-1.png" width="700" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"></a>
 <a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(mcmc_df<span class="op">$</span>sigma)</a>
-<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="co">#&gt; [1] 7.881</span></a>
+<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="co">#&gt; [1] 7.107</span></a>
 <a class="sourceLine" id="cb21-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/quantile">quantile</a></span>(mcmc_df<span class="op">$</span>sigma, <span class="dt">probs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</a>
 <a class="sourceLine" id="cb21-5" data-line-number="5"><span class="co">#&gt;  2.5% 97.5% </span></a>
-<a class="sourceLine" id="cb21-6" data-line-number="6"><span class="co">#&gt; 7.116 8.771</span></a></code></pre></div>
+<a class="sourceLine" id="cb21-6" data-line-number="6"><span class="co">#&gt; 6.406 7.906</span></a></code></pre></div>
 <p>Wasn’t that easy?</p>
 </div>
   </div>

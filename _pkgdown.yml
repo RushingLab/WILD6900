@@ -52,6 +52,8 @@ navbar:
           href: articles/Lecture14/Lecture14.html
         - text: "Lecture 15: Multi-state models"
           href: articles/Lecture15/Lecture15.html
+        - text: "Lecture 16: Integrated population models"
+          href: articles/Lecture16/Lecture16.html
     - text: "Labs"
       icon: fas fa-desktop
       menu:
