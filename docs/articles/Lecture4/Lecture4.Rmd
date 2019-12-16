@@ -1,7 +1,7 @@
 ---
 title: "Lecture 4"
 subtitle: "More about prior distributions"
-author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+author: "<br/><br/><br/>WILD6900 (Spring 2020)"
 output:
   xaringan::moon_reader:
     css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
@@ -49,7 +49,7 @@ class: inverse, center, middle
 
 
 --
-#### But this view is both philosophically counter to the scientific method and ignores the many benefits of using priors that contain some information about the parameter(s) $\theta$  
+#### But this view is both philosophically counter to the scientific method and ignores the many benefits of using priors that contain some information about the parameter(s) $\large \theta$  
 
 ---
 # A note on this material
@@ -192,7 +192,7 @@ For example, let's say we track 10 individuals over a period of time using GPS c
 --
 A natural model for these data is  
 
-$$Binomial(p, N = 10)$$  
+$$\LARGE Binomial(p, N = 10)$$  
 
 
 --

@@ -1,7 +1,7 @@
 ---
 title: "Syllabus"
 subtitle: "WILD 6900: Applied Bayesian Analysis of Ecological Data"
-author: "Spring 2019"
+author: "Spring 2020"
 output: 
   rmarkdown::html_vignette:
     keep_md: yes
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 # LOGISTICS
 
 **Lecture**: Tuesday and Thursday 1:30-2:45  
-**Location**: BNR 113   
+**Location**: ENLAB 248 (Engineering Laboratory Building)  
 **Credits**: 3  
 
 # INSTRUCTOR
@@ -33,7 +33,7 @@ Office hours: Monday and Wednesday 1:00-2:30
 
 # COURSE DESCRIPTION
 
-Quantitative models play a central role in linking data to inferences about ecological processes. Although quantitative ecological modeling involves a diverse array of questions and techniques, many of the most common modeling frameworks are based on a set of general underlying principles. This course aims to provide students with a firm understanding of these principles and their application, with a particular focus on modeling the dynamics of plant and animal populations using Bayesian methods. By building from common principles to more specific procedures, students will be better equipped to tailor analyses to their specific data and questions, ultimately leading to deeper and more robust understanding of the ecological systems they study. Concepts discussed during lectures will be reinforced through lab exercises focused on implementing statistical models using modern software tools (e.g. R, JAGS, and git). 
+Quantitative models play a central role in linking data to inferences about ecological processes. Although quantitative ecological modeling involves a diverse array of questions and techniques, many of the most common modeling frameworks are based on a set of general underlying principles. This course aims to provide students with a firm understanding of these principles and their application, with a particular focus on modeling the dynamics of plant and animal populations using Bayesian methods. By building from common principles to more specific procedures, students will be better equipped to tailor analyses to their specific data and questions, ultimately leading to deeper and more robust understanding of the ecological systems they study. Concepts discussed during lectures will be reinforced through lab exercises focused on implementing statistical models using modern software tools (e.g. R, JAGS). 
 
 # COURSE OBJECTIVES
 

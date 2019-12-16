@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">WILD6900</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2019.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2020.1</span>
       </span>
     </div>
 
@@ -198,7 +198,7 @@
       <h1>Estimating apparent survival: Basic Cormack-Jolly-Seber models</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2019-04-23</h4>
+            <h4 class="date">2019-12-16</h4>
       
       
       <div class="hidden name"><code>cjs.Rmd</code></div>
@@ -394,12 +394,12 @@
 #&gt; adaptation = 100 iterations (sufficient),
 #&gt; burn-in = 2500 iterations and thin rate = 1,
 #&gt; yielding 22500 total samples from the joint posterior. 
-#&gt; MCMC ran in parallel for 0.148 minutes at time 2019-04-23 10:24:55.
+#&gt; MCMC ran in parallel for 0.132 minutes at time 2019-12-16 14:29:09.
 #&gt; 
-#&gt;             mean     sd    2.5%     50%   97.5% overlap0 f Rhat n.eff
-#&gt; phi        0.562  0.025   0.513   0.562   0.612    FALSE 1    1 22500
-#&gt; p          0.895  0.029   0.831   0.897   0.945    FALSE 1    1 22500
-#&gt; deviance 165.338 28.068 117.708 162.985 225.265    FALSE 1    1 22089
+#&gt;             mean     sd    2.5%     50%   97.5% overlap0 f  Rhat n.eff
+#&gt; phi        0.561  0.025   0.512   0.562   0.610    FALSE 1 1.000  5437
+#&gt; p          0.896  0.029   0.834   0.898   0.945    FALSE 1 1.001  2623
+#&gt; deviance 164.236 27.699 114.656 162.672 223.091    FALSE 1 1.001  3278
 #&gt; 
 #&gt; Successful convergence based on Rhat values (all &lt; 1.1). 
 #&gt; Rhat is the potential scale reduction factor (at convergence, Rhat=1). 
@@ -410,7 +410,7 @@
 #&gt; i.e., our confidence that the parameter is positive or negative.
 #&gt; 
 #&gt; DIC info: (pD = var(deviance)/2) 
-#&gt; pD = 393.9 and DIC = 559.243 
+#&gt; pD = 383.4 and DIC = 547.657 
 #&gt; DIC is an estimate of expected predictive error (lower is better).</code></pre>
 <p>Looks good!</p>
 </div>
@@ -533,14 +533,14 @@
 #&gt; adaptation = 100 iterations (sufficient),
 #&gt; burn-in = 2500 iterations and thin rate = 1,
 #&gt; yielding 22500 total samples from the joint posterior. 
-#&gt; MCMC ran in parallel for 0.157 minutes at time 2019-04-23 10:25:05.
+#&gt; MCMC ran in parallel for 0.144 minutes at time 2019-12-16 14:29:18.
 #&gt; 
 #&gt;              mean     sd    2.5%     50%   97.5% overlap0     f Rhat n.eff
-#&gt; phi[1]      0.552  0.035   0.484   0.552   0.619    FALSE 1.000    1  6195
-#&gt; phi[2]      0.571  0.035   0.503   0.571   0.639    FALSE 1.000    1 22500
-#&gt; p           0.895  0.029   0.832   0.898   0.946    FALSE 1.000    1  9823
-#&gt; delta.phi  -0.019  0.048  -0.113  -0.020   0.076     TRUE 0.656    1  7511
-#&gt; deviance  164.655 28.327 113.404 162.850 225.007    FALSE 1.000    1 17935
+#&gt; phi[1]      0.552  0.034   0.483   0.552   0.619    FALSE 1.000    1 12254
+#&gt; phi[2]      0.571  0.035   0.502   0.571   0.638    FALSE 1.000    1 22500
+#&gt; p           0.896  0.028   0.835   0.898   0.946    FALSE 1.000    1 10369
+#&gt; delta.phi  -0.019  0.048  -0.112  -0.019   0.077     TRUE 0.651    1 19548
+#&gt; deviance  163.767 27.613 113.720 162.630 222.269    FALSE 1.000    1  6059
 #&gt; 
 #&gt; Successful convergence based on Rhat values (all &lt; 1.1). 
 #&gt; Rhat is the potential scale reduction factor (at convergence, Rhat=1). 
@@ -551,7 +551,7 @@
 #&gt; i.e., our confidence that the parameter is positive or negative.
 #&gt; 
 #&gt; DIC info: (pD = var(deviance)/2) 
-#&gt; pD = 401.2 and DIC = 565.857 
+#&gt; pD = 381.2 and DIC = 544.923 
 #&gt; DIC is an estimate of expected predictive error (lower is better).</code></pre>
 <p>So we can see that there’s a 65% probability that male survival is higher than female survival. Not much evidence of a survival difference but see how simple it is to estimate derived parameters and their uncertainty?</p>
 </div>

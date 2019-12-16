@@ -1,7 +1,7 @@
 ---
 title: "Lecture 2"
 subtitle: "Probability refresher (or introduction)"
-author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+author: "<br/><br/><br/>WILD6900 (Spring 2020)"
 output:
   xaringan::moon_reader:
     css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
@@ -137,10 +137,14 @@ $$Pr(not \; A) = \frac{area\; of \;S - area\; of\; A}{area\; of \;S} = 1 - \frac
 
 #### **Example**  
 
-#### In our example, let's say that the probability of occupancy for species $x$ is $Pr(z_x = 1) = 0.4$  
+#### In our example, let's say that the probability of occupancy for species $x$ is:
+$$\LARGE Pr(z_x = 1) = 0.4$$  
 
 --
-#### This means that the probability that the site in not occupied is $Pr(z_x = 0) =1-0.4=0.6$  
+#### This means that the probability that the site in not occupied is:
+
+--
+$$\LARGE Pr(z_x = 0) =1-0.4=0.6$$  
 
 ---
 class: inverse, middle, center

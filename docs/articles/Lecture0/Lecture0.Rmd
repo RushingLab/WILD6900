@@ -1,7 +1,7 @@
 ---
 title: "Lecture 0"
 subtitle: "Course overview"
-author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+author: "<br/><br/><br/>WILD6900 (Spring 2020)"
 output:
   xaringan::moon_reader:
     css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
@@ -20,7 +20,7 @@ library(WILD3810)
 
 # LOGISTICS
 
-**Lecture**: Tuesday and Thursday 1:30-2:45 BNR 113  
+**Lecture**: Tuesday and Thursday 1:30-2:45 ENLAB 248  
 **Credits**: 3  
 
 ---

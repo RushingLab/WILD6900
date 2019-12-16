@@ -1,7 +1,7 @@
 ---
 title: "Lecture 1"
 subtitle: "Introduction to statistical inference in ecology"
-author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+author: "<br/><br/><br/>WILD6900 (Spring 2020)"
 output:
   xaringan::moon_reader:
     css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
@@ -12,7 +12,7 @@ output:
       countIncrementalSlides: false
 ---
 
-```{r setup, echo = FALSE}
+```{r setup, echo = FALSE, warning=FALSE, message=FALSE}
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
 library(WILD6900)
@@ -161,7 +161,7 @@ $$\LARGE (y, \theta, x)$$
 **Boldface** = vector
 $$\LARGE \mathbf {(y, \theta, x)}$$
 
---
+---
 Probability distribution
 
 $$\LARGE [a|b,c]$$
@@ -189,7 +189,7 @@ class: inverse, center, middle
 ## Process models
 <br/>
 
-$$g(\theta_p, x)$$
+$$\LARGE g(\theta_p, x)$$
 <br/>
 
 - Mathematical description of our hypothesis about how the *state variables* we are interested in change over space and time  

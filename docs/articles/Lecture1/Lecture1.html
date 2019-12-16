@@ -3,7 +3,7 @@
   <head>
     <title>Lecture 1</title>
     <meta charset="utf-8">
-    <meta name="author" content="   WILD6900 (Spring 2019)" />
+    <meta name="author" content="   WILD6900 (Spring 2020)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
     <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
@@ -14,7 +14,7 @@ class: center, middle, inverse, title-slide
 
 # Lecture 1
 ## Introduction to statistical inference in ecology
-### <br/><br/><br/>WILD6900 (Spring 2019)
+### <br/><br/><br/>WILD6900 (Spring 2020)
 
 ---
 
@@ -142,36 +142,36 @@ class: inverse, center, middle
 ---
 
 Parameter(s)
-`$$\theta$$`
+`$$\LARGE \theta$$`
 
 --
 Observation(s)
 
-`$$y$$`
+`$$\LARGE y$$`
 
 --
 Predictor(s)
 
-`$$x$$`
+`$$\LARGE x$$`
 
 --
 Lightface = scalar
 
-`$$(y, \theta, x)$$`
+`$$\LARGE (y, \theta, x)$$`
 
 --
 **Boldface** = vector
-`$$\mathbf {(y, \theta, x)}$$`
+`$$\LARGE \mathbf {(y, \theta, x)}$$`
 
---
+---
 Probability distribution
 
-`$$[a|b,c]$$`
+`$$\LARGE [a|b,c]$$`
 
 --
 Deterministic function
 
-`$$g()$$`
+`$$\LARGE g()$$`
 
 ---
 class: inverse, center, middle
@@ -191,7 +191,7 @@ class: inverse, center, middle
 ## Process models
 &lt;br/&gt;
 
-`$$g(\theta_p, x)$$`
+`$$\LARGE g(\theta_p, x)$$`
 &lt;br/&gt;
 
 - Mathematical description of our hypothesis about how the *state variables* we are interested in change over space and time  
@@ -216,7 +216,7 @@ class: inverse, center, middle
 --
 - State variable `\((z)\)` modeled as a *probability distribution*  
 
-`$$[z|g(\theta_p, x), \sigma^2_p]$$`
+`$$\LARGE [z|g(\theta_p, x), \sigma^2_p]$$`
 
 ???
 
@@ -233,7 +233,7 @@ We hypothesize that population growth rate will be highest at low densities and 
 
 This leads us to believe that the *discrete logistic equation* is a good descriptor of our system:
 
-`$$N_{t+1} = g(\theta_p, x) = N_te^{r_0[1-(N_t/K)]}$$`
+`$$\LARGE N_{t+1} = g(\theta_p, x) = N_te^{r_0[1-(N_t/K)]}$$`
 
 &lt;img src="Lecture1_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
 
@@ -283,7 +283,7 @@ class: inverse, center, middle
     
 - As for the process model, we can represent sampling uncertainty `\(\sigma_s\)` stochastically using a probability model `\(^5\)`:
 
-`$$[u_i|z, \sigma^2_s]$$`
+`$$\LARGE [u_i|z, \sigma^2_s]$$`
 
 ???
 
@@ -296,7 +296,7 @@ class: inverse, center, middle
 
 In our population size example, suppose we conduct `\(i =1,2,3,...,K\)` transect or point counts to estimate abundance. The area of our counts (we'll call it `\(a\)`) is not the entire area of our population `\((a &lt; A)\)`. If we want to estimate `\(N_t\)`, we need a model linking our counts (call them `\(n_{t,i}\)`) to the true abundance. If we assume individuals are uniformly distributed across our study area, then perhaps we could use:
 
-`$$\bigg[\sum_{i=1}^K n_{t,i}\bigg|\frac{N_t}{a}, \sigma^2_s\bigg]$$`
+`$$\LARGE \bigg[\sum_{i=1}^K n_{t,i}\bigg|\frac{N_t}{a}, \sigma^2_s\bigg]$$`
 
 In this case, our counts `\(n_t\)` will be different if we had chosen different transect routes or points. This is what `\(\sigma^2_s\)` represents.  
 
@@ -322,7 +322,7 @@ class: inverse, center, middle
 --
 - This *observation uncertainty* `\((\sigma^2_o)\)` can lead to biased estimates of model parameters, so generally requires its own model `\(^6\)`
 
-`$$[y_i|d(\Theta_o,u_i), \sigma^2_o]$$`
+`$$\LARGE [y_i|d(\Theta_o,u_i), \sigma^2_o]$$`
 
 ???
 
@@ -342,7 +342,7 @@ Another way to say this is that `\(n_{t,i}\)` is the *true* number of individual
 In our count model, we might define a parameter `\(\psi\)` that is the probability that individual that is present in our sample is counted by the observer (we could further use a generalized linear model to account for the effects of, e.g., weather or observer skill, on `\(\psi\)`): 
 
 
-`$$[y_t|\psi n_t, \sigma^2_o]$$`
+`$$\LARGE [y_t|\psi n_t, \sigma^2_o]$$`
 
 where `\(\sigma^2_o\)` is uncertainty about the value of `\(\psi\)`.  
 
@@ -367,7 +367,7 @@ class: inverse, center, middle
 --
 - Every parameter in our model requires a probability distribution describing the prior probability we place of different values the parameter could take   
 
-`$$[\theta_p][\theta_o][\sigma^2_p][\sigma^2_s][\sigma^2_o]$$`
+`$$\LARGE [\theta_p][\theta_o][\sigma^2_p][\sigma^2_s][\sigma^2_o]$$`
 
 --
 - These distributions can provide a lot or a little information about the potential value of each parameter  
