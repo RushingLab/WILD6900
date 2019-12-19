@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
     <title>Lecture 5</title>
+<<<<<<< HEAD
     <meta charset="utf-8">
+=======
+    <meta charset="utf-8" />
+>>>>>>> 6c0a4057b66735eed317af2bfc1e5b76431fa2d2
     <meta name="author" content="   WILD6900 (Spring 2020)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
@@ -204,7 +208,11 @@ phi &lt;- 0.4   # True survival probability
 ```
 
 ```
+<<<<<<< HEAD
 ## [1] 11  9  6  9  5
+=======
+## [1] 11  5  7 14  9
+>>>>>>> 6c0a4057b66735eed317af2bfc1e5b76431fa2d2
 ```
 
 ---
@@ -576,7 +584,11 @@ mean(posterior$phi)
 ```
 
 ```
+<<<<<<< HEAD
 ## [1] 0.3937
+=======
+## [1] 0.4521
+>>>>>>> 6c0a4057b66735eed317af2bfc1e5b76431fa2d2
 ```
 
 Pretty close (that a good sign that our Metropolis sampler did what we wanted it to do!)
@@ -595,7 +607,11 @@ quantile(posterior$phi)
 
 ```
 ##     0%    25%    50%    75%   100% 
+<<<<<<< HEAD
 ## 0.1962 0.3606 0.3940 0.4246 0.6665
+=======
+## 0.2893 0.4197 0.4530 0.4853 0.6665
+>>>>>>> 6c0a4057b66735eed317af2bfc1e5b76431fa2d2
 ```
 
 Quantiles are useful for determining the 95% *credible intervals* of the posterior: `\(^1\)`
@@ -607,10 +623,17 @@ quantile(posterior$phi, probs = c(0.025, 0.975))
 
 ```
 ##   2.5%  97.5% 
+<<<<<<< HEAD
 ## 0.3013 0.4890
 ```
 
 This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.3 and 0.49" `\(^2\)`
+=======
+## 0.3544 0.5459
+```
+
+This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.35 and 0.55" `\(^2\)`
+>>>>>>> 6c0a4057b66735eed317af2bfc1e5b76431fa2d2
 
 ???
 
@@ -867,6 +890,7 @@ Solving lack of identifiability is harder
 
 `\(^2\)` Most MCMC software (JAGS, Bugs, etc) use an adaptive phase,  during with the samplers used by the model may modify their behavior for increased efficiency. This is usually done behind the scenes but as highlighted in the linked post, being aware of what the software is doing can be useful for improving mixing
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
@@ -876,16 +900,74 @@ Solving lack of identifiability is harder
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
 (function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -899,7 +981,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
