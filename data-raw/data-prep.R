@@ -3,6 +3,15 @@ WILD6900_colors <- data.frame(name = c("primary", "secondary", "success", "info"
                               value = c("#446E9B", "#999999", "#3CB521", "#3399F3", "#D47500", "#CD0200", "#eeeeee", "#333333"))
 WILD6900_colors$value <- as.character(WILD6900_colors$value)
 
+## Dispersal data
+DispData <- read.csv("data-raw/Plantdispersaldata.csv")
+DispData2 <- DispData[c(36,37), -c(1,2,3,4)]
+
+
+Disp_df <- data.frame(Distance = as.numeric(DispData2[1,]),
+                      Density = as.numeric(DispData2[2,]))
+ggplot(Disp_df) + geom_point(aes(x = Distance, y = Density))
+
 ## Polar bear survival data
 SurvPriorDat <- read.csv("data-raw/SurvAF_PublishedKnowledge.csv")
 
@@ -70,7 +79,7 @@ rain <- rnorm(N)    # Scaled body length
 
 ## Randomly determine each individuals study plot
 plot <- c(12, 6, 5, 2, 3, 3, 11, 3, 6, 11, 2, 4, 2, 6, 6, 9, 1, 5, 1, 11, 1, 6, 12, 11, 6, 8, 12, 12,
-          11, 8, 5, 6, 3, 7, 2, 2, 8, 8, 3, 5, 6, 1, 5, 2, 4, 9, 1, 2, 10, 3, 5, 2, 12, 2, 5, 5, 2, 2, 
+          11, 8, 5, 6, 3, 7, 2, 2, 8, 8, 3, 5, 6, 1, 5, 2, 4, 9, 1, 2, 10, 3, 5, 2, 12, 2, 5, 5, 2, 2,
           3, 4, 1, 9, 9, 6,
           11, 5, 12, 6, 1, 6, 11, 5, 9, 4, 5, 10, 12, 3, 9, 1, 11, 9, 6, 9, 12, 6, 1, 3, 12, 12, 11,
           11, 8, 12, 5, 12, 7, 6, 12, 8, 10, 5, 3, 6, 11, 9, 12, 2, 11, 8, 9, 6, 12, 4, 1, 8, 8, 12, 6, 11)

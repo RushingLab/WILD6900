@@ -3,12 +3,7 @@ title: "WILD6900"
 subtitle: "Homework 1: Creating informative prior distributions"
 author: "YOUR NAME HERE"
 date: "`r Sys.Date()`"
-output: 
-  pdf_document:
-    latex_engine: xelatex
-
-mainfont: Arial
-fontsize: 12pt
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -18,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warnin
 
 ***
 
-**Due date: 31 January, 2019 before class**
+**Due date: 30 January, 2020 before class**
 
 Refer to the [instructions for submitted homework assignments](https://rushinglab.github.io/WILD6900/articles/homework.html) prior to submission
 

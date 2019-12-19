@@ -1,6 +1,6 @@
 ---
 title: "WILD6900"
-subtitle: "Homework 2: Fitting dispersal kernels using MLE, custom MCMC, and JAGS"
+subtitle: "Homework 2: Estimating fecundity"
 author: "YOUR NAME HERE"
 date: "`r Sys.Date()`"
 output: html_document
@@ -23,13 +23,7 @@ Refer to the [instructions for submitted homework assignments](https://rushingla
 
 ***
 
-Dispersal is a central process in ecology and evolution. The movement of individuals from their birth place to their breeding location drive population dynamics, gene flow, range expansion, the spread of invasives, and many other processes. Of course, not all individuals disperse the same distance and characterizing the frequency and distance of dispersal events is critical to understanding how these movements influence the processes mentioned above. For this reason, there is a long history in ecological and evolutionary research of measuring the dispersal distance of many individuals from a population and then fitting a *dispersal kernel*. Dispersal kernels are essentially probability distributions - they define the probability that an individual will disperse a given distance. 
-
-Fitting dispersal kernels is in many ways similar to some of the concepts we have already seen this semester - we choose a probability distribution and then use observed data to estimate the parameters that define the shape of that distribution. In this assignment, you will estimate dispersal kernels using several different methods, including maximum likelihood estimation, a custom MCMC model, and using JAGS. 
-
-### The data
-
-The data for this lab come from a study by USU faculty member Noelle Beckman. These data...
+[Earlier in the semester](https://rushinglab.github.io/WILD6900/articles/poisson_glm.html), we learned about fitting generalized linear models in JAGS by modeling changes in the number of peregrine falcons nesting in the French Jura from 1964 to 2003. In this homework assignment, you will use the same data set to quantify changes in per capita fecundity of this population across the same time period. 
 
 ```{r  out.width="50%", eval = TRUE, echo = FALSE}
 knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/7/7b/Peregrine_falcon_%28Australia%29.JPG")
@@ -45,109 +39,24 @@ data("falcons")
 
 The `Eyasses` column provides the total number of fledglings produced by the entire population in each year (i.e., the `Pairs` column). We can think of these values as the product of per capita fecundity $f$ times the number of individuals $N$, plus some random noise. In other words, the *expected* number of eyasses in a given year is $f_tN_t$ but the *observed* number will differ from this expectation due to random process variation. 
 
-### The distribution
+**1) What distribution would be appropriate for linking the observed number of eyasses in each year (call that $E_t$) to the per capita fecundity $f_t$ and current population size $N_t$? Type the equation below inside of the double dollar signs (note - the command `\sim` will create the $\sim$ (tilda) symbol)**
 
-There are many possible distributions we could choose to describe the dispersal kernel of ?. How we choose among these models is beyond the scope of this assignment so we will use a fairly common model (at least, a model that's commonly used as a starting point), the negative exponential. The negative exponential distribution with rate $\lambda$ has the following probability density:
+$$insert\; equation\; here$$
 
-$$\Large [d] = \lambda e^{-\lambda d}$$
+In the previous lab, we modeled the counts as a non-linear function of year by including polynomial terms in the linear predictor. Given the non-linear changes in abundance, we might expect non-linear changes in fecundity over the same time period. 
 
-where $d$ is the observed dispersal distance. 
+**2a) In the equation below, replace `?` with the appropriate link function for modeling per capita fecundity $f_t$ as a linear function of covariates.**  
 
-### Maximum likelihood estimation
+**2b) On the right hand side of the equation, write the linear predictor assuming we want to model fecundity as a function of $year$ and $year^2$. Use whatever symbols you would like to represent intercept/slope parameters**
 
-```{r}
-LL <- function(x, lambda) {
-        loglike <- dexp(x, rate = lambda, log = TRUE)
-        return(-sum(loglike))
-}
-```
-
-```{r}
-
-logLike_df <- data.frame(lambda = seq(from = 0.01, to = 2, by = 0.01),
-                  logLike = NA)
-
-for(i in 1:nrow(mle)){
-  logLike_df$logLike[i] <- LL(x, lambda = logLike_df$lambda[i])
-}
-
-mle <- logLike_df$lambda[which(logLike_df$logLike == min(logLike_df$logLike))]
-
-ggplot(logLike_df, aes(x = lambda, y = logLike)) + 
-  geom_path() +
-  geom_vline(xintercept = mle)
-
-```
-```{r}
-MASS::fitdistr(x = x, densfun = "exponential")
-mle
-```
-
-$$\alpha = \frac{\mu^2}{\sigma^2}$$
-$$\beta =  \frac{\mu}{\sigma^2}$$
-
-```{r prior}
-mu <- 0.5
-var <- 0.1
-alpha <- mu^2/var^2
-beta <- mu/var^2
-```
+$$?(f_t) =$$
 
 
-```{r MCMCfunctions}
-joint <- function(data, p){
-  ll <- sum(dexp(data, rate = p, log = TRUE)) + 
-    dgamma(x = p, shape = alpha, rate = beta, log = TRUE)
-  return(ll)
-}
+Next you will need to covert the above model into functioning JAGS code. Complete the code statement below by filling in:
 
-proposal <- function(p, sigma){
-  proposal <- rnorm(n = 1, mean = p, sd = sigma)
-  return(proposal)
-}
-```
+**3a) The appropriate priors distributions for each parameter in the model**  
 
-```{r MCMCsetup}
-n.samples <- 10000    # Number of samples to draw
-sigma <- 0.015       # Tuning parameter
-
-posterior <- data.frame(iteration = 1:n.samples, 
-                        rate = rep(NA, n.samples),
-                        accept = rep(0, n.samples)) # Empty vector to store samples of phi
-
-p <- 1     # Initial value
-```
-
-```{r MCMC}
-for(i in 1:n.samples){
-  ## Propose new value (if negative value is proposed, p.cand == 0)
-  p.cand <- max(0, proposal(p = p, sigma = sigma))   ## Proposal
-
-  ## log(R)
-  l.R <- (joint(data = x, p = p.cand) - 
-            joint(data = x, p = p))
-  
-  ## R
-  R <- min(1, exp(l.R))   
-  
-  ## Keep p.cand with Pr(R); reject with Pr(1 - R)
-  if(runif(1) < R){
-    p <- p.cand
-    posterior$accept[i] <- 1
-  }
-  
-  ## Store new p
-  posterior$rate[i] <- p
-}
-
-mean(posterior$rate)
-```
-
-```{r vizMCMC}
-ggplot(posterior, aes(x = iteration, y = rate)) + geom_path()
-```
-
-**Play with sigma. How does it influence the MCMC?**
+**3b) The correct likelihood for the model above**
 
 ***
 **Important** - in order for the .Rmd file to knit properly, complete the model code below and then manually run the code to create the .jags file (highlighting the chunk below and clicking `Run` or `command + return`). Leave the `eval = FALSE` option set to false so that `knitr` does **not** try to run the code when you knit the document!
@@ -155,13 +64,13 @@ ggplot(posterior, aes(x = iteration, y = rate)) + geom_path()
 ***
 
 ```{r eval = FALSE}
-sink("kernel.jags")
+sink("fecundity.jags")
 cat("
 model{
   # Priors
 
   # Likelihood
-  for(t in 1:N){
+  for(t in 1:nyear){
 
   }
 } # end of model
@@ -201,8 +110,8 @@ nb <-
 Assuming all information above is completed correctly, the following code should run without error:
 
 ```{r include = FALSE}
-kernel_mod <- jagsUI::jags(data = jags_data, inits = jags_inits, 
-                              parameters.to.save = params, model.file = "kernel.jags",
+fecundity_mod <- jagsUI::jags(data = jags_data, inits = jags_inits, 
+                              parameters.to.save = params, model.file = "fecundity.jags",
                               n.chains = nc, n.iter = ni, n.thin = 1, n.burnin = nb)
 ```
 

@@ -1,7 +1,7 @@
 ---
 title: "Lecture 6"
 subtitle: "Introduction of Bayesian analysis using JAGS"
-author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+author: "<br/><br/><br/>WILD6900 (Spring 2020)"
 output:
   xaringan::moon_reader:
     css: ["default", "WILD6900.css", "WILD6900-fonts.css"]

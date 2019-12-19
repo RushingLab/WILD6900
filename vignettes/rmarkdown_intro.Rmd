@@ -62,47 +62,17 @@ There are a few disadvantages to R Markdown.
 
 4) **There's a learning curve** - You already know how to use Word. R Markdown is new. How do you make something bold? How do you insert equations? How do you get figures to go at the end of your document? At first, you will almost certaintly have to google almost every thing you need to do in R Markdown (this is why number 1 is a problem). Most of it is pretty simple but it still means the going can be slow at first. 
 
-# Authoring R Markdown files
+# Creating a new R Markdown file
 
-Understanding what R Markdown files are and why they are so useful will become more clear as you learn to create and edit these documents. So without futher ado, let's create an new R Markdown file and do some basic editing. 
+1) Click on `File -> New File -> R Markdown...`
 
-## Step 0: Set up the file structure
+2) Choose a title and format (HTML, pdf, or Word) for the document
 
-We've already learned about RStudio projects and directory structure so let's put that knowledge into practice. The document we are going to create will form the basis of your first homework assignment so to start off the semster in an organized fashion, let's create a project called `WILD6900`:
+3) Click `Ok`
 
-0a) Click on `File -> New Project` then click `New Directory`
+4) Save the newly created document 
 
-0b) Click `New Project`. Name this project `WILD6900` and choose a sensible location for the project (e.g., `Desktop/`)
-
-0c) Click `Create Project` at the bottom. 
-
-1d) In the newly create directory, create a subdirectory called `LastNameFirstName-Homework#`, replacing `LastNameFirstName` with your last and first names and `#` with the appropriate homework number
-
-## Step 1: Create a new R Markdown file using the homework template
-
-1a) Click on `File -> New File -> R Markdown...`
-
-1b) In the window on the left, select `From Template`
-
-1c) Scroll down through the options until you see `WILD6900-Homework1`. Select that template 
-
-1d) In the `Name:` window type `LastnameFirstname-homework1`, substituting your last and first names. In the `Location` window, navigate to your newly create `LastNameFirstName-Homework#` directory
-
-1e) Click `Ok`
-
-## Step 2: Fill in your information and render the document
-
-2a) Change the `author: YOUR NAME HERE` field in the header to your name. 
-
-2b) You should see a small box above the `Source` window (the RStudio window where your document just appeared) that says `Knit` with a small ball of yarn icon. When you click that button (not yet!), two things will happen:
-
-*The .Rmd file will be rendered as a PDF document, which will pop up on your screen
-
-* RStudio will create a new file called `Assignment1.pdf` - you should see that file in the `Files` window in the bottom right of your screen
-
-2c) Click that button
-
-Congratulations, you just created your first R Markdown file!
+Pretty easy
 
 # Basic formatting
 
@@ -111,14 +81,13 @@ Congratulations, you just created your first R Markdown file!
 At the top of your `.Rmd` file, you should see several line in between three blue dashes:
 ```
 ---
-title: "WILD6900"
-subtitle: "Homework 1"
-author: "YOUR NAME HERE"
+title: "Test document"
+author: "Clark Rushing"
 output: html_document
 ---
 ```
 
-This is called the "YAML header" and it's where we can control a lot of the major formatting options for our documents. For example, to change the output to pdf, just switch `html_document` for `pdf_document` and then click the `Knit` button again
+This is called the "YAML header" and it's where we can control a lot of the major formatting options for our documents. For example, to change the output to pdf, just switch `html_document` for `pdf_document` (note, you may need to install a Latex distribution to knit to pdf. If you get an error message at this step, see suggestions [here](https://bookdown.org/yihui/rmarkdown/installation.html)) and then click the `Knit` button again
 
 Pretty cool, right?
 
@@ -271,25 +240,20 @@ The ability to format and create pdf and html documents is great but the real st
 
 ## Inline code
 
-Inline code is useful to including (simple) `R` output directly into the text. Inline code can be added by inclosing `R` code between `\x60r` and `\x60`. For example, typing ` \x60r mean(c(3,7,4,7,9))\x60` will compute and print the mean of the given vector. This is, it will print `r mean(c(3,7,4,7,9))` instead of the code itself. This can be very useful for including summary statistics in reports. 
+Inline code is useful to including (simple) `R` output directly into the text. Inline code can be added by enclosing `R` code between `` `r "\u0060r"` `` and `` `r "\u0060"` ``. For example, typing `` `r "\u0060r mean(c(3,7,4,7,9))\u0060"` `` will compute and print the mean of the given vector. That is, it will print `r mean(c(3,7,4,7,9))` instead of the code itself. This can be very useful for including summary statistics in reports. 
 
-For example, if we have a vector indicating the number of individuals captured at each occassion during a mark-recapture study (e.g., `n <- c(155, 132, 147, 163)`) and we want to include the number of occasions in a report, instead of typing `4`, we can type `\x60r length(n)\x60`. Not only does this prevent typos, it is extemely useful if `length(n)` might change in the future. Instead of manually changing the number of occasions, we just re-render the document and the new number of occasions will be printed automatically. 
+For example, if we have a vector indicating the number of individuals captured at each occasion during a mark-recapture study (e.g., `n <- c(155, 132, 147, 163)`) and we want to include the number of occasions in a report, instead of typing `4`, we can type `` `r "\u0060r length(n)\u0060"` ``. Not only does this prevent typos, it is extremely useful if `length(n)` might change in the future. Instead of manually changing the number of occasions, we just re-render the document and the new number of occasions will be printed automatically. 
 
 ## Code chunks
 
-For more complicated code, it is generally more useful to use **chunks** than inline code. Chunks start on a separate line with `\x60\x60\x60{r}` and end with a `\x60\x60\x60` on its own line (instead of doing this manually, you can click the `Insert` button at the top right of script window, then click `R`). In between these two lines, you can include as many lines of code as you want. For example,
+For more complicated code, it is generally more useful to use **chunks** than inline code. Chunks start on a separate line with `` `r "\u0060\u0060\u0060{r}"` `` and end with a `` `r "\u0060\u0060\u0060"` `` on its own line (instead of doing this manually, you can click the `Insert` button at the top right of script window, then click `R`). In between these two lines, you can include as many lines of code as you want. For example,
 
-```
-\x60\x60\x60{r}
-n1 <- 44     # Number of individuals captured on first occasion
-
-n2 <- 32     # Number of individuals captured on second occasion
-  
-m2 <- 15     # Number of previously marked individuals captured on second occasion
-
-N <- n1 * n2 / m2     # Lincoln-Peterson estimate of abundance 
-\x60\x60\x60
-```
+`` `r "\u0060\u0060\u0060{r}"` ``  
+`` `r "n1 <- 44     # Number of individuals captured on first occasion"` ``  
+`` `r "n2 <- 32     # Number of individuals captured on second occasion"` ``  
+`` `r "m2 <- 15     # Number of previously marked individuals captured on second occasion"` ``  
+`` `r "N <- n1 * n2 / m2     # Lincoln-Peterson estimate of abundance "` ``  
+`` `r "\u0060\u0060\u0060"` ``
 
 ### Chunk options
 
@@ -313,11 +277,10 @@ See the main [R Markdown page](http://yihui.name/knitr/options/) for a complete 
 
 Often it is useful to set the default behavior for all chunks rather that including, for example, `warning = FALSE` at the beginning of each one. To do this, you can include a chunk at the beginning of the document:
 
-```
-\x60\x60\x60{r include=FALSE}
-opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
-\x60\x60\x60
-```
+`` `r "\u0060\u0060\u0060{r include = FALSE}"` ``  
+`` `r "opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)"` ``  
+`` `r "\u0060\u0060\u0060"` ``
+
 
 Any options can be inluded in this chuck to set the default behaviors. You can over-ride these defaults within chunks as needed. You can also load common packages in this chunk to streamline chunks later in the document. 
 
@@ -344,6 +307,3 @@ Coding Club's [Getting Started with R Markdown](https://ourcodingclub.github.io/
 
 Cosma Shalizi's [Using R Markdown for Class Reports](http://www.stat.cmu.edu/~cshalizi/rmarkdown)
 
-# Homework assignment 1
-
-Before submitting your assignment, be sure to double check the instructions for [completing and submitting homework assignments](https://rushinglab.github.io/WILD3810/articles/homework.html).   
