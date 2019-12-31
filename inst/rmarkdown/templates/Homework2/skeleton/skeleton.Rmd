@@ -23,131 +23,195 @@ Refer to the [instructions for submitted homework assignments](https://rushingla
 
 ***
 
-Dispersal is a central process in ecology and evolution. The movement of individuals from their birth place to their breeding location drive population dynamics, gene flow, range expansion, the spread of invasives, and many other processes. Of course, not all individuals disperse the same distance and characterizing the frequency and distance of dispersal events is critical to understanding how these movements influence the processes mentioned above. For this reason, there is a long history in ecological and evolutionary research of measuring the dispersal distance of many individuals from a population and then fitting a *dispersal kernel*. Dispersal kernels are essentially probability distributions - they define the probability that an individual will disperse a given distance. 
-
-Fitting dispersal kernels is in many ways similar to some of the concepts we have already seen this semester - we choose a probability distribution and then use observed data to estimate the parameters that define the shape of that distribution. In this assignment, you will estimate dispersal kernels using several different methods, including maximum likelihood estimation, a custom MCMC model, and using JAGS. 
-
-### The data
-
-The data for this lab come from a study by USU faculty member Noelle Beckman. These data...
-
-```{r  out.width="50%", eval = TRUE, echo = FALSE}
-knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/7/7b/Peregrine_falcon_%28Australia%29.JPG")
-```
-
-
-Start by loading the data:
-
-```{r}
-data("falcons")
-```
-
-
-The `Eyasses` column provides the total number of fledglings produced by the entire population in each year (i.e., the `Pairs` column). We can think of these values as the product of per capita fecundity $f$ times the number of individuals $N$, plus some random noise. In other words, the *expected* number of eyasses in a given year is $f_tN_t$ but the *observed* number will differ from this expectation due to random process variation. 
+In this homework, you will further develop your understanding of Markov Chain monte carlo by building a custom MCMC to estimate the parameters of a probability distribution from data. So called "curve fitting" is common in ecology, especially in dispersal studies, and involves many of the concepts we have already seen this semester - we choose a probability distribution and then use observed data to estimate the parameters that define the shape of that distribution. In this assignment, you will estimate the parameters of a distribution by building a custom MCMC model and using JAGS. 
 
 ### The distribution
 
-There are many possible distributions we could choose to describe the dispersal kernel of ?. How we choose among these models is beyond the scope of this assignment so we will use a fairly common model (at least, a model that's commonly used as a starting point), the negative exponential. The negative exponential distribution with rate $\lambda$ has the following probability density:
+There are many possible distributions that can be used to characterize patterns in ecology (e.g., dispersal kernels). How to choose among these models is beyond the scope of this assignment so we will use a fairly common model, the Weibull distribution. The Weibull distribution is defined by two parameters the shape (which we'll denote $k$) and the scale (which we'll denote $\lambda$). The Weibull is a popular choice to characterize many ecological processes because it is very flexible $-$ when $k = 1$ the Weibull simplifies to the negative exponential distribution; as $k$ approaches $0$, the probability of large values (e.g., long-distance dispersal events) becomes more common. The pdf of the Weibull distribution is:
 
-$$\Large [d] = \lambda e^{-\lambda d}$$
+$$\Large [x|k, \lambda] = \frac{k}{\lambda} \bigg(\frac{x}{\lambda}\bigg)^{k-1} e^{-(x/ \lambda)^k}$$
 
-where $d$ is the observed dispersal distance. 
+Luckily, you'll probably never need to know that because both `R` and JAGS have built-in functions to calculate the probability density of the Weibull distribution.
 
-### Maximum likelihood estimation
+### Simulating the data
 
-```{r}
-LL <- function(x, lambda) {
-        loglike <- dexp(x, rate = lambda, log = TRUE)
-        return(-sum(loglike))
+> In the chunk below, use the `rweibull()` function to simulate 500 observations from a Weibull distribution. Call this object `x` and create a histogram of the simulated data. Choose whatever $k$ and $\lambda$ values you think create a sensible dispersal kernel (you may also want to create objects called `k` and `lambda` so you can call these values later and only have to change them in one place). 
+
+```{r sim-data}
+
+```
+
+Next, you will be an MCMC to estimate $k$ and $\lambda$ from the observed data. Knowing the true values will help you make sure your code is doing what you think its doing. 
+
+## Custom MCMC
+
+Building an MCMC for a model with two parameters is challenging but not beyond your ability. Before proceeding, go back to lecture 5 and the lab on MCMC to refresh yourself on the steps and some of the code we used to estimate $\alpha$, $\beta$, and $\sigma$ in the regression example. You will need to modify that code to complete the assignment but everything you need is in those examples. 
+
+First, you need choose priors for $k$ and $\lambda$ and create helper functions that return the prior probability of different values. Despite what we learned about priors, we'll use uninformative $uniform(0, 10)$ priors for this example. 
+
+> In the chunk below, complete the code necessary to create the helper functions. Note that each function will take a single argument and should return the (log) probability density of observing a particular value of $k$ and $\lambda$ assuming a $uniform(0,10)$ prior
+
+```{r priorFunctions}
+priorK <- function(){
+
+  return(prob)
+} 
+
+priorLambda <- function(){
+  
+  return(prob)
+} 
+```
+
+Next, we'll create another helper function to calculate the (log) likelihood of the observed data given values of $k$ and $\lambda$. 
+
+> In the chunk below, use the `dweibull()` function to calculate the total (log) likelihood of the data. Hint - the function will take three arguments (the data, $k$, and $\lambda$)
+
+```{r likeFunction}
+calc_like <- function() {
+  
+  return(sum(loglike))
 }
 ```
 
-```{r}
+More helper functions. This time, you will create helper functions to generate proposal values of $k$ and $\lambda$. 
 
-logLike_df <- data.frame(lambda = seq(from = 0.01, to = 2, by = 0.01),
-                  logLike = NA)
+> In the chunk below, complete the code to create the helper functions. Hints - the functions will take two arguments (the current value of the parameter and the tuning parameter (call that `sigma`)); the Weibull distribution is only defined for $k > 0$ and $\lambda > 0$ so your proposal function shouldn't return values less than or equal to 0. Instead of deriving a complex proposal function, just use the `max()` function to return a very small value (e.g., 0.001) if the proposed value is $\leq 0$
 
-for(i in 1:nrow(mle)){
-  logLike_df$logLike[i] <- LL(x, lambda = logLike_df$lambda[i])
+```{r proposalFunctions}
+proposalK <- function(){
+
+  return(proposal)
 }
 
-mle <- logLike_df$lambda[which(logLike_df$logLike == min(logLike_df$logLike))]
+proposalLambda <- function(){
 
-ggplot(logLike_df, aes(x = lambda, y = logLike)) + 
-  geom_path() +
-  geom_vline(xintercept = mle)
-
-```
-```{r}
-MASS::fitdistr(x = x, densfun = "exponential")
-mle
-```
-
-$$\alpha = \frac{\mu^2}{\sigma^2}$$
-$$\beta =  \frac{\mu}{\sigma^2}$$
-
-```{r prior}
-mu <- 0.5
-var <- 0.1
-alpha <- mu^2/var^2
-beta <- mu/var^2
-```
-
-
-```{r MCMCfunctions}
-joint <- function(data, p){
-  ll <- sum(dexp(data, rate = p, log = TRUE)) + 
-    dgamma(x = p, shape = alpha, rate = beta, log = TRUE)
-  return(ll)
-}
-
-proposal <- function(p, sigma){
-  proposal <- rnorm(n = 1, mean = p, sd = sigma)
   return(proposal)
 }
 ```
 
+Before create the MCMC code, let's set up some basic parameters of the algorithm. 
+
+> In the chunk below, decide on the length of the chains and the tuning parameter. The data frame that's created next will store value of $k$ and $\lambda$ and whether each iteration is accepted or rejected (helpful to calculate the acceptance rate). Use the `runif()` function to generate initial values for each parameter. Finally, use the `calc_like()` function to calculate the likelihood of the data given the initial vales
+
 ```{r MCMCsetup}
-n.samples <- 10000    # Number of samples to draw
-sigma <- 0.015       # Tuning parameter
+## Length of chains
+nIter <- 
 
-posterior <- data.frame(iteration = 1:n.samples, 
-                        rate = rep(NA, n.samples),
-                        accept = rep(0, n.samples)) # Empty vector to store samples of phi
+## Tuning parameter
+tuning <- 
 
-p <- 1     # Initial value
+## Empty data frame to store posterior samples of each parameter
+mcmc_df <- data.frame(iteration = 1:nIter,
+                      k = numeric(nIter),
+                      lambda= numeric(nIter),
+                      k.accept = 0,
+                      lambda.accept = 0)
+
+## Initial values
+mcmc_df$k[1] <-  
+mcmc_df$lambda[1] <- 
+
+## Likelihood of initial values
+likelihood <- 
+
 ```
+
+Now you're ready to write the MCMC itself. I have included "pseudo-code" in the chunk below to walk you through the steps. Refer back to the MCMC lab for help if you get stuck $-$ this is almost identical to the regression model. 
+
+> Complete the code to set up the MCMC
 
 ```{r MCMC}
-for(i in 1:n.samples){
-  ## Propose new value (if negative value is proposed, p.cand == 0)
-  p.cand <- max(0, proposal(p = p, sigma = sigma))   ## Proposal
+for(i in 2:nIter){
+########################
+#### 1. Update k
+########################
 
-  ## log(R)
-  l.R <- (joint(data = x, p = p.cand) - 
-            joint(data = x, p = p))
-  
-  ## R
-  R <- min(1, exp(l.R))   
-  
-  ## Keep p.cand with Pr(R); reject with Pr(1 - R)
-  if(runif(1) < R){
-    p <- p.cand
-    posterior$accept[i] <- 1
-  }
-  
-  ## Store new p
-  posterior$rate[i] <- p
+## 1a: Generate candidate value
+candK <- 
+
+## 1b: Calculate likelihood at candidate value
+cand_like <- 
+
+## 1c: Calculate likelihood * prior at old value and candidate value
+jointOld <- 
+jointCand <- 
+
+## 1d: Acceptance probability 
+R <- 
+
+## 1e: Decide whether to accept or not
+if() {   # if accepted
+  mcmc_df$k[i] <-
+  mcmc_df$k.accept[i] <-
+  likelihood <- 
+} else {
+  mcmc_df$k[i] <-
 }
 
-mean(posterior$rate)
+########################
+#### 2. Update lambda
+########################
+
+## 2a: Generate candidate value
+candLambda <- 
+
+## 2b: Calculate likelihood at candidate value
+cand_like <- 
+
+## 2c: Calculate likelihood * prior at old value and candidate value
+jointOld <- 
+jointCand <- 
+
+## 2d: Acceptance probability 
+R <- 
+
+## 2e: Decide whether to accept or not
+if() {   # if accepted
+  mcmc_df$lambda[i] <-
+  mcmc_df$lambda.accept[i] <- 
+  likelihood <-
+} else {
+  mcmc_df$lambda[i] <-
+}
+}
 ```
+
+Did it work? 
+
+> In the chunk below, use the `quantile()` function to look at the median and quantiles of the posteriors for $k$ and $\lambda$. Are they close the true values?
+
+```{r posteriors}
+
+```
+
+You can also compare the posterior estimates to the MLE estimates using the following code:
+```{r mle}
+MASS::fitdistr(x, densfun = "weibull")
+```
+
+Are they similar? 
+
+Finally, you can visualize the chains.
+
+> Complete the ggplot2 code below to view the chains for $k$ and $\lambda$. Even though we can't assess convergence with only one chain, do the chains look well-behaved? Type a short answer in **bold** below
 
 ```{r vizMCMC}
-ggplot(posterior, aes(x = iteration, y = rate)) + geom_path()
+ggplot(, aes(x = , y = )) + geom_path()
 ```
 
-**Play with sigma. How does it influence the MCMC?**
+> In the chunk below, estimate the acceptance rate for each parameter (hint - use the `mean()` function). Change the tuning parameter. How does it influence the acceptance rate? How does it influence mixing and convergence of the chains? Type a short answer in **bold** below
+
+```{r acceptance}
+
+```
+
+## Fitting the model in JAGS
+
+Now that you've done the hard work of writing your own MCMC, you can do things the "easy" way and fit the same model in JAGS.
+
+
+> Complete the JAGS code below. Note that JAGS uses a slightly different parameterization of the Weibull so I've include a line to derive lambda from another parameter called `b` (include a prior on $b$ just like you did for $\lambda$ in the previous model but then use `lambda` in the likelihood statement). Note that JAGS has a built-in function `dweib()`
 
 ***
 **Important** - in order for the .Rmd file to knit properly, complete the model code below and then manually run the code to create the .jags file (highlighting the chunk below and clicking `Run` or `command + return`). Leave the `eval = FALSE` option set to false so that `knitr` does **not** try to run the code when you knit the document!
@@ -155,13 +219,15 @@ ggplot(posterior, aes(x = iteration, y = rate)) + geom_path()
 ***
 
 ```{r eval = FALSE}
-sink("kernel.jags")
+sink("weibull.jags")
 cat("
 model{
   # Priors
 
+  lambda <- pow(1/k, b)
+  
   # Likelihood
-  for(t in 1:N){
+  for(i in 1:N){
 
   }
 } # end of model
@@ -171,26 +237,26 @@ sink()
 
 Now create the objects that JAGS needs to fit the model:
 
-**4a) Complete the `jags_data <- list()` object to include all necessary input to run the model**
+> Complete the `jags_data <- list()` object to include all necessary input to run the model
 
 ```{r}
 jags_data <- list()
 ```
 
-**4b) Complete the `jags_inits` function to include all necessary input to run the model**
+> Complete the `jags_inits` function to include all necessary initial values to run the model. Use the `runif()` function to generate random initial values each time you run the model
 
 ```{r}
 jags_inits <- function(){list()}
 ```
 
 
-**4c) Complete the `params <- c()` object to include parameters you would like to monitor**
+> Complete the `params <- c()` object to include parameters you would like to monitor
 
 ```{r}
 params <- c()
 ```
 
-**4d) Complete the MCMC settings. Run 3 chains for 25,000 iterations, discarding the first 1000 samples as burn-in**
+> Complete the MCMC settings. Run 3 chains for 10,000 iterations, discarding the first 1000 samples as burn-in
 
 ```{r}
 ni <- 
@@ -201,36 +267,16 @@ nb <-
 Assuming all information above is completed correctly, the following code should run without error:
 
 ```{r include = FALSE}
-kernel_mod <- jagsUI::jags(data = jags_data, inits = jags_inits, 
-                              parameters.to.save = params, model.file = "kernel.jags",
+weib_mod <- jagsUI::jags(data = jags_data, inits = jags_inits, 
+                              parameters.to.save = params, model.file = "weibull.jags",
                               n.chains = nc, n.iter = ni, n.thin = 1, n.burnin = nb)
 ```
 
 
-Check the model for convergence. 
+> Check the model for convergence. Did the model converge? Type your answer in **bold** below, providing at least two sources of evidence for convergence. If the model did not converge, change your settings above and re-run. What did you change?
 
-**5) Did the model coverge? Type your answer in __bold__ below, providing at least two sources of evidence for convergence. If the model did not converge, change your settings above and re-run. What did you change?**
+```{r convergence}
 
-
-
-Finally, plot the expected and predicted fecundity over time.  
-
-**6) Complete the following code to add the predicted fecundity for each year from the model, plus the upper and lower 95% credible intervals. Remember that the posterior mean and 2.5/97.5% quantiles for each monitored paramter is stored within the `fecundity_mod` object**
-
-```{r}
-falcons <- dplyr::mutate(falcons, f = , 
-                                  q2.5 = , 
-                                  q97.5 = )
 ```
 
-If the above code was run without error, the code below should produce a figure showing changes to the observed and predicted fecundity. 
-
-```{r fig.width=6, fig.height=4}
-ggplot(falcons) + 
-  geom_ribbon(aes(x = Year, ymin = q2.5, ymax = q97.5), fill = "grey90") +
-  geom_path(aes(x = Year, y = f), color = "red") +
-  geom_point(aes(x = Year, y = Eyasses/Pairs)) +
-  scale_y_continuous("Fecundity")
-```
-
-**7) From an ecological perspective, how do you interpret the changes in fecundity over time? For additional context, refer to the plot from the previous lab showing changes in the abundance of nesting pairs over this time period. Type your answer in __bold__ below**
+> How close were the estimates from the custom MCMC and JAGS
