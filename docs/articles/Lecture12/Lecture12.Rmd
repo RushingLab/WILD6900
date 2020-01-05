@@ -1,7 +1,7 @@
 ---
 title: "Lecture 12"
-subtitle: "Estimating abundance: Occupancy modeling"
-author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+subtitle: "Estimating abundance: Closed-population capture-mark-recapture"
+author: "<br/><br/><br/>WILD6900 (Spring 2020)"
 output:
   xaringan::moon_reader:
     css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
@@ -21,208 +21,497 @@ library(WILD6900)
 
 ## Readings
 
-> Kéry & Schaub 383-409
+> ### Kéry & Schaub 134-170
+
+
+> ### [Powell & Gale chp. 8](https://docs.wixstatic.com/ugd/95e73b_6d832c61405d4b3cbd9d99bbb4530f7b.pdf)
 
 ---
-## Estimating abundance? 
+## Estimating abundance
 
-#### For the past few weeks, we've been modeling abundance:
+#### Unbiased estimates of $\large N$ require estimating $\large p$
 
-$$\Large N_t \sim Poisson(\lambda)$$
+#### *Many* methods available:
 
---
-#### Occupancy is a the proportion of sites that are occupied (alternatively, the probability a site is occupied)
+- Mark-recapture  
 
-- reduced-information form of abundance
-    + If $\large N_i > 0$, $\large z_i = 1$
+- Removal sampling  
 
-    + If $\large N_i = 0$, $\large z_i = 0$
+- Distance sampling  
 
---
-#### So even when occupancy is the state-variable, we are still modeling something related to abundance
+- Double observer  
+
+- N-mixture models
 
 ---
-## Estimating abundance? 
+## Estimating abundance
 
-#### Typical state model for occupancy
+#### Unbiased estimates of $\large N$ require estimating $\large p$
+
+#### *Many* methods available:
+
+- **Mark-recapture**  
+
+- Removal sampling  
+
+- Distance sampling  
+
+- Double observer  
+
+- N-mixture models
+
+
+---
+class: inverse, middle, center
+
+# Capture-mark-recapture
+
+---
+## Capture-mark-recapture (CMR)
+
+#### CMR includes a **wide** variety of related techniques and models  
+
+--
+#### Traditionally, CMR referred to methods of capturing, marking, and then recapturing individuals at some point in the future  
+
+--
+#### This results in a **capture-history** for each individual:  
+
+##### Individual 1: $101101$  
+##### Individual 2: $011001$  
+
+???
+
+Individual 1 was captured on occasions 1, 3, 4, and 6  
+
+Individual 2 was captured on occasions 2,3, and 6. 
+
+--
+#### From the capture-histories, possible to estimate $\large p$
+
+--
+#### With $\large p$, possible to estimate $\large N$
+
+$$\large N = \frac{C}{p}$$
+
+---
+## Capture-mark-recapture
+
+#### From capture-histories, we can estimate:  
+
+--
+- abundance  
+
+--
+- detection probability  
+
+--
+- survival  
+
+--
+- movement  
+
+--
+- recruitment  
+
+--
+- individual growth  
+
+--
+- populations trends   
+
+---
+## Capture-mark-recapture
+
+
+#### CMR methods are not restricted to physical captures and recaptures
+
+```{r out.width=600}
+knitr::include_graphics("figs/pelican.jpg")
+```
+
+???
+
+Capture histories can be created from resighting marks that can be seen from a distance
+
+Photo Credit: Rick Kimble/USFWS
+
+---
+## Capture-mark-recapture
+
+
+#### CMR methods are not restricted to physical captures and recaptures
+
+```{r out.width=600}
+knitr::include_graphics("figs/blrf.jpg")
+```
+
+???
+
+Capture histories can be created from automated systems that record ID's, like PIT tags
+
+Image courtesy of: USFWS Mountain-Prairie via Wikimedia Commons
+
+---
+## Capture-mark-recapture
+
+
+#### CMR methods are not restricted to physical captures and recaptures
+
+```{r out.width=600}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/3/37/Wild_Sumatran_tiger.jpg")
+```
+
+???
+
+ Capture histories can be created from "natural marks", e.g. camera trapping
+
+Image courtesy of: Arddu, via Wikimedia Commons
+
+---
+## Capture-mark-recapture
+
+
+#### CMR methods are not restricted to physical captures and recaptures
+
+```{r out.width=600}
+
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/2/2a/Grizzly_hair_snare_%28Northern_Divide_Grizzly_Bear_Project%29_%284428177124%29.jpg")
+```
+
+???
+
+Capture histories can be created from "natural marks", e.g. genetic markers
+
+Image courtesy of: GlacierNPS, via Wikimedia Commons
+
+---
+## Capture-mark-recapture
+
+
+#### CMR methods are not restricted to physical captures and recaptures  
+
+#### *What ties all of these methods together is that we have individual-level capture-histories*
+
+---
+## Capture-mark-recapture
+
+#### Key to closed CMR is that because individuals do not enter or leave the population, we assume any 0 in the capture history is non-detection $\large (1-p)$
+
+- in simplest model, easy to translate capture history into probabilistic statements based only on $p$:
+
+.pull-left[
+##### Individual 1: $\large 101101$  
+##### Individual 2: $\large 011001$  
+]
+
+.pull-right[
+#### $\large p(1-p)pp(1-p)p$  
+#### $\large (1-p)pp(1-p)(1-p)p$
+]
+
+<br/>
+--
+
+#### In the CMR literature, the constant $\large p$ model is known at the $M_0$ model ([Otis et al. (1978)](https://www.jstor.org/stable/pdf/3830650.pdf?casa_token=Dr4Y3XD5DJAAAAAA:IQA7BkqTFg7_0h2kqbrn20CGZLBbTBBbuAsCWsvdRWD-muQDenn-UVYfpdL3q09ZTmiGGxQBm5vnFV9RomNxOdtBq2c98vOSELdt6-hRyoY52ipEYj4))
+
+---
+## The $\large M_0$ model in JAGS
+
+#### In all closed CMR models, $\large N$ is unknown
+
+- we know $n$ but how many individuals were not detected at all?
+
+--
+- data augmentation!
+
+---
+class: inverse, middle, center
+
+# Data augmentation
+
+---
+## Data augmentation
+
+### Imagine an occupancy study:
+
+- $\large M$ sites are surveyed  
+    + $\large N$ sites are occupied $\large (z = 1)$
+    + $\large M - N$ sites are unoccupied $\large (z = 0)$  
+
+--
+- species is detected $(y_i=1)$ at $n$ sites
+    + species is not detected $(y_i=0)$ at $M-n$ sites  
+    
+--
+$$\Large y_i \sim Bernoulli(z_i p)$$
+
+---
+## Data augmentation
+
+### Imagine an occupancy study:
+
+#### How many sites are actually occupied $\large (N)$?  
+
+- if $\large \psi$ is the probability of occupancy
 
 $$\Large z_i \sim Bernoulli(\psi)$$
 
 --
-#### If the expected abundance is $\large \lambda$, what is the probability $\large N = 0$?
+- and
 
-$$\Large Pr(N=0|\lambda)=\frac{\lambda^0e^-\lambda}{0!}=e^{-\lambda}$$ 
-
---
-#### If the expected abundance is $\large \lambda$, what is the probability $\large N > 0$?
-
-$$\Large 1 - Pr(N=0|\lambda)=1 -e^{-\lambda}$$ 
-
---
-#### So (if our assumptions are valid):
-
-$$\Large \psi = 1 - e^{-\lambda}$$
+$$\Large N = \sum_{i=1}^M z_i$$
 
 ---
-## Why estimate occupancy?
+## Data augmentation
 
-#### Less effort
+#### These ideas can be applied to CMR studies
 
---
-#### Historical data sets
+#### Imagine a CMR study: 
 
---
-#### More reliable when $\large N$ very small
+- $\large n$ individuals were detected during the study
 
 --
-#### Occupancy = abundance (e.g., breeding territory)
+- $\large N-n$ individuals were not detected
+    + how do we know how many individuals were not detected?  
 
 --
-#### Metapopulation dynamics
+- Add $\large M-n$ individuals to the data
+    + Choose $M \gt \gt N$
+    + All of these "augmented" individuals have $\large y=0$
 
 --
-#### Distribution/range size
+$$\large z_i \sim Bernoulli(\psi)$$
 
---
-#### Disease dynamics
-
+$$\large N = \sum_{i = 1}^M z_i$$
 ---
-## Why not just use observed presence/absence?
+## The $\large M_0$ model in JAGS
 
-#### As in all ecological studies, we rarely (if ever) observe the state process perfectly 
+#### In all closed CMR models, $\large N$ is unknown
 
---
-#### In the case of occupancy, some sites will be occupied but we will fail to detect the species
+- we know $n$ but how many individuals were not detected at all?
 
-- i.e., $\large p < 1$
-
+- data augmentation!
 
 --
-#### Also possible (though generally more rare) that we record the species when it's not present (false positive)
-
-- see [Royle & Link 2006](https://www.uvm.edu/rsenr/vtcfwru/spreadsheets/occupancy/Occupancy%20Exercises/Exercise12/Royle_Link_2006.pdf)
-
-
---
-#### Similar to N-mixture models, estimating $\Large p$ requires temporal replication
-
----
-## Estimating $\LARGE p$
-
-#### Imagine a single site surveyed 3 times:
-
-- Assume site is closed across samples
-
-- Assume constant $\large p$
-
-$$\Large y_i = [111]$$
-
---
-#### What is the likelihood of this observation?
-
---
-$$\Large \psi p^3$$
-
---
-#### What about?
-
-$$\Large y_i = [011]$$
-
---
-$$\Large \psi (1-p)p^2$$
-
-
----
-## Estimating $\LARGE p$
-
-#### What about?
-
-$$\Large y_i = [000]$$
-
---
-$$(1 - \psi) + \psi (1-p)^3$$
-
-
----
-## Single-season (static) occupancy model
-
-#### State-space formulation
-
-- State-model
-
 $$\Large z_i \sim Bernoulli(\psi)$$
 
-$$\Large logit(\psi_i) = \alpha_0 + \alpha_1x_i$$
+--
+$$\Large y_{ik} \sim Bernoulli(z_ip)$$
 
-- Observation-model
+--
+$$\Large \psi \sim beta(1,1)$$
 
-$$\Large y_{i,k} \sim Bernoulli(z_ip)$$
+$$\Large p \sim beta(1,1)$$
 
-$$\Large logit(p_{ik}) = \beta_0 + \beta_1x_{i,k}$$
-
+--
+$$\Large N = \sum_{i=1}^M z_i$$
 ---
-## Single-season (static) occupancy model
+## The $\large M_0$ model in JAGS
 
 ```{r eval = FALSE, echo = TRUE}
 model{
-  # Priors 
-  psi ~ dbeta(1, 1)
+  omega ~ dbeta(1, 1)
   p ~ dbeta(1, 1)
   
-  # Likelihood
   for(i in 1:M){
-    # State model
     z[i] ~ dbern(psi)
     
-    # Observation model
-    for(k in 1:K){
-      y[i, k] ~ dbern(p * z[i])
-    }
-  }
+    for(t in 1:T){
+      y[i, t] ~ dbern(p * z[i])
+    } # end t
+  } # end i
+  
+  N <- sum(z[1:M])
 }
 ```
 
 ---
-## Single-season (static) occupancy model
+## Capture-mark-recapture
 
-```{r eval = FALSE, echo =TRUE}
-model{
-  alpha0 ~ dnorm(0, 0.1)
-  alpha1 ~ dnorm(0, 0.1)
-  mu.lp ~ dnorm(0, 0.1)
-  tau.p ~ dunif(0, 10)
-
-  for(i in 1:M){
-    z[i] ~ dbern(psi[i])
-    logit(psi[i]) <- alpha0 + alpha1 * x1[i]
-    for(k in 1:K){
-      y[i, k] ~ dbern(p[i,k] * z[i])
-      logit(p[i,k]) <- lp[i,k]
-      lp[i,k] ~ dnorm(mu.lp, tau)
-    }
-  }
-
-  N.occ <- sum(z[1:M])
-}
-```
-
-
----
-## Multi-season (dynamic) occupancy model
-
-#### What if occupancy can change over time? 
-
-- Data collection using the *robust design*
-    + Population open between primary periods (e.g., years)
-    + Population closed within secondary periods (e.g., occasions)
-
-$$\Large y_i = [\underbrace{101}_{Year\;1}\;\;\;\;\; \underbrace{000}_{Year\;2}\;\;\;\;\;\underbrace{110}_{Year\;3}\;\;\;\;\;\underbrace{100}_{Year\;4}]$$
+####  In addition to the $\large M_0$ model, Otis et al. 1978 outlined 3 other basic *closed* CMR "models":
 
 --
-- In year 1:
-$$\Large z_{i,1} \sim Bernoulli(\psi)$$
+- $\large M_t$: variation in $p$ among occasions
 
-- In years 2+:
-$$\Large z_{i,t} \sim Bernoulli(z_{i,t-1}(1-\epsilon)+(1-z_{i,t-1}\gamma))$$
+$$\large p_1(1-p_2)p_3p_4(1-p_5)p_6$$
 
-As always, we can include covariates in $\large \epsilon$ and $\large \gamma$
+--
+- $\large M_h$: variation in $p$ among individuals
+
+$$\large p_i(1-p_i)p_ip_i(1-p_i)p_i$$
+
+--
+- $\large M_b$: behavioral responses (trap happiness/shyness)
+
+$$\large p(1-c)cc(1-c)c$$
+
+.footnote[
+[1] David Otis was a post-doc at USU in the Coop Unit when he wrote this seminal paper
+]
+
+
+---
+## Capture-mark-recapture
+
+#### Otis et al. 1978 was seminal because it clarified ways that $\large p$ might vary
+
+--
+However, $\large M_0$, $\large M_t$, $\large M_h$, $\large M_b$ are not single models but instead families of models that allow $p$ to vary for different reasons
+
+--
+#### In modern Bayesian analysis of closed CMR models, we can use the tools you learned so far in this course to model complex variation in $\large p$
+
+- group effects
+
+- hierarchical structure
+
+- continuous covariates (via GLM)
+
+---
+## The $\large M_t$ model in JAGS
+
+#### How do we model $\large p$ as a function of occassion?
+
+```{r eval = FALSE, echo = TRUE}
+model{
+  omega ~ dbeta(1, 1)
+  for(t in 1:T){
+    p[t] ~ dbeta(1, 1)
+  }
+  
+  for(i in 1:M){
+    z[i] ~ dbern(psi)
+    
+    for(t in 1:T){
+      y[i, t] ~ dbern(p[t] * z[i])
+    } # end t
+  } # end i
+  
+  N <- sum(z[1:M])
+}
+```
+
+---
+## The $\large M_t$ model in JAGS
+
+```{r eval = FALSE, echo = TRUE}
+model{
+  omega ~ dbeta(1, 1)
+  for(t in 1:T){
+    lp[t] ~ dnorm(mu.p, tau.p)
+    logit(p[t]) <- lp[t]
+  }
+  mu.p ~ dnorm(0, 0.1)
+  tau.p ~ dgamma(0.25, 0.25)
+  for(i in 1:M){
+    z[i] ~ dbern(psi)
+    
+    for(t in 1:T){
+      y[i, t] ~ dbern(p[t] * z[i])
+    } # end t
+  } # end i
+}
+```
+
+- What is the difference between this model and the previous? How will this change influence estimates of $p_t$?
+
+---
+## Model $\large M_b$
+
+#### Behavioral responses are common in studies that require phyisical captures
+
+- probability of capture $\large \neq$ probability of recapture $(\large c)$
+
+- individuals learn to avoid traps (trap shy; $\large p > c$)
+
+- individuals learn to seek out traps (trap happy; $\large c > p$)
+
+
+--
+#### In the $\large M_b$ models, $\large p$ depends on whether an individual has previously been captured
+
+- response can be permanent or ephemeral 
+
+---
+## Model $\large M_b$ in JAGS
+
+```{r eval = FALSE, echo = TRUE}
+model{
+  omega ~ dbeta(1, 1)
+  p ~ dbeta(1, 1)
+  c ~ dbeta(1, 1)
+  
+  for(i in 1:M){
+    z[i] ~ dbern(psi)
+    
+    y[i, 1] ~ dbern(p * z[i])
+    
+    for(t in 2:T){
+      y[i, t] ~ dbern(z[i] * ((1 - y[i, t-1]) * p + y[i, t-1] * c))
+    } # end t
+  } # end i
+  
+  N <- sum(z[1:M])
+  trap.response <- c - p
+}
+```
+
+
+---
+## Model $\large M_h$
+
+#### Individual heterogeniety not captured by covariates 
+
+- treat individuals as random effect
+
+$$\large logit(p_i) \sim normal(logit(\mu_p), \tau_p)$$
+
+--
+- models with heterogeneity are not always identifiable 
+    + different assumptions about $p_i$ will give different estimates of $N$ but model selection does not differentiate between models 
+    
+--
+- however, *not* modeling individual heterogeneity leads to known bias
+    + assuming constant $p$ underestimates $N$
+
+
+---
+## Model $\large M_h$ in JAGS
+
+```{r eval = FALSE, echo = TRUE}
+model{
+  omega ~ dbeta(1, 1)
+  mean.p ~ dbeta(1, 1)
+  mean.lp <- log(mean.p) - log(1 - mean.p)
+  tau.p ~ dgamma(0.25, 0.25)
+  
+  for(i in 1:M){
+    z[i] ~ dbern(psi)
+    logit(p[i]) ~ dnorm(mean.lp, tau.p)T(-5, 5)
+    
+    y[i] ~ dbin(p[i] * z[i], T)
+  } # end i
+  
+  N <- sum(z[1:M])
+}
+```
+
+---
+## Extensions of the Otis et al. models
+
+#### Many extensions possible
+
+- $\large M_{tb}$
+
+- $\large M_{th}$
+
+- $\large M_{tbh}$
+
+- and many more limited only by your data and your modeling skills
+
+
+--
+#### As additional variation is added, more data is needed to estimate parameters
+
+- all else equal, each new parameter results in lower precision for $\large N$ (no free lunch!)

@@ -1,0 +1,13 @@
+
+model{
+  # Priors
+  k ~ dunif(0, 10)
+  b ~ dunif(0, 10)
+  lambda <- pow(1/k, b)
+  
+  # Likelihood
+  for(i in 1:N){
+    x[i] ~ dweib(k, lambda)
+  }
+} # end of model
+

@@ -21,9 +21,9 @@ library(WILD6900)
 ```
 
 
-In this activity, we simulate data that will later be used to verify a simple Metroplis sampler to estimate the parameters of a linear regression model. 
+In this activity, we simulate data that will later be used to verify a simple Metropolis sampler to estimate the parameters of a linear regression model. 
 
-Simulating data involves many of the same taks involved in preparing raw data for analysis. Many of the core principles of so called "data wrangling" are embodied by the [`tidyverse`](https://www.tidyverse.org/packages/), a family of packages created to make tidying, manipulating, and visualizing data and model output more intuitive and consistent. Throughout this semester, we will focus on using several of the `tidyverse` packages to create reproducible data wrangling scripts. 
+Simulating data involves many of the same tasks involved in preparing raw data for analysis. Many of the core principles of so called "data wrangling" are embodied by the [`tidyverse`](https://www.tidyverse.org/packages/), a family of packages created to make tidying, manipulating, and visualizing data and model output more intuitive and consistent. Throughout this semester, we will focus on using several of the `tidyverse` packages to create reproducible data wrangling scripts. 
 
 Use of the tidyverse is somewhat [controversial](http://varianceexplained.org/r/teach-tidyverse/) and it is worth noting that everything we will do in this lab can be done using base `R` or non-tidyverse packages. Nonetheless, I find the tidyverse useful *because* it is opinionated. The developers of the tidyverse have spent a great deal of time thinking about how data should be stored, manipulated, and visualized and they have created an entire ecosystem of functions built around these principles. Using the tidyverse isn't so much about the tools themselves as it is about **thinking about the structure and manipulation of data**. For better or worse, focusing on consistent application of these principles is not something base `R` encourages. 
 
@@ -79,11 +79,11 @@ With those seven lines of code, we now how a fake data set that could be fed int
 
 ## Why simulate data?
 
-At first, it may seem strange to generate a fake data set just so we can run it through a modeling exercise to get answers we already know. But data simulation is a powerful technique in your toolbox as an ecological modeller. There are a number of reasons data simulation is useful[^2]: 
+At first, it may seem strange to generate a fake data set just so we can run it through a modeling exercise to get answers we already know. But data simulation is a powerful technique in your toolbox as an ecological modeler. There are a number of reasons data simulation is useful[^2]: 
 
 [^2]: Based on chapter 4 of Kery & Royle *Applied Hierarchical Modeling in Ecology* 
 
-1) *Thruth is known*: Usually when we apply a model to data, we don't know the true parameter values that generated the data. In this case, you may be able to fit the model but you'll never know if it got the right answer. With simulated data, you can check whether your model returns the known parameter values. This is a useful way to make sure you code is doing what you *think* it's doing.  
+1) *Truth is known*: Usually when we apply a model to data, we don't know the true parameter values that generated the data. In this case, you may be able to fit the model but you'll never know if it got the right answer. With simulated data, you can check whether your model returns the known parameter values. This is a useful way to make sure you code is doing what you *think* it's doing.  
 
 2) *Sampling error*: As we already learned, sampling error is an inherent part of any ecological analysis. The noise that results from sampling error makes it harder to detect the true signals in our process model. With real data, you only have a single data set, which makes it hard to understand the effect of sampling error on your inference. With simulated data, you can generate hundreds or even thousands of data sets from the same process/observation models, allowing you to observe the effects of sampling error directly. 
 
@@ -91,7 +91,7 @@ At first, it may seem strange to generate a fake data set just so we can run it 
 
 4) *Power analysis*: By varying the effect sizes and sample sizes in your simulated data, you can easily perform power analyses. Using simulated data in this way can be very useful for designing field studies or helping to interpret inferences after data has been collected and analyzed.  
 
-5) *Check identifiability/estimability of parameters*: In Bayesian models, we can always obtain posteterior distributions for every parameter in our model. However, these posteriors are not always useful. In some cases, our data may provide little-to-no information about the value of a parameter and therefore the posterior distribution for this parameter will simply be determined by the prior. This lack of *identifiability* may be caused by instrinsic properties of our model (for example, if two parameters are completely confounded such that different combinations of parameter values have the same likelihood) or because our data do not provide enough information to estimate all parameters in the model (for example, a regression model with dozens of predictors but few observations). Although there are rigorous methods for testing instrinsic identifiability, this task can be extremely difficult for complex hierarchical models. Simulated data allow you to check whether all parameters in your model can be estimated by generating replicate data sets that have the same properties (sample size, etc) as your data.     
+5) *Check identifiability/estimability of parameters*: In Bayesian models, we can always obtain posterior distributions for every parameter in our model. However, these posteriors are not always useful. In some cases, our data may provide little-to-no information about the value of a parameter and therefore the posterior distribution for this parameter will simply be determined by the prior. This lack of *identifiability* may be caused by intrinsic properties of our model (for example, if two parameters are completely confounded such that different combinations of parameter values have the same likelihood) or because our data do not provide enough information to estimate all parameters in the model (for example, a regression model with dozens of predictors but few observations). Although there are rigorous methods for testing intrinsic identifiability, this task can be extremely difficult for complex hierarchical models. Simulated data allow you to check whether all parameters in your model can be estimated by generating replicate data sets that have the same properties (sample size, etc) as your data.     
 
 6) *Check robustness to violations of model assumptions*: All models have assumptions about how the data were generated. These assumptions stem from the way we formulate the process and observation models. Of course, most assumptions will be violated to some degree in real data sets. With simulated data sets, we can generate data that we know violate the assumptions of the model in one or more ways (e.g., generating heterogeneous survival probabilities for a model that assumes constant survival). By comparing the parameters estimates from these "mis-specified" data sets, we can gauge the degree to which our inferences are sensitive to violations. 
 
@@ -101,7 +101,7 @@ At first, it may seem strange to generate a fake data set just so we can run it 
 
 In this exercise, we will simulate and visualize data generated under a very general process model: a linear regression. Because I'm probably too guilty of being animal focused, we will assume the response variable of the model are counts of the number of seeds produced by the flowers of a rare, endangered orchid. As ecologists studying this orchid, we want to know whether seed production is related to the number of visits by the orchid's specialist pollinator. Perhaps if it is, we can increase the growth rate of the orchid population by boosting abundance of the pollinator (assuming the number of visits is a function of pollinator abundance). 
 
-So we hypothesize that seed number will increase linearly with pollinator visition. This hypothesis can then be translated into a process model: 
+So we hypothesize that seed number will increase linearly with pollinator visitation. This hypothesis can then be translated into a process model: 
 
 $$y_i = \alpha + \beta * x_i + \epsilon_i$$
 $$\epsilon_i \sim Normal(0, \sigma^2)$$
@@ -118,7 +118,7 @@ $$response = deterministic\; part+stochastic\; part$$
 
 The distributional assumptions of a linear model refer to the *residuals* (the $\epsilon_i$'s). That is, we assume that there is stochastic error in the response variable ($y_i$) and this error is equally likely to produce values that are larger or smaller than the value predicted by the deterministic portion of the model ($\alpha + \beta * x_i$).  
 
-For small counts, the Poisson distibution is asymetrical, meaning that we are more likely to generate values that are larger than the mean than smaller than the mean. You can see this clearly in the histogram below, which was generated from $Poisson(\lambda = 2)$:
+For small counts, the Poisson distribution is asymmetrical, meaning that we are more likely to generate values that are larger than the mean than smaller than the mean. You can see this clearly in the histogram below, which was generated from $Poisson(\lambda = 2)$:
 
 ```{r echo = FALSE, fig.width=6, fig.height=6}
 
@@ -148,7 +148,7 @@ In this case, $\mu = \lambda = 500$. So as counts get bigger, there will be very
 
 Hopefully you have already created a main directory for this course when you started the homework assignment on choosing priors. If you have not already done so, create a sub-directory of that folder called `data`. 
 
-For this exercise, create a new script and add it to whatever sub-directory you will use to store analysis scripts (alternatively, you could add this script to the `data` or `raw-data` folders since we'll use it to create data. Just use whatever system makes most sense to you). In the next section, copy the code from the markdown file into this script. 
+For this exercise, create a new script and add it to whatever sub-directory you will use to store analysis scripts (alternatively, you could add this script to the `data` or `data-raw` folders since we'll use it to create data. Just use whatever system makes most sense to you). In the next section, copy the code from the markdown file into this script. 
 
 # Step 1: Set the model parameters
 
@@ -195,7 +195,7 @@ beta <- 50   # Effect of visits on seed count
 
 # Step 2: Generate expected counts
 
-To generate the simulated seed counts for each flower, we first have to calcuate $\mu_i$, the *expected* seeds for each flower. We get these values by simply plugging in the observed visition values for each site to our linear model:
+To generate the simulated seed counts for each flower, we first have to calculate $\mu_i$, the *expected* seeds for each flower. We get these values by simply plugging in the observed visitation values for each site to our linear model:
 
 $$\begin{bmatrix}
     \mu_1 \\
@@ -252,7 +252,7 @@ The `ggplot()` function simply initiates a graph so if you run just that portion
 ggplot(data = sim_df, aes(x = visits, y = mu))
 ```
 
-You can see that `ggplot` created a figure with the correct axes and labels. But no data. That's because we didn't tell `ggplot` what type of *geometry* to use to represent the data. Geometry refers to the actual type geometric object(s) we want to use to display the data. Common geometries include points (e.g., scatterplot), lines (e.g., timeseries), and bars (e.g., histograms). There are many others. Once we add a geometry, we can see the data:
+You can see that `ggplot` created a figure with the correct axes and labels. But no data. That's because we didn't tell `ggplot` what type of *geometry* to use to represent the data. Geometry refers to the actual type geometric object(s) we want to use to display the data. Common geometries include points (e.g., scatterplot), lines (e.g., time series), and bars (e.g., histograms). There are many others. Once we add a geometry, we can see the data:
 
 ```{r fig.width=6, fig.height=6}
 ggplot(data = sim_df, aes(x = visits, y = mu)) + geom_point()

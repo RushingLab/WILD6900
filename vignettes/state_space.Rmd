@@ -221,7 +221,7 @@ ggplot(ssm_sim1, aes(x = Year)) +
   geom_point(aes(y = y), color = "red")
 ```
 
-Notice how much smoother the estimates of $N$ (light grey line) are relative to the raw counts, a good indication that the model was able to seperate the observation error from the process variation. 
+Notice how much smoother the estimates of $N$ (light grey line) are relative to the raw counts, a good indication that the model was able to separate the observation error from the process variation. 
 
 ## Unbiased *indices* of $N$
 

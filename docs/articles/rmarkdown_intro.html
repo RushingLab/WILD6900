@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Introduction to R Markdown • WILD6900</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to R Markdown">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -101,22 +102,19 @@
       <a href="../articles/Lecture10/Lecture10.html">Lecture 10: Estimating abundance: N-mixture models</a>
     </li>
     <li>
-      <a href="../articles/Lecture11/Lecture11.html">Lecture 11: Estimating abundance: Hierarchical distance sampling</a>
+      <a href="../articles/Lecture11/Lecture11.html">Lecture 11: Estimating abundance: Occupancy modeling</a>
     </li>
     <li>
-      <a href="../articles/Lecture12/Lecture12.html">Lecture 12: Estimating abundance: Occupancy modeling</a>
+      <a href="../articles/Lecture12/Lecture12.html">Lecture 12: Estimating abundance: Closed-population capture-mark-recapture</a>
     </li>
     <li>
-      <a href="../articles/Lecture13/Lecture13.html">Lecture 13: Estimating abundance: Closed-population capture-mark-recapture</a>
+      <a href="../articles/Lecture13/Lecture13.html">Lecture 13: Estimating survival: Open-population capture-mark-recapture</a>
     </li>
     <li>
-      <a href="../articles/Lecture14/Lecture14.html">Lecture 14: Estimating survival: Open-population capture-mark-recapture</a>
+      <a href="../articles/Lecture14/Lecture14.html">Lecture 14: Estimating abundance and survival: Open-population capture-mark-recapture</a>
     </li>
     <li>
       <a href="../articles/Lecture15/Lecture15.html">Lecture 15: Multi-state models</a>
-    </li>
-    <li>
-      <a href="../articles/Lecture16/Lecture16.html">Lecture 16: Integrated population models</a>
     </li>
   </ul>
 </li>
@@ -192,13 +190,14 @@
 <!--/.navbar -->
 
       
+
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Introduction to R Markdown</h1>
             <h3 class="subtitle">WILD6900</h3>
             
-            <h4 class="date">updated on 2019-12-16</h4>
+            <h4 class="date">updated on 2020-01-04</h4>
       
       
       <div class="hidden name"><code>rmarkdown_intro.Rmd</code></div>
@@ -246,40 +245,16 @@
 <li><p><strong>There’s a learning curve</strong> - You already know how to use Word. R Markdown is new. How do you make something bold? How do you insert equations? How do you get figures to go at the end of your document? At first, you will almost certaintly have to google almost every thing you need to do in R Markdown (this is why number 1 is a problem). Most of it is pretty simple but it still means the going can be slow at first.</p></li>
 </ol>
 </div>
-<div id="authoring-r-markdown-files" class="section level1">
+<div id="creating-a-new-r-markdown-file" class="section level1">
 <h1 class="hasAnchor">
-<a href="#authoring-r-markdown-files" class="anchor"></a>Authoring R Markdown files</h1>
-<p>Understanding what R Markdown files are and why they are so useful will become more clear as you learn to create and edit these documents. So without futher ado, let’s create an new R Markdown file and do some basic editing.</p>
-<div id="step-0-set-up-the-file-structure" class="section level2">
-<h2 class="hasAnchor">
-<a href="#step-0-set-up-the-file-structure" class="anchor"></a>Step 0: Set up the file structure</h2>
-<p>We’ve already learned about RStudio projects and directory structure so let’s put that knowledge into practice. The document we are going to create will form the basis of your first homework assignment so to start off the semster in an organized fashion, let’s create a project called <code>WILD6900</code>:</p>
-<p>0a) Click on <code>File -&gt; New Project</code> then click <code>New Directory</code></p>
-<p>0b) Click <code>New Project</code>. Name this project <code>WILD6900</code> and choose a sensible location for the project (e.g., <code>Desktop/</code>)</p>
-<p>0c) Click <code>Create Project</code> at the bottom.</p>
-<p>1d) In the newly create directory, create a subdirectory called <code>LastNameFirstName-Homework#</code>, replacing <code>LastNameFirstName</code> with your last and first names and <code>#</code> with the appropriate homework number</p>
-</div>
-<div id="step-1-create-a-new-r-markdown-file-using-the-homework-template" class="section level2">
-<h2 class="hasAnchor">
-<a href="#step-1-create-a-new-r-markdown-file-using-the-homework-template" class="anchor"></a>Step 1: Create a new R Markdown file using the homework template</h2>
-<p>1a) Click on <code>File -&gt; New File -&gt; R Markdown...</code></p>
-<p>1b) In the window on the left, select <code>From Template</code></p>
-<p>1c) Scroll down through the options until you see <code>WILD6900-Homework1</code>. Select that template</p>
-<p>1d) In the <code>Name:</code> window type <code>LastnameFirstname-homework1</code>, substituting your last and first names. In the <code>Location</code> window, navigate to your newly create <code>LastNameFirstName-Homework#</code> directory</p>
-<p>1e) Click <code>Ok</code></p>
-</div>
-<div id="step-2-fill-in-your-information-and-render-the-document" class="section level2">
-<h2 class="hasAnchor">
-<a href="#step-2-fill-in-your-information-and-render-the-document" class="anchor"></a>Step 2: Fill in your information and render the document</h2>
-<p>2a) Change the <code>author: YOUR NAME HERE</code> field in the header to your name.</p>
-<p>2b) You should see a small box above the <code>Source</code> window (the RStudio window where your document just appeared) that says <code>Knit</code> with a small ball of yarn icon. When you click that button (not yet!), two things will happen:</p>
-<p>*The .Rmd file will be rendered as a PDF document, which will pop up on your screen</p>
-<ul>
-<li>RStudio will create a new file called <code>Assignment1.pdf</code> - you should see that file in the <code>Files</code> window in the bottom right of your screen</li>
-</ul>
-<p>2c) Click that button</p>
-<p>Congratulations, you just created your first R Markdown file!</p>
-</div>
+<a href="#creating-a-new-r-markdown-file" class="anchor"></a>Creating a new R Markdown file</h1>
+<ol style="list-style-type: decimal">
+<li><p>Click on <code>File -&gt; New File -&gt; R Markdown...</code></p></li>
+<li><p>Choose a title and format (HTML, pdf, or Word) for the document</p></li>
+<li><p>Click <code>Ok</code></p></li>
+<li><p>Save the newly created document</p></li>
+</ol>
+<p>Pretty easy</p>
 </div>
 <div id="basic-formatting" class="section level1">
 <h1 class="hasAnchor">
@@ -289,12 +264,11 @@
 <a href="#the-yaml-header" class="anchor"></a>The YAML header</h2>
 <p>At the top of your <code>.Rmd</code> file, you should see several line in between three blue dashes:</p>
 <pre><code>---
-title: "WILD6900"
-subtitle: "Homework 1"
-author: "YOUR NAME HERE"
+title: "Test document"
+author: "Clark Rushing"
 output: html_document
 ---</code></pre>
-<p>This is called the “YAML header” and it’s where we can control a lot of the major formatting options for our documents. For example, to change the output to pdf, just switch <code>html_document</code> for <code>pdf_document</code> and then click the <code>Knit</code> button again</p>
+<p>This is called the “YAML header” and it’s where we can control a lot of the major formatting options for our documents. For example, to change the output to pdf, just switch <code>html_document</code> for <code>pdf_document</code> (note, you may need to install a Latex distribution to knit to pdf. If you get an error message at this step, see suggestions <a href="https://bookdown.org/yihui/rmarkdown/installation.html">here</a>) and then click the <code>Knit</code> button again</p>
 <p>Pretty cool, right?</p>
 <p>The YAML header allows to control many “high level” options for our document. For example, to change the font size, type the following directly under the <code>output: pdf_document</code> argument:</p>
 <pre><code>fontsize: 12pt</code></pre>
@@ -303,7 +277,7 @@ output: html_document
 <pre><code>title: "WILD6900"
 subtitle: "Homework 1"
 author: "YOUR NAME HERE"
-date: "2019-12-16"
+date: "2020-01-04"
 output: 
   pdf_document:
     latex_engine: xelatex
@@ -350,7 +324,7 @@ This is the next line</code></pre>
 <div id="code-type" class="section level2">
 <h2 class="hasAnchor">
 <a href="#code-type" class="anchor"></a>Code type</h2>
-<p>To highlight code (note, this does not actually insert functioning code, just formats text to show that it is code rather than plain text), surround the text with back ticks ": <code><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean()</a></code></p>
+<p>To highlight code (note, this does not actually insert functioning code, just formats text to show that it is code rather than plain text), surround the text with back ticks ": <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code></p>
 <p>You can include muliple lines of code by including three back ticks on the line before the code and then three back ticks on the line after the code:</p>
 <pre><code>Multiple lines of code
 look like 
@@ -362,11 +336,11 @@ this</code></pre>
 <ul>
 <li><p>Bulleted lists can be included by starting a line with an asterisk</p></li>
 <li>
-<p>You can also start the lines with a single dash <code>-</code></p>
+<p>You can also start the lines with a single dash <code><a href="https://rdrr.io/r/base/Arithmetic.html">-</a></code></p>
 <ul>
-<li>for sub-bullets, indent the line and start it with <code>+</code>
+<li>for sub-bullets, indent the line and start it with <code><a href="https://rdrr.io/r/base/Arithmetic.html">+</a></code>
 <ul>
-<li>for sub-sub-bullets, indent twice (press <code>tab</code> two times) and start with <code>-</code>
+<li>for sub-sub-bullets, indent twice (press <code>tab</code> two times) and start with <code><a href="https://rdrr.io/r/base/Arithmetic.html">-</a></code>
 </li>
 </ul>
 </li>
@@ -379,7 +353,8 @@ this</code></pre>
 <a href="#numbered-lists" class="anchor"></a>Numbered lists</h2>
 <ol style="list-style-type: decimal">
 <li><p>Numbered lists look like this</p></li>
-<li>You can also include sub-levels in number lists
+<li>
+<p>You can also include sub-levels in number lists</p>
 <ol style="list-style-type: lower-roman">
 <li>these can be lower case roman numerals<br>
 </li>
@@ -394,7 +369,7 @@ B. or uppercase letters</li>
 <div id="quotations" class="section level2">
 <h2 class="hasAnchor">
 <a href="#quotations" class="anchor"></a>Quotations</h2>
-<p>You highlight quotations by starting the line with <code>&gt;</code>, which produces:</p>
+<p>You highlight quotations by starting the line with <code><a href="https://rdrr.io/r/base/Comparison.html">&gt;</a></code>, which produces:</p>
 <blockquote>
 <p>All models are wrong</p>
 </blockquote>
@@ -408,12 +383,12 @@ B. or uppercase letters</li>
 <h2 class="hasAnchor">
 <a href="#equations" class="anchor"></a>Equations</h2>
 <p>Inserting equations in R Markdown is where knowing some Latex really comes in handy becuase eqations are written using Latex code. For the most part, this is not too difficult but if you need to insert complex equations you will probably need to look up the code for some symbols. There are many good resources for if you google “latex equations” or something similear.</p>
-<div id="inline-vs-block-equations" class="section level3">
+<div id="inline-vs--block-equations" class="section level3">
 <h3 class="hasAnchor">
-<a href="#inline-vs-block-equations" class="anchor"></a>Inline vs. block equations</h3>
+<a href="#inline-vs--block-equations" class="anchor"></a>Inline vs. block equations</h3>
 <p>You can include equations either inline (<span class="math inline">\(e = mc^2\)</span>) or as a stand-alone block:</p>
 <p><span class="math display">\[e=mc^2\]</span></p>
-<p>Inline equations are added by putting a single dollar sign <code>$</code> on either side of the equation (<code>$e=mc^2$</code>). Equation blocks are create by starting and ending a new line with double dollar signs</p>
+<p>Inline equations are added by putting a single dollar sign <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> on either side of the equation (<code>$e=mc^2$</code>). Equation blocks are create by starting and ending a new line with double dollar signs</p>
 <p><code>$$e=mc^2$$</code></p>
 </div>
 </div>
@@ -425,7 +400,7 @@ B. or uppercase letters</li>
 <div id="subscripts-and-superscripts" class="section level2">
 <h2 class="hasAnchor">
 <a href="#subscripts-and-superscripts" class="anchor"></a>Subscripts and superscripts</h2>
-<p>You can add superscripts using the <code>^</code> (<span class="math inline">\(\pi r^2\)</span>=<code>$\pi r^2$</code>) symbol and subscripts using an underscore <code>_</code> (<span class="math inline">\(N_t\)</span> = <code>$N_t$</code>).</p>
+<p>You can add superscripts using the <code><a href="https://rdrr.io/r/base/Arithmetic.html">^</a></code> (<span class="math inline">\(\pi r^2\)</span>=<code>$\pi r^2$</code>) symbol and subscripts using an underscore <code>_</code> (<span class="math inline">\(N_t\)</span> = <code>$N_t$</code>).</p>
 <p>If the superscript or subscript includes more than one characeter, put the entire script within curly brackets <code>{}</code>: <span class="math inline">\(N_t-1 \neq N_{t-1}\)</span> is <code>$N_t-1 \neq N_{t-1}$</code></p>
 </div>
 <div id="brackets-and-parentheses" class="section level2">
@@ -453,22 +428,14 @@ B. or uppercase letters</li>
 <div id="inline-code" class="section level2">
 <h2 class="hasAnchor">
 <a href="#inline-code" class="anchor"></a>Inline code</h2>
-<p>Inline code is useful to including (simple) <code>R</code> output directly into the text. Inline code can be added by inclosing <code>R</code> code between <code>\x60r</code> and <code>\x60</code>. For example, typing <code>\x60r mean(c(3,7,4,7,9))\x60</code> will compute and print the mean of the given vector. This is, it will print 6 instead of the code itself. This can be very useful for including summary statistics in reports.</p>
-<p>For example, if we have a vector indicating the number of individuals captured at each occassion during a mark-recapture study (e.g., <code>n &lt;- c(155, 132, 147, 163)</code>) and we want to include the number of occasions in a report, instead of typing <code>4</code>, we can type <code>\x60r length(n)\x60</code>. Not only does this prevent typos, it is extemely useful if <code><a href="https://www.rdocumentation.org/packages/base/topics/length">length(n)</a></code> might change in the future. Instead of manually changing the number of occasions, we just re-render the document and the new number of occasions will be printed automatically.</p>
+<p>Inline code is useful to including (simple) <code>R</code> output directly into the text. Inline code can be added by enclosing <code>R</code> code between <code>`r</code> and <code>`</code>. For example, typing <code>`r mean(c(3,7,4,7,9))`</code> will compute and print the mean of the given vector. That is, it will print 6 instead of the code itself. This can be very useful for including summary statistics in reports.</p>
+<p>For example, if we have a vector indicating the number of individuals captured at each occasion during a mark-recapture study (e.g., <code>n &lt;- c(155, 132, 147, 163)</code>) and we want to include the number of occasions in a report, instead of typing <code>4</code>, we can type <code>`r length(n)`</code>. Not only does this prevent typos, it is extremely useful if <code><a href="https://rdrr.io/r/base/length.html">length(n)</a></code> might change in the future. Instead of manually changing the number of occasions, we just re-render the document and the new number of occasions will be printed automatically.</p>
 </div>
 <div id="code-chunks" class="section level2">
 <h2 class="hasAnchor">
 <a href="#code-chunks" class="anchor"></a>Code chunks</h2>
-<p>For more complicated code, it is generally more useful to use <strong>chunks</strong> than inline code. Chunks start on a separate line with <code>\x60\x60\x60{r}</code> and end with a <code>\x60\x60\x60</code> on its own line (instead of doing this manually, you can click the <code>Insert</code> button at the top right of script window, then click <code>R</code>). In between these two lines, you can include as many lines of code as you want. For example,</p>
-<pre><code>\x60\x60\x60{r}
-n1 &lt;- 44     # Number of individuals captured on first occasion
-
-n2 &lt;- 32     # Number of individuals captured on second occasion
-  
-m2 &lt;- 15     # Number of previously marked individuals captured on second occasion
-
-N &lt;- n1 * n2 / m2     # Lincoln-Peterson estimate of abundance 
-\x60\x60\x60</code></pre>
+<p>For more complicated code, it is generally more useful to use <strong>chunks</strong> than inline code. Chunks start on a separate line with <code>```{r}</code> and end with a <code>```</code> on its own line (instead of doing this manually, you can click the <code>Insert</code> button at the top right of script window, then click <code>R</code>). In between these two lines, you can include as many lines of code as you want. For example,</p>
+<p><code>```{r}</code><br><code>n1 &lt;- 44     # Number of individuals captured on first occasion</code><br><code>n2 &lt;- 32     # Number of individuals captured on second occasion</code><br><code>m2 &lt;- 15     # Number of previously marked individuals captured on second occasion</code><br><code>N &lt;- n1 * n2 / m2     # Lincoln-Peterson estimate of abundance</code><br><code>```</code></p>
 <div id="chunk-options" class="section level3">
 <h3 class="hasAnchor">
 <a href="#chunk-options" class="anchor"></a>Chunk options</h3>
@@ -487,17 +454,15 @@ N &lt;- n1 * n2 / m2     # Lincoln-Peterson estimate of abundance
 <h3 class="hasAnchor">
 <a href="#setting-defaults-for-all-chunks" class="anchor"></a>Setting defaults for all chunks</h3>
 <p>Often it is useful to set the default behavior for all chunks rather that including, for example, <code>warning = FALSE</code> at the beginning of each one. To do this, you can include a chunk at the beginning of the document:</p>
-<pre><code>\x60\x60\x60{r include=FALSE}
-opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
-\x60\x60\x60</code></pre>
+<p><code>```{r include = FALSE}</code><br><code>opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)</code><br><code>```</code></p>
 <p>Any options can be inluded in this chuck to set the default behaviors. You can over-ride these defaults within chunks as needed. You can also load common packages in this chunk to streamline chunks later in the document.</p>
 </div>
 <div id="tables" class="section level3">
 <h3 class="hasAnchor">
 <a href="#tables" class="anchor"></a>Tables</h3>
-<p>To nicely print matrices and data frames in R Markdown document, use the <code><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable()</a></code> function:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(knitr)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/knitr/topics/kable">kable</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(mtcars))</a></code></pre></div>
+<p>To nicely print matrices and data frames in R Markdown document, use the <code><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable()</a></code> function:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(knitr)</span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="kw"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span>(<span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(mtcars))</span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th></th>
@@ -613,14 +578,10 @@ opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
 <p>Coding Club’s <a href="https://ourcodingclub.github.io/2016/11/24/rmarkdown-1.html">Getting Started with R Markdown</a></p>
 <p>Cosma Shalizi’s <a href="http://www.stat.cmu.edu/~cshalizi/rmarkdown">Using R Markdown for Class Reports</a></p>
 </div>
-<div id="homework-assignment-1" class="section level1">
-<h1 class="hasAnchor">
-<a href="#homework-assignment-1" class="anchor"></a>Homework assignment 1</h1>
-<p>Before submitting your assignment, be sure to double check the instructions for <a href="https://rushinglab.github.io/WILD3810/articles/homework.html">completing and submitting homework assignments</a>.</p>
-</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -629,13 +590,7 @@ opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
       <li><a href="#what-is-r-markdown">What is R Markdown?</a></li>
       <li><a href="#why-use-r-markdown">Why use R Markdown</a></li>
       <li><a href="#why-not-use-r-markdown">Why not use R Markdown?</a></li>
-      <li>
-<a href="#authoring-r-markdown-files">Authoring R Markdown files</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#step-0-set-up-the-file-structure">Step 0: Set up the file structure</a></li>
-      <li><a href="#step-1-create-a-new-r-markdown-file-using-the-homework-template">Step 1: Create a new R Markdown file using the homework template</a></li>
-      <li><a href="#step-2-fill-in-your-information-and-render-the-document">Step 2: Fill in your information and render the document</a></li>
-      </ul>
-</li>
+      <li><a href="#creating-a-new-r-markdown-file">Creating a new R Markdown file</a></li>
       <li>
 <a href="#basic-formatting">Basic formatting</a><ul class="nav nav-pills nav-stacked">
 <li><a href="#the-yaml-header">The YAML header</a></li>
@@ -667,7 +622,6 @@ opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
       </ul>
 </li>
       <li><a href="#additional-resources">Additional resources</a></li>
-      <li><a href="#homework-assignment-1">Homework assignment 1</a></li>
       </ul>
 </div>
       </div>
@@ -675,17 +629,20 @@ opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
 </div>
 
 
+
       <footer><div class="copyright">
   <p>Developed by Clark Rushing.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

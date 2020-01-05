@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
     <title>Lecture 15</title>
-    <meta charset="utf-8">
-    <meta name="author" content="   WILD6900 (Spring 2019)" />
+    <meta charset="utf-8" />
+    <meta name="author" content="   WILD6900 (Spring 2020)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
     <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
   </head>
@@ -14,7 +15,7 @@ class: center, middle, inverse, title-slide
 
 # Lecture 15
 ## Multi-state models
-### <br/><br/><br/>WILD6900 (Spring 2019)
+### <br/><br/><br/>WILD6900 (Spring 2020)
 
 ---
 
@@ -113,7 +114,7 @@ class: center, middle, inverse, title-slide
 
 - `\(\large \psi_{AB}\)`: Probability of moving from site A to site B
 
-- `\(\large \psi_{BA}\)`: Probability of mumoving from site B to site A
+- `\(\large \psi_{BA}\)`: Probability of moving from site B to site A
 
 ---
 ## Three states - example
@@ -236,12 +237,12 @@ head(rCH)
 
 ```
 ##      [,1] [,2] [,3] [,4] [,5] [,6]
-## [1,]    1    1    2    2    1    3
-## [2,]    1    1    3    3    3    3
-## [3,]    1    3    3    3    3    3
-## [4,]    1    2    1    3    3    3
-## [5,]    1    2    3    3    3    3
-## [6,]    1    3    3    3    3    3
+## [1,]    1    1    3    1    1    1
+## [2,]    1    1    1    1    1    1
+## [3,]    1    3    1    2    3    3
+## [4,]    1    3    3    3    3    3
+## [5,]    1    1    2    3    3    3
+## [6,]    1    3    3    2    3    1
 ```
 
 ---
@@ -258,11 +259,11 @@ tail(rCH)
 
 ```
 ##        [,1] [,2] [,3] [,4] [,5] [,6]
-## [795,]    3    3    3    3    2    2
-## [796,]    3    3    3    3    2    1
+## [795,]    3    3    3    3    2    3
+## [796,]    3    3    3    3    2    3
 ## [797,]    3    3    3    3    2    3
 ## [798,]    3    3    3    3    2    3
-## [799,]    3    3    3    3    2    3
+## [799,]    3    3    3    3    2    1
 ## [800,]    3    3    3    3    2    3
 ```
 
@@ -282,7 +283,7 @@ tail(f)
 
 --
 - The categorical distribution describes the probability of one (of `\(N\)`) outcomes
-    + `\(\Omega\)` and `\(\Theta\)` are matrices defining the state/observaton probabilities   
+    + `\(\Omega\)` and `\(\Theta\)` are matrices defining the state/observation probabilities   
 
 --
 `$$\large z_{i, t+1}|z_{i,t} \sim categorical(\Omega_{z_{i,t},1:S})$$`
@@ -368,7 +369,7 @@ sink()
 #### Very flexible
 - Most capture-recapture models can be formulated as multi-state models
 
-- Can accomodate many states
+- Can accommodate many states
 
 - Can include covariates and individual/temporal variation 
 
@@ -379,6 +380,7 @@ sink()
 
 - Computationally intensive
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
@@ -388,16 +390,74 @@ sink()
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
 (function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -411,7 +471,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

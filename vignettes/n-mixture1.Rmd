@@ -166,7 +166,7 @@ sink()
 
 where `alpha` and `beta` are vectors containing the intercept and slope coefficients, `XN` is a matrix with one row per site and one column per covariate (including a column of 1's for the intercept), and `Xp` is a 3-d array with dimensions $K \times x \times J$ (where $x$ is the number of covariates in the detection model, including the intercept).  
 
-This parameterization has a few benefits. First, it can speed up model fitting, sometimes substaintially. Second, you can easily add or remove covariates without having to change the model code. Notice that the length of the `alpha` and `beta` vectors is determined by `nAlpha` and `nBeta` so the priors can be changed by simply changing these values in the data object. In addition, the linear predictors are vectorized so they will be updated when the dimensions of `XN` and `Xp` are changed. 
+This parameterization has a few benefits. First, it can speed up model fitting, sometimes substantially. Second, you can easily add or remove covariates without having to change the model code. Notice that the length of the `alpha` and `beta` vectors is determined by `nAlpha` and `nBeta` so the priors can be changed by simply changing these values in the data object. In addition, the linear predictors are vectorized so they will be updated when the dimensions of `XN` and `Xp` are changed. 
 
 To help with simulating data for this model, the `WILD6900` package includes a function called `sim_Nmix`:
 
