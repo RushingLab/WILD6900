@@ -130,7 +130,7 @@ Next, we need to model the occupancy status of each species $i$ at each site $j$
 
 $$\Large z_{i,j} \sim Bernoulli(z_i \psi_i)$$
 
-To treat species as random effects in this model, we will specificy a distribution for the species-specific occupancy probabilities:
+To treat species as random effects in this model, we will specify a distribution for the species-specific occupancy probabilities:
 
 $$\Large logit(\psi_i) \sim normal(\mu_{\psi}, \tau_{\psi})$$
 
@@ -178,7 +178,7 @@ sink()
 
 ## Model fitting 
 
-Now we're ready to fit the model. As in the othe occupancy models we've seen, initial values for $x$ and $z$ are important (remember that we need $x$ and $z$ for the full augmented data set):
+Now we're ready to fit the model. As in the other occupancy models we've seen, initial values for $x$ and $z$ are important (remember that we need $x$ and $z$ for the full augmented data set):
 
 ```{r eval = FALSE}
 ## Bundle data

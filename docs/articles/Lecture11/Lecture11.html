@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
     <title>Lecture 11</title>
-    <meta charset="utf-8">
-    <meta name="author" content="   WILD6900 (Spring 2019)" />
+    <meta charset="utf-8" />
+    <meta name="author" content="   WILD6900 (Spring 2020)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <script src="libs/kePrint/kePrint.js"></script>
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
     <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
   </head>
@@ -14,8 +13,8 @@
 class: center, middle, inverse, title-slide
 
 # Lecture 11
-## Estimating abundance: Hierarchical distance sampling
-### <br/><br/><br/>WILD6900 (Spring 2019)
+## Estimating abundance: Occupancy modeling
+### <br/><br/><br/>WILD6900 (Spring 2020)
 
 ---
 
@@ -24,382 +23,215 @@ class: center, middle, inverse, title-slide
 
 ## Readings
 
-&gt; [Powell &amp; Gale chp. 19](https://docs.wixstatic.com/ugd/95e73b_873e8bade7934a8388d5e21bee43a2bf.pdf)
-
-#### Also recommended: Kery &amp; Royle *Applied hierarchical modeling in ecology*, chp. 8
+&gt; Kéry &amp; Schaub 383-409
 
 ---
-## Estimating abundance
+## Estimating abundance? 
 
-#### Unbiased estimates of `\(\large N\)` require estimating `\(\large p\)`
+#### For the past few weeks, we've been modeling abundance:
 
-#### *Many* methods available:
-
-- Mark-recapture  
-
-- Removal sampling  
-
-- Distance sampling  
-
-- Double observer  
-
-- N-mixture models
-
----
-## Estimating abundance
-
-#### Unbiased estimates of `\(\large N\)` require estimating `\(\large p\)`
-
-#### *Many* methods available:
-
-- Mark-recapture  
-
-- Removal sampling  
-
-- **Distance sampling**  
-
-- Double observer  
-
-- N-mixture models
-
----
-class: middle, center, inverse
-
-# Distance sampling
-
----
-## Distance sampling
-
-#### Basic idea
-
-- Assume a population of `\(\large N\)` individuals
-    + `\(N \sim Poisson(\lambda)\)`
-    + `\(n \sim binomial(N, \bar{p})\)` 
-    
---
-- Each of the `\(N\)` individuals is defined by:
-      + `\(x_i\)`: the distance from the individual to a transect/point
-      + `\(y_i\)`, whether the individual was detected or not during a survey
-      
---
-- Resonable to assume that detection probability `\(\large p_i\)` is related to `\(\large x_i\)`   
-    + i.e., `\(Pr(y_i = 1|x_i)\)`  
-
-    + objects that are further away are harder to detect  
-
+`$$\Large N_t \sim Poisson(\lambda)$$`
 
 --
-- Sample only includes individuals with `\(\large y = 1\)`
-    + we only see distances `\(x_1, x_2, x_3, ...,x_n\)` 
-    
----
-## Distance sampling
+#### Occupancy is the probability a site is occupied
 
-#### What does a histogram of the observed distances look like?
+- reduced-information form of abundance
+    + If `\(\large N_i &gt; 0\)`, `\(\large z_i = 1\)`
 
---
-&lt;img src="Lecture11_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
-
-
----
-## Distance sampling
-
-#### What is the probability of `\(\large x\)` given `\(\large y = 1\)`? 
-
-`$$\Large [x|y=1]=\frac{[y=1|x][x]}{[y=1]}$$`
+    + If `\(\large N_i = 0\)`, `\(\large z_i = 0\)`
 
 --
-- `\(\large [y=1|x]\)` is a user-specified specified detection function
-    + usually denoted `\(g(x, \theta)\)`
-&lt;br/&gt;  
-
-
---
-- `\(\large [x]\)` is the *population distribution of distances*
-&lt;br/&gt;  
-
-
---
-- `\(\large [y=1]\)` is the average detection probabilty over some interval `\(\large [0,B]\)`
-    + aka `\(\bar{p}\)`
-    + `\(\large \int_x^Bg(x,\theta)[x]dx\)`
-    
+#### So even when occupancy is the state-variable, we are still modeling something related to abundance
 
 ---
-## Distance sampling
+## Estimating abundance? 
 
-#### One way to think about distance sampling is as a type of state-space model
-
-1) The observation model is `\(\large g(x, \theta)\)`
-
-- defined as the probability of detecting individuals as a function of distance
-
-- describes how individuals **appear in the sample**
-
-2) The state model is `\(\large [x]\)`
-
-- defined as the probability that an individual is distance `\(x\)` from the observer
-
-- directly related to how individuals are distributed across the landscape
-
----
-## Distance sampling
-
-#### Models of detection probability
-
-- Must be monotonically decreasing 
-
-- Common models:
-    + half normal: `\(\large e^{-x^2/2\sigma^2}\)`
-    + negative exponential: `\(\large e^{-x/\sigma}\)`
-    + hazard rate: `\(\large 1-e^{(x/\sigma)^{-b}}\)`
-    
-- Each model implies different relationship between `\(p\)` and `\(x\)`
-    + often multiple models are fit and compared using model selection
-
-- All assume `\(g(0) = 1\)` (detection is perfect at the transect)
-
-- `\(\large \sigma\)` defines shape of curve; must be estimated as a parameter in the model
-
----
-## Distance sampling
-
-#### How do we define the distribution `\(\large [x]\)`?
-
-- Assume a line transect with length `\(L\)` and maximum detection distance `\(B\)`
-
-&lt;img src="figs/distance_transect.png" width="80%" style="display: block; margin: auto;" /&gt;
-
---
-- The area of the search is `\(L \times 2B\)`
-
-
---
-- If individuals are distributed uniformly with the sample region, then distance to the transect also has a uniform distribution
-`$$\Large [x] \sim uniform(0, B)$$`
-
----
-class: inverse, middle, center
-
-# Data augmentation
-
----
-## Data augmentation
-
-### Imagine an occupancy study:
-
-- `\(\large M\)` sites are surveyed  
-    + `\(\large N\)` sites are occupied `\(\large (z = 1)\)`
-    + `\(\large M - N\)` sites are unoccupied `\(\large (z = 0)\)`  
-
---
-- species is detected `\((y_i=1)\)` at `\(n\)` sites
-    + species is not detected `\((y_i=0)\)` at `\(M-n\)` sites  
-    
---
-`$$\Large y_i \sim Bernoulli(z_i p)$$`
-
----
-## Data augmentation
-
-### Imagine an occupancy study:
-
-#### How many sites are actually occupied `\(\large (N)\)`?  
-
-- if `\(\large \psi\)` is the probability of occupancy
+#### Typical state model for occupancy
 
 `$$\Large z_i \sim Bernoulli(\psi)$$`
 
 --
-- and
+#### If the expected abundance is `\(\large \lambda\)`, what is the probability `\(\large N = 0\)`?
 
-`$$\Large N = \sum_{i=1}^M z_i$$`
-
----
-## Data augmentation
-
-#### These ideas can be applied to distance sampling
-
-#### Imagine a distance sampling study: 
-
-- `\(\large n\)` individuals were detected during the study
+`$$\Large Pr(N=0|\lambda)=\frac{\lambda^0e^-\lambda}{0!}=e^{-\lambda}$$` 
 
 --
-- `\(\large N-n\)` individuals were not detected
-    + how do we know how many individuals were not detected?  
+#### If the expected abundance is `\(\large \lambda\)`, what is the probability `\(\large N &gt; 0\)`?
+
+`$$\Large 1 - Pr(N=0|\lambda)=1 -e^{-\lambda}$$` 
 
 --
-- Add `\(\large M-n\)` individuals to the data
-    + Choose `\(M \gt \gt N\)`
-    + All of these "augmented" individuals have `\(\large y=0\)`
-    + Distances `\(\large x\)` for augmented individuals are `NA` but have `\(uniform(0, B)\)` prior
+#### So (if our assumptions are valid):
+
+`$$\Large \psi = 1 - e^{-\lambda}$$`
+
+---
+## Why estimate occupancy?
+
+#### Less effort
 
 --
-`$$\large z_i \sim Bernoulli(\psi)$$`
+#### Historical data sets
 
-`$$\large N = \sum_{i = 1}^M z_i$$`
+--
+#### More reliable when `\(\large N\)` very small
 
----
-## Distance sampling
+--
+#### Occupancy = abundance (e.g., breeding territory)
 
-#### Bayesian formulation
+--
+#### Metapopulation dynamics
 
-- Process model:
+--
+#### Distribution/range size
 
-`$$\large z_i \sim Bernoulli(\psi)$$`
-`$$\large x_i \sim uniform(0, B)$$`
-
-- Observation model:
-
-`$$\large p_i = g(x_i, \theta)$$`
-
-`$$\large y_i \sim Bernoulli(z_i p_i)$$`
-
-- Derived variables
-
-`$$\large N = \sum_{i=1}^M z_i$$`
-
-`$$\large D = \frac{N}{A}$$`
+--
+#### Disease dynamics
 
 ---
-## Distance sampling
+## Why not just use observed presence/absence?
+
+#### As in all ecological studies, we rarely (if ever) observe the state process perfectly 
+
+--
+#### In the case of occupancy, some sites will be occupied but we will fail to detect the species
+
+- i.e., `\(\large p &lt; 1\)`
+
+
+--
+#### Also possible (though generally more rare) that we record the species when it's not present (false positive)
+
+- see [Royle &amp; Link 2006](https://www.uvm.edu/rsenr/vtcfwru/spreadsheets/occupancy/Occupancy%20Exercises/Exercise12/Royle_Link_2006.pdf)
+
+
+--
+#### Similar to N-mixture models, estimating `\(\large p\)` requires temporal replication
+
+---
+## Estimating `\(\LARGE p\)`
+
+#### Imagine a single site surveyed 3 times:
+
+- Assume site is closed across samples
+
+- Assume constant `\(\large p\)`
+
+`$$\LARGE y_i = [111]$$`
+
+--
+#### What is the likelihood of this observation?
+
+--
+`$$\LARGE \psi p^3$$`
+
+---
+## Estimating `\(\LARGE p\)`
+
+#### What about?
+
+`$$\LARGE y_i = [011]$$`
+
+--
+`$$\LARGE \psi (1-p)p^2$$`
+
+
+---
+## Estimating `\(\LARGE p\)`
+
+#### What about?
+
+`$$\LARGE y_i = [000]$$`
+
+--
+`$$\LARGE (1 - \psi) + \psi (1-p)^3$$`
+
+
+---
+## Single-season (static) occupancy model
+
+#### State-space formulation
+
+- State-model
+
+`$$\Large z_i \sim Bernoulli(\psi_i)$$`
+
+`$$\Large logit(\psi_i) = \alpha_0 + \alpha_1x_i$$`
+
+- Observation-model
+
+`$$\Large y_{i,k} \sim Bernoulli(z_ip_{i,k})$$`
+
+`$$\Large logit(p_{ik}) = \beta_0 + \beta_1x_{i,k}$$`
+
+---
+## Single-season (static) occupancy model
 
 
 ```r
 model{
   # Priors 
-  sigma ~ dunif(0, 1000)
   psi ~ dbeta(1, 1)
+  p ~ dbeta(1, 1)
   
   # Likelihood
   for(i in 1:M){
+    # State model
     z[i] ~ dbern(psi)
-    x[i] ~ dunif(0, B)
     
-    ## Observation model
-    log(p[i]) &lt;- -((x[i] * x[i])/(2*sigma*sigma))
-    y[i] ~ dbern(p[i] * z[i])
+    # Observation model
+    for(k in 1:K){
+      y[i, k] ~ dbern(p * z[i])
+    }
   }
-  
-  # Derived variables
-  N &lt;- sum(z[A:M])
-  D &lt;- N/A
+}
+```
+
+---
+## Single-season (static) occupancy model
+
+
+```r
+model{
+  alpha0 ~ dnorm(0, 0.1)
+  alpha1 ~ dnorm(0, 0.1)
+  mu.lp ~ dnorm(0, 0.1)
+  tau.p ~ dunif(0, 10)
+
+  for(i in 1:M){
+    z[i] ~ dbern(psi[i])
+    logit(psi[i]) &lt;- alpha0 + alpha1 * x1[i]
+    for(k in 1:K){
+      y[i, k] ~ dbern(p[i,k] * z[i])
+      logit(p[i,k]) &lt;- lp[i,k]
+      lp[i,k] ~ dnorm(mu.lp, tau)
+    }
+  }
+
+  N.occ &lt;- sum(z[1:M])
 }
 ```
 
 
 ---
-## Distance sampling
+## Multi-season (dynamic) occupancy model
 
+#### What if occupancy can change over time? 
 
+- Data collection using the *robust design*
+    + Population open between primary periods (e.g., years)
+    + Population closed within secondary periods (e.g., occasions)
 
-#### Point transect data
-
-- With line transect data &amp; assumption of uniform distribution:
-
-`$$\Large Pr(x)= 1/B$$`
-
---
-- But with circular point counts, distances are not uniformly distributed because area gets bigger as `\(x\)` gets bigger:
-
-`$$\Large Pr(x) = \frac{2x}{B^2}$$`
-&lt;img src="Lecture11_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
-
----
-## Distance sampling
-
-#### Observed vs. true distances
-
-&lt;img src="Lecture11_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
-
-
----
-## Putting the *hierarchy* in HDS
-
-#### Typical distance sampling data
-
-&lt;table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;"&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style="text-align:left;"&gt; Transect &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; dclass1 &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; dclass2 &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; dclass3 &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; X1 &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; XS &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; x11 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; x12 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; 2 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; x21 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; x22 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; 3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; x31 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; x32 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; S &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; xs1 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; xs2 &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-
----
-## Putting the *hierarchy* in HDS
-
-#### Model structure - binned data
-
-`$$\Large N_s \sim Poisson(\lambda_s)$$`
-
-`$$\Large log(\lambda_s) = \beta_0 + \beta1 x_{s1}$$`
---
-`$$\Large (y_{s1}, y_{s2}, y_{s3}) \sim multinomial(N_s, \{\pi_s\})$$`
---
-`$$\Large \pi_{s,h}= \underbrace{\bar{p}_h}_{average\; detection\; prob} \underbrace{\frac{b_{h+1}-b_h}{B}}_{prob. \; x \; in\; h}$$`
-
-`$$\Large log(\sigma_s) = \alpha_0 + \alpha_1 x_{s2}$$`
-
----
-## Putting the *hierarchy* in HDS
-
-#### Model structure - data augmentation
-
-`$$\Large N_x \sim Poisson(\lambda_s)$$`
-
-`$$\Large log(\lambda_s) = \beta_0 + \beta1 x_{s1}$$`
+`$$\Large y_i = [\underbrace{101}_{Year\;1}\;\;\;\;\; \underbrace{000}_{Year\;2}\;\;\;\;\;\underbrace{110}_{Year\;3}\;\;\;\;\;\underbrace{100}_{Year\;4}]$$`
 
 --
-`$$\Large z_i \sim Bermoulli(\psi)$$`
-`$$\Large \psi = \frac{\sum_{s=1}^S\lambda}{M}$$`
+- In year 1:
+`$$\Large z_{i,1} \sim Bernoulli(\psi)$$`
 
---
-`$$\Large y_i \sim Bernoulli(z_ip_i)$$`
-
-`$$\Large p_i = e^{-d_i^2/2\sigma^2_{s[i]}}$$`
-
-`$$\Large log(\sigma_s) = \alpha_0 + \alpha_1 x_{s2}$$`
+- In years 2+:
+`$$\Large z_{i,t} \sim Bernoulli(z_{i,t-1}(1-\epsilon)+(1-z_{i,t-1}\gamma))$$`
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
@@ -409,16 +241,74 @@ model{
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
 (function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -432,7 +322,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

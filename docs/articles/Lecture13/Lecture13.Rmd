@@ -1,7 +1,7 @@
 ---
 title: "Lecture 13"
-subtitle: "Estimating abundance: Closed-population capture-mark-recapture"
-author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+subtitle: "Estimating survival: Open capture-mark-recapture models"
+author: "<br/><br/><br/>WILD6900 (Spring 2020)"
 output:
   xaringan::moon_reader:
     css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
@@ -17,414 +17,341 @@ options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
 library(WILD6900)
 # library(gganimate)
+library(kableExtra)
 ```
 
 ## Readings
 
-> ### Kéry & Schaub 134-170
+> ### Kéry & Schaub 171-239
 
-
-> ### [Powell & Gale chp. 8](https://docs.wixstatic.com/ugd/95e73b_6d832c61405d4b3cbd9d99bbb4530f7b.pdf)
-
----
-## Estimating abundance
-
-#### Unbiased estimates of $\large N$ require estimating $\large p$
-
-#### *Many* methods available:
-
-- Mark-recapture  
-
-- Removal sampling  
-
-- Distance sampling  
-
-- Double observer  
-
-- N-mixture models
-
----
-## Estimating abundance
-
-#### Unbiased estimates of $\large N$ require estimating $\large p$
-
-#### *Many* methods available:
-
-- **Mark-recapture**  
-
-- Removal sampling  
-
-- Distance sampling  
-
-- Double observer  
-
-- N-mixture models
+> ### [Powell & Gale chp. 10](https://docs.wixstatic.com/ugd/95e73b_3a230cc8eaa64148ad17a8a36c98240b.pdf)
 
 
 ---
-class: inverse, middle, center
+## From closed-population models to open-population models
 
-# Capture-mark-recapture
-
----
-## Capture-mark-recapture (CMR)
-
-#### CMR includes a **wide** variety of related techniques and models  
-
---
-#### Traditionally, CMR referred to methods of capturing, marking, and then recapturing individuals at some point in the future  
-
---
-#### This results in a **capture-history** for each individual:  
-
-##### Individual 1: $101101$  
-##### Individual 2: $011001$  
-
-???
-
-Individual 1 was captured on occasions 1, 3, 4, and 6  
-
-Individual 2 was captured on occasions 2,3, and 6. 
-
---
-#### From the capture-histories, possible to estimate $\large p$
-
---
-#### With $\large p$, possible to estimate $\large N$
-
-$$\large N = \frac{C}{p}$$
-
----
-## Capture-mark-recapture
-
-#### From capture-histories, we can estimate:  
-
---
-- abundance  
-
---
-- detection probability  
-
---
-- survival  
-
---
-- movement  
-
---
-- recruitment  
-
---
-- individual growth  
-
---
-- populations trends   
-
----
-## Capture-mark-recapture
-
-
-#### CMR methods are not restricted to physical captures and recaptures
-
-```{r out.width=600}
-knitr::include_graphics("figs/pelican.jpg")
-```
-
-???
-
-Capture histories can be created from resighting marks that can be seen from a distance
-
-Photo Credit: Rick Kimble/USFWS
-
----
-## Capture-mark-recapture
-
-
-#### CMR methods are not restricted to physical captures and recaptures
-
-```{r out.width=600}
-knitr::include_graphics("figs/blrf.jpg")
-```
-
-???
-
-Capture histories can be created from automated systems that record ID's, like PIT tags
-
-Image courtesy of: USFWS Mountain-Prairie via Wikimedia Commons
-
----
-## Capture-mark-recapture
-
-
-#### CMR methods are not restricted to physical captures and recaptures
-
-```{r out.width=600}
-knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/3/37/Wild_Sumatran_tiger.jpg")
-```
-
-???
-
- Capture histories can be created from "natural marks", e.g. camera trapping
-
-Image courtesy of: Arddu, via Wikimedia Commons
-
----
-## Capture-mark-recapture
-
-
-#### CMR methods are not restricted to physical captures and recaptures
-
-```{r out.width=600}
-
-knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/2/2a/Grizzly_hair_snare_%28Northern_Divide_Grizzly_Bear_Project%29_%284428177124%29.jpg")
-```
-
-???
-
-Capture histories can be created from "natural marks", e.g. genetic markers
-
-Image courtesy of: GlacierNPS, via Wikimedia Commons
-
----
-## Capture-mark-recapture
-
-
-#### CMR methods are not restricted to physical captures and recaptures  
-
-#### *What ties all of these methods together is that we have individual-level capture-histories*
-
----
-## Capture-mark-recapture
-
-#### Key to closed CMR is that because individuals do not enter or leave the population, we assume any 0 in the capture history is non-detection $\large (1-p)$
-
-- in simplest model, easy to translate capture history into probabilistic statements based only on $p$:
+#### All CMR studies have a similar basic design:
 
 .pull-left[
-##### Individual 1: $\large 101101$  
-##### Individual 2: $\large 011001$  
+During each sampling occasion
+
+- individuals are captured  
+
+- marked or identified  
+
+- released alive  
 ]
 
 .pull-right[
-#### $\large p(1-p)pp(1-p)p$  
-#### $\large (1-p)pp(1-p)(1-p)p$
+```{r out.width="50%"}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/6/6f/Band_on_pelican_leg_%285282438747%29.jpg")
+```
 ]
 
-<br/>
 --
+#### But whats happens next?
 
-#### In the CMR literature, the constant $\large p$ model is known at the $M_0$ model ([Otis et al. (1978)](https://www.jstor.org/stable/pdf/3830650.pdf?casa_token=Dr4Y3XD5DJAAAAAA:IQA7BkqTFg7_0h2kqbrn20CGZLBbTBBbuAsCWsvdRWD-muQDenn-UVYfpdL3q09ZTmiGGxQBm5vnFV9RomNxOdtBq2c98vOSELdt6-hRyoY52ipEYj4))
+--
+- In the $\large M_0$ model, we assumed the population was closed to any change in $\large N$ during our study
+    + No births, deaths, emigration, or immigration
+
+--
+    +  Any $\large 0$ in the capture histories was due to detection error
+
+???
+Image courtesy of USFWS Mountain-Prairie, via Wikimedia Commons
 
 ---
-## The $\LARGE M_0$ model in JAGS
+## From closed-population models to open-population models
 
-#### In all closed CMR models, $\large N$ is unknown
+#### **Open population** models relax this assumption
 
-- we know $n$ but how many individuals were not detected at all?
+- Individuals can enter (births or immigration) or leave the population (deaths or emigration) between sampling occasions
 
---
-- data augmentation!
+- $\large 0$'s in the capture histories could be because individuals are there but not detected or because they are not there
 
---
-$$\Large z_i \sim Bernoulli(\psi)$$
 
 --
-$$\Large y_{ik} \sim Bernoulli(z_ip)$$
+#### Many different forms of open population models 
 
---
-$$\Large \psi \sim beta(1,1)$$
-
-$$\Large p \sim beta(1,1)$$
-
---
-$$\Large N = \sum_{i=1}^M z_i$$
+- Allow estimation of:
+    + survival
+    + recruitment
+    + movement
 
 ---
-## Capture-mark-recapture
+## Open-population models
 
-####  In addition to the $\large M_0$ model, Otis et al. 1978 outlined 3 other basic *closed* CMR "models":
-
---
-- $\large M_t$: variation in $p$ among occasions
-
-$$\large p_1(1-p_2)p_3p_4(1-p_5)p_6$$
+#### In this lecture, we will focus on estimating survival/emigration
 
 --
-- $\large M_h$: variation in $p$ among individuals
-
-$$\large p_i(1-p_i)p_ip_i(1-p_i)p_i$$
-
---
-- $\large M_b$: behavioral responses (trap happiness/shyness)
-
-$$\large p(1-c)cc(1-c)c$$
-
-.footnote[
-[1] David Otis was a post-doc at USU in the Coop Unit when he wrote this seminal paper
-]
-
-
----
-## Capture-mark-recapture
-
-#### Otis et al. 1978 was seminal because it clarified ways that $\large p$ might vary
-
---
-However, $\large M_0$, $\large M_t$, $\large M_h$, $\large M_b$ are not single models but instead families of models that allow $p$ to vary for different reasons
-
---
-#### In modern Bayesian analysis of closed CMR models, we can use the tools you learned so far in this course to model complex variation in $\large p$
-
-- group effects
-
-- hierarchical structure
-
-- continuous covariates (via GLM)
-
----
-## The $\LARGE M_t$ model in JAGS
-
-#### How do we model $\large p$ as a function of occassion?
-
-```{r eval = FALSE, echo = TRUE}
-model{
-  omega ~ dbeta(1, 1)
-  for(t in 1:T){
-    p[t] ~ dbeta(1, 1)
-  }
-  
-  for(i in 1:M){
-    z[i] ~ dbern(psi)
-    
-    for(t in 1:T){
-      y[i, t] ~ dbern(p[t] * z[i])
-    } # end t
-  } # end i
-  
-  N <- sum(z[1:M])
-}
+```{r out.width = "75%"}
+knitr::include_graphics("figs/cjs1.png")
 ```
 
 ---
-## The $\LARGE M_t$ model in JAGS
+## Open-population models
 
-```{r eval = FALSE, echo = TRUE}
-model{
-  omega ~ dbeta(1, 1)
-  for(t in 1:T){
-    lp[t] ~ dnorm(mu.p, tau.p)
-    logit(p[t]) <- lp[t]
-  }
-  mu.p ~ dnorm(0, 0.1)
-  tau.p ~ dgamma(0.25, 0.25)
-  for(i in 1:M){
-    z[i] ~ dbern(psi)
-    
-    for(t in 1:T){
-      y[i, t] ~ dbern(p[t] * z[i])
-    } # end t
-  } # end i
-}
+#### In this lecture, we will focus on estimating survival/emigration
+
+
+```{r out.width = "75%"}
+knitr::include_graphics("figs/cjs2.png")
 ```
 
-- What is the difference between this model and the previous? How will this change influence estimates of $p_t$?
+--
+- *Condition on first capture*
 
 ---
-## Model $\LARGE M_b$
+## Open-population models
 
-#### Behavioral responses are common in studies that require phyisical captures
+#### On the occassion after release, 4 possible scenarios:
 
-- probability of capture $\large \neq$ probability of recapture $(\large c)$
+- 1) Individual survives and is re-captured (capture history = `11`)  
 
-- individuals learn to avoid traps (trap shy; $\large p > c$)
 
-- individuals learn to seek out traps (trap happy; $\large c > p$)
+- 2) Individual survives but is not recaptured (capture history = `10`)  
 
+
+- 3) Individual dies and is **not available** for recapture (capture history = `10`)  
+
+
+- 4) Individual survives but leaves the study area and is **not available** for recapture (capture history = `10`)  
+
+
+---
+## Open-population models
+
+#### On the occassion after release, 4 possible scenarios:
+
+- 1) Individual survives and is re-captured (capture history = `11`)  
+
+
+- 2) Individual survives but is not recaptured (capture history = `10`)  
+
+
+- 3) Individual dies and is **not available** for recapture (capture history = `10`)  
+
+
+- 4) Individual survives but leaves the study area and is **not available** for recapture (capture history = `10`)  
+
+
+
+#### Not possible to distuingish between scenarios 3 & 4 without additional data
+
+- $\LARGE \phi_t = s_t \times (1 - \epsilon_t)$ 
+
+- $\LARGE \phi_t$: **Apparent survival** (prob. individual survives *and* remains within study area)  
+
+???
+
+$\LARGE \epsilon_t$: probability an individual leaves the study area
+
+
+---
+## Cormack-Jolly-Seber model
+
+#### How do we distinguish between scenarios 2 & 3/4?  
 
 --
-#### In the $\large M_b$ models, $\large p$ depends on whether an individual has previously been captured
+#### **CJS model**
 
-- response can be permanent or ephemeral 
+- Parameters
+    + $\LARGE \phi$: Apparent survival probability
 
----
-## Model $\LARGE M_b$ in JAGS
+    + $\Large p$: Recapture probability
 
-```{r eval = FALSE, echo = TRUE}
-model{
-  omega ~ dbeta(1, 1)
-  p ~ dbeta(1, 1)
-  c ~ dbeta(1, 1)
-  
-  for(i in 1:M){
-    z[i] ~ dbern(psi)
-    
-    y[i, 1] ~ dbern(p * z[i])
-    
-    for(t in 2:T){
-      y[i, t] ~ dbern(z[i] * ((1 - y[i, t-1]) * p + y[i, t-1] * c))
-    } # end t
-  } # end i
-  
-  N <- sum(z[1:M])
-  trap.response <- c - p
-}
-```
+???
 
+Note that for simplicity, we have removed the $t$ subscript. This implies that apparent survival probability and recapture probability are constant across all occasions.   
+
+However, the CJS model can estimate different apparent survival and recapture probabilities for each occasion, that is $\phi_t$ and $p_t$
 
 ---
-## Model $\LARGE M_h$
+## Cormack-Jolly-Seber model
 
-#### Individual heterogeniety not captured by covariates 
-
-- treat individuals as random effect
-
-$$\large logit(p_i) \sim normal(logit(\mu_p), \tau_p)$$
-
---
-- models with heterogeneity are not always identifiable 
-    + different assumptions about $p_i$ will give different estimates of $N$ but model selection does not differentiate between models 
-    
---
-- however, *not* modeling individual heterogeneity leads to known bias
-    + assuming constant $p$ underestimates $N$
+#### How do we distinguish between scenarios 2 & 3/4?  
 
 
----
-## Model $\LARGE M_h$ in JAGS
-
-```{r eval = FALSE, echo = TRUE}
-model{
-  omega ~ dbeta(1, 1)
-  mean.p ~ dbeta(1, 1)
-  mean.lp <- log(mean.p) - log(1 - mean.p)
-  tau.p ~ dgamma(0.25, 0.25)
-  
-  for(i in 1:M){
-    z[i] ~ dbern(psi)
-    logit(p[i]) ~ dnorm(mean.lp, tau.p)T(-5, 5)
-    
-    y[i] ~ dbin(p[i] * z[i], T)
-  } # end i
-  
-  N <- sum(z[1:M])
-}
+```{r out.width="75%"}
+knitr::include_graphics("figs/cjs_flowchart.png")
 ```
 
 ---
-## Extensions of the Otis et al. models
+## Cormack-Jolly-Seber model
 
-#### Many extensions possible
 
-- $\large M_{tb}$
+```{r}
+cjs_df <- data.frame(animal = c("Indv 1", "Indv 2", "Indv 3", "Indv 4"),
+                 ch = c("111", "101", "110", "100"),
+                 prb = c("\\(\\phi_1 p_2 \\phi_2 p_3\\)", 
+                         "\\(\\phi_1 (1-p_2) \\phi_2 p_3\\)", 
+                         "\\(\\phi_1 p_2 \\phi_2 (1-p_3)+(1-\\phi_2)\\)",
+                         "\\((1-\\phi_1) + \\phi_1 (1-p_2) (1-\\phi_2 p_3)\\)"))
 
-- $\large M_{th}$
+names(cjs_df) <- c("Individual", "Capture history", "Probability")
+cjs_df2 <- cjs_df
+cjs_df2[,3] <- c("\\(\\phi_1 p_2 \\phi_2 p_3\\)", "", "", "")
+cjs_df2 %>%
+  kable("html", align = 'c', escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE, font_size = 10) 
+```
 
-- $\large M_{tbh}$
+#### Individual 1
 
-- and many more limited only by your data and your modeling skills
+- survived interval 1 $\large (\phi_1)$, recaptured on occasion 2 $\large (p_2)$, survived occasion 2 $\large (\phi_2)$, recapture on occasion 3 $\large (p_3)$
 
+
+---
+## Cormack-Jolly-Seber model
+
+
+```{r}
+cjs_df3 <- cjs_df
+cjs_df3[,3] <- c("\\(\\phi_1 p_2 \\phi_2 p_3\\)", 
+                         "\\(\\phi_1 (1-p_2) \\phi_2 p_3\\)", 
+                         "",
+                         "")
+cjs_df3 %>%
+  kable("html", align = 'c', escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE, font_size = 10) 
+```
+
+#### Individual 2
+
+- survived interval 1 $\large (\phi_1)$, not recaptured on occasion 2 $\large (1-p_2)$, survived occasion 2 $\large (\phi_2)$, recapture on occasion 3 $\large (p_3)$
+
+---
+## Cormack-Jolly-Seber model
+
+```{r}
+cjs_df4 <- cjs_df
+cjs_df4[,3] <- c("\\(\\phi_1 p_2 \\phi_2 p_3\\)", 
+                         "\\(\\phi_1 (1-p_2) \\phi_2 p_3\\)", 
+                         "\\(\\phi_1 p_2 \\phi_2 (1-p_3)+(1-\\phi_2)\\)",
+                         "")
+cjs_df4 %>%
+  kable("html", align = 'c', escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE, font_size = 10) 
+```
+
+#### Individual 3
+
+- survived interval 1 $\large (\phi_1)$, recaptured on occasion 2 $\large (p_2)$
 
 --
-#### As additional variation is added, more data is needed to estimate parameters
+    + survived occasion 2 $\large (\phi_2)$, not recaptured on occasion 3 $\large (1 - p_3)$; **or**  
 
-- all else equal, each new parameter results in lower precision for $\large N$ (no free lunch!)
+--
+    + died during occasion 2 $\large (1-\phi_2)$
+
+
+---
+## Cormack-Jolly-Seber model
+
+```{r}
+cjs_df %>%
+  kable("html", align = 'c', escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE, font_size = 10) 
+```
+
+#### Individual 4
+
+- died during interval 1 $\large (1-\phi_1)$; **or**  
+
+--
+- survived occasion 1 $\large (\phi_1)$, not recaptured on occasion 2 $\large (1 - p_2)$, died during occasion 2 $(1-\phi_2)$; **or**  
+
+--
+- survived occasion 1 $\large (\phi_1)$, not recaptured on occasion 2 $\large (1 - p_2)$, survived occasion 2 $\large (\phi_2)$, not recaptured on occasion 3 $\large (1 - p_3)$  
+
+---
+## CJS model as a state-space model
+
+#### Using the tools we've learned this semester, it's relativley straightfoward to write the CJS model as a state-space model:
+
+--
+#### Process model, capture occassion 1
+$$\large z_{i,f_1} = 1$$
+
+--
+#### Process model, capture occasion 2+
+
+--
+$$\large z_{i,t} \sim Bernoulli(z_{i,t-1}\phi)$$
+
+--
+#### Observation model
+
+$$\large y_{i,t} \sim Bernoulli(z_{i,t}p)$$
+
+---
+## CJS model with time-variation
+
+#### As for the other models we've seen this semester, it's possible to add temporal variation to the CJS model
+
+--
+$$\Large logit(\phi_t) = \mu + \epsilon_t$$
+
+$$\Large \epsilon_t \sim normal(0, \tau_{\phi})$$
+
+--
+$$\Large logit(p_t) = \mu + \xi_t$$
+
+$$\Large \xi_t \sim normal(0, \tau_{p})$$
+
+
+---
+## Identifiability of the CJS model with time-variation
+
+#### In the fully time-dependent model, $\large \phi_T$ and $\large p_T$ are not identifiable
+
+- the model will return posteriors for both parameters (because each has a prior) but the model will not be able to separately estimate both parameters
+    + posteriors will actually be for $\phi_T \times p_T$
+
+---
+## Identifiability of the CJS model with time-variation
+
+#### Why is this?
+
+--
+- In a CMR study with two occassions (**note** - never do this!):
+    + 100 individuals captured on first occasion
+    + 60 of those individuals recaptured on the second occasion
+
+--
+- Expected number of recaptures $= N \times \phi \times p$
+    + $60 = 100 \times 0.8 \times 0.75$
+    + $60 = 100 \times 0.9 \times 0.667$
+    + $60 = 100 \times 0.6 \times 1.00$
+
+--
+- No unique solution
+    + Separating $p$ from $\phi$ requires *internal* zeros
+    
+---
+## Identifiability of the CJS model with time-variation
+
+#### What can you do:
+
+1) Constant $\large p$
+
+2) Covariates on $\large \phi$ and $\large p$
+
+3) Informative priors
+
+
+---
+## Assumptions of the CJS model
+
+#### 1) Every animal has the same chance of capture, p
+
+#### 2) Every animal has same probability of surviving $\large \phi$
+
+#### 3) Marks are not lost 
+
+#### 4) Samples are instantaneous (short periods)  
+
+#### 5) All emigration is permanent (`101` must indicate $1-p$) 
+
+#### 6) Fates of animals  are independent of other animals 

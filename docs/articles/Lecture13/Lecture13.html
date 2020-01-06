@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
     <title>Lecture 13</title>
-    <meta charset="utf-8">
-    <meta name="author" content="   WILD6900 (Spring 2019)" />
+    <meta charset="utf-8" />
+    <meta name="author" content="   WILD6900 (Spring 2020)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <script src="libs/kePrint/kePrint.js"></script>
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
     <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
   </head>
@@ -13,8 +14,8 @@
 class: center, middle, inverse, title-slide
 
 # Lecture 13
-## Estimating abundance: Closed-population capture-mark-recapture
-### <br/><br/><br/>WILD6900 (Spring 2019)
+## Estimating survival: Open capture-mark-recapture models
+### <br/><br/><br/>WILD6900 (Spring 2020)
 
 ---
 
@@ -23,409 +24,417 @@ class: center, middle, inverse, title-slide
 
 ## Readings
 
-&gt; ### Kéry &amp; Schaub 134-170
+&gt; ### Kéry &amp; Schaub 171-239
 
-
-&gt; ### [Powell &amp; Gale chp. 8](https://docs.wixstatic.com/ugd/95e73b_6d832c61405d4b3cbd9d99bbb4530f7b.pdf)
-
----
-## Estimating abundance
-
-#### Unbiased estimates of `\(\large N\)` require estimating `\(\large p\)`
-
-#### *Many* methods available:
-
-- Mark-recapture  
-
-- Removal sampling  
-
-- Distance sampling  
-
-- Double observer  
-
-- N-mixture models
-
----
-## Estimating abundance
-
-#### Unbiased estimates of `\(\large N\)` require estimating `\(\large p\)`
-
-#### *Many* methods available:
-
-- **Mark-recapture**  
-
-- Removal sampling  
-
-- Distance sampling  
-
-- Double observer  
-
-- N-mixture models
+&gt; ### [Powell &amp; Gale chp. 10](https://docs.wixstatic.com/ugd/95e73b_3a230cc8eaa64148ad17a8a36c98240b.pdf)
 
 
 ---
-class: inverse, middle, center
+## From closed-population models to open-population models
 
-# Capture-mark-recapture
-
----
-## Capture-mark-recapture (CMR)
-
-#### CMR includes a **wide** variety of related techniques and models  
-
---
-#### Traditionally, CMR referred to methods of capturing, marking, and then recapturing individuals at some point in the future  
-
---
-#### This results in a **capture-history** for each individual:  
-
-##### Individual 1: `\(101101\)`  
-##### Individual 2: `\(011001\)`  
-
-???
-
-Individual 1 was captured on occasions 1, 3, 4, and 6  
-
-Individual 2 was captured on occasions 2,3, and 6. 
-
---
-#### From the capture-histories, possible to estimate `\(\large p\)`
-
---
-#### With `\(\large p\)`, possible to estimate `\(\large N\)`
-
-`$$\large N = \frac{C}{p}$$`
-
----
-## Capture-mark-recapture
-
-#### From capture-histories, we can estimate:  
-
---
-- abundance  
-
---
-- detection probability  
-
---
-- survival  
-
---
-- movement  
-
---
-- recruitment  
-
---
-- individual growth  
-
---
-- populations trends   
-
----
-## Capture-mark-recapture
-
-
-#### CMR methods are not restricted to physical captures and recaptures
-
-&lt;img src="figs/pelican.jpg" width="600" style="display: block; margin: auto;" /&gt;
-
-???
-
-Capture histories can be created from resighting marks that can be seen from a distance
-
-Photo Credit: Rick Kimble/USFWS
-
----
-## Capture-mark-recapture
-
-
-#### CMR methods are not restricted to physical captures and recaptures
-
-&lt;img src="figs/blrf.jpg" width="600" style="display: block; margin: auto;" /&gt;
-
-???
-
-Capture histories can be created from automated systems that record ID's, like PIT tags
-
-Image courtesy of: USFWS Mountain-Prairie via Wikimedia Commons
-
----
-## Capture-mark-recapture
-
-
-#### CMR methods are not restricted to physical captures and recaptures
-
-&lt;img src="https://upload.wikimedia.org/wikipedia/commons/3/37/Wild_Sumatran_tiger.jpg" width="600" style="display: block; margin: auto;" /&gt;
-
-???
-
- Capture histories can be created from "natural marks", e.g. camera trapping
-
-Image courtesy of: Arddu, via Wikimedia Commons
-
----
-## Capture-mark-recapture
-
-
-#### CMR methods are not restricted to physical captures and recaptures
-
-&lt;img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Grizzly_hair_snare_%28Northern_Divide_Grizzly_Bear_Project%29_%284428177124%29.jpg" width="600" style="display: block; margin: auto;" /&gt;
-
-???
-
-Capture histories can be created from "natural marks", e.g. genetic markers
-
-Image courtesy of: GlacierNPS, via Wikimedia Commons
-
----
-## Capture-mark-recapture
-
-
-#### CMR methods are not restricted to physical captures and recaptures  
-
-#### *What ties all of these methods together is that we have individual-level capture-histories*
-
----
-## Capture-mark-recapture
-
-#### Key to closed CMR is that because individuals do not enter or leave the population, we assume any 0 in the capture history is non-detection `\(\large (1-p)\)`
-
-- in simplest model, easy to translate capture history into probabilistic statements based only on `\(p\)`:
+#### All CMR studies have a similar basic design:
 
 .pull-left[
-##### Individual 1: `\(\large 101101\)`  
-##### Individual 2: `\(\large 011001\)`  
+During each sampling occasion
+
+- individuals are captured  
+
+- marked or identified  
+
+- released alive  
 ]
 
 .pull-right[
-#### `\(\large p(1-p)pp(1-p)p\)`  
-#### `\(\large (1-p)pp(1-p)(1-p)p\)`
+&lt;img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Band_on_pelican_leg_%285282438747%29.jpg" width="50%" style="display: block; margin: auto;" /&gt;
 ]
 
-&lt;br/&gt;
 --
+#### But whats happens next?
 
-#### In the CMR literature, the constant `\(\large p\)` model is known at the `\(M_0\)` model ([Otis et al. (1978)](https://www.jstor.org/stable/pdf/3830650.pdf?casa_token=Dr4Y3XD5DJAAAAAA:IQA7BkqTFg7_0h2kqbrn20CGZLBbTBBbuAsCWsvdRWD-muQDenn-UVYfpdL3q09ZTmiGGxQBm5vnFV9RomNxOdtBq2c98vOSELdt6-hRyoY52ipEYj4))
+--
+- In the `\(\large M_0\)` model, we assumed the population was closed to any change in `\(\large N\)` during our study
+    + No births, deaths, emigration, or immigration
+
+--
+    +  Any `\(\large 0\)` in the capture histories was due to detection error
+
+???
+Image courtesy of USFWS Mountain-Prairie, via Wikimedia Commons
 
 ---
-## The `\(\LARGE M_0\)` model in JAGS
+## From closed-population models to open-population models
 
-#### In all closed CMR models, `\(\large N\)` is unknown
+#### **Open population** models relax this assumption
 
-- we know `\(n\)` but how many individuals were not detected at all?
+- Individuals can enter (births or immigration) or leave the population (deaths or emigration) between sampling occasions
 
---
-- data augmentation!
+- `\(\large 0\)`'s in the capture histories could be because individuals are there but not detected or because they are not there
 
---
-`$$\Large z_i \sim Bernoulli(\psi)$$`
 
 --
-`$$\Large y_{ik} \sim Bernoulli(z_ip)$$`
+#### Many different forms of open population models 
 
---
-`$$\Large \psi \sim beta(1,1)$$`
-
-`$$\Large p \sim beta(1,1)$$`
-
---
-`$$\Large N = \sum_{i=1}^M z_i$$`
+- Allow estimation of:
+    + survival
+    + recruitment
+    + movement
 
 ---
-## Capture-mark-recapture
+## Open-population models
 
-####  In addition to the `\(\large M_0\)` model, Otis et al. 1978 outlined 3 other basic *closed* CMR "models":
-
---
-- `\(\large M_t\)`: variation in `\(p\)` among occasions
-
-`$$\large p_1(1-p_2)p_3p_4(1-p_5)p_6$$`
+#### In this lecture, we will focus on estimating survival/emigration
 
 --
-- `\(\large M_h\)`: variation in `\(p\)` among individuals
+&lt;img src="figs/cjs1.png" width="75%" style="display: block; margin: auto;" /&gt;
 
-`$$\large p_i(1-p_i)p_ip_i(1-p_i)p_i$$`
+---
+## Open-population models
+
+#### In this lecture, we will focus on estimating survival/emigration
+
+
+&lt;img src="figs/cjs2.png" width="75%" style="display: block; margin: auto;" /&gt;
 
 --
-- `\(\large M_b\)`: behavioral responses (trap happiness/shyness)
+- *Condition on first capture*
 
-`$$\large p(1-c)cc(1-c)c$$`
+---
+## Open-population models
 
-.footnote[
-[1] David Otis was a post-doc at USU in the Coop Unit when he wrote this seminal paper
-]
+#### On the occassion after release, 4 possible scenarios:
+
+- 1) Individual survives and is re-captured (capture history = `11`)  
+
+
+- 2) Individual survives but is not recaptured (capture history = `10`)  
+
+
+- 3) Individual dies and is **not available** for recapture (capture history = `10`)  
+
+
+- 4) Individual survives but leaves the study area and is **not available** for recapture (capture history = `10`)  
 
 
 ---
-## Capture-mark-recapture
+## Open-population models
 
-#### Otis et al. 1978 was seminal because it clarified ways that `\(\large p\)` might vary
+#### On the occassion after release, 4 possible scenarios:
 
---
-However, `\(\large M_0\)`, `\(\large M_t\)`, `\(\large M_h\)`, `\(\large M_b\)` are not single models but instead families of models that allow `\(p\)` to vary for different reasons
+- 1) Individual survives and is re-captured (capture history = `11`)  
 
---
-#### In modern Bayesian analysis of closed CMR models, we can use the tools you learned so far in this course to model complex variation in `\(\large p\)`
 
-- group effects
+- 2) Individual survives but is not recaptured (capture history = `10`)  
 
-- hierarchical structure
 
-- continuous covariates (via GLM)
+- 3) Individual dies and is **not available** for recapture (capture history = `10`)  
+
+
+- 4) Individual survives but leaves the study area and is **not available** for recapture (capture history = `10`)  
+
+
+
+#### Not possible to distuingish between scenarios 3 &amp; 4 without additional data
+
+- `\(\LARGE \phi_t = s_t \times (1 - \epsilon_t)\)` 
+
+- `\(\LARGE \phi_t\)`: **Apparent survival** (prob. individual survives *and* remains within study area)  
+
+???
+
+`\(\LARGE \epsilon_t\)`: probability an individual leaves the study area
+
 
 ---
-## The `\(\LARGE M_t\)` model in JAGS
+## Cormack-Jolly-Seber model
 
-#### How do we model `\(\large p\)` as a function of occassion?
+#### How do we distinguish between scenarios 2 &amp; 3/4?  
+
+--
+#### **CJS model**
+
+- Parameters
+    + `\(\LARGE \phi\)`: Apparent survival probability
+
+    + `\(\Large p\)`: Recapture probability
+
+???
+
+Note that for simplicity, we have removed the `\(t\)` subscript. This implies that apparent survival probability and recapture probability are constant across all occasions.   
+
+However, the CJS model can estimate different apparent survival and recapture probabilities for each occasion, that is `\(\phi_t\)` and `\(p_t\)`
+
+---
+## Cormack-Jolly-Seber model
+
+#### How do we distinguish between scenarios 2 &amp; 3/4?  
 
 
-```r
-model{
-  omega ~ dbeta(1, 1)
-  for(t in 1:T){
-    p[t] ~ dbeta(1, 1)
-  }
-  
-  for(i in 1:M){
-    z[i] ~ dbern(psi)
+&lt;img src="figs/cjs_flowchart.png" width="75%" style="display: block; margin: auto;" /&gt;
+
+---
+## Cormack-Jolly-Seber model
+
+
+&lt;table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 10px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Individual &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Capture history &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Probability &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 111 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi_1 p_2 \phi_2 p_3\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 101 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 110 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 100 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+#### Individual 1
+
+- survived interval 1 `\(\large (\phi_1)\)`, recaptured on occasion 2 `\(\large (p_2)\)`, survived occasion 2 `\(\large (\phi_2)\)`, recapture on occasion 3 `\(\large (p_3)\)`
+
+
+---
+## Cormack-Jolly-Seber model
+
+
+&lt;table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 10px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Individual &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Capture history &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Probability &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 111 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi_1 p_2 \phi_2 p_3\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 101 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi_1 (1-p_2) \phi_2 p_3\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 110 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 100 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+#### Individual 2
+
+- survived interval 1 `\(\large (\phi_1)\)`, not recaptured on occasion 2 `\(\large (1-p_2)\)`, survived occasion 2 `\(\large (\phi_2)\)`, recapture on occasion 3 `\(\large (p_3)\)`
+
+---
+## Cormack-Jolly-Seber model
+
+&lt;table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 10px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Individual &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Capture history &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Probability &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 111 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi_1 p_2 \phi_2 p_3\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 101 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi_1 (1-p_2) \phi_2 p_3\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 110 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi_1 p_2 \phi_2 (1-p_3)+(1-\phi_2)\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 100 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+#### Individual 3
+
+- survived interval 1 `\(\large (\phi_1)\)`, recaptured on occasion 2 `\(\large (p_2)\)`
+
+--
+    + survived occasion 2 `\(\large (\phi_2)\)`, not recaptured on occasion 3 `\(\large (1 - p_3)\)`; **or**  
+
+--
+    + died during occasion 2 `\(\large (1-\phi_2)\)`
+
+
+---
+## Cormack-Jolly-Seber model
+
+&lt;table class="table table-striped table-hover table-condensed table-responsive" style="font-size: 10px; margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:center;"&gt; Individual &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Capture history &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; Probability &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 1 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 111 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi_1 p_2 \phi_2 p_3\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 2 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 101 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi_1 (1-p_2) \phi_2 p_3\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 3 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 110 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\phi_1 p_2 \phi_2 (1-p_3)+(1-\phi_2)\) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:center;"&gt; Indv 4 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; 100 &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \((1-\phi_1) + \phi_1 (1-p_2) (1-\phi_2 p_3)\) &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+#### Individual 4
+
+- died during interval 1 `\(\large (1-\phi_1)\)`; **or**  
+
+--
+- survived occasion 1 `\(\large (\phi_1)\)`, not recaptured on occasion 2 `\(\large (1 - p_2)\)`, died during occasion 2 `\((1-\phi_2)\)`; **or**  
+
+--
+- survived occasion 1 `\(\large (\phi_1)\)`, not recaptured on occasion 2 `\(\large (1 - p_2)\)`, survived occasion 2 `\(\large (\phi_2)\)`, not recaptured on occasion 3 `\(\large (1 - p_3)\)`  
+
+---
+## CJS model as a state-space model
+
+#### Using the tools we've learned this semester, it's relativley straightfoward to write the CJS model as a state-space model:
+
+--
+#### Process model, capture occassion 1
+`$$\large z_{i,f_1} = 1$$`
+
+--
+#### Process model, capture occasion 2+
+
+--
+`$$\large z_{i,t} \sim Bernoulli(z_{i,t-1}\phi)$$`
+
+--
+#### Observation model
+
+`$$\large y_{i,t} \sim Bernoulli(z_{i,t}p)$$`
+
+---
+## CJS model with time-variation
+
+#### As for the other models we've seen this semester, it's possible to add temporal variation to the CJS model
+
+--
+`$$\Large logit(\phi_t) = \mu + \epsilon_t$$`
+
+`$$\Large \epsilon_t \sim normal(0, \tau_{\phi})$$`
+
+--
+`$$\Large logit(p_t) = \mu + \xi_t$$`
+
+`$$\Large \xi_t \sim normal(0, \tau_{p})$$`
+
+
+---
+## Identifiability of the CJS model with time-variation
+
+#### In the fully time-dependent model, `\(\large \phi_T\)` and `\(\large p_T\)` are not identifiable
+
+- the model will return posteriors for both parameters (because each has a prior) but the model will not be able to separately estimate both parameters
+    + posteriors will actually be for `\(\phi_T \times p_T\)`
+
+---
+## Identifiability of the CJS model with time-variation
+
+#### Why is this?
+
+--
+- In a CMR study with two occassions (**note** - never do this!):
+    + 100 individuals captured on first occasion
+    + 60 of those individuals recaptured on the second occasion
+
+--
+- Expected number of recaptures `\(= N \times \phi \times p\)`
+    + `\(60 = 100 \times 0.8 \times 0.75\)`
+    + `\(60 = 100 \times 0.9 \times 0.667\)`
+    + `\(60 = 100 \times 0.6 \times 1.00\)`
+
+--
+- No unique solution
+    + Separating `\(p\)` from `\(\phi\)` requires *internal* zeros
     
-    for(t in 1:T){
-      y[i, t] ~ dbern(p[t] * z[i])
-    } # end t
-  } # end i
-  
-  N &lt;- sum(z[1:M])
-}
-```
-
 ---
-## The `\(\LARGE M_t\)` model in JAGS
+## Identifiability of the CJS model with time-variation
 
+#### What can you do:
 
-```r
-model{
-  omega ~ dbeta(1, 1)
-  for(t in 1:T){
-    lp[t] ~ dnorm(mu.p, tau.p)
-    logit(p[t]) &lt;- lp[t]
-  }
-  mu.p ~ dnorm(0, 0.1)
-  tau.p ~ dgamma(0.25, 0.25)
-  for(i in 1:M){
-    z[i] ~ dbern(psi)
-    
-    for(t in 1:T){
-      y[i, t] ~ dbern(p[t] * z[i])
-    } # end t
-  } # end i
-}
-```
+1) Constant `\(\large p\)`
 
-- What is the difference between this model and the previous? How will this change influence estimates of `\(p_t\)`?
+2) Covariates on `\(\large \phi\)` and `\(\large p\)`
 
----
-## Model `\(\LARGE M_b\)`
-
-#### Behavioral responses are common in studies that require phyisical captures
-
-- probability of capture `\(\large \neq\)` probability of recapture `\((\large c)\)`
-
-- individuals learn to avoid traps (trap shy; `\(\large p &gt; c\)`)
-
-- individuals learn to seek out traps (trap happy; `\(\large c &gt; p\)`)
-
-
---
-#### In the `\(\large M_b\)` models, `\(\large p\)` depends on whether an individual has previously been captured
-
-- response can be permanent or ephemeral 
-
----
-## Model `\(\LARGE M_b\)` in JAGS
-
-
-```r
-model{
-  omega ~ dbeta(1, 1)
-  p ~ dbeta(1, 1)
-  c ~ dbeta(1, 1)
-  
-  for(i in 1:M){
-    z[i] ~ dbern(psi)
-    
-    y[i, 1] ~ dbern(p * z[i])
-    
-    for(t in 2:T){
-      y[i, t] ~ dbern(z[i] * ((1 - y[i, t-1]) * p + y[i, t-1] * c))
-    } # end t
-  } # end i
-  
-  N &lt;- sum(z[1:M])
-  trap.response &lt;- c - p
-}
-```
+3) Informative priors
 
 
 ---
-## Model `\(\LARGE M_h\)`
+## Assumptions of the CJS model
 
-#### Individual heterogeniety not captured by covariates 
+#### 1) Every animal has the same chance of capture, p
 
-- treat individuals as random effect
+#### 2) Every animal has same probability of surviving `\(\large \phi\)`
 
-`$$\large logit(p_i) \sim normal(logit(\mu_p), \tau_p)$$`
+#### 3) Marks are not lost 
 
---
-- models with heterogeneity are not always identifiable 
-    + different assumptions about `\(p_i\)` will give different estimates of `\(N\)` but model selection does not differentiate between models 
-    
---
-- however, *not* modeling individual heterogeneity leads to known bias
-    + assuming constant `\(p\)` underestimates `\(N\)`
+#### 4) Samples are instantaneous (short periods)  
 
+#### 5) All emigration is permanent (`101` must indicate `\(1-p\)`) 
 
----
-## Model `\(\LARGE M_h\)` in JAGS
-
-
-```r
-model{
-  omega ~ dbeta(1, 1)
-  mean.p ~ dbeta(1, 1)
-  mean.lp &lt;- log(mean.p) - log(1 - mean.p)
-  tau.p ~ dgamma(0.25, 0.25)
-  
-  for(i in 1:M){
-    z[i] ~ dbern(psi)
-    logit(p[i]) ~ dnorm(mean.lp, tau.p)T(-5, 5)
-    
-    y[i] ~ dbin(p[i] * z[i], T)
-  } # end i
-  
-  N &lt;- sum(z[1:M])
-}
-```
-
----
-## Extensions of the Otis et al. models
-
-#### Many extensions possible
-
-- `\(\large M_{tb}\)`
-
-- `\(\large M_{th}\)`
-
-- `\(\large M_{tbh}\)`
-
-- and many more limited only by your data and your modeling skills
-
-
---
-#### As additional variation is added, more data is needed to estimate parameters
-
-- all else equal, each new parameter results in lower precision for `\(\large N\)` (no free lunch!)
+#### 6) Fates of animals  are independent of other animals
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
@@ -435,16 +444,74 @@ model{
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
 (function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -458,7 +525,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

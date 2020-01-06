@@ -11,7 +11,7 @@
 
 <meta name="author" content="YOUR NAME HERE" />
 
-<meta name="date" content="2019-02-15" />
+<meta name="date" content="2019-03-29" />
 
 <title>WILD6900</title>
 
@@ -308,67 +308,103 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">WILD6900</h1>
-<h3 class="subtitle"><em>Homework 2: Estimating fecundity</em></h3>
+<h3 class="subtitle"><em>Homework 3: Estimating fecundity</em></h3>
 <h4 class="author"><em>YOUR NAME HERE</em></h4>
-<h4 class="date"><em>2019-02-15</em></h4>
+<h4 class="date"><em>2019-03-29</em></h4>
 
 </div>
 
 
 <hr />
-<p><strong>Due date: 26 February, 2019 before class</strong></p>
+<p><strong>Due date: 4 April, 2019 before class</strong></p>
 <p>After you have modified the code according to the instructions, change <code>eval = FALSE</code> to <code>eval = TRUE</code> in the <code>setup</code> chunk above (line 12). Once this option is changed, <strong>do not</strong> modify any of the chunk options below.</p>
 <p>Refer to the <a href="https://rushinglab.github.io/WILD6900/articles/homework.html">instructions for submitted homework assignments</a> prior to submission</p>
 <hr />
-<p><a href="https://rushinglab.github.io/WILD6900/articles/poisson_glm.html">Earlier in the semester</a>, we learned about fitting generalized linear models in JAGS by modeling changes in the number of peregrine falcons nesting in the French Jura from 1964 to 2003. In this homework assignment, you will use the same data set to quantify changes in per capita fecundity of this population across the same time period.</p>
-<p>Start by loading the data:</p>
-<pre class="r"><code>data(&quot;falcons&quot;)</code></pre>
-<p>The <code>Eyasses</code> column provides the total number of fledglings produced by the entire population in each year (i.e., the <code>Pairs</code> column). We can think of these values as the product of per capita fecundity <span class="math inline">\(f\)</span> times the number of individuals <span class="math inline">\(N\)</span>, plus some random noise. In other words, the <em>expected</em> number of eyasses in a given year is <span class="math inline">\(f_tN_t\)</span> but the <em>observed</em> number will differ from this expectation due to random process variation.</p>
-<p><strong>1) What distribution would be appropriate for linking the observed number of eyasses in each year (call that <span class="math inline">\(E_t\)</span>) to the per capita fecundity <span class="math inline">\(f_t\)</span> and current population size <span class="math inline">\(N_t\)</span>? Type the equation below inside of the double dollar signs (note - the command <code>\sim</code> will create the <span class="math inline">\(\sim\)</span> (tilda) symbol)</strong></p>
-<p><span class="math display">\[insert\; equation\; here\]</span></p>
-<p>In the previous lab, we modeled the counts as a non-linear function of year by including polynomial terms in the linear predictor. Given the non-linear changes in abundance, we might expect non-linear changes in fecundity over the same time period.</p>
-<p><strong>2a) In the equation below, replace <code>?</code> with the appropriate link function for modeling per capita fecundity <span class="math inline">\(f_t\)</span> as a linear function of covariates.</strong></p>
-<p><strong>2b) On the right hand side of the equation, write the linear predictor assuming we want to model fecundity as a function of <span class="math inline">\(year\)</span> and <span class="math inline">\(year^2\)</span>. Use whatever symbols you would like to represent intercept/slope parameters</strong></p>
-<p><span class="math display">\[?(f_t) =\]</span></p>
-<p>Next you will need to covert the above model into functioning JAGS code. Complete the code statement below by filling in:</p>
-<p><strong>3a) The appropriate priors distributions for each parameter in the model</strong></p>
-<p><strong>3b) The correct likelihood for the model above</strong></p>
+<p>For this assignment, you need to translate the “psuedo-code” below into a working simulation study. The objective is to use simulated data to investigate how the number of survey occasions influences uncertainty about <span class="math inline">\(\psi\)</span>, <span class="math inline">\(p\)</span>, and the power to detect whether occupancy probability differs among habitats.</p>
+<p>First, you will simulate the “full” data set, which includes the true state (0/1) of each study site and the observed state (0/1) for each of the <span class="math inline">\(K\)</span> occasions:</p>
+<pre class="r"><code>set.seed(53) # Do not change
+
+### 1) Create variables to store the number of sites per habitat type (set to 150) and the number of visits (set to 10)
+
+### 2) Set the habitat-specific occupancy probabilities (set psi1 to 0.75 and psi2 to 0.6)
+
+### 3) Set the detection probability (constant for both habitats, set to 0.4)
+
+### 4a) Randomly generate the true state of sites in habitat 1 (hint - the rbinom function with size = 1 will generate n values from a Bernoulli distribution)
+
+### 4b) Randomly generate the true state of sites in habitat 2 
+
+### 4c) Combine the objects you just created into a single vector indicating the true state of all 150 sites
+
+### 4d) Create a vector indicating whether each point was in habitat type 1 (value = 1) or habitat type 2 (value = 2)
+
+### 5a) Create an empty NxK matrix to store the observations for each site
+
+### 5b) Loop over each site to randomly generate observations 
+####    hint 1: use the rbinom function to fill in the entire row of observations for each site with a single line of code)
+####    hint 2: Remember that we can use the state-space formulation to ensure that sites with z = 0 always have y = 0</code></pre>
+<p>With the simulated data created, you’re now ready to write the JAGS model. In the model, be sure to:</p>
+<ul>
+<li><p>Create separate priors for <code>psi[1]</code> and <code>psi[2]</code></p></li>
+<li><p>Inside the likelihood, use the habitat type vector you created in step 4d to index the correct <code>psi</code> value for each site</p></li>
+<li><p>Create a derived variable called <code>delta_psi</code> that is the difference between <code>psi[1]</code> and <code>psi[2]</code></p></li>
+</ul>
 <hr />
 <p><strong>Important</strong> - in order for the .Rmd file to knit properly, complete the model code below and then manually run the code to create the .jags file (highlighting the chunk below and clicking <code>Run</code> or <code>command + return</code>). Leave the <code>eval = FALSE</code> option set to false so that <code>knitr</code> does <strong>not</strong> try to run the code when you knit the document!</p>
 <hr />
-<pre class="r"><code>sink(&quot;fecundity.jags&quot;)
+<pre class="r"><code>sink(&quot;Occ.jags&quot;)
 cat(&quot;
 model{
   # Priors
 
   # Likelihood
-  for(t in 1:nyear){
+  for(i in 1:M){
 
   }
 } # end of model
 &quot;, fill = TRUE)
 sink()</code></pre>
-<p>Now create the objects that JAGS needs to fit the model:</p>
-<p><strong>4a) Complete the <code>jags_data &lt;- list()</code> object to include all necessary input to run the model</strong></p>
-<pre class="r"><code>jags_data &lt;- list()</code></pre>
-<p><strong>4b) Complete the <code>jags_inits</code> function to include all necessary input to run the model</strong></p>
-<pre class="r"><code>jags_inits &lt;- function(){list()}</code></pre>
-<p><strong>4c) Complete the <code>params &lt;- c()</code> object to include parameters you would like to monitor</strong></p>
-<pre class="r"><code>params &lt;- c()</code></pre>
-<p><strong>4d) Complete the MCMC settings. Run 3 chains for 25,000 iterations, discarding the first 1000 samples as burn-in</strong></p>
-<pre class="r"><code>ni &lt;- 
+<p>Now create the objects that JAGS needs to fit the full model. One thing that is key to getting this model to run is providing good initial values for <code>x[i]</code>. To do this, use the <code>apply</code> function to set the initial value of <code>x</code> as a vector containing the maximum observed value at each site:</p>
+<pre class="r"><code>## Bundle data
+jags_data &lt;- list()
+
+## Initial values; be sure to include initial values for x
+jags_inits &lt;- function(){list()}
+
+## Parameters to model
+params &lt;- c()
+
+## MCMC settings
+ni &lt;- 
 nc &lt;- 
 nb &lt;- </code></pre>
 <p>Assuming all information above is completed correctly, the following code should run without error:</p>
-<p>Check the model for convergence.</p>
-<p><strong>5) Did the model coverge? Type your answer in <strong>bold</strong> below, providing at least two sources of evidence for convergence. If the model did not converge, change your settings above and re-run. What did you change?</strong></p>
-<p>Finally, plot the expected and predicted fecundity over time.</p>
-<p><strong>6) Complete the following code to add the predicted fecundity for each year from the model, plus the upper and lower 95% credible intervals. Remember that the posterior mean and 2.5/97.5% quantiles for each monitored paramter is stored within the <code>fecundity_mod</code> object</strong></p>
-<pre class="r"><code>falcons &lt;- dplyr::mutate(falcons, f = , 
-                                  q2.5 = , 
-                                  q97.5 = )</code></pre>
-<p>If the above code was run without error, the code below should produce a figure showing changes to the observed and predicted fecundity.</p>
-<p><strong>7) From an ecological perspective, how do you interpret the changes in fecundity over time? For additional context, refer to the plot from the previous lab showing changes in the abundance of nesting pairs over this time period. Type your answer in <strong>bold</strong> below</strong></p>
+<p>Be sure to check the model for convergence and refit if necessary</p>
+<div id="power-analysis---detecting-differences-in-psi-as-a-function-of-k" class="section level3">
+<h3>“Power analysis” - detecting differences in <span class="math inline">\(\psi\)</span> as a function of <span class="math inline">\(K\)</span></h3>
+<p>In the chunks below, refit the same model as you did above but this time only using a subset of the occasions. Rather than re-simulating the data, you can simply change the <span class="math inline">\(k\)</span> loop in JAGS so that you only loop over a subset of the columns in <span class="math inline">\(y\)</span>. In fact, you don’t even have the change the model code at all <span class="math inline">\(-\)</span> simply change the value of <span class="math inline">\(K\)</span> in the data object. This trick not only saves you from having to re-simulate the data, it ensures that the true state <span class="math inline">\(z\)</span> is the same for all of the data you analyze, ensuring that the only source of variation between models is the number of observations.</p>
+<p>In each chunk, copy whatever lines of code you need to re-bundle the data and refit the model, reducing the number of occasions by 1 in each chunk (if you’re feeling clever you can do this using a loop instead). Be sure to change the name of the fitted model objects so you end up with 9 separate model objects.</p>
+<pre class="r"><code># Enter code for k = 9 here</code></pre>
+<pre class="r"><code># Enter code for k = 8 here</code></pre>
+<pre class="r"><code># Enter code for k = 7 here</code></pre>
+<pre class="r"><code># Enter code for k = 6 here</code></pre>
+<pre class="r"><code># Enter code for k = 5 here</code></pre>
+<pre class="r"><code># Enter code for k = 4 here</code></pre>
+<pre class="r"><code># Enter code for k = 3 here</code></pre>
+<pre class="r"><code># Enter code for k = 2 here</code></pre>
+<p>Finally, make a plot showing the estimated <span class="math inline">\(\Delta_{\psi}\)</span> for each model as a function of <span class="math inline">\(K\)</span>. This plot should be “publication quality” so be sure that:</p>
+<ol style="list-style-type: decimal">
+<li><p>The axes are labeled correctly</p></li>
+<li><p>The graph shows both the posterior mean of <span class="math inline">\(\Delta_{\psi}\)</span> as well as the 95% credible interval</p></li>
+<li><p>There are horizontal lines showing the true <span class="math inline">\(\Delta_{\psi}\)</span> and 0</p></li>
+</ol>
+<pre class="r"><code># Enter figure code here</code></pre>
+</div>
+<div id="questions" class="section level3">
+<h3>Questions</h3>
+<p><strong>1) How did your estimate of <span class="math inline">\(\Delta_{\psi}\)</span> change as the number of occasions increased? Provide a brief explanation for the link between <span class="math inline">\(K\)</span> and <span class="math inline">\(\Delta_{\psi}\)</span></strong></p>
+<p><strong>2) This not a very good power analysis because we just looked at a single realization of a stochastic process and because we only simulated data under a single combination of parameters. Briefly describe how you would design a more informative analysis to examine the factors that influence your power to detect differences in <span class="math inline">\(\psi\)</span> between two habitat types</strong></p>
+</div>
 
 
 

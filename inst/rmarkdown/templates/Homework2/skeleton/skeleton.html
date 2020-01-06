@@ -11,7 +11,7 @@
 
 <meta name="author" content="YOUR NAME HERE" />
 
-<meta name="date" content="2019-02-15" />
+<meta name="date" content="2019-12-31" />
 
 <title>WILD6900</title>
 
@@ -256,9 +256,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type="text/css">
 .main-container {
@@ -283,22 +281,92 @@ img {
 button.code-folding-btn:focus {
   outline: none;
 }
+summary {
+  display: list-item;
+}
 </style>
 
 
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
 <script>
 $(document).ready(function () {
   window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
 });
 </script>
 
 <!-- code folding -->
 
 
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
 
 
 
@@ -308,9 +376,9 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">WILD6900</h1>
-<h3 class="subtitle"><em>Homework 2: Estimating fecundity</em></h3>
-<h4 class="author"><em>YOUR NAME HERE</em></h4>
-<h4 class="date"><em>2019-02-15</em></h4>
+<h3 class="subtitle">Homework 2: Fitting dispersal kernels using MLE, custom MCMC, and JAGS</h3>
+<h4 class="author">YOUR NAME HERE</h4>
+<h4 class="date">2019-12-31</h4>
 
 </div>
 
@@ -320,55 +388,203 @@ $(document).ready(function () {
 <p>After you have modified the code according to the instructions, change <code>eval = FALSE</code> to <code>eval = TRUE</code> in the <code>setup</code> chunk above (line 12). Once this option is changed, <strong>do not</strong> modify any of the chunk options below.</p>
 <p>Refer to the <a href="https://rushinglab.github.io/WILD6900/articles/homework.html">instructions for submitted homework assignments</a> prior to submission</p>
 <hr />
-<p><a href="https://rushinglab.github.io/WILD6900/articles/poisson_glm.html">Earlier in the semester</a>, we learned about fitting generalized linear models in JAGS by modeling changes in the number of peregrine falcons nesting in the French Jura from 1964 to 2003. In this homework assignment, you will use the same data set to quantify changes in per capita fecundity of this population across the same time period.</p>
-<p>Start by loading the data:</p>
-<pre class="r"><code>data(&quot;falcons&quot;)</code></pre>
-<p>The <code>Eyasses</code> column provides the total number of fledglings produced by the entire population in each year (i.e., the <code>Pairs</code> column). We can think of these values as the product of per capita fecundity <span class="math inline">\(f\)</span> times the number of individuals <span class="math inline">\(N\)</span>, plus some random noise. In other words, the <em>expected</em> number of eyasses in a given year is <span class="math inline">\(f_tN_t\)</span> but the <em>observed</em> number will differ from this expectation due to random process variation.</p>
-<p><strong>1) What distribution would be appropriate for linking the observed number of eyasses in each year (call that <span class="math inline">\(E_t\)</span>) to the per capita fecundity <span class="math inline">\(f_t\)</span> and current population size <span class="math inline">\(N_t\)</span>? Type the equation below inside of the double dollar signs (note - the command <code>\sim</code> will create the <span class="math inline">\(\sim\)</span> (tilda) symbol)</strong></p>
-<p><span class="math display">\[insert\; equation\; here\]</span></p>
-<p>In the previous lab, we modeled the counts as a non-linear function of year by including polynomial terms in the linear predictor. Given the non-linear changes in abundance, we might expect non-linear changes in fecundity over the same time period.</p>
-<p><strong>2a) In the equation below, replace <code>?</code> with the appropriate link function for modeling per capita fecundity <span class="math inline">\(f_t\)</span> as a linear function of covariates.</strong></p>
-<p><strong>2b) On the right hand side of the equation, write the linear predictor assuming we want to model fecundity as a function of <span class="math inline">\(year\)</span> and <span class="math inline">\(year^2\)</span>. Use whatever symbols you would like to represent intercept/slope parameters</strong></p>
-<p><span class="math display">\[?(f_t) =\]</span></p>
-<p>Next you will need to covert the above model into functioning JAGS code. Complete the code statement below by filling in:</p>
-<p><strong>3a) The appropriate priors distributions for each parameter in the model</strong></p>
-<p><strong>3b) The correct likelihood for the model above</strong></p>
+<p>In this homework, you will further develop your understanding of Markov Chain monte carlo by building a custom MCMC to estimate the parameters of a probability distribution from data. So called “curve fitting” is common in ecology, especially in dispersal studies, and involves many of the concepts we have already seen this semester - we choose a probability distribution and then use observed data to estimate the parameters that define the shape of that distribution. In this assignment, you will estimate the parameters of a distribution by building a custom MCMC model and using JAGS.</p>
+<div id="the-distribution" class="section level3">
+<h3>The distribution</h3>
+<p>There are many possible distributions that can be used to characterize patterns in ecology (e.g., dispersal kernels). How to choose among these models is beyond the scope of this assignment so we will use a fairly common model, the Weibull distribution. The Weibull distribution is defined by two parameters the shape (which we’ll denote <span class="math inline">\(k\)</span>) and the scale (which we’ll denote <span class="math inline">\(\lambda\)</span>). The Weibull is a popular choice to characterize many ecological processes because it is very flexible <span class="math inline">\(-\)</span> when <span class="math inline">\(k = 1\)</span> the Weibull simplifies to the negative exponential distribution; as <span class="math inline">\(k\)</span> approaches <span class="math inline">\(0\)</span>, the probability of large values (e.g., long-distance dispersal events) becomes more common. The pdf of the Weibull distribution is:</p>
+<p><span class="math display">\[\Large [x|k, \lambda] = \frac{k}{\lambda} \bigg(\frac{x}{\lambda}\bigg)^{k-1} e^{-(x/ \lambda)^k}\]</span></p>
+<p>Luckily, you’ll probably never need to know that because both <code>R</code> and JAGS have built-in functions to calculate the probability density of the Weibull distribution.</p>
+</div>
+<div id="simulating-the-data" class="section level3">
+<h3>Simulating the data</h3>
+<blockquote>
+<p>In the chunk below, use the <code>rweibull()</code> function to simulate 500 observations from a Weibull distribution. Call this object <code>x</code> and create a histogram of the simulated data. Choose whatever <span class="math inline">\(k\)</span> and <span class="math inline">\(\lambda\)</span> values you think create a sensible dispersal kernel (you may also want to create objects called <code>k</code> and <code>lambda</code> so you can call these values later and only have to change them in one place).</p>
+</blockquote>
+<p>Next, you will be an MCMC to estimate <span class="math inline">\(k\)</span> and <span class="math inline">\(\lambda\)</span> from the observed data. Knowing the true values will help you make sure your code is doing what you think its doing.</p>
+</div>
+<div id="custom-mcmc" class="section level2">
+<h2>Custom MCMC</h2>
+<p>Building an MCMC for a model with two parameters is challenging but not beyond your ability. Before proceeding, go back to lecture 5 and the lab on MCMC to refresh yourself on the steps and some of the code we used to estimate <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, and <span class="math inline">\(\sigma\)</span> in the regression example. You will need to modify that code to complete the assignment but everything you need is in those examples.</p>
+<p>First, you need choose priors for <span class="math inline">\(k\)</span> and <span class="math inline">\(\lambda\)</span> and create helper functions that return the prior probability of different values. Despite what we learned about priors, we’ll use uninformative <span class="math inline">\(uniform(0, 10)\)</span> priors for this example.</p>
+<blockquote>
+<p>In the chunk below, complete the code necessary to create the helper functions. Note that each function will take a single argument and should return the (log) probability density of observing a particular value of <span class="math inline">\(k\)</span> and <span class="math inline">\(\lambda\)</span> assuming a <span class="math inline">\(uniform(0,10)\)</span> prior</p>
+</blockquote>
+<pre class="r"><code>priorK &lt;- function(){
+
+  return(prob)
+} 
+
+priorLambda &lt;- function(){
+  
+  return(prob)
+} </code></pre>
+<p>Next, we’ll create another helper function to calculate the (log) likelihood of the observed data given values of <span class="math inline">\(k\)</span> and <span class="math inline">\(\lambda\)</span>.</p>
+<blockquote>
+<p>In the chunk below, use the <code>dweibull()</code> function to calculate the total (log) likelihood of the data. Hint - the function will take three arguments (the data, <span class="math inline">\(k\)</span>, and <span class="math inline">\(\lambda\)</span>)</p>
+</blockquote>
+<pre class="r"><code>calc_like &lt;- function() {
+  
+  return(sum(loglike))
+}</code></pre>
+<p>More helper functions. This time, you will create helper functions to generate proposal values of <span class="math inline">\(k\)</span> and <span class="math inline">\(\lambda\)</span>.</p>
+<blockquote>
+<p>In the chunk below, complete the code to create the helper functions. Hints - the functions will take two arguments (the current value of the parameter and the tuning parameter (call that <code>sigma</code>)); the Weibull distribution is only defined for <span class="math inline">\(k &gt; 0\)</span> and <span class="math inline">\(\lambda &gt; 0\)</span> so your proposal function shouldn’t return values less than or equal to 0. Instead of deriving a complex proposal function, just use the <code>max()</code> function to return a very small value (e.g., 0.001) if the proposed value is <span class="math inline">\(\leq 0\)</span></p>
+</blockquote>
+<pre class="r"><code>proposalK &lt;- function(){
+
+  return(proposal)
+}
+
+proposalLambda &lt;- function(){
+
+  return(proposal)
+}</code></pre>
+<p>Before create the MCMC code, let’s set up some basic parameters of the algorithm.</p>
+<blockquote>
+<p>In the chunk below, decide on the length of the chains and the tuning parameter. The data frame that’s created next will store value of <span class="math inline">\(k\)</span> and <span class="math inline">\(\lambda\)</span> and whether each iteration is accepted or rejected (helpful to calculate the acceptance rate). Use the <code>runif()</code> function to generate initial values for each parameter. Finally, use the <code>calc_like()</code> function to calculate the likelihood of the data given the initial vales</p>
+</blockquote>
+<pre class="r"><code>## Length of chains
+nIter &lt;- 
+
+## Tuning parameter
+tuning &lt;- 
+
+## Empty data frame to store posterior samples of each parameter
+mcmc_df &lt;- data.frame(iteration = 1:nIter,
+                      k = numeric(nIter),
+                      lambda= numeric(nIter),
+                      k.accept = 0,
+                      lambda.accept = 0)
+
+## Initial values
+mcmc_df$k[1] &lt;-  
+mcmc_df$lambda[1] &lt;- 
+
+## Likelihood of initial values
+likelihood &lt;- </code></pre>
+<p>Now you’re ready to write the MCMC itself. I have included “pseudo-code” in the chunk below to walk you through the steps. Refer back to the MCMC lab for help if you get stuck <span class="math inline">\(-\)</span> this is almost identical to the regression model.</p>
+<blockquote>
+<p>Complete the code to set up the MCMC</p>
+</blockquote>
+<pre class="r"><code>for(i in 2:nIter){
+########################
+#### 1. Update k
+########################
+
+## 1a: Generate candidate value
+candK &lt;- 
+
+## 1b: Calculate likelihood at candidate value
+cand_like &lt;- 
+
+## 1c: Calculate likelihood * prior at old value and candidate value
+jointOld &lt;- 
+jointCand &lt;- 
+
+## 1d: Acceptance probability 
+R &lt;- 
+
+## 1e: Decide whether to accept or not
+if() {   # if accepted
+  mcmc_df$k[i] &lt;-
+  mcmc_df$k.accept[i] &lt;-
+  likelihood &lt;- 
+} else {
+  mcmc_df$k[i] &lt;-
+}
+
+########################
+#### 2. Update lambda
+########################
+
+## 2a: Generate candidate value
+candLambda &lt;- 
+
+## 2b: Calculate likelihood at candidate value
+cand_like &lt;- 
+
+## 2c: Calculate likelihood * prior at old value and candidate value
+jointOld &lt;- 
+jointCand &lt;- 
+
+## 2d: Acceptance probability 
+R &lt;- 
+
+## 2e: Decide whether to accept or not
+if() {   # if accepted
+  mcmc_df$lambda[i] &lt;-
+  mcmc_df$lambda.accept[i] &lt;- 
+  likelihood &lt;-
+} else {
+  mcmc_df$lambda[i] &lt;-
+}
+}</code></pre>
+<p>Did it work?</p>
+<blockquote>
+<p>In the chunk below, use the <code>quantile()</code> function to look at the median and quantiles of the posteriors for <span class="math inline">\(k\)</span> and <span class="math inline">\(\lambda\)</span>. Are they close the true values?</p>
+</blockquote>
+<p>You can also compare the posterior estimates to the MLE estimates using the following code:</p>
+<pre class="r"><code>MASS::fitdistr(x, densfun = &quot;weibull&quot;)</code></pre>
+<p>Are they similar?</p>
+<p>Finally, you can visualize the chains.</p>
+<blockquote>
+<p>Complete the ggplot2 code below to view the chains for <span class="math inline">\(k\)</span> and <span class="math inline">\(\lambda\)</span>. Even though we can’t assess convergence with only one chain, do the chains look well-behaved? Type a short answer in <strong>bold</strong> below</p>
+</blockquote>
+<pre class="r"><code>ggplot(, aes(x = , y = )) + geom_path()</code></pre>
+<blockquote>
+<p>In the chunk below, estimate the acceptance rate for each parameter (hint - use the <code>mean()</code> function). Change the tuning parameter. How does it influence the acceptance rate? How does it influence mixing and convergence of the chains? Type a short answer in <strong>bold</strong> below</p>
+</blockquote>
+</div>
+<div id="fitting-the-model-in-jags" class="section level2">
+<h2>Fitting the model in JAGS</h2>
+<p>Now that you’ve done the hard work of writing your own MCMC, you can do things the “easy” way and fit the same model in JAGS.</p>
+<blockquote>
+<p>Complete the JAGS code below. Note that JAGS uses a slightly different parameterization of the Weibull so I’ve include a line to derive lambda from another parameter called <code>b</code> (include a prior on <span class="math inline">\(b\)</span> just like you did for <span class="math inline">\(\lambda\)</span> in the previous model but then use <code>lambda</code> in the likelihood statement). Note that JAGS has a built-in function <code>dweib()</code></p>
+</blockquote>
 <hr />
 <p><strong>Important</strong> - in order for the .Rmd file to knit properly, complete the model code below and then manually run the code to create the .jags file (highlighting the chunk below and clicking <code>Run</code> or <code>command + return</code>). Leave the <code>eval = FALSE</code> option set to false so that <code>knitr</code> does <strong>not</strong> try to run the code when you knit the document!</p>
 <hr />
-<pre class="r"><code>sink(&quot;fecundity.jags&quot;)
+<pre class="r"><code>sink(&quot;weibull.jags&quot;)
 cat(&quot;
 model{
   # Priors
 
+  lambda &lt;- pow(1/k, b)
+  
   # Likelihood
-  for(t in 1:nyear){
+  for(i in 1:N){
 
   }
 } # end of model
 &quot;, fill = TRUE)
 sink()</code></pre>
 <p>Now create the objects that JAGS needs to fit the model:</p>
-<p><strong>4a) Complete the <code>jags_data &lt;- list()</code> object to include all necessary input to run the model</strong></p>
+<blockquote>
+<p>Complete the <code>jags_data &lt;- list()</code> object to include all necessary input to run the model</p>
+</blockquote>
 <pre class="r"><code>jags_data &lt;- list()</code></pre>
-<p><strong>4b) Complete the <code>jags_inits</code> function to include all necessary input to run the model</strong></p>
+<blockquote>
+<p>Complete the <code>jags_inits</code> function to include all necessary initial values to run the model. Use the <code>runif()</code> function to generate random initial values each time you run the model</p>
+</blockquote>
 <pre class="r"><code>jags_inits &lt;- function(){list()}</code></pre>
-<p><strong>4c) Complete the <code>params &lt;- c()</code> object to include parameters you would like to monitor</strong></p>
+<blockquote>
+<p>Complete the <code>params &lt;- c()</code> object to include parameters you would like to monitor</p>
+</blockquote>
 <pre class="r"><code>params &lt;- c()</code></pre>
-<p><strong>4d) Complete the MCMC settings. Run 3 chains for 25,000 iterations, discarding the first 1000 samples as burn-in</strong></p>
+<blockquote>
+<p>Complete the MCMC settings. Run 3 chains for 10,000 iterations, discarding the first 1000 samples as burn-in</p>
+</blockquote>
 <pre class="r"><code>ni &lt;- 
 nc &lt;- 
 nb &lt;- </code></pre>
 <p>Assuming all information above is completed correctly, the following code should run without error:</p>
-<p>Check the model for convergence.</p>
-<p><strong>5) Did the model coverge? Type your answer in <strong>bold</strong> below, providing at least two sources of evidence for convergence. If the model did not converge, change your settings above and re-run. What did you change?</strong></p>
-<p>Finally, plot the expected and predicted fecundity over time.</p>
-<p><strong>6) Complete the following code to add the predicted fecundity for each year from the model, plus the upper and lower 95% credible intervals. Remember that the posterior mean and 2.5/97.5% quantiles for each monitored paramter is stored within the <code>fecundity_mod</code> object</strong></p>
-<pre class="r"><code>falcons &lt;- dplyr::mutate(falcons, f = , 
-                                  q2.5 = , 
-                                  q97.5 = )</code></pre>
-<p>If the above code was run without error, the code below should produce a figure showing changes to the observed and predicted fecundity.</p>
-<p><strong>7) From an ecological perspective, how do you interpret the changes in fecundity over time? For additional context, refer to the plot from the previous lab showing changes in the abundance of nesting pairs over this time period. Type your answer in <strong>bold</strong> below</strong></p>
+<blockquote>
+<p>Check the model for convergence. Did the model converge? Type your answer in <strong>bold</strong> below, providing at least two sources of evidence for convergence. If the model did not converge, change your settings above and re-run. What did you change?</p>
+</blockquote>
+<blockquote>
+<p>How close were the estimates from the custom MCMC and JAGS</p>
+</blockquote>
+</div>
 
 
 

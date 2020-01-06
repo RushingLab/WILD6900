@@ -44,13 +44,7 @@ The data for this activity comes from a long-term project that monitored a popul
 knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/7/7b/Peregrine_falcon_%28Australia%29.JPG")
 ```
 
-To access the data, update to the latest version of the `WILD6900` package:
-
-```{r eval = FALSE}
-devtools::install_github("RushingLab/WILD6900")
-```
-
-Once the updated package is installed, the data can be loaded:
+Load and inspect the data:
 
 ```{r eval = FALSE}
 library(WILD6900)
@@ -143,7 +137,7 @@ $$log(\lambda_t) = log(E(\lambda_t))$$
 
 Finally, we need to write the linear predictor. Based on the preliminary visualization of the data, a cubic polynomial might be appropriate to capture the non-linear change over time:
 
-$$log(\lambda_t) = \alpha + beta_1 \times year_t + \beta_2 \times year^2_t + \beta_3 \times year^3_t$$
+$$log(\lambda_t) = \alpha + \beta_1 \times year_t + \beta_2 \times year^2_t + \beta_3 \times year^3_t$$
 
 ### Accessing and viewing the JAGS model
 
@@ -247,7 +241,7 @@ knitr::kable(falcon_mod$summary[1:10,], format = 'html')
 
 Notice that all `Rhat` are less than 1.1, indicating that all parameters appear to have converged. Also note `f` for `beta2` - the posterior mean is `r round(falcon_mod$mean$beta2, 3)` but there is only a `r round(falcon_mod$f$beta2, 3)*100`% probability that it is greater than 0.  
 
-As usual, let's check the traceplots to see how they look:
+As usual, let's check the trace plots to see how they look:
 
 ```{r}
 # View traceplots for alpha, beta1, beta2, and beta3 (not for lambda)

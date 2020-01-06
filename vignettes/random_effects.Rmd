@@ -86,7 +86,7 @@ Xmat <- model.matrix(~as.factor(plot) + Length - 1)
 Xmat[1:5,c(1,2,3,21)]
 ```
 
-Now use matrix multiplicaiton to create the linear predictor:
+Now use matrix multiplication to create the linear predictor:
 
 ```{r}
 linear.pred <- Xmat %*% c(alpha, beta)
@@ -257,7 +257,7 @@ first <- as.matrix(tits[23:31])
 matplot(1999:2007, t(C), type = "l", lty = 1, lwd = 2, main = "", las = 1, ylab = "Territory counts", xlab = "Year", ylim = c(0, 80), frame = FALSE)
 ```
 
-One issue with the `obs` and `first` matrices is that they contain `NA` values, which JAGS will not allow in predictor variables (they are ok in the response variable, as we will soon see). Some of the `NA` values correspond to years when a sites was not surveyed (in these cases, there will also be a `NA` in the `C` matrix). In addition, JAGS will want the observer ID as a continuous variable rather than a factor. We will first convert the `obs` levels into a numeric vector and the create a new matrix containing the correct numberic IDs:
+One issue with the `obs` and `first` matrices is that they contain `NA` values, which JAGS will not allow in predictor variables (they are ok in the response variable, as we will soon see). Some of the `NA` values correspond to years when a sites was not surveyed (in these cases, there will also be a `NA` in the `C` matrix). In addition, JAGS will want the observer ID as a continuous variable rather than a factor. We will first convert the `obs` levels into a numeric vector and the create a new matrix containing the correct numeric IDs:
 
 ```{r}
 a <- as.numeric(levels(factor(obs)))     # All the levels, numeric
@@ -265,7 +265,7 @@ newobs <- obs                            # Gets ObsID from 1:271
 for (j in 1:length(a)){newobs[which(obs==a[j])] <- j }
 ```
 
-Next, we need to fill in the `NA` values. For the observer ID, we'll lump all missing values as a single value corresponding to the number of observers + 1. For the `first` matrix, we will code the `NA` values as `0`, which corresponds to an 'experienced' observer. This will decrease our power to quantify the effect of being a novice observer but not to the extent that it will substaintially alter our conclusions. 
+Next, we need to fill in the `NA` values. For the observer ID, we'll lump all missing values as a single value corresponding to the number of observers + 1. For the `first` matrix, we will code the `NA` values as `0`, which corresponds to an 'experienced' observer. This will decrease our power to quantify the effect of being a novice observer but not to the extent that it will substantially alter our conclusions. 
 
 ```{r}
 newobs[is.na(newobs)] <- length(a) + 1
@@ -285,7 +285,7 @@ You can view the JAGS code for this model by running:
 
 ```{r eval = FALSE}
 glm0_mod <- system.file("jags/GLM0.jags", package = "WILD6900")
-file.show(glm0)
+file.show(glm0_mod)
 ```
 
 ```{r echo = FALSE}
@@ -373,13 +373,10 @@ Even with this relatively simple data set, you can create relatively complex mod
 
 - Random site and random year effects, linear year effect and fixed first-year observer effect
 
-If you need help, refer to chapter 4 of Kery & Schaub. You can also access the following model files from the `WILD6900` package: `GLM1.jags`, `GLM2.jags`, `GLMM1.jags`, `GLMM2.jags`, `GLMM3.jags`, `GLMM4.jags`, `GLMM%.jags`. These model files are for your own reference but it is up to you to translate the code into the model descriptions above. 
-
 One note about including multiple factors in the model. In the models with both site and year (as a factor), the model cannot estimate the predicted count for all combinations of both factors. Essentially, the model needs to set one level of one of the factors to a "reference" level to avoid over-parameterization. In JAGS, we have to do this manually by setting the prior for one level to zero:
 
 ```{r eval = FALSE}
 eps[1] <- 0
 ```
 
-You will see this in several of the above models and may need to include it in your own models as you write the code. 
 

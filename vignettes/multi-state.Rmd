@@ -57,7 +57,7 @@ ms_df %>%
                 full_width = TRUE, font_size = 14) 
 ```
 
-Although individuals can be in three states, there are only two observations $-$ "seen" and "not seen" $-$ and therefore a single detection parameter $p$. Note that $p$ is interpreted as the probability that an individual is captured *given that it is both **alive** and **present** on a given capture occassion*. As a result, we never detect individuals that are "alive and absent" or individuals that are dead:
+Although individuals can be in three states, there are only two observations $-$ "seen" and "not seen" $-$ and therefore a single detection parameter $p$. Note that $p$ is interpreted as the probability that an individual is captured *given that it is both **alive** and **present** on a given capture occasion*. As a result, we never detect individuals that are "alive and absent" or individuals that are dead:
 
 ```{r echo = FALSE}
 library(kableExtra)

@@ -2,11 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
     <title>Lecture 5</title>
-<<<<<<< HEAD
-    <meta charset="utf-8">
-=======
     <meta charset="utf-8" />
->>>>>>> 6c0a4057b66735eed317af2bfc1e5b76431fa2d2
     <meta name="author" content="   WILD6900 (Spring 2020)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
@@ -208,11 +204,7 @@ phi &lt;- 0.4   # True survival probability
 ```
 
 ```
-<<<<<<< HEAD
-## [1] 11  9  6  9  5
-=======
-## [1] 11  5  7 14  9
->>>>>>> 6c0a4057b66735eed317af2bfc1e5b76431fa2d2
+## [1]  9  8 10  7  8
 ```
 
 ---
@@ -584,11 +576,7 @@ mean(posterior$phi)
 ```
 
 ```
-<<<<<<< HEAD
-## [1] 0.3937
-=======
-## [1] 0.4521
->>>>>>> 6c0a4057b66735eed317af2bfc1e5b76431fa2d2
+## [1] 0.4139
 ```
 
 Pretty close (that a good sign that our Metropolis sampler did what we wanted it to do!)
@@ -607,11 +595,7 @@ quantile(posterior$phi)
 
 ```
 ##     0%    25%    50%    75%   100% 
-<<<<<<< HEAD
-## 0.1962 0.3606 0.3940 0.4246 0.6665
-=======
-## 0.2893 0.4197 0.4530 0.4853 0.6665
->>>>>>> 6c0a4057b66735eed317af2bfc1e5b76431fa2d2
+## 0.2032 0.3814 0.4132 0.4456 0.6665
 ```
 
 Quantiles are useful for determining the 95% *credible intervals* of the posterior: `\(^1\)`
@@ -623,17 +607,10 @@ quantile(posterior$phi, probs = c(0.025, 0.975))
 
 ```
 ##   2.5%  97.5% 
-<<<<<<< HEAD
-## 0.3013 0.4890
+## 0.3188 0.5134
 ```
 
-This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.3 and 0.49" `\(^2\)`
-=======
-## 0.3544 0.5459
-```
-
-This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.35 and 0.55" `\(^2\)`
->>>>>>> 6c0a4057b66735eed317af2bfc1e5b76431fa2d2
+This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.32 and 0.51" `\(^2\)`
 
 ???
 

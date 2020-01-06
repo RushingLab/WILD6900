@@ -1,7 +1,7 @@
 ---
 title: "Anticipated schedule (subject to change)"
 subtitle: "WILD 6900: Applied Bayesian Analysis of Ecological Data"
-author: "Spring 2019"
+author: "Spring 2020"
 output: 
   rmarkdown::html_vignette:
     keep_md: yes
@@ -22,42 +22,43 @@ knitr::opts_chunk$set(
 
 ```{r schedule, echo = FALSE}
 library(kableExtra)
-schedule <- data.frame(Week = c("1 (Jan. 8 & 10)", "2 (Jan. 15 & 17)", "3 (Jan. 22 & 24)", 
-                                "4 (Jan. 29 & 31)",
-                                "5 (Feb. 5 & 7)", "6 (Feb. 12 & 14)", "7 (Feb. 19 & 21)", 
-                                "8 (Feb. 26 & 28)",
-                                "9 (Mar. 5 & 7)", "10 (Mar. 12 & 14)", "11 (Mar. 19 & 21)", 
-                                "12 (Mar. 26 & 28)",
-                                "13 (Apr. 2 & 5)", "14 (Apr. 9 & 11)", "15 (Apr. 16 & 18)", 
-                                "16 (Apr. 23 & 25)"),
+schedule <- data.frame(Week = c("1 (Jan. 7 & 9)", "2 (Jan. 14 & 15)", "3 (Jan. 21 & 23)", 
+                                "4 (Jan. 28 & 30)",
+                                "5 (Feb. 4 & 6)", "6 (Feb. 11 & 13)", "7 (Feb. 18 & 20)", 
+                                "8 (Feb. 25 & 27)",
+                                "9 (Mar. 3 & 5)", "10 (Mar. 10 & 12)", "11 (Mar. 17 & 19)", 
+                                "12 (Mar. 24 & 26)",
+                                "13 (Mar. 31 & Apr. 2)", "14 (Apr. 7 & 9)", "15 (Apr. 14 & 16)", 
+                                "16 (Apr. 21 & 23)"),
                        Lecture = c("Intro to WILD6900 and statistical modeling in ecology", 
                                    "Probability models and stochasticity", 
                                    "Principles of Bayesian inference", 
                                    "Implementing Bayesian models: MCMC samplers and JAGS",
-                             "Generalized linear models/Hierarchical models", 
-                             "Estimating indices of abundance from count data", 
+                             "Generalized linear models", 
+                             "Generalized linear models (cont.)/Hierarchical models",
+                             "Estimating indices abundance from count data", 
                              "Estimating abundance from count data",
-                              "Estimating occupancy from presence/absence data",
-                             "Review/midterm", 
+                             "Estimating occupancy from presence/absence data",
                              "Spring break - no class", 
-                             "",
-                             "",
-                             "", 
-                             "", 
-                             "", 
-                             "Student presentations"),
+                             "Estimating abundance: Closed-population capture-mark-recapture", 
+                             "Estimating survival: Open-population capture-mark-recapture", 
+                             "Estimating abundance and survival: Open-population capture-mark-recapture",
+                             "Multi-state models",
+                             "TBD",
+                             "TBD"),
                        Lab = c("Projects and directories/ Intro to R Markdown", 
                                "Manipulating, tidying, & visualizing data in R", 
-                               "Data simulation techniques/Informative priors",  "Building simple samplers in R", "Introduction to JAGS/ Regression analysis using JAGS",
-                               "Poisson GLMM for count data ", "Basic N-mixture model & variations", 
-                             "Static and dynamic occupancy models ","Buffer", "Spring break - no class", "", "",
-                             "", "", "", ""),
-                       Reading = c("H&H chp. 1", "H&H chp. 2-3", "H&H chp. 5", "H&H chp. 7", "H&H chp. 6, K&S chp. 3", "K&S chp. 4", "K&S chp. 12", "K&S chp. 13", "", "-", "", "", "", "", "", ""))
+                               "Data simulation techniques/Informative priors",  "Building simple samplers in R", "Introduction to JAGS/Regression analysis using JAGS",
+                               "Poisson GLMM for count data ", "State-space models", "Basic N-mixture model & variations", 
+                             "Static and dynamic occupancy models ", "Spring break - no class", "M0, Mt, Mb, Mh models",
+                             "Cormack-Jolly-Seber models", "Jolly-Seber models", "Estimating movement rates using multi-state models", "", ""),
+                       Reading = c("H&H chp. 1", "H&H chp. 2-3", "H&H chp. 5", "H&H chp. 7", "H&H chp. 6, K&S chp. 3", "K&S chp. 3 & 4", "K&S chp. 5", "K&S chp. 12", "K&S chp. 13", "-", "K&S chp. 6", "K&S chp. 7", "K&S chp. 10", "K&S chp. 9", "", ""))
 
 schedule %>%
   kable("html", col.names = c("Week (dates)", "Lecture topic", "Lab topic", "Reading"), align = 'c') %>%
   kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"), full_width = TRUE) %>%
-    group_rows("Unit 1: Foundations of Bayesian inference", 1,5, label_row_css = "background-color: #333333; color: #eeeeee;") %>%
-  group_rows("Unit 2: Abundance and occupancy", 6,11, label_row_css = "background-color: #333333; color: #eeeeee;") 
+    group_rows("Unit 1: Foundations of Bayesian inference", 1,6, label_row_css = "background-color: #333333; color: #eeeeee;") %>%
+  group_rows("Unit 2: Abundance and occupancy", 7,13, label_row_css = "background-color: #333333; color: #eeeeee;") %>%
+  group_rows("Unit 3: Advanced models", 14,16, label_row_css = "background-color: #333333; color: #eeeeee;") 
 
 ```

@@ -1,7 +1,7 @@
 ---
 title: "Lecture 9"
 subtitle: "State-space models"
-author: "<br/><br/><br/>WILD6900 (Spring 2019)"
+author: "<br/><br/><br/>WILD6900 (Spring 2020)"
 output:
   xaringan::moon_reader:
     css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
@@ -36,7 +36,7 @@ library(WILD6900)
 
 --
 
-#### Occurence
+#### Occurrence
 
 > the spatial distribution of organisms with a particular region at a particular point in time  
 
@@ -44,7 +44,7 @@ library(WILD6900)
  
 #### Richness
 
-> the number of co-occuring species at a given location and a particular point in time  
+> the number of co-occurring species at a given location and a particular point in time  
 
 ???
 
@@ -147,44 +147,44 @@ knitr::include_graphics("state_space.png")
 ---
 ## Process models
 
-#### Population dynamics
+### Population dynamics
 
-- $\Large N_{t+1} \sim Poisson(N_t \lambda)$  
+$$\Large N_{t+1} \sim Poisson(N_t \lambda)$$ 
 
-- $\Large N_{t+1} \sim Normal(N_t e^{\bigg[r_0 \bigg(1-\frac{N_t}{K}\bigg)\bigg]}, \sigma^2)$  
-
-
---
-#### Survival
-
-- $\Large z_{t+1} \sim Bernoulli\big(z_t \phi_t\big)$  
+$$\Large N_{t+1} \sim Normal(N_t e^{\bigg[r_0 \bigg(1-\frac{N_t}{K}\bigg)\bigg]}, \sigma^2)$$  
 
 
 --
-#### Occupancy
+### Survival
 
-- $\Large z_{t+1} \sim Bernoulli\bigg(z_t (1-\epsilon_t) + (1 - z_t)\gamma_t\bigg)$  
+$$\Large z_{t+1} \sim Bernoulli\big(z_t \phi_t\big)$$ 
+
+
+--
+### Occupancy
+
+$$\Large z_{t+1} \sim Bernoulli\bigg(z_t (1-\epsilon_t) + (1 - z_t)\gamma_t\bigg)$$  
 
 ---
 ## Observation models
 
-#### Population dynamics
+### Population dynamics
 
-- $\Large C_{t} \sim Normal(N_t, \sigma_o^2)$  
+$$\Large C_{t} \sim Normal(N_t, \sigma_o^2)$$  
 
-- $\Large C_{t} \sim Binomial(N_t, p)$  
-
-
---
-#### Survival
-
-- $\Large y_{t} \sim Bernoulli\big(z_t p\big)$  
+$$\Large C_{t} \sim Binomial(N_t, p)$$  
 
 
 --
-#### Occupancy
+### Survival
 
-- $\Large y_{t} \sim Bernoulli\big(z_t p_t\big)$ 
+$$\Large y_{t} \sim Bernoulli\big(z_t p\big)$$  
+
+
+--
+### Occupancy
+
+$$\Large y_{t} \sim Bernoulli\big(z_t p_t\big)$$ 
 
 ---
 ## Including covariates
@@ -414,7 +414,7 @@ p +
 <br/>
 
 --
-#### Produce unbiased estimates of population **indices** $\Large (Np)$ if detection probability has no pattern ove time  
+#### Produce unbiased estimates of population **indices** $\Large (Np)$ if detection probability has no pattern over time  
 <br/>
 
 --

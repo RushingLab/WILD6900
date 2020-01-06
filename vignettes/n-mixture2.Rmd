@@ -131,7 +131,7 @@ model{
         exp[j, k] <- N[j] * p[j, k] 
     
         ## Discrepancy 
-        ## (note small value added to demominator to avoid potential divide by zero)
+        ## (note small value added to denominator to avoid potential divide by zero)
         E[j, k] <- pow((y[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)
 
         ## Simulate new count from model
@@ -152,7 +152,7 @@ sink()
 
 With the code ready, we can fit the model[^2]: 
 
-[^2]: Note that this model can be a bit picky about initial values. Good initial values for $N$ are particularly important but sometimes it appears that if the initial values for the other parameters are too far from their true value, the model with throw an error (sometime about `invalid parent node`). I tried to experiment with different initial value functions but you may need to make some tweaks if you get an error
+[^2]: Note that this model can be a bit picky about initial values. Good initial values for $N$ are particularly important but sometimes it appears that if the initial values for the other parameters are too far from their true value, the model with throw an error (something about `invalid parent node`). I tried to experiment with different initial value functions but you may need to make some tweaks if you get an error
 
 ```{r eval = FALSE}
 ## Bundle data

@@ -26,96 +26,18 @@ To learn more about the CJS model, we will use the famous dipper data set (Lebre
 knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/d/d9/Cinclus_cinclus_V%C3%ADzirig%C3%B3.JPG")
 ```
 
-We will treat the capture histories as a $294 \times 7$ matrix, which can be read into `R` by copying and pasting the following code:
+We will treat the capture histories as a $294 \times 7$ matrix, which can be read into `R` with the following code:
 
 ```{r}
-ch <- matrix(c(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
-  0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
-  0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 
-  0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
-  1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
-  0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
-  0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 
-  0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
-  0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
-  0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0,
-  0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 
-  0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
-  0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
-  0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 
-  0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-  1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
-  0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 
-  0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 
-  1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 
-  0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 
-  0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 
-  0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 
-  1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 
-  0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
-  0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 
-  0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
-  1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
-  0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 
-  0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 
-  1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0,
-  0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 
-  0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 
-  1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 
-  1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 
-  0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
-  0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 
-  0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
-  1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
-  0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 
-  1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 
-  1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 
-  0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 
-  0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 
-  1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 
-  1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 
-  0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 
-  1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 
-  0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
-  1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
-  0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 
-  0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 
-  0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
-  0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
-  0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 
-  1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 
-  1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 
-  0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 
-  0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 
-  1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 
-  0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1,
-  1, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0,
-  0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 
-  0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
-  0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
-  0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 
-  0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 
-  1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 
-  0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 
-  0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 
-  1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 
-  0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 
-  1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 
-  1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 
-  1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 
-  0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 
-  0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 
-  1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 
-  1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 
-  1, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 
-  1, 1, 1, 0), nrow = 294, ncol = 7, byrow = TRUE)
+library(WILD6900)
+data("dipper")
 ```
 
 ### The basic CJS model in JAGS
 
 Next, let's create a `.jags` file with the model code. To start, we'll fit the most simple CJS model available - constant $\phi$ and $p$. Remember that the state-space version of the CJS model can be written as: 
 
-#### Process model, capture occassion 1
+#### Process model, capture occasion 1
 $$\large z_{i,f_1} = 1$$
 
 #### Process model, capture occasion 2+
@@ -162,10 +84,10 @@ Now we're ready to fit the model. First, we need to create the vector `f1`. We'l
 ```{r}
 ## The function min(which(x==1)) first returns which elements in the vector are 1 and then return the minimum of those values
 ## The `apply` function allows us to apply this function to each row (MARGIN = 1)
-f1 <- apply(X = ch, MARGIN = 1, FUN = function(x) min(which(x == 1)))
+f1 <- apply(X = dipper, MARGIN = 1, FUN = function(x) min(which(x == 1)))
 
 ## Bundle data
-jags.data <- list(y = ch, nInd = dim(ch)[1], nOcc = dim(ch)[2], f1 = f1)
+jags.data <- list(y = dipper, nInd = dim(dipper)[1], nOcc = dim(dipper)[2], f1 = f1)
 ```
 
 As we saw for occupancy and closed-population CMR models, it's important to provide good initial values for `z`. These initial values need to be stored in a matrix with the same dimensions as the capture history matrix. Also, we have to be sure **not** to provide initial values for any nodes that are deterministic (i.e., the first capture occasion, which we know is 1). So we'll create a matrix that has `NA` for occasions 1-f1 and then 1's after that:
@@ -221,35 +143,7 @@ Looks good!
 The original dipper data also includes information about the sex of each individual. Let's use these data to test whether survival differs for males vs. females. First, read in the sex data:
 
 ```{r}
-sex <- c("Female", "Female", "Female", "Female", "Female", "Female", "Female", "Female", 
-  "Female", "Female", "Female", "Female", "Female", "Female", "Female", "Female", 
-  "Female", "Female", "Female", "Female", "Female", "Female", "Male", "Male", "Male", 
-  "Male", "Male" , "Male", "Male" , "Male" , "Male" , "Male" , "Male" , "Male" , 
-  "Male", "Male", "Male", "Male", "Male", "Female", "Female", "Female", "Female", "Female", 
-  "Female", "Female", "Female", "Female", "Female", "Female", "Female", "Male", "Male", 
-  "Male", "Male", "Male", "Male", "Male", "Male", "Male", "Male", "Male", "Female", "Female", 
-  "Female", "Female", "Female", "Female", "Female", "Female", "Female", "Female", "Female", 
-  "Male", "Male", "Male" , "Male", "Male" , "Male", "Male" , "Male", "Male", "Male", "Male", 
-  "Male", "Female", "Female", "Female", "Female", "Female", "Female", "Female", "Male", "Male",
-  "Male", "Male", "Male" , "Male", "Male", "Male", "Male", "Female", "Female", "Female", "Female",
-  "Female", "Female", "Male" , "Male", "Male", "Female", "Female", "Female", "Female", "Female", 
-  "Female", "Male", "Male" , "Male", "Male", "Male", "Male", "Male", "Male", "Male", "Male", 
-  "Female", "Female", "Female", "Female", "Female", "Female", "Female", "Female", "Female", 
-  "Female", "Male" , "Male" , "Male", "Male", "Male", "Male", "Female", "Male", "Female", 
-  "Female", "Female", "Female", "Female", "Female", "Male", "Male", "Male", "Male", "Male", "Male",
-  "Female", "Female", "Female", "Female", "Male", "Male", "Male", "Female", "Female", "Male", 
-  "Male", "Male", "Male" , "Male", "Male", "Female", "Female", "Female", "Female", "Female", 
-  "Female", "Female", "Female", "Female", "Female", "Female", "Female", "Female", "Female", 
-  "Female", "Female", "Female", "Female", "Male", "Male", "Male", "Male", "Male", "Male", "Male",
-  "Male", "Male", "Male" , "Male", "Male", "Female", "Female", "Female", "Female", "Male", "Male", 
-  "Male", "Male", "Male" , "Male", "Male", "Male", "Female", "Female", "Male", "Male", "Male", 
-  "Male" , "Female", "Male" , "Female", "Female", "Female", "Female", "Female", "Female", "Female",
-  "Female", "Female", "Female", "Female", "Female", "Female", "Female", "Female", "Female", "Female",
-  "Female", "Female", "Female", "Male", "Male", "Male", "Male", "Male", "Male", "Male", "Male", "Male" ,
-  "Male", "Male", "Female", "Female", "Female", "Female", "Male", "Male", "Male", "Male", "Male", "Male",
-  "Male", "Female", "Female", "Male" , "Female", "Female", "Male", "Female", "Female", "Female", 
-  "Female", "Female", "Female", "Female", "Male", "Male", "Male", "Male", "Male", "Female", "Male",
-  "Female", "Female", "Male" , "Male", "Male", "Male", "Female", "Female", "Male", "Female", "Male") 
+data("sex")
 ```
 
 ### The model
@@ -295,7 +189,7 @@ No need to re-create the `f1` vector so all we need to do is add the vector with
 sex <- as.numeric(as.factor(sex))
 
 ## Bundle data
-jags.data <- list(y = ch, nInd = dim(ch)[1], nOcc = dim(ch)[2], f1 = f1, sex = sex)
+jags.data <- list(y = dipper, nInd = dim(dipper)[1], nOcc = dim(dipper)[2], f1 = f1, sex = sex)
 ```
 
 As we saw for occupancy and closed-population CMR models, it's important to provide good initial values for `z`. These initial values need to be stored in a matrix with the same dimensions as the capture history matrix. Also, we have to be sure **not** to provide initial values for any nodes that are deterministic (i.e., the first capture occasion, which we know is 1). So we'll create a matrix that has `NA` for occasions 1-f1 and then 1's after that:

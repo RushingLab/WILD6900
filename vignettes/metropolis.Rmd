@@ -1,5 +1,5 @@
 ---
-title: "Metroplis sampler for a simple linear regression"
+title: "Metropolis sampler for a simple linear regression"
 author: "WILD6900"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -21,12 +21,12 @@ library(WILD6900)
 ```
 
 
-In this activity, we will use `R` to create a simple Metroplis sampler to estimate the posterior distributions of the parameters in a linear regression model. This example is slightly more complicated than the sampler we developed during lecture because instead of estimating the posterior distribution for a single parameter, we have to create a sampler that iterates the MCMC steps over multiple parameters. However, as you will see, this is not so hard. To check that the sampler does what we want it to do, we will use the simulated data we created in the [previous activity](https://rushinglab.github.io/WILD6900/articles/simulation.html) as input for the sampler and check that the posterior distributions match the data-generating parameters. 
+In this activity, we will use `R` to create a simple Metropolis sampler to estimate the posterior distributions of the parameters in a linear regression model. This example is slightly more complicated than the sampler we developed during lecture because instead of estimating the posterior distribution for a single parameter, we have to create a sampler that iterates the MCMC steps over multiple parameters. However, as you will see, this is not so hard. To check that the sampler does what we want it to do, we will use the simulated data we created in the [previous activity](https://rushinglab.github.io/WILD6900/articles/simulation.html) as input for the sampler and check that the posterior distributions match the data-generating parameters. 
 
 ***
 **Objectives**
 
-* Create a Metroplis sampler to estimate the parameters of a linear regression model  
+* Create a Metropolis sampler to estimate the parameters of a linear regression model  
 
 * Create custom functions to avoid copying/pasting code
   
@@ -57,7 +57,7 @@ When we generated the seed count data, we did so assuming a linear model that li
 $$y_i = \alpha + \beta * x_i + \epsilon_i$$
 $$\epsilon_i \sim Normal(0, \sigma^2)$$
 
-This model includes 3 random variables that we want to estimate posterior distributions for: $\alpha$, $\beta$, and $\sigma^2$ (remember that the $y_i$ and $x_i$ are *observed* and therefore treated as *fixed* and *known* rather than random variables governed by probability distrubtions). So:
+This model includes 3 random variables that we want to estimate posterior distributions for: $\alpha$, $\beta$, and $\sigma^2$ (remember that the $y_i$ and $x_i$ are *observed* and therefore treated as *fixed* and *known* rather than random variables governed by probability distributions). So:
 
 $$[\alpha, \beta, \sigma^2|y_i] \propto [y_i|\alpha, \beta, \sigma^2][\alpha][\beta][\sigma^2] \tag{1}$$
 
@@ -83,7 +83,7 @@ $$[\tau] = Gamma(\tau|0.01, 0.01)$$
 
 # Custom functions
 
-At each interation of the sampler, we will need to perform the same set of tasks, namely estimating the likelihood and joint distributions for the proposed and current parameter values. We could do this by copying and pasting the code necessary for these calculations at each point in the sampler code where we need them. However, any time you find yourself copying and pasting the same code more than once or twice, it's a good idea to consider wrapping that code in a function, which will do here. 
+At each iteration of the sampler, we will need to perform the same set of tasks, namely estimating the likelihood and joint distributions for the proposed and current parameter values. We could do this by copying and pasting the code necessary for these calculations at each point in the sampler code where we need them. However, any time you find yourself copying and pasting the same code more than once or twice, it's a good idea to consider wrapping that code in a function, which will do here. 
 
 ## Function for calculating likelihood
 
@@ -100,7 +100,7 @@ Given values of $\alpha$, $\beta$, and $\tau$, we can estimate the likelihood in
   sum(dnorm(y, lp, sigma, log = TRUE)) 
 ```
 
-To turn this code into a function, first open a new script and call it  `calc_like.R`. Save it in the `R/` sub-directory. This script will contain the fuction code. The function code is: 
+To turn this code into a function, first open a new script and call it  `calc_like.R`. Save it in the `R/` sub-directory. This script will contain the function code. The function code is: 
 
 ```{r}
 calc_like <- function(y, alpha, beta, tau, x) {
@@ -140,14 +140,14 @@ priorTau <- function(tau, shape1 = 0.01, rate1 = 0.01){
 
 ## Metropolis sampler
 
-Now we are ready to create the sampler. Remember that when there are mutiple parameters, we need to define the full conditionals. For each random variable in the model, we define the full conditional by including any element on the right hand side of eq. 1 that contains the parameter (note the change to $\tau$):
+Now we are ready to create the sampler. Remember that when there are multiple parameters, we need to define the full conditionals. For each random variable in the model, we define the full conditional by including any element on the right hand side of eq. 1 that contains the parameter (note the change to $\tau$):
 
 $$[\alpha|.] = [y_i|\alpha, \beta, \tau][\alpha]$$
 $$[\beta|.] = [y_i|\alpha, \beta, \tau][\beta]$$
 
 $$[\tau|.] = [y_i|\alpha, \beta, \tau][\tau]$$
 
-In the sampler, we loop over each parameter, going through the Metroplis steps for each and treating the other parameters as known (based on their current value in the chain). If this in not clear, walking through the `R` code will hopefully make it more concrete (don't worry about trying to copy and run the code in this section, which is simply for illustration. In the next section, we will *slightly* modify this code to run the sampler for our seed count data). 
+In the sampler, we loop over each parameter, going through the Metropolis steps for each and treating the other parameters as known (based on their current value in the chain). If this in not clear, walking through the `R` code will hopefully make it more concrete (don't worry about trying to copy and run the code in this section, which is simply for illustration. In the next section, we will *slightly* modify this code to run the sampler for our seed count data). 
 
 First, we set the length of our chains, set the tuning parameter for the proposal distribution, and create an empty data frame to store the samples and a binary variable for estimating the acceptance rate:
 
@@ -164,7 +164,7 @@ First, we set the length of our chains, set the tuning parameter for the proposa
                         beta = numeric(nIter),
                         tau = numeric(nIter),
                         alpha.accept = 0,
-                        beta.accept = 0
+                        beta.accept = 0,
                         tau.accept = 0)
 ```
 
@@ -255,7 +255,7 @@ Next we do the same thing for $\beta$, using the new value of $alpha$ (`mcmc_df$
     }
 ```
 
-Finally, we update $\tau$ using the new values of both $\alpha$ and $\beta$. The only difference here is that because $\tau$ has to be $>0$, the normal proposal distrbution we used for $\alpha$ and $\beta$ will not work (it could create negative values). As we learned in lecture, you could create a proposal distribution that generates positive value (e.g., gamma) and use moment matching to estimate the parameters with regards to the current $\tau$ and the tuning parameter. We'll use a slightly less efficient approach here to demonstrate there are different ways to enforcing the behavior we want in the sampler. In this cases, will simply add a small value to the current $\tau$ and automatically reject the proposed value if it's less than 0. The small value can be negative or positive to allow us to explore the posterior. 
+Finally, we update $\tau$ using the new values of both $\alpha$ and $\beta$. The only difference here is that because $\tau$ has to be $>0$, the normal proposal distribution we used for $\alpha$ and $\beta$ will not work (it could create negative values). As we learned in lecture, you could create a proposal distribution that generates positive value (e.g., gamma) and use moment matching to estimate the parameters with regards to the current $\tau$ and the tuning parameter. We'll use a slightly less efficient approach here to demonstrate there are different ways to enforcing the behavior we want in the sampler. In this cases, will simply add a small value to the current $\tau$ and automatically reject the proposed value if it's less than 0. The small value can be negative or positive to allow us to explore the posterior. 
 
 ```{r eval = FALSE}  
 ########################
@@ -459,7 +459,7 @@ At this point, you should be able to run the script from start to finish and cre
 
 # Checking the output
 
-Now we can determine whether the sampler returns the data generating values from our data simulation. When assessing the output of MCMC chains, a good first diagnostic is usually checking the traceplots:
+Now we can determine whether the sampler returns the data generating values from our data simulation. When assessing the output of MCMC chains, a good first diagnostic is usually checking the trace plots:
 
 ```{r fig.width=7, fig.height=4}
 ggplot(mcmc_df, aes(x = x, y = alpha)) + geom_path()
