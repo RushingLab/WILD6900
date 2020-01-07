@@ -26,7 +26,7 @@ library(WILD6900)
 ---
 ## Ecology $^1$
 
-> the comprehensive sicence of the relationship of the organism to the environment (Haeckel 1866)
+> the comprehensive science of the relationship of the organism to the environment (Haeckel 1866)
 
 <br/>
 > the study of the natural environment, particularly the interrelationships between organisms and their surroundings (Ricklefs 1973)
