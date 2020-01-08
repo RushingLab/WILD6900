@@ -7,9 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Introduction to N-mixture models • WILD6900</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Introduction to N-mixture models">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -190,14 +189,13 @@
 <!--/.navbar -->
 
       
-
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Introduction to N-mixture models</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2020-01-04</h4>
+            <h4 class="date">2020-01-08</h4>
       
       
       <div class="hidden name"><code>n-mixture1.Rmd</code></div>
@@ -211,50 +209,50 @@
 <h2 class="hasAnchor">
 <a href="#the-constant-model" class="anchor"></a>The “constant” model</h2>
 <p>In the constant model, we assume that every site has the same expected abundance and detection probability. Start by setting the data-generating values:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>lambda &lt;-<span class="st"> </span><span class="dv">6</span></span>
-<span id="cb1-2"><a href="#cb1-2"></a>p &lt;-<span class="st"> </span><span class="fl">0.4</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">lambda &lt;-<span class="st"> </span><span class="dv">6</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">p &lt;-<span class="st"> </span><span class="fl">0.4</span></a></code></pre></div>
 <p>Now set the number of sites and number of visits:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>J &lt;-<span class="st"> </span><span class="dv">200</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>K &lt;-<span class="st"> </span><span class="dv">3</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">J &lt;-<span class="st"> </span><span class="dv">200</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">K &lt;-<span class="st"> </span><span class="dv">3</span></a></code></pre></div>
 <p>Next, simulate the state process, that is, the true abundance at each site:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>N &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Poisson.html">rpois</a></span>(<span class="dt">n =</span> J, <span class="dt">lambda =</span> lambda)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">N &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Poisson">rpois</a></span>(<span class="dt">n =</span> J, <span class="dt">lambda =</span> lambda)</a></code></pre></div>
 <p>Finally, simulate the observation process. We will first create an empty matrix to store the counts, then fill in each column using <code>rbinom</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>y &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> J, <span class="dt">ncol =</span> K)</span>
-<span id="cb4-2"><a href="#cb4-2"></a></span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K){</span>
-<span id="cb4-4"><a href="#cb4-4"></a>  y[,i] &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span>(<span class="dt">n =</span> J, <span class="dt">size =</span> N, <span class="dt">prob =</span> p)</span>
-<span id="cb4-5"><a href="#cb4-5"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">matrix</a></span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> J, <span class="dt">ncol =</span> K)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>K){</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">  y[,i] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(<span class="dt">n =</span> J, <span class="dt">size =</span> N, <span class="dt">prob =</span> p)</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">}</a></code></pre></div>
 <p>On your own, write the JAGS code to fit the constant N-mixture model:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="kw"><a href="https://rdrr.io/r/base/sink.html">sink</a></span>(<span class="st">"jags/N-mixture.jags"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2"></a><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a><span class="st">   ## Priors</span></span>
-<span id="cb5-4"><a href="#cb5-4"></a></span>
-<span id="cb5-5"><a href="#cb5-5"></a><span class="st">   ## Likelihood</span></span>
-<span id="cb5-6"><a href="#cb5-6"></a><span class="st">   </span></span>
-<span id="cb5-7"><a href="#cb5-7"></a><span class="st">    "</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb5-8"><a href="#cb5-8"></a><span class="kw"><a href="https://rdrr.io/r/base/sink.html">sink</a></span>()</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"jags/N-mixture.jags"</span>)</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="st">   ## Priors</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">   ## Likelihood</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="st">   </span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="st">    "</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()</a></code></pre></div>
 <p>Now prepare the data and fit the model:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a></span>
-<span id="cb6-2"><a href="#cb6-2"></a>jags_data &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">y =</span> y, <span class="dt">J =</span> J, <span class="dt">K =</span> K)</span>
-<span id="cb6-3"><a href="#cb6-3"></a></span>
-<span id="cb6-4"><a href="#cb6-4"></a>jags_inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">lambda =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">10</span>),</span>
-<span id="cb6-5"><a href="#cb6-5"></a>                              <span class="dt">p =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),</span>
-<span id="cb6-6"><a href="#cb6-6"></a>                              <span class="dt">N =</span> <span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(y, <span class="dv">1</span>, max))}</span>
-<span id="cb6-7"><a href="#cb6-7"></a></span>
-<span id="cb6-8"><a href="#cb6-8"></a>parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"lambda"</span>, <span class="st">"p"</span>, <span class="st">"N"</span>)</span>
-<span id="cb6-9"><a href="#cb6-9"></a></span>
-<span id="cb6-10"><a href="#cb6-10"></a>nc &lt;-<span class="st"> </span><span class="dv">3</span></span>
-<span id="cb6-11"><a href="#cb6-11"></a>ni &lt;-<span class="st"> </span><span class="dv">10000</span></span>
-<span id="cb6-12"><a href="#cb6-12"></a>nb &lt;-<span class="st"> </span><span class="dv">2500</span></span>
-<span id="cb6-13"><a href="#cb6-13"></a>nt &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb6-14"><a href="#cb6-14"></a></span>
-<span id="cb6-15"><a href="#cb6-15"></a>Nmix_fit &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/jagsUI/man/jags.html">jags</a></span>(<span class="dt">data =</span> jags_data, <span class="dt">inits =</span> jags_inits,</span>
-<span id="cb6-16"><a href="#cb6-16"></a>                    <span class="dt">parameters.to.save =</span> parameters, <span class="dt">model.file =</span> <span class="st">"jags/N-mixture.jags"</span>,</span>
-<span id="cb6-17"><a href="#cb6-17"></a>                    <span class="dt">n.chains =</span> nc, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb, <span class="dt">n.thin =</span> nt, <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb6-18"><a href="#cb6-18"></a></span>
-<span id="cb6-19"><a href="#cb6-19"></a><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(Nmix_fit)</span>
-<span id="cb6-20"><a href="#cb6-20"></a></span>
-<span id="cb6-21"><a href="#cb6-21"></a>jagsUI<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/jagsUI/man/traceplot.html">traceplot</a></span>(Nmix_fit)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">jags_data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">y =</span> y, <span class="dt">J =</span> J, <span class="dt">K =</span> K)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">jags_inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">lambda =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">10</span>),</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">                              <span class="dt">p =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6">                              <span class="dt">N =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(y, <span class="dv">1</span>, max))}</a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"lambda"</span>, <span class="st">"p"</span>, <span class="st">"N"</span>)</a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10">nc &lt;-<span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11">ni &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12">nb &lt;-<span class="st"> </span><span class="dv">2500</span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13">nt &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15">Nmix_fit &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags_data, <span class="dt">inits =</span> jags_inits,</a>
+<a class="sourceLine" id="cb6-16" data-line-number="16">                    <span class="dt">parameters.to.save =</span> parameters, <span class="dt">model.file =</span> <span class="st">"jags/N-mixture.jags"</span>,</a>
+<a class="sourceLine" id="cb6-17" data-line-number="17">                    <span class="dt">n.chains =</span> nc, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb, <span class="dt">n.thin =</span> nt, <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb6-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb6-19" data-line-number="19"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(Nmix_fit)</a>
+<a class="sourceLine" id="cb6-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb6-21" data-line-number="21">jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/traceplot">traceplot</a></span>(Nmix_fit)</a></code></pre></div>
 <pre><code>#&gt; 
 #&gt; Processing function input....... 
 #&gt; 
@@ -280,56 +278,56 @@
 <p>Notice that because <span class="math inline">\(\lambda\)</span> is a site-level parameter (it varies among sites but not among occasions), we can include covariates that describe variation among sites that we think may influence abundance (e.g., habitat attributes, climate, etc.). Although the equation above contains only a single covariate, the model could be expanded to include others.</p>
 <p>In contrast, <span class="math inline">\(p\)</span> can vary both among sites <em>and</em> among occasions (it’s indexed by <span class="math inline">\(j\)</span> and <span class="math inline">\(k\)</span>). This means that we can include both site-level covariates (possibly including the same site-level covariates that influence <span class="math inline">\(\lambda_j\)</span>) and occasion-level covariates (e.g., weather, observer, etc.). Again, the equation above could be expanded to include additional covariates.</p>
 <p>When we write this model in JAGS (and any other model that includes covariates), it is often beneficial to parameterize the GLMs using a vector of coefficients rather than scalars. The data then goes in as a matrix or array and we use vectorization or matrix algebra to compute the linear predictor. In this case:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="kw"><a href="https://rdrr.io/r/base/sink.html">sink</a></span>(<span class="st">"jags/N-mixture2.jags"</span>)</span>
-<span id="cb8-2"><a href="#cb8-2"></a><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"</span></span>
-<span id="cb8-3"><a href="#cb8-3"></a><span class="st">model{</span></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="st">    # Priors</span></span>
-<span id="cb8-5"><a href="#cb8-5"></a><span class="st">    for(i in 1:nAlpha){</span></span>
-<span id="cb8-6"><a href="#cb8-6"></a><span class="st">      alpha[i] ~ dnorm(0, 0.1)</span></span>
-<span id="cb8-7"><a href="#cb8-7"></a><span class="st">    }</span></span>
-<span id="cb8-8"><a href="#cb8-8"></a></span>
-<span id="cb8-9"><a href="#cb8-9"></a><span class="st">    for(i in 1:nBeta){</span></span>
-<span id="cb8-10"><a href="#cb8-10"></a><span class="st">      beta[i] ~ dnorm(0, 0.1)</span></span>
-<span id="cb8-11"><a href="#cb8-11"></a><span class="st">    }</span></span>
-<span id="cb8-12"><a href="#cb8-12"></a></span>
-<span id="cb8-13"><a href="#cb8-13"></a><span class="st">    # Likelihood</span></span>
-<span id="cb8-14"><a href="#cb8-14"></a><span class="st">    for(j in 1:J){</span></span>
-<span id="cb8-15"><a href="#cb8-15"></a><span class="st">     N[j] ~ dpois(lambda[j])</span></span>
-<span id="cb8-16"><a href="#cb8-16"></a><span class="st">     log(lambda[j]) &lt;- sum(alpha * XN[j, ])</span></span>
-<span id="cb8-17"><a href="#cb8-17"></a></span>
-<span id="cb8-18"><a href="#cb8-18"></a><span class="st">     for(k in 1:K){</span></span>
-<span id="cb8-19"><a href="#cb8-19"></a><span class="st">      y[j, k] ~ dbinom(p[j, k], N[j])</span></span>
-<span id="cb8-20"><a href="#cb8-20"></a><span class="st">      logit(p[j, k]) &lt;- sum(beta * Xp[k, , j])</span></span>
-<span id="cb8-21"><a href="#cb8-21"></a><span class="st">     }</span></span>
-<span id="cb8-22"><a href="#cb8-22"></a><span class="st">    }</span></span>
-<span id="cb8-23"><a href="#cb8-23"></a><span class="st">    </span></span>
-<span id="cb8-24"><a href="#cb8-24"></a><span class="st">    } # End model</span></span>
-<span id="cb8-25"><a href="#cb8-25"></a><span class="st">"</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb8-26"><a href="#cb8-26"></a><span class="kw"><a href="https://rdrr.io/r/base/sink.html">sink</a></span>()</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"jags/N-mixture2.jags"</span>)</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="st">model{</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">    # Priors</span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="st">    for(i in 1:nAlpha){</span></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="st">      alpha[i] ~ dnorm(0, 0.1)</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="st">    }</span></a>
+<a class="sourceLine" id="cb8-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="st">    for(i in 1:nBeta){</span></a>
+<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="st">      beta[i] ~ dnorm(0, 0.1)</span></a>
+<a class="sourceLine" id="cb8-11" data-line-number="11"><span class="st">    }</span></a>
+<a class="sourceLine" id="cb8-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb8-13" data-line-number="13"><span class="st">    # Likelihood</span></a>
+<a class="sourceLine" id="cb8-14" data-line-number="14"><span class="st">    for(j in 1:J){</span></a>
+<a class="sourceLine" id="cb8-15" data-line-number="15"><span class="st">     N[j] ~ dpois(lambda[j])</span></a>
+<a class="sourceLine" id="cb8-16" data-line-number="16"><span class="st">     log(lambda[j]) &lt;- sum(alpha * XN[j, ])</span></a>
+<a class="sourceLine" id="cb8-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb8-18" data-line-number="18"><span class="st">     for(k in 1:K){</span></a>
+<a class="sourceLine" id="cb8-19" data-line-number="19"><span class="st">      y[j, k] ~ dbinom(p[j, k], N[j])</span></a>
+<a class="sourceLine" id="cb8-20" data-line-number="20"><span class="st">      logit(p[j, k]) &lt;- sum(beta * Xp[k, , j])</span></a>
+<a class="sourceLine" id="cb8-21" data-line-number="21"><span class="st">     }</span></a>
+<a class="sourceLine" id="cb8-22" data-line-number="22"><span class="st">    }</span></a>
+<a class="sourceLine" id="cb8-23" data-line-number="23"><span class="st">    </span></a>
+<a class="sourceLine" id="cb8-24" data-line-number="24"><span class="st">    } # End model</span></a>
+<a class="sourceLine" id="cb8-25" data-line-number="25"><span class="st">"</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb8-26" data-line-number="26"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()</a></code></pre></div>
 <p>where <code>alpha</code> and <code>beta</code> are vectors containing the intercept and slope coefficients, <code>XN</code> is a matrix with one row per site and one column per covariate (including a column of 1’s for the intercept), and <code>Xp</code> is a 3-d array with dimensions <span class="math inline">\(K \times x \times J\)</span> (where <span class="math inline">\(x\)</span> is the number of covariates in the detection model, including the intercept).</p>
 <p>This parameterization has a few benefits. First, it can speed up model fitting, sometimes substantially. Second, you can easily add or remove covariates without having to change the model code. Notice that the length of the <code>alpha</code> and <code>beta</code> vectors is determined by <code>nAlpha</code> and <code>nBeta</code> so the priors can be changed by simply changing these values in the data object. In addition, the linear predictors are vectorized so they will be updated when the dimensions of <code>XN</code> and <code>Xp</code> are changed.</p>
 <p>To help with simulating data for this model, the <code>WILD6900</code> package includes a function called <code>sim_Nmix</code>:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>sim_data &lt;-<span class="kw"><a href="../reference/sim_Nmix.html">sim_Nmix</a></span>(<span class="dt">J =</span> <span class="dv">150</span>, <span class="dt">K =</span> <span class="dv">4</span>, <span class="dt">alpha =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.2</span>, <span class="fl">1.2</span>, <span class="fl">0.75</span>), <span class="dt">beta =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="fl">0.25</span>, <span class="dv">-1</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">sim_data &lt;-<span class="kw"><a href="../reference/sim_Nmix.html">sim_Nmix</a></span>(<span class="dt">J =</span> <span class="dv">150</span>, <span class="dt">K =</span> <span class="dv">4</span>, <span class="dt">alpha =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.2</span>, <span class="fl">1.2</span>, <span class="fl">0.75</span>), <span class="dt">beta =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="fl">0.25</span>, <span class="dv">-1</span>))</a></code></pre></div>
 <p>You can play with different values of <span class="math inline">\(J\)</span> and <span class="math inline">\(K\)</span> and change the number of covariates by adding or removing slope terms in the <code>alpha</code> and <code>beta</code> vectors.</p>
 <p>With the data simulated, all you have to do is package the data, set the MCMC settings, and run the model. Notice that we set <code>nAlpha</code> and <code>nBeta</code> based on the dimensions of the covariate arrays so that if we change the simulation, the data list will automatically update to the correct number of parameters.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>jags_data &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">y =</span> sim_data<span class="op">$</span>y, <span class="dt">XN =</span> sim_data<span class="op">$</span>XN, <span class="dt">Xp =</span> sim_data<span class="op">$</span>Xp,</span>
-<span id="cb10-2"><a href="#cb10-2"></a>                  <span class="dt">J =</span> sim_data<span class="op">$</span>J, <span class="dt">K =</span> sim_data<span class="op">$</span>K, </span>
-<span id="cb10-3"><a href="#cb10-3"></a>                  <span class="dt">nAlpha =</span> <span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(sim_data<span class="op">$</span>XN)[<span class="dv">2</span>], <span class="dt">nBeta =</span> <span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(sim_data<span class="op">$</span>Xp)[<span class="dv">2</span>])</span>
-<span id="cb10-4"><a href="#cb10-4"></a></span>
-<span id="cb10-5"><a href="#cb10-5"></a>jags_inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">N =</span> <span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(jags_data<span class="op">$</span>y, <span class="dv">1</span>, max) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)}</span>
-<span id="cb10-6"><a href="#cb10-6"></a></span>
-<span id="cb10-7"><a href="#cb10-7"></a>parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"lambda"</span>, <span class="st">"p"</span>, <span class="st">"N"</span>)</span>
-<span id="cb10-8"><a href="#cb10-8"></a></span>
-<span id="cb10-9"><a href="#cb10-9"></a>nc &lt;-<span class="st"> </span><span class="dv">3</span></span>
-<span id="cb10-10"><a href="#cb10-10"></a>ni &lt;-<span class="st"> </span><span class="dv">10000</span></span>
-<span id="cb10-11"><a href="#cb10-11"></a>nb &lt;-<span class="st"> </span><span class="dv">2500</span></span>
-<span id="cb10-12"><a href="#cb10-12"></a>nt &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb10-13"><a href="#cb10-13"></a></span>
-<span id="cb10-14"><a href="#cb10-14"></a>Nmix_fit &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/jagsUI/man/jags.html">jags</a></span>(<span class="dt">data =</span> jags_data, <span class="dt">inits =</span> jags_inits,</span>
-<span id="cb10-15"><a href="#cb10-15"></a>                    <span class="dt">parameters.to.save =</span> parameters, <span class="dt">model.file =</span> <span class="st">"jags/N-mixture2.jags"</span>,</span>
-<span id="cb10-16"><a href="#cb10-16"></a>                    <span class="dt">n.chains =</span> nc, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb, <span class="dt">n.thin =</span> nt, <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb10-17"><a href="#cb10-17"></a></span>
-<span id="cb10-18"><a href="#cb10-18"></a><span class="kw"><a href="https://rdrr.io/r/base/print.html">print</a></span>(Nmix_fit)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">jags_data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">y =</span> sim_data<span class="op">$</span>y, <span class="dt">XN =</span> sim_data<span class="op">$</span>XN, <span class="dt">Xp =</span> sim_data<span class="op">$</span>Xp,</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">                  <span class="dt">J =</span> sim_data<span class="op">$</span>J, <span class="dt">K =</span> sim_data<span class="op">$</span>K, </a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">                  <span class="dt">nAlpha =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(sim_data<span class="op">$</span>XN)[<span class="dv">2</span>], <span class="dt">nBeta =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(sim_data<span class="op">$</span>Xp)[<span class="dv">2</span>])</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">jags_inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">N =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(jags_data<span class="op">$</span>y, <span class="dv">1</span>, max) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)}</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"alpha"</span>, <span class="st">"beta"</span>, <span class="st">"lambda"</span>, <span class="st">"p"</span>, <span class="st">"N"</span>)</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9">nc &lt;-<span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10">ni &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11">nb &lt;-<span class="st"> </span><span class="dv">2500</span></a>
+<a class="sourceLine" id="cb10-12" data-line-number="12">nt &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb10-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb10-14" data-line-number="14">Nmix_fit &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags_data, <span class="dt">inits =</span> jags_inits,</a>
+<a class="sourceLine" id="cb10-15" data-line-number="15">                    <span class="dt">parameters.to.save =</span> parameters, <span class="dt">model.file =</span> <span class="st">"jags/N-mixture2.jags"</span>,</a>
+<a class="sourceLine" id="cb10-16" data-line-number="16">                    <span class="dt">n.chains =</span> nc, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb, <span class="dt">n.thin =</span> nt, <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb10-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb10-18" data-line-number="18"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(Nmix_fit)</a></code></pre></div>
 <pre><code>#&gt; 
 #&gt; Processing function input....... 
 #&gt; 
@@ -343,15 +341,14 @@
 #&gt; 
 #&gt; Done.</code></pre>
 <p>You may need to run longer chains for this model to converge but the parameter estimates should look pretty close to the data-generating values. For example, the expected abundance at each site:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(Nmix_fit<span class="op">$</span>mean<span class="op">$</span>lambda <span class="op">~</span><span class="st"> </span>sim_data<span class="op">$</span>lam)</span>
-<span id="cb12-2"><a href="#cb12-2"></a><span class="kw"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(Nmix_fit<span class="op">$</span>mean<span class="op">$</span>lambda <span class="op">~</span><span class="st"> </span>sim_data<span class="op">$</span>lam)</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dv">0</span>, <span class="dv">1</span>)</a></code></pre></div>
 <p><img src="n-mixture1_files/figure-html/unnamed-chunk-12-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>This concludes our investigation of the basic N-mixture model. On your own, play with the simulation function by changing not only the parameters in the GLM but also the number of sites <span class="math inline">\(J\)</span> and the number of visits <span class="math inline">\(K\)</span>. How does your ability to estimate the parameters change based on the degree of spatial and temporal replication?</p>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -365,20 +362,17 @@
 </div>
 
 
-
       <footer><div class="copyright">
   <p>Developed by Clark Rushing.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
 </div>
-
       </footer>
 </div>
 
   
-
 
   </body>
 </html>
