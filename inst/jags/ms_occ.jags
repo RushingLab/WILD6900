@@ -1,0 +1,39 @@
+
+model{
+  # Priors
+  psi ~ dunif(0, 1)
+  r ~ dunif(0, 1)
+  p1 ~ dunif(0, 1)
+
+  for(i in 1:3){
+   a[i] ~ dgamma(1, 1)
+   p2[i] <- a[i]/sum(a[])
+  }
+
+  # State vector
+  phi[1] <- 1- psi
+  phi[2] <- psi * (1 -r)
+  phi[3] <- psi * r
+
+  # Observation matrix
+  po[1,1] <- 1
+  po[1,2] <- 0
+  po[1,3] <- 0
+  po[2,1] <- 1 - p1
+  po[2,2] <- p1
+  po[2,3] <- 0
+  po[3,1] <- p2[1]
+  po[3,2] <- p2[2] 
+  po[3,3] <- p2[3]
+
+  # Likelihood
+  for(s in 1:N){
+   # State model
+   z[s] ~ dcat(phi[])
+   # Observation model
+   for(k in 1:K){
+    y[s, k] ~ dcat(po[z[s],])
+   } # end k loop
+  } # end s loop
+} # end model
+    

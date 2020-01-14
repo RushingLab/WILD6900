@@ -1,0 +1,145 @@
+---
+title: "WILD6900"
+subtitle: "Homework 7: Multi-state occupancy model"
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output: html_document
+
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warning = FALSE)
+library(WILD6900)
+```
+
+***
+
+**Due date: 23 April, 2020**
+
+Refer to the [instructions for submitting homework assignments](https://rushinglab.github.io/WILD6900/articles/homework.html) prior to submission
+
+***
+
+In this homework assignment, you will continue to practice writing and fitting multi-state models. Specifically, you will fit a multi-state occupancy model to estimate the probabilities that a site is occupied *and* that individuals are using the site for reproduction. In addition to demonstrating the flexibility of the multi-state framework, this model is a slight extension of the models we saw in class. Specifically, in this case we assume that the observations of the state process are not perfect - we might mis-classify a site that is occupied with reproduction as occupied without reproduction (or unoccupied). 
+
+## The state model
+
+In this example, we will assume a static occupancy model; that is, we conduct multiple surveys over a single season and our goal is to determine whether each site is: unoccupied, occupied without reproduction, or occupied with reproduction. Because we are not trying to model change from in occupancy status over time, the state model is relatively simple. 
+
+Remember that in the standard occupancy model, a site can be occupied with probability $\psi$ or unoccupied with probability $1 - \psi$. Assuming that, conditional on occupancy, reproduction happens with probability $r$, the state matrix associated with the multi-state model has three states. 
+
+> 1) The code below will create a matrix when your .Rmd file is rendered as html. As written, each `0` is one element of the matrix. Replace the relevant `0`'s with the appropriate probability statement (combination of $\psi$ and $r$) that describes the probability of being in each occupancy state for this model:
+
+
+$$\begin{bmatrix}
+    0\\
+    0\\
+    0
+\end{bmatrix}$$
+
+
+## The observation model
+
+> 2) This model has three observation levels. What are they? 
+
+**Type you answer here**
+
+Assume that if the site is unoccupied, we always observe "not seen". Furthermore, if the site is occupied without reproduction, we can detect the species with probability $p_1$ but never falsely observe reproduction. However, if the site is occupied with reproduction, there is a chance that we could 1) fail to detect the species is present at all ($p_{2,1}$), 2) detect the species is present but fail to detect signs of reproduction( $p_{2,2}$), or 3) correctly observe signs of reproduction ($p_{2,3}$). 
+
+> 3) Fill out the observation matrix below with the appropriate probabilities for each observation given the true state of the site:
+
+$$\begin{bmatrix}
+    0 & 0 & 0\\
+    0 & 0 & 0\\
+    0 & 0 & 0
+\end{bmatrix}$$
+
+## The model
+
+In the chunk below, write the JAGS code to fit this model. Remember that $p_{2,1}$, $p_{2,2}$, and $p_{2,3}$ must sum to one (look back at the last lab if you need a hint on how to write the Dirichlet prior in JAGS). 
+
+After writing the model, run the code within this chunk manually and then leave `eval = FALSE` when you knit the document. 
+
+```{r eval = FALSE}
+sink("ms_occ.jags")
+cat("
+model{
+  # Priors
+
+
+  # State vector
+  phi[1] <- 
+  phi[2] <- 
+  phi[3] <- 
+
+  # Observation matrix
+  po[1,1] <- 
+  po[1,2] <- 
+  po[1,3] <- 
+  po[2,1] <- 
+  po[2,2] <- 
+  po[2,3] <- 
+  po[3,1] <- 
+  po[3,2] <- 
+  po[3,3] <- 
+
+  # Likelihood
+  for(s in 1:N){
+   # State model
+
+   # Observation model
+   for(k in 1:K){
+
+   } # end k loop
+  } # end s loop
+} # end model
+    ", fill = TRUE)
+sink()
+
+```
+
+
+## Fitting the model
+
+Along with this homework assignment, you were given a data set on the observed status of 40 long-eared owl breeding territories. Each site was surveyed 1-5 times with three possible observations: 0 = not seen, 1 = hooting adult, 2 = begging young. In the chunk below, read in the data, create the objects necessary to fit the model, and then fit the model in JAGS:
+
+```{r fit}
+### Read data
+
+### Convert data to a matrix
+
+### Recode data to match observation matrix above
+
+### Bundle data for JAGS
+
+### Initial values
+## no need for initial values for p2
+## you will however, need initial values for z (look back at occupancy model examples for hints on how to do this)
+
+### Parameters to monitor
+
+### MCMC settings
+
+### Call JAGS from R to fit model
+
+```
+
+
+## Assessing covergence
+
+In the chunk below, assess convergence of the model
+
+```{r convergence}
+
+```
+
+Did the model converge? 
+
+## Extensions
+
+This is a relatively simple model that several assumptions about constancy of the parameters in the model. 
+
+> 4) Explain at least one way this model could be extended to make it more realistic. Your explaination should include both a biological justification for the additional complexity and specific changes to the model you created above (provide JAGS code for the extended model, though you do not need to run the new model)
+
+**Type your answer here**

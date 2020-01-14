@@ -1,0 +1,243 @@
+---
+title: "WILD6900"
+subtitle: "Homework 5: Integrated count-occupancy model"
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output: html_document
+
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warning = FALSE, eval = FALSE)
+library(WILD6900)
+```
+
+***
+
+**Due date: 19 March, 2020 before class**
+
+After you have modified the code according to the instructions, change `eval = FALSE` to `eval = TRUE` in the `setup` chunk above (line 12). Once this option is changed, **do not** modify any of the chunk options below.  
+
+Refer to the [instructions for submitting homework assignments](https://rushinglab.github.io/WILD6900/articles/homework.html) prior to submission
+
+***
+
+In this homework assignment, you will practice simulating data and fitting an *integrated N-occupancy model*. As the name implies, this model combines an N-mixture count model with detection/non-detection data. This is potentially a very useful approach, especially in cases where replicated count data is available for a small number of sites but detection/non-detection data (possibly without replication) is available for a larger set of sites (e.g., historical data). By modeling $N$ as a function of covariates and $p$ as a function of $N$, the integrated N-occupancy model makes it possible to estimate $N$ at the sites with only detection/non-detection data! 
+
+## The N-mixture model
+
+We'll start with just the N-mixture portion of the model. The JAGS code below is meant as a starting point for the code you will write below:
+
+***
+**Important** - in order for the .Rmd file to knit properly, complete the model code below and then manually run the code to create the .jags file (highlighting the chunk below and clicking `Run` or `command + return`). Leave the `eval = FALSE` option set to false so that `knitr` does **not** try to run the code when you knit the document!
+
+***
+
+```{r eval = FALSE}
+sink("integrated_Nocc.jags")
+cat("
+model{
+    alpha0 ~ dnorm(0, 0.1)
+    alpha1 ~ dnorm(0, 0.1)
+    
+    p ~ dbeta(1, 1)
+    
+    # Likelihood
+    for(j in 1:J){
+      N[j] ~ dpois(lambda[j])
+      log(lambda[j]) <- alpha0 + alpha1 * x[j]
+    }
+    
+    for(j in 1:J){
+      for(k in 1:K){
+        y.count[j, k] ~ dbin(p, N[j])
+      }
+    }
+}
+    ", fill = TRUE)
+sink()
+```
+
+This model should look pretty familiar. We model the counts $y.count$ as:
+
+$$y.count_{j,k} \sim binomial(p, N_j)$$
+
+and the latent abundance of each site as:
+
+$$N_j \sim Poisson(\lambda_j)$$
+
+$$log(\lambda_j) = \alpha_0 + \alpha_1 x_j$$
+
+As you will see, modeling $\lambda_j$ as a function of covariate $x$ is key to linking the occupancy data to the true $N$ at the detection/non-detection sites.  
+
+Next, use the pseudo-code below to simulate data to fit this model:
+
+```{r}
+## 1) Number of sites with count data (J.count) = 50
+
+## 2) Number of replicate counts (K.count) = 4
+
+## 3a) Expected count (mu.lambda) = 2
+
+## 3b) alpha0 = log(expected count)
+
+## 3c) slope between x and lambda = 0.5
+
+## 3d) Detection probability (p) = 0.4
+
+## 4) Draw random values of x (x.count) from a normal distribution with mean = 0 sd = 1
+
+## 5) Calculate expected count (lambda.count) for each site
+
+## 6) Generate true abundance at each site (N.count) from Poisson distribution
+
+## 7a) Create empty matrix (y.count) to store counts for each site (rows) and visit (column)
+
+## 7b) Loop over sites, generate observed counts from binomial distribution 
+
+```
+
+With the data simulated, fit the N-mixture model:
+
+```{r}
+jags.data <- list(J = J.count,
+                  K = K.count,
+                  y.count = y.count, x = x.count)
+
+inits <- function(){list(alpha0 = rnorm(1), alpha1 = rnorm(1), p = runif(1),
+                         N = N.count)}
+
+params = c("alpha0", "alpha1", "p", "N")
+
+fit1 <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = params,
+                     model.file = "integrated_Nocc.jags", n.chains = 3, n.iter = 10000, n.burnin = 2500, n.thin = 2, parallel = TRUE)
+
+```
+
+Check the model for convergence. 
+
+## Adding the occupancy data
+
+Now let's assume that we have detection/non-detection data and measures of covariate $x$ from another set of sites. What is the relationship between detecting the species and the true abundance at each site? 
+
+- If the probability of detecting a single individual is $p$, the probability of *not* detecting an individual is $(1 - p)$
+
+- If there are $N$ individuals, the probability of not detecting *any* of them is $(1 - p)^N$
+
+- Therefore, the probability of detecting at least one individual is:
+
+$$P = 1 - (1 - p)^N$$
+
+This equation gives us a way to model the detection/non-detection data as a function of $N$. We estimate $p$ from the count data, $\lambda$ from the covariate $x$, and use the detection/non-detection data to both refine our estimates of the model parameters (we added 150 sites to the data set after all) and estimate $N$ at sites where we have neither counts nor replicate occupancy data. Pretty cool
+
+In the chunk below, modify the JAGS model to accommodate the occupancy data. Remember:
+
+- the first $j$ loop now loops over all sites (both the count and occupancy sites)
+
+- the `j` loop that corresponds to the observation model for `y.count` will now need to loop over just the `J.count` sites
+
+- you will need to add another loop that loops over the `J.occ` sites. Within each loop, you should estimate the species-level detection probability for that site (based on `N[j]`) as well as the observation model for the detection non-detection data
+
+- everything else stays the same
+
+```{r eval = FALSE}
+sink("integrated_Nocc2.jags")
+cat("
+model{
+    alpha0 ~ dnorm(0, 0.1)
+    alpha1 ~ dnorm(0, 0.1)
+    
+    p ~ dbeta(1, 1)
+    
+    # Likelihood
+    for(j in 1:J){
+      N[j] ~ dpois(lambda[j])
+      log(lambda[j]) <- alpha0 + alpha1 * x[j]
+    }
+    
+    for(j in 1:J){
+      for(k in 1:K){
+        y.count[j, k] ~ dbin(p, N[j])
+      }
+    }
+}
+    ", fill = TRUE)
+sink()
+```
+
+Now, complete the code below to simulate the detection/non-detection data:
+
+```{r}
+## 1) Number of sites with detection/non-detection data (J.occ) = 150
+
+## 2) Draw random values of x (x.occ) from a normal distribution with mean = 0 sd = 1
+
+
+## 3) Calculate expected count (lambda.occ) for each occupancy site
+
+
+## 4) Generate true abundance at each site (N.occ) from Poisson distribution
+
+
+## 5) Calculate the species-level probability of detection (P) for each site based on N.occ
+
+## 6) Randomly draw J.occ values from a binomial distribution with size = 1 and P to create observed detection/non-detection data (y.occ) 
+
+  
+```
+
+Before moving on with the model, plot `P ~ N.occ`:
+
+```{r}
+plot(P ~ N.occ)
+```
+
+> 1) What do you notice about the relationship between the overall species-level probability of detection and the abundance at each site?**
+
+
+Finally, fit the integrated model:
+
+```{r}
+## 1) Create an object J indicating the total number of sites in the study
+J.co <- J.count + J.occ
+
+## 2) Combine the covariate values into a single vector x
+X <- c(x.count, x.occ)
+
+## 3) Bundle the data
+jags.data <- list(J.co = J.co, J.c = J.count, J.o = J.occ, K = K.count, 
+                  y.count = y.count, X = X, N.occ = N.occ)
+
+## 4) Create initial values (especially for N!)
+inits <- function(){list(alpha0 = rnorm(1), alpha1 = rnorm(1), p = runif(1),
+                         N = c(N.count, N.occ))}
+
+## 5) Fit the model
+params <- c("alpha0", "alpha1", "p", "P", "N")
+
+fit2 <- jagsUI::jags(data = jags.data, inits = inits, parameters.to.save = params,
+                     model.file = "integrated_Nocc2.jags", n.chains = 3, n.iter = 10000,
+                     n.burnin = 2500, n.thin = 2, parallel = TRUE)
+
+## 6) Check for convergence (and re-run if necessary)
+print(fit2)
+```
+
+
+> 2) How did the model do at predicting abundance at both the count and detection/non-detection sites? Make a plot to show your answer.**
+
+
+```{r}
+## Insert plot code here
+              
+```
+
+
+> 3) Integrated models work by parameterizing different data sets in terms of shared parameters. What parameters are we using to integrate the count and occupancy data?**
+
+
+
+> 4) What assumption does this model make about the individual-level detection probabilities? How would you expect that violating this assumption influences inference from the model?**
+
+
