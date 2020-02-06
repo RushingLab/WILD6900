@@ -195,7 +195,7 @@
       <h1>Estimating apparent survival: Basic Cormack-Jolly-Seber models</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2020-01-14</h4>
+            <h4 class="date">2020-02-06</h4>
       
       
       <div class="hidden name"><code>cjs.Rmd</code></div>
@@ -317,12 +317,12 @@
 #&gt; adaptation = 100 iterations (sufficient),
 #&gt; burn-in = 2500 iterations and thin rate = 1,
 #&gt; yielding 22500 total samples from the joint posterior. 
-#&gt; MCMC ran in parallel for 0.138 minutes at time 2020-01-14 11:04:47.
+#&gt; MCMC ran in parallel for 0.144 minutes at time 2020-02-06 12:40:06.
 #&gt; 
-#&gt;             mean     sd    2.5%     50%   97.5% overlap0 f Rhat n.eff
-#&gt; phi        0.562  0.025   0.512   0.562   0.611    FALSE 1    1 22500
-#&gt; p          0.895  0.029   0.832   0.897   0.946    FALSE 1    1  6983
-#&gt; deviance 164.926 28.255 114.426 162.894 225.073    FALSE 1    1  4415
+#&gt;             mean     sd    2.5%     50%   97.5% overlap0 f  Rhat n.eff
+#&gt; phi        0.561  0.025   0.512   0.562   0.610    FALSE 1 1.000  7715
+#&gt; p          0.896  0.029   0.834   0.898   0.946    FALSE 1 1.001  6693
+#&gt; deviance 164.379 27.513 114.551 162.781 222.196    FALSE 1 1.000 16333
 #&gt; 
 #&gt; Successful convergence based on Rhat values (all &lt; 1.1). 
 #&gt; Rhat is the potential scale reduction factor (at convergence, Rhat=1). 
@@ -333,7 +333,7 @@
 #&gt; i.e., our confidence that the parameter is positive or negative.
 #&gt; 
 #&gt; DIC info: (pD = var(deviance)/2) 
-#&gt; pD = 399 and DIC = 563.9 
+#&gt; pD = 378.5 and DIC = 542.9 
 #&gt; DIC is an estimate of expected predictive error (lower is better).</code></pre>
 <p>Looks good!</p>
 </div>
@@ -428,20 +428,20 @@
 #&gt; adaptation = 100 iterations (sufficient),
 #&gt; burn-in = 2500 iterations and thin rate = 1,
 #&gt; yielding 22500 total samples from the joint posterior. 
-#&gt; MCMC ran in parallel for 0.128 minutes at time 2020-01-14 11:04:56.
+#&gt; MCMC ran in parallel for 0.159 minutes at time 2020-02-06 12:40:16.
 #&gt; 
 #&gt;              mean     sd    2.5%     50%   97.5% overlap0     f  Rhat
-#&gt; phi[1]      0.552  0.034   0.485   0.552   0.619    FALSE 1.000 1.000
-#&gt; phi[2]      0.571  0.035   0.501   0.571   0.638    FALSE 1.000 1.000
-#&gt; p           0.896  0.029   0.834   0.898   0.946    FALSE 1.000 1.001
-#&gt; delta.phi  -0.019  0.049  -0.114  -0.019   0.077     TRUE 0.648 1.000
-#&gt; deviance  164.212 27.651 114.034 162.797 221.859    FALSE 1.000 1.001
+#&gt; phi[1]      0.552  0.034   0.484   0.552   0.618    FALSE 1.000 1.000
+#&gt; phi[2]      0.571  0.035   0.503   0.571   0.639    FALSE 1.000 1.000
+#&gt; p           0.896  0.029   0.835   0.898   0.945    FALSE 1.000 1.001
+#&gt; delta.phi  -0.019  0.048  -0.114  -0.019   0.074     TRUE 0.653 1.000
+#&gt; deviance  164.660 27.686 115.021 162.836 223.457    FALSE 1.000 1.001
 #&gt;           n.eff
-#&gt; phi[1]     4546
-#&gt; phi[2]     6274
-#&gt; p          1795
+#&gt; phi[1]     6449
+#&gt; phi[2]     6346
+#&gt; p          2690
 #&gt; delta.phi 22500
-#&gt; deviance   1724
+#&gt; deviance   2073
 #&gt; 
 #&gt; Successful convergence based on Rhat values (all &lt; 1.1). 
 #&gt; Rhat is the potential scale reduction factor (at convergence, Rhat=1). 
@@ -452,7 +452,7 @@
 #&gt; i.e., our confidence that the parameter is positive or negative.
 #&gt; 
 #&gt; DIC info: (pD = var(deviance)/2) 
-#&gt; pD = 381.9 and DIC = 546.1 
+#&gt; pD = 382.9 and DIC = 547.6 
 #&gt; DIC is an estimate of expected predictive error (lower is better).</code></pre>
 <p>So we can see that there’s a 65% probability that male survival is higher than female survival. Not much evidence of a survival difference but see how simple it is to estimate derived parameters and their uncertainty?</p>
 </div>
