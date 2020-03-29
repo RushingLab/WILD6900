@@ -15,7 +15,7 @@ library(WILD6900)
 
 ***
 
-**Due date: 4 April, 2019 before class**
+**Due date: 4 April, 2020 before class**
 
 The exam consists of 5 questions, each worth 10 points. For each question, include all code necessary to format/clean data, create and fit model files, check convergence, and visualize model output. 
 
@@ -23,23 +23,55 @@ Refer to the [instructions for submitted homework assignments](https://rushingla
 
 ***
 
-### Question 1
+> 1) For each of the data types below, indicate a reasonable distribution that could be used to describe the data generating process. Type your answer in **bold** after each data type
 
-Linear model (create design matrix, fit using `lm` and design matrix)
+- Height of humans:
 
-### Question 2
+- Salinity:
 
-Linear model (create custom design matrix, fit using `lm` and design matrix)
+- 
 
-### Question 3
 
-Linear model (fit above in JAGS w/ informative prior, visually compare to lm)
+> 2) Prior question
 
-### Question 4
+
+
+> 3) Remember that a conventional t-test is used to test for differences the mean of two populations. A critical assumption of this method is equal variances - that is, both populations have the same variance in the measured response variable. 
+
+> 3a) If the equations below describe a standard t-test, what are the possible values of $x_i$? 
+
+$$y_i = \alpha + \beta \times x_i + \epsilon_i$$
+
+$$\epsilon_i \sim normal(0, \tau)$$
+
+> 3b) Change the above equations to represent a model with unequal variances. 
+
+> 3c) The JAGS code below can be used to fit the standard t-test. Change the code to match the model you described in question 3b (hint - there are numerous ways to code this model. One efficient way to do so is to recongize that x + 1 will always equal either 1 or 2. So if you have an object that is a vector of length 2, you can subset the first element or the second using each individual's value of x)
+
+```{r eval = FALSE}
+model{
+  # Priors
+  alpha ~ dnorm(0, 0.33)
+  beta ~ dnrom(0, 0.33)
+  tau ~ dunif(0, 10)
+  
+  # Likelihood
+  for(i in 1:N){
+    lp[i] <- alpha + beta * x[i]
+    y[i] ~ dnorm(lp[i], tau)
+  }
+} # end of model
+```
+
+> 3d) In the model above, what is the ecological interpretation of $\alpha$ and $\beta$?
+
+> 3e) In the model code above, create a new variable called alpha2 that measures the mean of group 2
+
+> 4) Custom design matrix using lm
 
 GLMM (logistic regression) in JAGS
 
 
-### Question 5
+> 5) Fit model 4 in JAGS
 
 State-space logistic regression in JAGS

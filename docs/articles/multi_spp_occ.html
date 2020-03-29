@@ -195,7 +195,7 @@
       <h1>Estimating species richness using hierarchical occupancy models</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2020-02-06</h4>
+            <h4 class="date">2020-03-28</h4>
       
       
       <div class="hidden name"><code>multi_spp_occ.Rmd</code></div>
@@ -288,7 +288,7 @@
 <p>Next, let’s write out the full model. At the top of the hierarchy, we need to decide which species are real and which are fake. We will define a random Bernoulli variable <span class="math inline">\(x_i\)</span> that is 1 for real specie and 0 for fake species with probability <span class="math inline">\(\omega\)</span> (or course for species that we detected, we know <span class="math inline">\(x_i\)</span> is 1)</p>
 <p><span class="math display">\[\Large x_i \sim Bernoulli(\omega)\]</span></p>
 <p>Next, we need to model the occupancy status of each species <span class="math inline">\(i\)</span> at each site <span class="math inline">\(j\)</span>:</p>
-<p><span class="math display">\[\Large z_{i,j} \sim Bernoulli(z_i \psi_i)\]</span></p>
+<p><span class="math display">\[\Large z_{i,j} \sim Bernoulli(x_i \psi_i)\]</span></p>
 <p>To treat species as random effects in this model, we will specify a distribution for the species-specific occupancy probabilities:</p>
 <p><span class="math display">\[\Large logit(\psi_i) \sim normal(\mu_{\psi}, \tau_{\psi})\]</span></p>
 <p>Next, we model the observations:</p>

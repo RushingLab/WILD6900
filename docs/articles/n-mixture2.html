@@ -195,7 +195,7 @@
       <h1>Advanced N-mixture models</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2020-02-06</h4>
+            <h4 class="date">2020-03-28</h4>
       
       
       <div class="hidden name"><code>n-mixture2.Rmd</code></div>
@@ -392,7 +392,7 @@
 <a href="#posterior-predictive-checks-1" class="anchor"></a>Posterior predictive checks</h2>
 <p>To check the model fit, let’s first estimate the Bayesian p-value:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(sal_fit1<span class="op">$</span>sims.list<span class="op">$</span>fit.rep <span class="op">&gt;</span><span class="st"> </span>sal_fit1<span class="op">$</span>sims.list<span class="op">$</span>fit)</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">#&gt; [1] 0.0009333</span></a></code></pre></div>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">#&gt; [1] 0.001289</span></a></code></pre></div>
 <p>Note that testing whether <code>fit.</code> is greater than <code>fit</code> will return a vector of 1’s (TRUE) and 0’s (FALSE) so the mean of this vector is the proportion of samples where the discrepancy of the simulated data was greater than the discrepancy of the observed data.</p>
 <p>We can also visualize these data:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sal_fit1<span class="op">$</span>sims.list<span class="op">$</span>fit.rep <span class="op">~</span><span class="st"> </span>sal_fit1<span class="op">$</span>sims.list<span class="op">$</span>fit)</a>
@@ -472,7 +472,7 @@
 <a href="#posterior-predictive-checks-2" class="anchor"></a>Posterior predictive checks</h3>
 <p>Now we can check the fit of the zero-inflated model:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(sal_fit2<span class="op">$</span>sims.list<span class="op">$</span>fit.rep <span class="op">&gt;</span><span class="st"> </span>sal_fit2<span class="op">$</span>sims.list<span class="op">$</span>fit)</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">#&gt; [1] 0.01302</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">#&gt; [1] 0.01276</span></a>
 <a class="sourceLine" id="cb11-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sal_fit2<span class="op">$</span>sims.list<span class="op">$</span>fit.rep<span class="op">~</span>sal_fit2<span class="op">$</span>sims.list<span class="op">$</span>fit)</a>
 <a class="sourceLine" id="cb11-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dv">0</span>, <span class="dv">1</span>)</a></code></pre></div>
 <p><img src="n-mixture2_files/figure-html/unnamed-chunk-15-1.png" width="576" style="display: block; margin: auto;"></p>
@@ -554,7 +554,7 @@
 <a href="#posterior-predictive-checks-3" class="anchor"></a>Posterior predictive checks</h3>
 <p>Now we can check the fit of the model with over-dispersion in both the abundance and observation models:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(sal_fit3<span class="op">$</span>sims.list<span class="op">$</span>fit.rep <span class="op">&gt;</span><span class="st"> </span>sal_fit3<span class="op">$</span>sims.list<span class="op">$</span>fit)</a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">#&gt; [1] 0.4855</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">#&gt; [1] 0.4908</span></a>
 <a class="sourceLine" id="cb15-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sal_fit3<span class="op">$</span>sims.list<span class="op">$</span>fit.rep<span class="op">~</span>sal_fit3<span class="op">$</span>sims.list<span class="op">$</span>fit)</a>
 <a class="sourceLine" id="cb15-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dv">0</span>, <span class="dv">1</span>)</a></code></pre></div>
 <p><img src="n-mixture2_files/figure-html/unnamed-chunk-20-1.png" width="576" style="display: block; margin: auto;"></p>
