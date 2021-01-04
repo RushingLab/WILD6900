@@ -1,45 +1,264 @@
 ---
-title: "WILD6900"
-subtitle: "Mid-term exam"
-author: "YOUR NAME HERE"
-date: "`r Sys.Date()`"
+title: "Mid-term Exam"
+author: "Your name here"
+date: "WILD6900 - Spring 2020"
 output: html_document
-
 ---
 
 ```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warning = FALSE, eval = FALSE)
-library(WILD6900)
+knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ***
+**Be sure to change "Your name here" above to your name**
 
-**Due date: 4 April, 2019 before class**
+**This is a take home exam. You are allowed to use whatever reference material you need (lecture notes, books, internet) but you must complete the exam _on your own_.** 
 
-The exam consists of 5 questions, each worth 10 points. For each question, include all code necessary to format/clean data, create and fit model files, check convergence, and visualize model output. 
+**The exam is worth 50 points total.**
 
-Refer to the [instructions for submitted homework assignments](https://rushinglab.github.io/WILD6900/articles/homework.html) prior to submission
+**You have one week from the date that the exam is assigned to complete the assignment**  
 
 ***
 
-### Question 1
+# Question 1
 
-Linear model (create design matrix, fit using `lm` and design matrix)
+Choosing appropriate distributions for both your data and parameters is central to Bayesian analysis. 
 
-### Question 2
+For each of the following data sets, provide:
 
-Linear model (create custom design matrix, fit using `lm` and design matrix)
+1) a **reasonable model** that could be used describe the data-generating process (i.e., the likelihood)
 
-### Question 3
+2) the **ecological interpretation of each parameter in the likelihood**
 
-Linear model (fit above in JAGS w/ informative prior, visually compare to lm)
+3) a **non-informative prior** for each parameter
 
-### Question 4
+***
+> Example: The number of times people wash their hands each day since the outbreak of coronavirus
 
-GLMM (logistic regression) in JAGS
+**Model**: $y_i \sim Poisson(\lambda)$
+
+**Interpretation**: $\lambda$ is the average number of times people wash their hands each day
+
+**Priors**: $\lambda \sim uniform(0, 100)$  
+
+***
+
+> 1a) The observed presence/absence of species *a* along $J$ transect surveys
+
+**Model**:
+
+**Interpretation**: 
+
+**Prior(s)**:
+
+> 1b) The number of individuals of species *b* counted on $J$ study plots (assuming all plots have the same expected number of individuals)
+
+**Model**: 
+
+**Interpretation**: 
+
+**Prior(s)**:  
+
+> 1c) The number of individuals of species *c* detected during a point count out of $N$ individuals that were present
+
+**Model**:
+
+**Interpretation**: 
+
+**Prior(s)**: 
+
+> 1d) The number of individuals of species $d$ in each of three disease states (susceptible, infected, recovered) out of $N$ sampled individuals
+
+**Model**: 
+
+**Interpretation**: 
+
+**Prior(s)**: 
 
 
-### Question 5
 
-State-space logistic regression in JAGS
+# Question 2
+
+Assume each of the following are published estimates of the parameters from question 1. For each example, use moment matching functions to generate an informative prior for your analysis. Hint - you will need to first choose an appropriate distribution and then look up the moment matching functions to covert the estimate (with associated uncertainty) into the correct parameter values of the chosen distribution.
+
+***
+> Example: A previous study found that, before the coronavirus outbreak, people were pretty bad about washing their hands, washing, on average, just 2 times per day ($\sigma^2 = 0.4$)
+
+Use gamma prior with parameters $shape = \frac{\mu^2}{\sigma^2}$ and $rate = \frac{\mu}{\sigma^2}$
+
+$$\lambda \sim gamma(shape = \frac{2^2}{0.4}=10, rate = \frac{2}{0.4}=5)$$
+
+***
+
+> 2a) Probability that species $a$ was present at a nearby study site estimated to be 0.4 ($\sigma^2$ = 0.08)
+
+$$put prior here$$
+
+> 2b) Average abundance of species $b$ at nearby study sites estimated to be 62 ($\sigma^2$ = 6.4)
+
+$$put prior here$$
+
+> 2c) Field experiment indicated that, on average, observers detected approximately 75% ($\sigma^2$ = 0.12) of individuals of species $c$ 
+
+$$put prior here$$
+
+> 2d) In a closely related species $e$, the proportion of the population in each class was, respectively, 0.45, 0.15, 0.4 
+
+$$put prior here$$
+
+# Question 3
+
+Thanks to the coronavirus outbreak, there is now big grant money available to better understand how many times individuals, on average, touch their face in an hour. To get in on the action, you decide to do a small pilot project by passively recording how many times undergraduates in the class you TA for touch their faces during a one hour lab. This pilot data generates the following observations from five students : 746, 554, 584, 661, 644. Assume that we can use a Poisson likelihood to describe these data.
+
+A previous study, which used a similar protocol but had a larger sample size (n = 74), found that, on average people touched their face 684 times per hour ($\sigma^2$ = 84). The conjugate prior for the Poisson distribution is the gamma distribution. That means that if we define a gamma prior for $\lambda$, we can estimate the posterior distribution of $\lambda$ without the need for MCMC. 
+
+
+> 3a) Convert the previous study results into the shape and scale parameters for the gamma prior (call them $shape_{prior}$ and $rate_{prior}$). 
+
+$$gamma(shape_{prior} = ?,rate_{prior} = ?)$$
+
+Because of the Poisson/gamma conjugacy, we know that the posterior distribution of $\lambda$ will also be a gamma distribution with parameters $shape_{posterior} = shape_{prior} + \sum_{i=1}^n y_i$ and $rate_{posterior} = rate_{prior} + n$, where $n$ is the sample size of the pilot study and $y$ are the observed values from the pilot study.
+
+> 3b) Calculate the posterior distribution of $\lambda$ given your data and the prior based on the previous study
+
+$$gamma(shape_{posterior} = ?, rate_{posterior} = ?)$$
+
+> 3c) What are the mean and variance of the estimated posterior?
+
+**Type answer here**
+
+> 3d) In the chunk below, create a graph showing the prior and posterior distributions of $\lambda$ (hint - dgamma() defaults to using shape/scale but we are parameterizing in terms of shape/rate so **explicitly** name the arguments in that function)
+
+```{r}
+# place figure code here
+```
+
+
+# Question 4
+
+Assume the following data come from a study that measured the mass of 6 frogs from two populations and three different habitat types within each population
+
+```{r}
+set.seed(3720)
+mass <- runif(20, 5, 20)
+pop <- factor(sample(c(1,2), 20, replace = TRUE))
+hab <- factor(sample(c(1,2,3), 20, replace = TRUE))
+```
+
+The following model matrix describes one possible model for these data (only first 6 individuals shown):
+
+```{r}
+model.matrix(lm(mass ~ pop * hab))[1:6, 1:6]
+```
+
+> 4a) Provide a brief interpretation of each parameter in this model
+
+`Intercept`:
+
+`pop2`:
+
+`hab2`:
+
+`hab3`:
+
+`pop2:hab2`:
+
+`pop2:hab3`:
+
+> 4b) Fit the model in R and then use the estimated coefficients to calculate the predicted mass of the first 6 individuals (show your work on the calculation, e.g., `Intercept + pop2 * 1 +... = ?; you do not need to show the output of the lm)
+
+**Predicted mass of individual 1**:
+
+**Predicted mass of individual 2**:
+
+**Predicted mass of individual 3**:
+
+**Predicted mass of individual 4**:
+
+**Predicted mass of individual 5**:
+
+**Predicted mass of individual 6**:
+
+
+An alternative way for formulate this model is:
+
+```{r}
+model.matrix(lm(mass ~ pop * hab - 1 - pop - hab))[1:6, 1:6]
+```
+
+> 4c) Provide a brief interpretation of each parameter in this model
+
+`pop1:hab1`:
+
+`pop2:hab1`:
+
+`pop1:hab2`:
+
+`pop2:hab2`:
+
+`pop1:hab3`:
+
+`pop2:hab3`:
+
+
+> 4d) Fit the model in R and then use the estimated coefficients to calculate the predicted mass of the first 6 individuals (show your work on the calculation as before)
+
+**Predicted mass of individual 1**:
+
+**Predicted mass of individual 2**:
+
+**Predicted mass of individual 3**:
+
+**Predicted mass of individual 4**:
+
+**Predicted mass of individual 5**:
+
+**Predicted mass of individual 6**:
+
+> 4e) Did the predicted body masses changed when the model changed?
+
+**Type your answer here**
+
+# Question 5
+
+Imagine a study that aims to determine how annual precipitation influences the distribution of a given species. Researchers sampled 150 study plots to record whether the species was present ($y = 1$) or absent ($y =0$). For the moment, we'll assume that the species is always detected if it is present (i.e., no false negatives). 
+
+The 150 sites were stratified across 10 geographically-distinct regions and researchers also measured annual precipitation at each plot ($x$). 
+
+> 5a) Assuming that all regions have the same baseline probability of presence, write a JAGS model in the chunk below that could be used to estimate the effect of rainfall on presence
+
+```
+model{
+write jags model here
+}
+
+```
+
+> 5b) Now assume that each region has its own **independent** baseline probability of presence. Rewrite the JAGS model to allow for different baseline probability across regions, treating region as a fixed effect
+
+```
+model{
+write jags model here
+}
+```
+
+> 5c) Baseline probability of presence is probably not totally independent across sites. Rewrite the JAGS model to allow for different baseline probability across regions, treating region as a random effect
+
+```
+model{
+write jags model here
+}
+```
+
+> 5d) In general, how would you expect the estimated baseline probabilities for each region to differ between the two models?
+
+**Type your answer here** 
+
+> 5e) Now assume that the effect of precipitation on presence probability differs among populations. Rewrite the JAGS model to allow for different effects of precipitation across regions, again treating region as a random effect
+
+```
+model{
+write jags model here
+}
+```
+
