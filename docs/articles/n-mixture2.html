@@ -7,9 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Advanced N-mixture models • WILD6900</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/headroom.min.js" integrity="sha256-DJFC1kqIhelURkuza0AvYal5RxMtpzLjFhsnVIeuk+U=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.9.4/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Advanced N-mixture models">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
@@ -190,14 +189,13 @@
 <!--/.navbar -->
 
       
-
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1>Advanced N-mixture models</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2020-01-04</h4>
+            <h4 class="date">2020-03-28</h4>
       
       
       <div class="hidden name"><code>n-mixture2.Rmd</code></div>
@@ -213,9 +211,9 @@
 <p>For this lab, we will use a published data set<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> containing replicate counts of Lanza’s Alpine Salamander (<em>Salamandra lanzai</em>), an endemic species to the Alps of northwestern Italy and eastern France, found only in a small area with altitudes of 1200–2650 m.</p>
 <p><img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Salamandra_lanzai_%28Franco_Andreone%29.jpeg" width="80%" style="display: block; margin: auto;"></p>
 <p>You can load the data using:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(WILD6900)</span>
-<span id="cb1-2"><a href="#cb1-2"></a><span class="kw"><a href="https://rdrr.io/r/utils/data.html">data</a></span>(<span class="st">"salamanders"</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a><span class="kw"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(salamanders)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(WILD6900)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"salamanders"</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(salamanders)</a></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">ID</th>
@@ -284,17 +282,17 @@
 </tbody>
 </table>
 <p>A maximum of 3 surveys were conducted at 28 sites. We can covert columns 2-4 into a <span class="math inline">\(28 \times 3\)</span> matrix so that the data can go into JAGS:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">### Store counts as JxK matrix</span></span>
-<span id="cb2-2"><a href="#cb2-2"></a>y &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(salamanders[,<span class="dv">2</span><span class="op">:</span><span class="dv">4</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co">### Store counts as JxK matrix</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">y &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(salamanders[,<span class="dv">2</span><span class="op">:</span><span class="dv">4</span>])</a></code></pre></div>
 <p>The researchers also recorded the time of the survey, which allows us to model detection probability as a function of time (it’s seems reasonable to assume that detection probability might change through the nighttime hours that salamander counts were conducted). In order to use these data as predictors in the model, however, we need to fill in the missing values. There are multiple ways to do this but we will simply replace the <code>NA</code> values with the mean survey time:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">### Store hour of survey as JxK matrix</span></span>
-<span id="cb3-2"><a href="#cb3-2"></a>hours &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span>(salamanders[,<span class="dv">5</span><span class="op">:</span><span class="dv">7</span>])</span>
-<span id="cb3-3"><a href="#cb3-3"></a></span>
-<span id="cb3-4"><a href="#cb3-4"></a><span class="co">### Fill in NA hours with mean survey time</span></span>
-<span id="cb3-5"><a href="#cb3-5"></a>hours[<span class="kw"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span>(hours)] &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(hours, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb3-6"><a href="#cb3-6"></a></span>
-<span id="cb3-7"><a href="#cb3-7"></a><span class="co">### Standardize hours</span></span>
-<span id="cb3-8"><a href="#cb3-8"></a>hours_c &lt;-<span class="st"> </span>(hours <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(hours))<span class="op">/</span><span class="kw"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span>(hours)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">### Store hour of survey as JxK matrix</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">hours &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/matrix">as.matrix</a></span>(salamanders[,<span class="dv">5</span><span class="op">:</span><span class="dv">7</span>])</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="co">### Fill in NA hours with mean survey time</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">hours[<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(hours)] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(hours, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">### Standardize hours</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8">hours_c &lt;-<span class="st"> </span>(hours <span class="op">-</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(hours))<span class="op">/</span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/sd">sd</a></span>(hours)</a></code></pre></div>
 </div>
 <div id="posterior-predictive-checks" class="section level2">
 <h2 class="hasAnchor">
@@ -327,85 +325,85 @@
 <h2 class="hasAnchor">
 <a href="#putting-ppc-into-practice" class="anchor"></a>Putting PPC into practice</h2>
 <p>Let’s first add the posterior predictive check code to the basic N-mixture model we saw in the last class (but this time with a covariate on <span class="math inline">\(p\)</span>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="kw"><a href="https://rdrr.io/r/base/sink.html">sink</a></span>(<span class="st">"jags/salamander_Nmixture.jags"</span>)</span>
-<span id="cb4-2"><a href="#cb4-2"></a><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"</span></span>
-<span id="cb4-3"><a href="#cb4-3"></a><span class="st">model{</span></span>
-<span id="cb4-4"><a href="#cb4-4"></a><span class="st">    # Priors</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a><span class="st">    lambda ~ dgamma(0.25, 0.25)</span></span>
-<span id="cb4-6"><a href="#cb4-6"></a><span class="st">    beta0 ~ dnorm(0, 0.1)</span></span>
-<span id="cb4-7"><a href="#cb4-7"></a><span class="st">    beta1 ~ dnorm(0, 0.1)</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a></span>
-<span id="cb4-9"><a href="#cb4-9"></a><span class="st">    # Likelihood</span></span>
-<span id="cb4-10"><a href="#cb4-10"></a><span class="st">    for(j in 1:J){</span></span>
-<span id="cb4-11"><a href="#cb4-11"></a><span class="st">      N[j] ~ dpois(lambda)</span></span>
-<span id="cb4-12"><a href="#cb4-12"></a></span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="st">      for(k in 1:K){</span></span>
-<span id="cb4-14"><a href="#cb4-14"></a><span class="st">        y[j, k] ~ dbinom(p[j, k], N[j])</span></span>
-<span id="cb4-15"><a href="#cb4-15"></a><span class="st">        logit(p[j, k]) &lt;- beta0 + beta1 * hours[j,k]</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a></span>
-<span id="cb4-17"><a href="#cb4-17"></a><span class="st">        ## Expected count at site j, survey k</span></span>
-<span id="cb4-18"><a href="#cb4-18"></a><span class="st">        exp[j, k] &lt;- N[j] * p[j, k] </span></span>
-<span id="cb4-19"><a href="#cb4-19"></a><span class="st">    </span></span>
-<span id="cb4-20"><a href="#cb4-20"></a><span class="st">        ## Discrepancy </span></span>
-<span id="cb4-21"><a href="#cb4-21"></a><span class="st">        ## (note small value added to denominator to avoid potential divide by zero)</span></span>
-<span id="cb4-22"><a href="#cb4-22"></a><span class="st">        E[j, k] &lt;- pow((y[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)</span></span>
-<span id="cb4-23"><a href="#cb4-23"></a></span>
-<span id="cb4-24"><a href="#cb4-24"></a><span class="st">        ## Simulate new count from model</span></span>
-<span id="cb4-25"><a href="#cb4-25"></a><span class="st">        y.rep[j, k] ~ dbinom(p[j, k], N[j])</span></span>
-<span id="cb4-26"><a href="#cb4-26"></a></span>
-<span id="cb4-27"><a href="#cb4-27"></a><span class="st">        ## Discrepancy </span></span>
-<span id="cb4-28"><a href="#cb4-28"></a><span class="st">        E.rep[j, k] &lt;- pow((y.rep[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)</span></span>
-<span id="cb4-29"><a href="#cb4-29"></a><span class="st">      } # end k loop</span></span>
-<span id="cb4-30"><a href="#cb4-30"></a><span class="st">    } # end j loop</span></span>
-<span id="cb4-31"><a href="#cb4-31"></a></span>
-<span id="cb4-32"><a href="#cb4-32"></a><span class="st">    # chi-squared test statistics</span></span>
-<span id="cb4-33"><a href="#cb4-33"></a><span class="st">    fit &lt;- sum(E[,])</span></span>
-<span id="cb4-34"><a href="#cb4-34"></a><span class="st">    fit.rep &lt;- sum(E.rep[,])</span></span>
-<span id="cb4-35"><a href="#cb4-35"></a><span class="st">}</span></span>
-<span id="cb4-36"><a href="#cb4-36"></a><span class="st">    "</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb4-37"><a href="#cb4-37"></a><span class="kw"><a href="https://rdrr.io/r/base/sink.html">sink</a></span>()</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"jags/salamander_Nmixture.jags"</span>)</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="st">model{</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="st">    # Priors</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="st">    lambda ~ dgamma(0.25, 0.25)</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="st">    beta0 ~ dnorm(0, 0.1)</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="st">    beta1 ~ dnorm(0, 0.1)</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="st">    # Likelihood</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="st">    for(j in 1:J){</span></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="st">      N[j] ~ dpois(lambda)</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="st">      for(k in 1:K){</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="st">        y[j, k] ~ dbinom(p[j, k], N[j])</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="st">        logit(p[j, k]) &lt;- beta0 + beta1 * hours[j,k]</span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="st">        ## Expected count at site j, survey k</span></a>
+<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="st">        exp[j, k] &lt;- N[j] * p[j, k] </span></a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="st">    </span></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="st">        ## Discrepancy </span></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="st">        ## (note small value added to denominator to avoid potential divide by zero)</span></a>
+<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="st">        E[j, k] &lt;- pow((y[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)</span></a>
+<a class="sourceLine" id="cb4-23" data-line-number="23"></a>
+<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="st">        ## Simulate new count from model</span></a>
+<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="st">        y.rep[j, k] ~ dbinom(p[j, k], N[j])</span></a>
+<a class="sourceLine" id="cb4-26" data-line-number="26"></a>
+<a class="sourceLine" id="cb4-27" data-line-number="27"><span class="st">        ## Discrepancy </span></a>
+<a class="sourceLine" id="cb4-28" data-line-number="28"><span class="st">        E.rep[j, k] &lt;- pow((y.rep[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)</span></a>
+<a class="sourceLine" id="cb4-29" data-line-number="29"><span class="st">      } # end k loop</span></a>
+<a class="sourceLine" id="cb4-30" data-line-number="30"><span class="st">    } # end j loop</span></a>
+<a class="sourceLine" id="cb4-31" data-line-number="31"></a>
+<a class="sourceLine" id="cb4-32" data-line-number="32"><span class="st">    # chi-squared test statistics</span></a>
+<a class="sourceLine" id="cb4-33" data-line-number="33"><span class="st">    fit &lt;- sum(E[,])</span></a>
+<a class="sourceLine" id="cb4-34" data-line-number="34"><span class="st">    fit.rep &lt;- sum(E.rep[,])</span></a>
+<a class="sourceLine" id="cb4-35" data-line-number="35"><span class="st">}</span></a>
+<a class="sourceLine" id="cb4-36" data-line-number="36"><span class="st">    "</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb4-37" data-line-number="37"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()</a></code></pre></div>
 <p>With the code ready, we can fit the model<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">## Bundle data</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>jags_dat &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">y =</span> y, <span class="dt">hours =</span> hours_c, <span class="dt">J =</span> <span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(y)[<span class="dv">1</span>], <span class="dt">K =</span> <span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(y)[<span class="dv">2</span>])</span>
-<span id="cb5-3"><a href="#cb5-3"></a></span>
-<span id="cb5-4"><a href="#cb5-4"></a><span class="co">## Initial values (see footnote)</span></span>
-<span id="cb5-5"><a href="#cb5-5"></a>inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">lambda =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">0</span>, <span class="dv">3</span>),</span>
-<span id="cb5-6"><a href="#cb5-6"></a>                         <span class="dt">beta0 =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">1</span>), <span class="dt">beta1 =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">1</span>),</span>
-<span id="cb5-7"><a href="#cb5-7"></a>                         <span class="dt">N =</span> <span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(y, <span class="dv">1</span>, max, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)}</span>
-<span id="cb5-8"><a href="#cb5-8"></a></span>
-<span id="cb5-9"><a href="#cb5-9"></a><span class="co">## Parameters to save</span></span>
-<span id="cb5-10"><a href="#cb5-10"></a>parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"lambda"</span>, <span class="st">"beta0"</span>, <span class="st">"beta1"</span>, <span class="st">"N"</span>, <span class="st">"fit"</span>, <span class="st">"fit.rep"</span>)</span>
-<span id="cb5-11"><a href="#cb5-11"></a></span>
-<span id="cb5-12"><a href="#cb5-12"></a><span class="co">## MCMC settings</span></span>
-<span id="cb5-13"><a href="#cb5-13"></a>ni &lt;-<span class="st"> </span><span class="dv">10000</span></span>
-<span id="cb5-14"><a href="#cb5-14"></a>nc &lt;-<span class="st"> </span><span class="dv">3</span></span>
-<span id="cb5-15"><a href="#cb5-15"></a>nb &lt;-<span class="st"> </span><span class="dv">2500</span></span>
-<span id="cb5-16"><a href="#cb5-16"></a>nt &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb5-17"><a href="#cb5-17"></a></span>
-<span id="cb5-18"><a href="#cb5-18"></a><span class="co">## Fit model</span></span>
-<span id="cb5-19"><a href="#cb5-19"></a>sal_fit1 &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/jagsUI/man/jags.html">jags</a></span>(<span class="dt">data =</span> jags_dat, <span class="dt">inits =</span> inits, <span class="dt">parameters.to.save =</span> parameters, </span>
-<span id="cb5-20"><a href="#cb5-20"></a>                         <span class="dt">model.file =</span> <span class="st">"inst/jags/salamander_Nmixture.jags"</span>, </span>
-<span id="cb5-21"><a href="#cb5-21"></a>                         <span class="dt">n.chains =</span> nc, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb, <span class="dt">n.thin =</span> nt,</span>
-<span id="cb5-22"><a href="#cb5-22"></a>                         <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## Bundle data</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">jags_dat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">y =</span> y, <span class="dt">hours =</span> hours_c, <span class="dt">J =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(y)[<span class="dv">1</span>], <span class="dt">K =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(y)[<span class="dv">2</span>])</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="co">## Initial values (see footnote)</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">lambda =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">0</span>, <span class="dv">3</span>),</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">                         <span class="dt">beta0 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1</span>), <span class="dt">beta1 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">                         <span class="dt">N =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(y, <span class="dv">1</span>, max, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)}</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">## Parameters to save</span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"lambda"</span>, <span class="st">"beta0"</span>, <span class="st">"beta1"</span>, <span class="st">"N"</span>, <span class="st">"fit"</span>, <span class="st">"fit.rep"</span>)</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">## MCMC settings</span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13">ni &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14">nc &lt;-<span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15">nb &lt;-<span class="st"> </span><span class="dv">2500</span></a>
+<a class="sourceLine" id="cb5-16" data-line-number="16">nt &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">## Fit model</span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19">sal_fit1 &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags_dat, <span class="dt">inits =</span> inits, <span class="dt">parameters.to.save =</span> parameters, </a>
+<a class="sourceLine" id="cb5-20" data-line-number="20">                         <span class="dt">model.file =</span> <span class="st">"inst/jags/salamander_Nmixture.jags"</span>, </a>
+<a class="sourceLine" id="cb5-21" data-line-number="21">                         <span class="dt">n.chains =</span> nc, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb, <span class="dt">n.thin =</span> nt,</a>
+<a class="sourceLine" id="cb5-22" data-line-number="22">                         <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <p>If your model doesn’t converge, try bumping up the number of iterations.</p>
 </div>
 <div id="posterior-predictive-checks-1" class="section level2">
 <h2 class="hasAnchor">
 <a href="#posterior-predictive-checks-1" class="anchor"></a>Posterior predictive checks</h2>
 <p>To check the model fit, let’s first estimate the Bayesian p-value:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(sal_fit1<span class="op">$</span>sims.list<span class="op">$</span>fit.rep <span class="op">&gt;</span><span class="st"> </span>sal_fit1<span class="op">$</span>sims.list<span class="op">$</span>fit)</span>
-<span id="cb6-2"><a href="#cb6-2"></a><span class="co">#&gt; [1] 0.001111</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(sal_fit1<span class="op">$</span>sims.list<span class="op">$</span>fit.rep <span class="op">&gt;</span><span class="st"> </span>sal_fit1<span class="op">$</span>sims.list<span class="op">$</span>fit)</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="co">#&gt; [1] 0.001289</span></a></code></pre></div>
 <p>Note that testing whether <code>fit.</code> is greater than <code>fit</code> will return a vector of 1’s (TRUE) and 0’s (FALSE) so the mean of this vector is the proportion of samples where the discrepancy of the simulated data was greater than the discrepancy of the observed data.</p>
 <p>We can also visualize these data:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(sal_fit1<span class="op">$</span>sims.list<span class="op">$</span>fit.rep <span class="op">~</span><span class="st"> </span>sal_fit1<span class="op">$</span>sims.list<span class="op">$</span>fit)</span>
-<span id="cb7-2"><a href="#cb7-2"></a><span class="kw"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sal_fit1<span class="op">$</span>sims.list<span class="op">$</span>fit.rep <span class="op">~</span><span class="st"> </span>sal_fit1<span class="op">$</span>sims.list<span class="op">$</span>fit)</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dv">0</span>, <span class="dv">1</span>)</a></code></pre></div>
 <p><img src="n-mixture2_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>If the simulate data is comparable to the observed data, the line should pass right through the middle of the points (50% larger, 50% smaller). In this case, both the plot and the p-value clearly our model is not a good fit.</p>
 <p>To get a sense of what’s causing the lack of fit, we can also plot the observed and simulated data side by side:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>fit_df &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">y =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(y), <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(sal_fit1<span class="op">$</span>mean<span class="op">$</span>y.rep)),</span>
-<span id="cb8-2"><a href="#cb8-2"></a>                     <span class="dt">data =</span> <span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Observed"</span>, <span class="st">"Simulated"</span>), <span class="dt">each =</span> <span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(y)))</span>
-<span id="cb8-3"><a href="#cb8-3"></a></span>
-<span id="cb8-4"><a href="#cb8-4"></a><span class="kw">ggplot</span>(fit_df, <span class="kw">aes</span>(<span class="dt">x =</span> y, <span class="dt">fill =</span> data)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">fit_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(y), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sal_fit1<span class="op">$</span>mean<span class="op">$</span>y.rep)),</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">                     <span class="dt">data =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Observed"</span>, <span class="st">"Simulated"</span>), <span class="dt">each =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(y)))</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="kw">ggplot</span>(fit_df, <span class="kw">aes</span>(<span class="dt">x =</span> y, <span class="dt">fill =</span> data)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>()</a></code></pre></div>
 <p><img src="n-mixture2_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>The observed data show a classic zero-inflated pattern - lots of zeros but also some values that are relatively large. The simulated data is trying to fit both the zeros and the non-zeros into a single Poisson distribution so it estimates a very small <span class="math inline">\(\lambda\)</span> (all the 0’s pull it down) but then that small expected values doesn’t allow for the larger counts in the observed data (remember that the variance of the Poisson distribution is <span class="math inline">\(\lambda\)</span> so small expected value means small variance)</p>
 </div>
@@ -417,72 +415,72 @@
 <p><span class="math display">\[\large y_{j,k} \sim binomial(N_j, p_{j,k})\]</span> <span class="math display">\[\large logit(p_{j,k}) = \beta_0 + \beta_1 \times hours_{j,k}\]</span></p>
 <p>where <span class="math inline">\(\omega\)</span> is the probability that a site is occupied. Note that by multiplying <span class="math inline">\(\lambda\)</span> by <span class="math inline">\(z_j\)</span>, we ensure that if the site is not occupied (<span class="math inline">\(z_j=0\)</span>), abundance at that site is 0.</p>
 <p>Tweaking the model to accommodate this zero-inflation is straightforward:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw"><a href="https://rdrr.io/r/base/sink.html">sink</a></span>(<span class="st">"jags/salamander_Nmixture_ZIP.jags"</span>)</span>
-<span id="cb9-2"><a href="#cb9-2"></a><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a><span class="st">model{</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a><span class="st">    # Priors</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a><span class="st">    omega ~ dbeta(1, 1)</span></span>
-<span id="cb9-6"><a href="#cb9-6"></a><span class="st">    lambda ~ dgamma(0.25, 0.25)</span></span>
-<span id="cb9-7"><a href="#cb9-7"></a><span class="st">    beta0 ~ dnorm(0, 0.1)</span></span>
-<span id="cb9-8"><a href="#cb9-8"></a><span class="st">    beta1 ~ dnorm(0, 0.1)</span></span>
-<span id="cb9-9"><a href="#cb9-9"></a></span>
-<span id="cb9-10"><a href="#cb9-10"></a><span class="st">    # Likelihood</span></span>
-<span id="cb9-11"><a href="#cb9-11"></a><span class="st">    for(j in 1:J){</span></span>
-<span id="cb9-12"><a href="#cb9-12"></a><span class="st">      z[j] ~ dbern(omega)</span></span>
-<span id="cb9-13"><a href="#cb9-13"></a><span class="st">      N[j] ~ dpois(lambda * z[j])</span></span>
-<span id="cb9-14"><a href="#cb9-14"></a></span>
-<span id="cb9-15"><a href="#cb9-15"></a><span class="st">      for(k in 1:K){</span></span>
-<span id="cb9-16"><a href="#cb9-16"></a><span class="st">        y[j, k] ~ dbinom(p[j, k], N[j])</span></span>
-<span id="cb9-17"><a href="#cb9-17"></a><span class="st">        logit(p[j, k]) &lt;- beta0 + beta1 * hours[j,k]</span></span>
-<span id="cb9-18"><a href="#cb9-18"></a></span>
-<span id="cb9-19"><a href="#cb9-19"></a><span class="st">        exp[j, k] &lt;- N[j] * p[j, k]</span></span>
-<span id="cb9-20"><a href="#cb9-20"></a><span class="st">        E[j, k] &lt;- pow((y[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)</span></span>
-<span id="cb9-21"><a href="#cb9-21"></a></span>
-<span id="cb9-22"><a href="#cb9-22"></a><span class="st">        y.rep[j, k] ~ dbinom(p[j, k], N[j])</span></span>
-<span id="cb9-23"><a href="#cb9-23"></a><span class="st">        E.rep[j, k] &lt;- pow((y.rep[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)</span></span>
-<span id="cb9-24"><a href="#cb9-24"></a><span class="st">      } # end k loop</span></span>
-<span id="cb9-25"><a href="#cb9-25"></a><span class="st">    } # end j loop</span></span>
-<span id="cb9-26"><a href="#cb9-26"></a></span>
-<span id="cb9-27"><a href="#cb9-27"></a><span class="st">    # Derived variables</span></span>
-<span id="cb9-28"><a href="#cb9-28"></a><span class="st">    fit &lt;- sum(E[,])</span></span>
-<span id="cb9-29"><a href="#cb9-29"></a><span class="st">    fit.rep &lt;- sum(E.rep[,])</span></span>
-<span id="cb9-30"><a href="#cb9-30"></a><span class="st">}</span></span>
-<span id="cb9-31"><a href="#cb9-31"></a><span class="st">    "</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb9-32"><a href="#cb9-32"></a><span class="kw"><a href="https://rdrr.io/r/base/sink.html">sink</a></span>()</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"jags/salamander_Nmixture_ZIP.jags"</span>)</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="st">model{</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="st">    # Priors</span></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="st">    omega ~ dbeta(1, 1)</span></a>
+<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="st">    lambda ~ dgamma(0.25, 0.25)</span></a>
+<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="st">    beta0 ~ dnorm(0, 0.1)</span></a>
+<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="st">    beta1 ~ dnorm(0, 0.1)</span></a>
+<a class="sourceLine" id="cb9-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb9-10" data-line-number="10"><span class="st">    # Likelihood</span></a>
+<a class="sourceLine" id="cb9-11" data-line-number="11"><span class="st">    for(j in 1:J){</span></a>
+<a class="sourceLine" id="cb9-12" data-line-number="12"><span class="st">      z[j] ~ dbern(omega)</span></a>
+<a class="sourceLine" id="cb9-13" data-line-number="13"><span class="st">      N[j] ~ dpois(lambda * z[j])</span></a>
+<a class="sourceLine" id="cb9-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb9-15" data-line-number="15"><span class="st">      for(k in 1:K){</span></a>
+<a class="sourceLine" id="cb9-16" data-line-number="16"><span class="st">        y[j, k] ~ dbinom(p[j, k], N[j])</span></a>
+<a class="sourceLine" id="cb9-17" data-line-number="17"><span class="st">        logit(p[j, k]) &lt;- beta0 + beta1 * hours[j,k]</span></a>
+<a class="sourceLine" id="cb9-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb9-19" data-line-number="19"><span class="st">        exp[j, k] &lt;- N[j] * p[j, k]</span></a>
+<a class="sourceLine" id="cb9-20" data-line-number="20"><span class="st">        E[j, k] &lt;- pow((y[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)</span></a>
+<a class="sourceLine" id="cb9-21" data-line-number="21"></a>
+<a class="sourceLine" id="cb9-22" data-line-number="22"><span class="st">        y.rep[j, k] ~ dbinom(p[j, k], N[j])</span></a>
+<a class="sourceLine" id="cb9-23" data-line-number="23"><span class="st">        E.rep[j, k] &lt;- pow((y.rep[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)</span></a>
+<a class="sourceLine" id="cb9-24" data-line-number="24"><span class="st">      } # end k loop</span></a>
+<a class="sourceLine" id="cb9-25" data-line-number="25"><span class="st">    } # end j loop</span></a>
+<a class="sourceLine" id="cb9-26" data-line-number="26"></a>
+<a class="sourceLine" id="cb9-27" data-line-number="27"><span class="st">    # Derived variables</span></a>
+<a class="sourceLine" id="cb9-28" data-line-number="28"><span class="st">    fit &lt;- sum(E[,])</span></a>
+<a class="sourceLine" id="cb9-29" data-line-number="29"><span class="st">    fit.rep &lt;- sum(E.rep[,])</span></a>
+<a class="sourceLine" id="cb9-30" data-line-number="30"><span class="st">}</span></a>
+<a class="sourceLine" id="cb9-31" data-line-number="31"><span class="st">    "</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb9-32" data-line-number="32"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()</a></code></pre></div>
 <p>And fitting the model is the same as before (but with one additional initial value):</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a></span>
-<span id="cb10-2"><a href="#cb10-2"></a>jags_dat &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">y =</span> y, <span class="dt">hours =</span> hours_c, <span class="dt">J =</span> <span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(y)[<span class="dv">1</span>], <span class="dt">K =</span> <span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(y)[<span class="dv">2</span>])</span>
-<span id="cb10-3"><a href="#cb10-3"></a></span>
-<span id="cb10-4"><a href="#cb10-4"></a>inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">lambda =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="dv">10</span>),</span>
-<span id="cb10-5"><a href="#cb10-5"></a>                         <span class="dt">omega =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>),</span>
-<span id="cb10-6"><a href="#cb10-6"></a>                         <span class="dt">beta0 =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">1</span>), <span class="dt">beta1 =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">1</span>),</span>
-<span id="cb10-7"><a href="#cb10-7"></a>                         <span class="dt">N =</span> <span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(y, <span class="dv">1</span>, max, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))}</span>
-<span id="cb10-8"><a href="#cb10-8"></a></span>
-<span id="cb10-9"><a href="#cb10-9"></a>parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"omega"</span>, <span class="st">"lambda"</span>, <span class="st">"beta0"</span>, <span class="st">"beta1"</span>, <span class="st">"N"</span>, <span class="st">"fit"</span>, <span class="st">"fit.rep"</span>, <span class="st">"y.rep"</span>)</span>
-<span id="cb10-10"><a href="#cb10-10"></a></span>
-<span id="cb10-11"><a href="#cb10-11"></a>ni &lt;-<span class="st"> </span><span class="dv">10000</span></span>
-<span id="cb10-12"><a href="#cb10-12"></a>nc &lt;-<span class="st"> </span><span class="dv">3</span></span>
-<span id="cb10-13"><a href="#cb10-13"></a>nb &lt;-<span class="st"> </span><span class="dv">2500</span></span>
-<span id="cb10-14"><a href="#cb10-14"></a>nt &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb10-15"><a href="#cb10-15"></a></span>
-<span id="cb10-16"><a href="#cb10-16"></a>sal_fit2 &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/jagsUI/man/jags.html">jags</a></span>(<span class="dt">data =</span> jags_dat, <span class="dt">inits =</span> inits, <span class="dt">parameters.to.save =</span> parameters, </span>
-<span id="cb10-17"><a href="#cb10-17"></a>                     <span class="dt">model.file =</span> <span class="st">"jags/salamander_Nmixture_ZIP.jags"</span>, </span>
-<span id="cb10-18"><a href="#cb10-18"></a>                     <span class="dt">n.chains =</span> nc, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb, <span class="dt">n.thin =</span> nt,</span>
-<span id="cb10-19"><a href="#cb10-19"></a>                     <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">jags_dat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">y =</span> y, <span class="dt">hours =</span> hours_c, <span class="dt">J =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(y)[<span class="dv">1</span>], <span class="dt">K =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(y)[<span class="dv">2</span>])</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">lambda =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="dv">10</span>),</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">                         <span class="dt">omega =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>),</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">                         <span class="dt">beta0 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1</span>), <span class="dt">beta1 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb10-7" data-line-number="7">                         <span class="dt">N =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(y, <span class="dv">1</span>, max, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))}</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9">parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"omega"</span>, <span class="st">"lambda"</span>, <span class="st">"beta0"</span>, <span class="st">"beta1"</span>, <span class="st">"N"</span>, <span class="st">"fit"</span>, <span class="st">"fit.rep"</span>, <span class="st">"y.rep"</span>)</a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11">ni &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb10-12" data-line-number="12">nc &lt;-<span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb10-13" data-line-number="13">nb &lt;-<span class="st"> </span><span class="dv">2500</span></a>
+<a class="sourceLine" id="cb10-14" data-line-number="14">nt &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb10-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb10-16" data-line-number="16">sal_fit2 &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags_dat, <span class="dt">inits =</span> inits, <span class="dt">parameters.to.save =</span> parameters, </a>
+<a class="sourceLine" id="cb10-17" data-line-number="17">                     <span class="dt">model.file =</span> <span class="st">"jags/salamander_Nmixture_ZIP.jags"</span>, </a>
+<a class="sourceLine" id="cb10-18" data-line-number="18">                     <span class="dt">n.chains =</span> nc, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb, <span class="dt">n.thin =</span> nt,</a>
+<a class="sourceLine" id="cb10-19" data-line-number="19">                     <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <div id="posterior-predictive-checks-2" class="section level3">
 <h3 class="hasAnchor">
 <a href="#posterior-predictive-checks-2" class="anchor"></a>Posterior predictive checks</h3>
 <p>Now we can check the fit of the zero-inflated model:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(sal_fit2<span class="op">$</span>sims.list<span class="op">$</span>fit.rep <span class="op">&gt;</span><span class="st"> </span>sal_fit2<span class="op">$</span>sims.list<span class="op">$</span>fit)</span>
-<span id="cb11-2"><a href="#cb11-2"></a><span class="co">#&gt; [1] 0.01458</span></span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(sal_fit2<span class="op">$</span>sims.list<span class="op">$</span>fit.rep<span class="op">~</span>sal_fit2<span class="op">$</span>sims.list<span class="op">$</span>fit)</span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="kw"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(sal_fit2<span class="op">$</span>sims.list<span class="op">$</span>fit.rep <span class="op">&gt;</span><span class="st"> </span>sal_fit2<span class="op">$</span>sims.list<span class="op">$</span>fit)</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="co">#&gt; [1] 0.01276</span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sal_fit2<span class="op">$</span>sims.list<span class="op">$</span>fit.rep<span class="op">~</span>sal_fit2<span class="op">$</span>sims.list<span class="op">$</span>fit)</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dv">0</span>, <span class="dv">1</span>)</a></code></pre></div>
 <p><img src="n-mixture2_files/figure-html/unnamed-chunk-15-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Hmm, a little better but still pretty poor fit.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>fit_df &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">y =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(y), <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(sal_fit2<span class="op">$</span>mean<span class="op">$</span>y.rep)),</span>
-<span id="cb12-2"><a href="#cb12-2"></a>                     <span class="dt">data =</span> <span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Observed"</span>, <span class="st">"Simulated"</span>), <span class="dt">each =</span> <span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(y)))</span>
-<span id="cb12-3"><a href="#cb12-3"></a></span>
-<span id="cb12-4"><a href="#cb12-4"></a><span class="kw">ggplot</span>(fit_df, <span class="kw">aes</span>(<span class="dt">x =</span> y, <span class="dt">fill =</span> data)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">fit_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(y), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sal_fit2<span class="op">$</span>mean<span class="op">$</span>y.rep)),</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">                     <span class="dt">data =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Observed"</span>, <span class="st">"Simulated"</span>), <span class="dt">each =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(y)))</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="kw">ggplot</span>(fit_df, <span class="kw">aes</span>(<span class="dt">x =</span> y, <span class="dt">fill =</span> data)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>()</a></code></pre></div>
 <p><img src="n-mixture2_files/figure-html/unnamed-chunk-16-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -494,77 +492,77 @@
 <p>We can try to account for this source of variability by including a random survey effect in the observation model:</p>
 <p><span class="math display">\[\large logit(p_{j,k}) = \beta_0 + \beta_1 \times hours_{j,k} + \epsilon_{j,k}\]</span></p>
 <p><span class="math display">\[\large \epsilon_{j,k} \sim normal(0, \tau_p)\]</span></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="kw"><a href="https://rdrr.io/r/base/sink.html">sink</a></span>(<span class="st">"jags/salamander_Nmixture_ZIP_OD.jags"</span>)</span>
-<span id="cb13-2"><a href="#cb13-2"></a><span class="kw"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="st">"</span></span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="st">model{</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a><span class="st">    # Priors</span></span>
-<span id="cb13-5"><a href="#cb13-5"></a><span class="st">    omega ~ dbeta(1, 1)</span></span>
-<span id="cb13-6"><a href="#cb13-6"></a><span class="st">    lambda ~ dgamma(0.25, 0.25)</span></span>
-<span id="cb13-7"><a href="#cb13-7"></a><span class="st">    beta0 ~ dnorm(0, 0.1)</span></span>
-<span id="cb13-8"><a href="#cb13-8"></a><span class="st">    beta1 ~ dnorm(0, 0.1)</span></span>
-<span id="cb13-9"><a href="#cb13-9"></a></span>
-<span id="cb13-10"><a href="#cb13-10"></a><span class="st">    tau.p &lt;- pow(sd.p, -2)</span></span>
-<span id="cb13-11"><a href="#cb13-11"></a><span class="st">    sd.p ~ dunif(0, 3)</span></span>
-<span id="cb13-12"><a href="#cb13-12"></a></span>
-<span id="cb13-13"><a href="#cb13-13"></a><span class="st">    # Likelihood</span></span>
-<span id="cb13-14"><a href="#cb13-14"></a><span class="st">    for(j in 1:J){</span></span>
-<span id="cb13-15"><a href="#cb13-15"></a><span class="st">      z[j] ~ dbern(omega)</span></span>
-<span id="cb13-16"><a href="#cb13-16"></a><span class="st">      N[j] ~ dpois(lambda * z[j])</span></span>
-<span id="cb13-17"><a href="#cb13-17"></a></span>
-<span id="cb13-18"><a href="#cb13-18"></a><span class="st">      for(k in 1:K){</span></span>
-<span id="cb13-19"><a href="#cb13-19"></a><span class="st">        y[j, k] ~ dbinom(p[j, k], N[j])</span></span>
-<span id="cb13-20"><a href="#cb13-20"></a><span class="st">        logit(p[j, k]) &lt;- lp[j, k]</span></span>
-<span id="cb13-21"><a href="#cb13-21"></a><span class="st">        mu.lp[j, k] &lt;- beta0 + beta1 * hours[j,k]</span></span>
-<span id="cb13-22"><a href="#cb13-22"></a><span class="st">        lp[j, k] ~ dnorm(mu.lp[j, k], tau.p)</span></span>
-<span id="cb13-23"><a href="#cb13-23"></a></span>
-<span id="cb13-24"><a href="#cb13-24"></a><span class="st">        exp[j, k] &lt;- N[j] * p[j, k]</span></span>
-<span id="cb13-25"><a href="#cb13-25"></a><span class="st">        E[j, k] &lt;- pow((y[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)</span></span>
-<span id="cb13-26"><a href="#cb13-26"></a></span>
-<span id="cb13-27"><a href="#cb13-27"></a><span class="st">        y.rep[j, k] ~ dbinom(p[j, k], N[j])</span></span>
-<span id="cb13-28"><a href="#cb13-28"></a><span class="st">        E.rep[j, k] &lt;- pow((y.rep[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)</span></span>
-<span id="cb13-29"><a href="#cb13-29"></a><span class="st">      } # end k loop</span></span>
-<span id="cb13-30"><a href="#cb13-30"></a><span class="st">    } # end j loop</span></span>
-<span id="cb13-31"><a href="#cb13-31"></a></span>
-<span id="cb13-32"><a href="#cb13-32"></a><span class="st">    # Derived variables</span></span>
-<span id="cb13-33"><a href="#cb13-33"></a><span class="st">    fit &lt;- sum(E[,])</span></span>
-<span id="cb13-34"><a href="#cb13-34"></a><span class="st">    fit.rep &lt;- sum(E.rep[,])</span></span>
-<span id="cb13-35"><a href="#cb13-35"></a><span class="st">}</span></span>
-<span id="cb13-36"><a href="#cb13-36"></a><span class="st">    "</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb13-37"><a href="#cb13-37"></a><span class="kw"><a href="https://rdrr.io/r/base/sink.html">sink</a></span>()</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"jags/salamander_Nmixture_ZIP_OD.jags"</span>)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span></a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"><span class="st">model{</span></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="st">    # Priors</span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="st">    omega ~ dbeta(1, 1)</span></a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="st">    lambda ~ dgamma(0.25, 0.25)</span></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="st">    beta0 ~ dnorm(0, 0.1)</span></a>
+<a class="sourceLine" id="cb13-8" data-line-number="8"><span class="st">    beta1 ~ dnorm(0, 0.1)</span></a>
+<a class="sourceLine" id="cb13-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb13-10" data-line-number="10"><span class="st">    tau.p &lt;- pow(sd.p, -2)</span></a>
+<a class="sourceLine" id="cb13-11" data-line-number="11"><span class="st">    sd.p ~ dunif(0, 3)</span></a>
+<a class="sourceLine" id="cb13-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb13-13" data-line-number="13"><span class="st">    # Likelihood</span></a>
+<a class="sourceLine" id="cb13-14" data-line-number="14"><span class="st">    for(j in 1:J){</span></a>
+<a class="sourceLine" id="cb13-15" data-line-number="15"><span class="st">      z[j] ~ dbern(omega)</span></a>
+<a class="sourceLine" id="cb13-16" data-line-number="16"><span class="st">      N[j] ~ dpois(lambda * z[j])</span></a>
+<a class="sourceLine" id="cb13-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb13-18" data-line-number="18"><span class="st">      for(k in 1:K){</span></a>
+<a class="sourceLine" id="cb13-19" data-line-number="19"><span class="st">        y[j, k] ~ dbinom(p[j, k], N[j])</span></a>
+<a class="sourceLine" id="cb13-20" data-line-number="20"><span class="st">        logit(p[j, k]) &lt;- lp[j, k]</span></a>
+<a class="sourceLine" id="cb13-21" data-line-number="21"><span class="st">        mu.lp[j, k] &lt;- beta0 + beta1 * hours[j,k]</span></a>
+<a class="sourceLine" id="cb13-22" data-line-number="22"><span class="st">        lp[j, k] ~ dnorm(mu.lp[j, k], tau.p)</span></a>
+<a class="sourceLine" id="cb13-23" data-line-number="23"></a>
+<a class="sourceLine" id="cb13-24" data-line-number="24"><span class="st">        exp[j, k] &lt;- N[j] * p[j, k]</span></a>
+<a class="sourceLine" id="cb13-25" data-line-number="25"><span class="st">        E[j, k] &lt;- pow((y[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)</span></a>
+<a class="sourceLine" id="cb13-26" data-line-number="26"></a>
+<a class="sourceLine" id="cb13-27" data-line-number="27"><span class="st">        y.rep[j, k] ~ dbinom(p[j, k], N[j])</span></a>
+<a class="sourceLine" id="cb13-28" data-line-number="28"><span class="st">        E.rep[j, k] &lt;- pow((y.rep[j, k] - exp[j, k]), 2) / (exp[j, k] + 0.5)</span></a>
+<a class="sourceLine" id="cb13-29" data-line-number="29"><span class="st">      } # end k loop</span></a>
+<a class="sourceLine" id="cb13-30" data-line-number="30"><span class="st">    } # end j loop</span></a>
+<a class="sourceLine" id="cb13-31" data-line-number="31"></a>
+<a class="sourceLine" id="cb13-32" data-line-number="32"><span class="st">    # Derived variables</span></a>
+<a class="sourceLine" id="cb13-33" data-line-number="33"><span class="st">    fit &lt;- sum(E[,])</span></a>
+<a class="sourceLine" id="cb13-34" data-line-number="34"><span class="st">    fit.rep &lt;- sum(E.rep[,])</span></a>
+<a class="sourceLine" id="cb13-35" data-line-number="35"><span class="st">}</span></a>
+<a class="sourceLine" id="cb13-36" data-line-number="36"><span class="st">    "</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb13-37" data-line-number="37"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()</a></code></pre></div>
 <p>And fit the new model:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>jags_dat &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">y =</span> y, <span class="dt">hours =</span> hours_c, <span class="dt">J =</span> <span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(y)[<span class="dv">1</span>], <span class="dt">K =</span> <span class="kw"><a href="https://rdrr.io/r/base/dim.html">dim</a></span>(y)[<span class="dv">2</span>])</span>
-<span id="cb14-2"><a href="#cb14-2"></a></span>
-<span id="cb14-3"><a href="#cb14-3"></a>inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="dt">lambda =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="dv">10</span>),</span>
-<span id="cb14-4"><a href="#cb14-4"></a>                         <span class="dt">omega =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>),</span>
-<span id="cb14-5"><a href="#cb14-5"></a>                         <span class="dt">sd.p =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span>(<span class="dv">0</span>, <span class="fl">0.25</span>),</span>
-<span id="cb14-6"><a href="#cb14-6"></a>                         <span class="dt">beta0 =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">1</span>), <span class="dt">beta1 =</span> <span class="kw"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span>(<span class="dv">1</span>),</span>
-<span id="cb14-7"><a href="#cb14-7"></a>                         <span class="dt">N =</span> <span class="kw"><a href="https://rdrr.io/r/base/apply.html">apply</a></span>(y, <span class="dv">1</span>, max, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))}</span>
-<span id="cb14-8"><a href="#cb14-8"></a></span>
-<span id="cb14-9"><a href="#cb14-9"></a>parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"omega"</span>, <span class="st">"lambda"</span>, <span class="st">"beta0"</span>, <span class="st">"beta1"</span>, <span class="st">"N"</span>, <span class="st">"fit"</span>, <span class="st">"fit.rep"</span>)</span>
-<span id="cb14-10"><a href="#cb14-10"></a></span>
-<span id="cb14-11"><a href="#cb14-11"></a>ni &lt;-<span class="st"> </span><span class="dv">10000</span></span>
-<span id="cb14-12"><a href="#cb14-12"></a>nc &lt;-<span class="st"> </span><span class="dv">3</span></span>
-<span id="cb14-13"><a href="#cb14-13"></a>nb &lt;-<span class="st"> </span><span class="dv">2500</span></span>
-<span id="cb14-14"><a href="#cb14-14"></a>nt &lt;-<span class="st"> </span><span class="dv">1</span></span>
-<span id="cb14-15"><a href="#cb14-15"></a></span>
-<span id="cb14-16"><a href="#cb14-16"></a>sal_fit3 &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://rdrr.io/pkg/jagsUI/man/jags.html">jags</a></span>(<span class="dt">data =</span> jags_dat, <span class="dt">inits =</span> inits, <span class="dt">parameters.to.save =</span> parameters, </span>
-<span id="cb14-17"><a href="#cb14-17"></a>                     <span class="dt">model.file =</span> <span class="st">"jags/salamander_Nmixture_ZIP_OD.jags"</span>, </span>
-<span id="cb14-18"><a href="#cb14-18"></a>                     <span class="dt">n.chains =</span> nc, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb, <span class="dt">n.thin =</span> nt,</span>
-<span id="cb14-19"><a href="#cb14-19"></a>                     <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">jags_dat &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">y =</span> y, <span class="dt">hours =</span> hours_c, <span class="dt">J =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(y)[<span class="dv">1</span>], <span class="dt">K =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(y)[<span class="dv">2</span>])</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">lambda =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">8</span>, <span class="dv">10</span>),</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">                         <span class="dt">omega =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>),</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">                         <span class="dt">sd.p =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">0</span>, <span class="fl">0.25</span>),</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">                         <span class="dt">beta0 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1</span>), <span class="dt">beta1 =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1</span>),</a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">                         <span class="dt">N =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(y, <span class="dv">1</span>, max, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))}</a>
+<a class="sourceLine" id="cb14-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb14-9" data-line-number="9">parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"omega"</span>, <span class="st">"lambda"</span>, <span class="st">"beta0"</span>, <span class="st">"beta1"</span>, <span class="st">"N"</span>, <span class="st">"fit"</span>, <span class="st">"fit.rep"</span>)</a>
+<a class="sourceLine" id="cb14-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb14-11" data-line-number="11">ni &lt;-<span class="st"> </span><span class="dv">10000</span></a>
+<a class="sourceLine" id="cb14-12" data-line-number="12">nc &lt;-<span class="st"> </span><span class="dv">3</span></a>
+<a class="sourceLine" id="cb14-13" data-line-number="13">nb &lt;-<span class="st"> </span><span class="dv">2500</span></a>
+<a class="sourceLine" id="cb14-14" data-line-number="14">nt &lt;-<span class="st"> </span><span class="dv">1</span></a>
+<a class="sourceLine" id="cb14-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb14-16" data-line-number="16">sal_fit3 &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags_dat, <span class="dt">inits =</span> inits, <span class="dt">parameters.to.save =</span> parameters, </a>
+<a class="sourceLine" id="cb14-17" data-line-number="17">                     <span class="dt">model.file =</span> <span class="st">"jags/salamander_Nmixture_ZIP_OD.jags"</span>, </a>
+<a class="sourceLine" id="cb14-18" data-line-number="18">                     <span class="dt">n.chains =</span> nc, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb, <span class="dt">n.thin =</span> nt,</a>
+<a class="sourceLine" id="cb14-19" data-line-number="19">                     <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <div id="posterior-predictive-checks-3" class="section level3">
 <h3 class="hasAnchor">
 <a href="#posterior-predictive-checks-3" class="anchor"></a>Posterior predictive checks</h3>
 <p>Now we can check the fit of the model with over-dispersion in both the abundance and observation models:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw"><a href="https://rdrr.io/r/base/mean.html">mean</a></span>(sal_fit3<span class="op">$</span>sims.list<span class="op">$</span>fit.rep <span class="op">&gt;</span><span class="st"> </span>sal_fit3<span class="op">$</span>sims.list<span class="op">$</span>fit)</span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="co">#&gt; [1] 0.4836</span></span>
-<span id="cb15-3"><a href="#cb15-3"></a><span class="kw"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span>(sal_fit3<span class="op">$</span>sims.list<span class="op">$</span>fit.rep<span class="op">~</span>sal_fit3<span class="op">$</span>sims.list<span class="op">$</span>fit)</span>
-<span id="cb15-4"><a href="#cb15-4"></a><span class="kw"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span>(<span class="dv">0</span>, <span class="dv">1</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/mean">mean</a></span>(sal_fit3<span class="op">$</span>sims.list<span class="op">$</span>fit.rep <span class="op">&gt;</span><span class="st"> </span>sal_fit3<span class="op">$</span>sims.list<span class="op">$</span>fit)</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="co">#&gt; [1] 0.4908</span></a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/plot">plot</a></span>(sal_fit3<span class="op">$</span>sims.list<span class="op">$</span>fit.rep<span class="op">~</span>sal_fit3<span class="op">$</span>sims.list<span class="op">$</span>fit)</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4"><span class="kw"><a href="https://www.rdocumentation.org/packages/graphics/topics/abline">abline</a></span>(<span class="dv">0</span>, <span class="dv">1</span>)</a></code></pre></div>
 <p><img src="n-mixture2_files/figure-html/unnamed-chunk-20-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Much better!</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>fit_df &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span>(<span class="dt">y =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(y), <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(sal_fit3<span class="op">$</span>mean<span class="op">$</span>y.rep)),</span>
-<span id="cb16-2"><a href="#cb16-2"></a>                     <span class="dt">data =</span> <span class="kw"><a href="https://rdrr.io/r/base/rep.html">rep</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Observed"</span>, <span class="st">"Simulated"</span>), <span class="dt">each =</span> <span class="kw"><a href="https://rdrr.io/r/base/length.html">length</a></span>(y)))</span>
-<span id="cb16-3"><a href="#cb16-3"></a></span>
-<span id="cb16-4"><a href="#cb16-4"></a><span class="kw">ggplot</span>(fit_df, <span class="kw">aes</span>(<span class="dt">x =</span> y, <span class="dt">fill =</span> data)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>()</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">fit_df &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(y), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(sal_fit3<span class="op">$</span>mean<span class="op">$</span>y.rep)),</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">                     <span class="dt">data =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"Observed"</span>, <span class="st">"Simulated"</span>), <span class="dt">each =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(y)))</a>
+<a class="sourceLine" id="cb16-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="kw">ggplot</span>(fit_df, <span class="kw">aes</span>(<span class="dt">x =</span> y, <span class="dt">fill =</span> data)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>()</a></code></pre></div>
 <p><img src="n-mixture2_files/figure-html/unnamed-chunk-21-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 <div id="final-note" class="section level3">
@@ -576,14 +574,13 @@
 <div class="footnotes">
 <hr>
 <ol>
-<li id="fn1"><p>Ficetola, G.F., Barzaghi, B., Melotto, A., Muraro, M., Lunghi, E., Canedoli, C., Parrino, E.L., Nanni, V., Silva-Rocha, I., Urso, A. and Carretero, M.A., 2018. N-mixture models reliably estimate the abundance of small vertebrates. <em>Scientific reports</em>, 8(1), p.10357.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>Note that this model can be a bit picky about initial values. Good initial values for <span class="math inline">\(N\)</span> are particularly important but sometimes it appears that if the initial values for the other parameters are too far from their true value, the model with throw an error (something about <code>invalid parent node</code>). I tried to experiment with different initial value functions but you may need to make some tweaks if you get an error<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn1"><p>Ficetola, G.F., Barzaghi, B., Melotto, A., Muraro, M., Lunghi, E., Canedoli, C., Parrino, E.L., Nanni, V., Silva-Rocha, I., Urso, A. and Carretero, M.A., 2018. N-mixture models reliably estimate the abundance of small vertebrates. <em>Scientific reports</em>, 8(1), p.10357.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>Note that this model can be a bit picky about initial values. Good initial values for <span class="math inline">\(N\)</span> are particularly important but sometimes it appears that if the initial values for the other parameters are too far from their true value, the model with throw an error (something about <code>invalid parent node</code>). I tried to experiment with different initial value functions but you may need to make some tweaks if you get an error<a href="#fnref2" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
@@ -601,20 +598,17 @@
 </div>
 
 
-
       <footer><div class="copyright">
   <p>Developed by Clark Rushing.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.4.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
 </div>
-
       </footer>
 </div>
 
   
-
 
   </body>
 </html>

@@ -128,7 +128,7 @@ $$\Large x_i \sim Bernoulli(\omega)$$
 
 Next, we need to model the occupancy status of each species $i$ at each site $j$:
 
-$$\Large z_{i,j} \sim Bernoulli(z_i \psi_i)$$
+$$\Large z_{i,j} \sim Bernoulli(x_i \psi_i)$$
 
 To treat species as random effects in this model, we will specify a distribution for the species-specific occupancy probabilities:
 

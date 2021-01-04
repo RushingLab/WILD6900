@@ -1,0 +1,25 @@
+
+model{
+  omega ~ dbeta(1, 1)
+  alpha0 ~ dnorm(0, 0.01)
+  alpha1 ~ dnorm(0, 0.01)
+
+  mu.x ~ dnorm(0, 0.01)
+  tau.x <- 1 / pow(sd.x, 2)
+  sd.x ~ dunif(0, 10)
+
+  for(i in 1:M){
+
+    z[i] ~ dbern(omega)
+    x[i] ~ dnorm(mu.x, tau.x)
+    
+    lp[i] <- alpha0 + alpha1 * x[i]
+    p[i] <- 1 / (1 + exp(-lp[i]))
+
+    for(t in 1:T){
+      y[i, t] ~ dbern(p[i] * z[i])
+    } # end t
+  } # end i
+  N <- sum(z[1:M])
+}
+

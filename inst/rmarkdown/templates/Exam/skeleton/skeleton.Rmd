@@ -12,7 +12,11 @@ knitr::opts_chunk$set(echo = TRUE)
 ***
 **Be sure to change "Your name here" above to your name**
 
+<<<<<<< HEAD
 **This is a take home exam. You are allowed to use whatever reference material you need (lecture notes, books, internet) but you must complete the exam _on your own_.** 
+=======
+**Due date: 4 April, 2020 before class**
+>>>>>>> ffac4cf30365948d951409f56143b41bef486790
 
 **The exam is worth 50 points total.**
 
@@ -20,6 +24,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ***
 
+<<<<<<< HEAD
 # Question 1
 
 Choosing appropriate distributions for both your data and parameters is central to Bayesian analysis. 
@@ -85,6 +90,53 @@ Assume each of the following are published estimates of the parameters from ques
 > Example: A previous study found that, before the coronavirus outbreak, people were pretty bad about washing their hands, washing, on average, just 2 times per day ($\sigma^2 = 0.4$)
 
 Use gamma prior with parameters $shape = \frac{\mu^2}{\sigma^2}$ and $rate = \frac{\mu}{\sigma^2}$
+=======
+> 1) For each of the data types below, indicate a reasonable distribution that could be used to describe the data generating process. Type your answer in **bold** after each data type
+
+- Height of humans:
+
+- Salinity:
+
+- 
+
+
+> 2) Prior question
+
+
+
+> 3) Remember that a conventional t-test is used to test for differences the mean of two populations. A critical assumption of this method is equal variances - that is, both populations have the same variance in the measured response variable. 
+
+> 3a) If the equations below describe a standard t-test, what are the possible values of $x_i$? 
+
+$$y_i = \alpha + \beta \times x_i + \epsilon_i$$
+
+$$\epsilon_i \sim normal(0, \tau)$$
+
+> 3b) Change the above equations to represent a model with unequal variances. 
+
+> 3c) The JAGS code below can be used to fit the standard t-test. Change the code to match the model you described in question 3b (hint - there are numerous ways to code this model. One efficient way to do so is to recongize that x + 1 will always equal either 1 or 2. So if you have an object that is a vector of length 2, you can subset the first element or the second using each individual's value of x)
+
+```{r eval = FALSE}
+model{
+  # Priors
+  alpha ~ dnorm(0, 0.33)
+  beta ~ dnrom(0, 0.33)
+  tau ~ dunif(0, 10)
+  
+  # Likelihood
+  for(i in 1:N){
+    lp[i] <- alpha + beta * x[i]
+    y[i] ~ dnorm(lp[i], tau)
+  }
+} # end of model
+```
+
+> 3d) In the model above, what is the ecological interpretation of $\alpha$ and $\beta$?
+
+> 3e) In the model code above, create a new variable called alpha2 that measures the mean of group 2
+
+> 4) Custom design matrix using lm
+>>>>>>> ffac4cf30365948d951409f56143b41bef486790
 
 $$\lambda \sim gamma(shape = \frac{2^2}{0.4}=10, rate = \frac{2}{0.4}=5)$$
 
@@ -147,6 +199,7 @@ hab <- factor(sample(c(1,2,3), 20, replace = TRUE))
 
 The following model matrix describes one possible model for these data (only first 6 individuals shown):
 
+<<<<<<< HEAD
 ```{r}
 model.matrix(lm(mass ~ pop * hab))[1:6, 1:6]
 ```
@@ -261,4 +314,7 @@ model{
 write jags model here
 }
 ```
+=======
+> 5) Fit model 4 in JAGS
+>>>>>>> ffac4cf30365948d951409f56143b41bef486790
 

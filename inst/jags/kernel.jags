@@ -1,0 +1,13 @@
+
+model{
+  a ~ dgamma(0.01, 0.01)
+  b ~ dgamma(0.01, 0.01)
+  for(i in 1:N){
+    # x[i] ~ dexp(a)
+    # p[i] <- ((b - 1) / pi * pow(a, 2)) * pow((1 + (pow(x[i], 2) / pow(a, 2))), -b)
+    p[i] <- (a/b) * (x[i]/b)^(a-1) * exp(- (x[i]/b)^a)
+    ones[i] ~ dbern(p[i]/C)
+    # x[i] ~ dweib(a, b)
+  }
+} # End model
+

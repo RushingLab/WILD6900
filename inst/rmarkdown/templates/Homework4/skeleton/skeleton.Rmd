@@ -15,7 +15,7 @@ library(WILD6900)
 
 ***
 
-**Due date: 20 February, 2019 before class**
+**Due date: 27 February, 2020 before class**
 
 After you have modified the code according to the instructions, change `eval = FALSE` to `eval = TRUE` in the `setup` chunk above (line 12). Once this option is changed, **do not** modify any of the chunk options below.  
 
@@ -23,91 +23,46 @@ Refer to the [instructions for submitted homework assignments](https://rushingla
 
 ***
 
-In this homework assignment, you will continue to explore fitting hierarchical models in JAGS by building off the Coal tit example from class. As a reminder, these data come from the Swiss Breeding Bird Survey and our objective is to model changes in the abundance of Swiss Coal tits from 1999-2007. 
+In this homework assignment, you will continue to explore fitting hierarchical models in JAGS by simulating data that is similar in structure to the data you work with as part of your research. 
 
-```{r echo = FALSE, out.width = "100%", fig.cap="Photo by Andreas Eichler via WikiCommons"}
-knitr::include_graphics("https://upload.wikimedia.org/wikipedia/commons/b/b6/2017.01.27.-18-Paradiski-La_Plagne-Champagny-en-Vanoise--Tannenmeise.jpg")
+## Formulating the data and model
+
+When you design a research project, it's a good idea to think very hard about the model you will be using to analyze your data before you collect a single data point. Formulating the model ahead of time allows you to focus on how the output from that model will help answer your research questions and what data will be necessary to fit the model. Having the model formulated ahead of time also allows you to conduct simulation-based studies to assess whether the model does what you think it does, perform power analyses specific to your model, and identify potential analytical issues while there is still time to revise your sampling protocol. In this assignment, you will go through the steps of formulating a model and performing a simulation study based on your research questions. This does not need to be a full-blown simulation study, just a small example of how this process works. If you already have a well-formulated question and even some data, that's great. If not, just come up with a question consistent with what you think you'll be doing. If you can, use this assignment to get a head start on your project. 
+
+**The one condition is that your model must be hierarchical (i.e., it must include at least one random effect)!**
+
+As you think about the model, answer the following questions (type your answer in bold below the question):
+
+> 1) What are the state variables you need to estimate in order to answer these questions? 
+
+> 2) What are the parameters that govern that state variable? How 
+
+> 3) What are the hypothesized relationships between the parameters and state variables? Express your answer to this question in terms of a mathmatical, deterministic process model. If you need more than one equation, add as many as you need
+
+$$insert\; equation\; here$$
+
+> 4) How does process uncertainty enter your system? Express your answer to this question in terms of a stochastic model. If you need more than one equation, add as many as you need
+
+$$insert\; equation\; here$$
+
+> 5) What is the observational unit of your study, i.e., what do your data look like?
+
+> 6) Do you observe the state variable(s) perfectly? If not, formulate an observation model and express this model mathmatically.  If you need more than one equation, add as many as you need
+
+$$insert\; equation\; here$$
+
+## Simulating the data
+
+We've already seen several examples of simulating data in class. In the chunk below, include whatever code is necessary to simulate a single realization of your hypothesized systems. Choose sample sizes and parameter values that you think are consistent with your data/system.
+
+```{r sim_data}
+
+
 ```
 
+## Translating the model into code
 
-Start by loading the data:
-
-```{r}
-data("tits")
-```
-
-The following code will format the data so we can use it to model abundance (this code is copied from the lab exercise; go back to the description of that exerecise if you need a reminder of what this code is doing):
-
-```{r}
-C <- as.matrix(tits[5:13])
-obs <- as.matrix(tits[14:22])
-first <- as.matrix(tits[23:31])
-
-a <- as.numeric(levels(factor(obs)))     # All the levels, numeric
-newobs <- obs                            # Gets ObsID from 1:271
-for (j in 1:length(a)){newobs[which(obs==a[j])] <- j }
-
-newobs[is.na(newobs)] <- length(a) + 1
-first[is.na(first)] <- 0
-```
-
-In class, we fit the following models:
-
-```
- model {
-
-    # Priors
-    for (j in 1:nsite){
-    alpha[j] ~ dnorm(mu.alpha, tau.alpha) 
-    }
-    mu.alpha ~ dnorm(0, 0.01)
-    tau.alpha <- 1/ (sd.alpha * sd.alpha)
-    sd.alpha ~ dunif(0, 5)
-
-    # Likelihood
-    for (i in 1:nyear){
-    for (j in 1:nsite){
-    C[i,j] ~ dpois(lambda[i,j])
-    lambda[i,j] <- exp(log.lambda[i,j])
-    log.lambda[i,j] <- alpha[j]
-    }  #j
-    }  #i
-    }
-```
-
-and 
-```
- model {
-
-    # Priors
-    mu ~ dnorm(0, 0.01)                  # Grand mean
-    
-    for (i in 1:nyear){
-      eps[i] ~ dnorm(0, tau.eps)        # Random year effects
-    }
-    tau.eps <- 1/ (sd.eps * sd.eps)
-    sd.eps ~ dunif(0, 3)
-
-    # Likelihood
-    for (i in 1:nyear){
-      for (j in 1:nsite){
-        C[i,j] ~ dpois(lambda[i,j])
-        lambda[i,j] <- exp(log.lambda[i,j])
-        log.lambda[i,j] <- mu + eps[i]
-      }  #j
-    }  #i
-    }
-```
-
-
-> 1) Describe in plain English the two models above. What sources of variation do each model account for? How are these sources of variation treated? Type your answer in bold below**
-
-
-### Random site and year effects 
-
-Next, you will change the model code to account for both random site effects and random year effects. 
-
-> 2a) Write the JAGS code below to fit the random site/random year model (remember the trick we learned in class about setting one level to 0!)
+Next, translate the model you specified above into working JAGS code. Choose reasonable priors for each parameter (priors can be informative or uninformative)
 
 ***
 **Important** - in order for the .Rmd file to knit properly, complete the model code below and then manually run the code to create the .jags file (highlighting the chunk below and clicking `Run` or `command + return`). Leave the `eval = FALSE` option set to false so that `knitr` does **not** try to run the code when you knit the document!
@@ -115,117 +70,32 @@ Next, you will change the model code to account for both random site effects and
 ***
 
 ```{r eval = FALSE}
-sink("glmm2.jags")
+sink("sim_mod.jags")
 cat("
 model{
   # Priors
 
   # Likelihood
-  for (i in 1:nyear){
-    for (j in 1:nsite){
 
-    }  #j
-  }  #i
 } # end of model
 ", fill = TRUE)
 sink()
 ```
 
-**2a) In the equation below, replace `?` with the appropriate link function for modeling per capita fecundity $f_t$ as a linear function of covariates.**  
 
-**2b) On the right hand side of the equation, write the linear predictor assuming we want to model fecundity as a function of $year$ and $year^2$. Use whatever symbols you would like to represent intercept/slope parameters**
+## Fitting the model and checking the results
 
-$$?(f_t) =$$
+In the chunk below, add the code necessary to fit the model to your simulated data set:
 
 
-Next you will need to covert the above model into functioning JAGS code. Complete the code statement below by filling in:
+```{r fit_data}
 
-**3a) The appropriate prior distributions for each parameter in the model**  
 
-**3b) The correct likelihood for the model above**
-
-***
-**Important** - in order for the .Rmd file to knit properly, complete the model code below and then manually run the code to create the .jags file (highlighting the chunk below and clicking `Run` or `command + return`). Leave the `eval = FALSE` option set to false so that `knitr` does **not** try to run the code when you knit the document!
-
-***
-
-```{r eval = FALSE}
-sink("fecundity.jags")
-cat("
-model{
-  # Priors
-
-  # Likelihood
-  for(t in 1:nyear){
-
-  }
-} # end of model
-", fill = TRUE)
-sink()
 ```
 
-Now create the objects that JAGS needs to fit the model:
+> 7) Write a brief paragraph below detailing the results from your simulation. How close were the estimated parameters to the true values? Why might they differ? Do you think these differences are systematic (i.e., bias) and what information would you need to assess bias? Use inline `R` code to reference values/results rather than typing the values manually. Also, add a single visualization that is relevant for interpreting your results (any figure you think is appropriate will do)
 
-**4a) Complete the `jags_data <- list()` object to include all necessary input to run the model**
+```{r fig, echo = FALSE}
 
-```{r}
-jags_data <- list()
+
 ```
-
-**4b) Complete the `jags_inits` function to include all necessary input to run the model**
-
-```{r}
-jags_inits <- function(){list()}
-```
-
-
-**4c) Complete the `params <- c()` object to include parameters you would like to monitor**
-
-```{r}
-params <- c()
-```
-
-**4d) Complete the MCMC settings. Run 3 chains for 25,000 iterations, discarding the first 1000 samples as burn-in**
-
-```{r}
-ni <- 
-nc <- 
-nb <- 
-```
-
-Assuming all information above is completed correctly, the following code should run without error:
-
-```{r include = FALSE}
-fecundity_mod <- jagsUI::jags(data = jags_data, inits = jags_inits, 
-                              parameters.to.save = params, model.file = "fecundity.jags",
-                              n.chains = nc, n.iter = ni, n.thin = 1, n.burnin = nb)
-```
-
-
-Check the model for convergence. 
-
-**5) Did the model coverge? Type your answer in __bold__ below, providing at least two sources of evidence for convergence. If the model did not converge, change your settings above and re-run. What did you change?**
-
-
-
-Finally, plot the expected and predicted fecundity over time.  
-
-**6) Complete the following code to add the predicted fecundity for each year from the model, plus the upper and lower 95% credible intervals. Remember that the posterior mean and 2.5/97.5% quantiles for each monitored paramter is stored within the `fecundity_mod` object**
-
-```{r}
-falcons <- dplyr::mutate(falcons, f = , 
-                                  q2.5 = , 
-                                  q97.5 = )
-```
-
-If the above code was run without error, the code below should produce a figure showing changes to the observed and predicted fecundity. 
-
-```{r fig.width=6, fig.height=4}
-ggplot(falcons) + 
-  geom_ribbon(aes(x = Year, ymin = q2.5, ymax = q97.5), fill = "grey90") +
-  geom_path(aes(x = Year, y = f), color = "red") +
-  geom_point(aes(x = Year, y = Eyasses/Pairs)) +
-  scale_y_continuous("Fecundity")
-```
-
-**7) From an ecological perspective, how do you interpret the changes in fecundity over time? For additional context, refer to the plot from the previous lab showing changes in the abundance of nesting pairs over this time period. Type your answer in __bold__ below**

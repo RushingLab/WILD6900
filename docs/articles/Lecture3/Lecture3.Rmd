@@ -122,11 +122,11 @@ That is, in likelihood, we treat $\theta$ as *fixed* and *known* rather than a r
 
 #### **Example**  
 
-Let's say we're sampling the number of trees on small plots and that we **_know_** the average number of trees/plot is 40 $^4$  
+Let's say we're sampling the number of trees on small plots and that we **_know_** the expected number of trees/plot is 40 $^4$  
 <br/>
 
 --
-On one plot, we observe 34 trees. What is the probability of $y = 34$?  
+On one plot, we observe 34 trees. What is the probability of $\large y = 34$?  
  <br/>
  
 --
@@ -137,7 +137,7 @@ To answer this question, we first need to select a sensible probability distribu
 
 
 --
-Next, we calculate the probability $Pr(y=34|\lambda = 40)$:
+Next, we calculate the probability $\large Pr(y=34|\lambda = 40)$:
 
 ```{r echo = TRUE}
 dpois(x = 34, lambda = 40)
@@ -160,7 +160,7 @@ On a second plot, we observed 42 trees
 --
 What is the probability of that observation?  
 
-+ $Pr(y=42|\lambda=40) =$ `r round(dpois(42,40),3)`  
++ $\large Pr(y=42|\lambda=40) =$ `r round(dpois(42,40),3)`  
 <br/>
 
 
@@ -169,7 +169,7 @@ What is the joint probability of both observations?
 
 <br/>
 --
-Assuming the observations are independent, the joint probability (probability of $y=34$ *and* $y=42$) is the product of the individual probabilities:  
+Assuming the observations are independent, the joint probability (probability of $\large y=34$ *and* $\large y=42$) is the product of the individual probabilities:  
 
 + `r round(dpois(34,40),2)` x `r round(dpois(42,40),2)` = `0.00059`. 
 
@@ -184,10 +184,10 @@ Assuming the observations are independent, the joint probability (probability of
 
 
 --
-In our research, we never know $\lambda$ (or to be consistent with eq. 1, $\theta$)
+In our research, we never know $\large \lambda$ (or to be consistent with eq. 1, $\large \theta$)
 <br/>
 
-- We want to estimate $\lambda$ using our data  
+- We want to estimate $\large \lambda$ using our data  
 
 
 --
@@ -202,7 +202,7 @@ This equation means that the likelihood of $\theta$ given the data $y$ is equal 
 ---
 ## Likelihood profile
 
-An important distinction between the probability distribution $[y|\theta]$ and a likelihood function $L(\theta|y)$ is:  
+An important distinction between the probability distribution $\large [y|\theta]$ and a likelihood function $\large L(\theta|y)$ is:  
 
 + In the probability distribution, we treat the parameter as fixed and the data as random  
 
@@ -211,9 +211,9 @@ An important distinction between the probability distribution $[y|\theta]$ and a
 ---
 ## Likelihood profile
 
-In our example, the tree counts $y$ are random variables - they can take a range of possible values due to chance  
+In our example, the tree counts $\large y$ are random variables - they can take a range of possible values due to chance  
 
-The probability distribution $[y|\theta]$ tells us the probability of each possible value $y$:  
+The probability distribution $\large [y|\theta]$ tells us the probability of each possible value $y$:  
 
 ```{r, echo = TRUE, eval = FALSE}
 y_probs <- data.frame(y = 15:65,
@@ -294,19 +294,19 @@ y_probs <- data.frame(lambda = 15:65,
 --
 #### For something to be a random variable, it must be defined by a probability distribution  
 
-+ For the likelihood profile, we have not defined a probability distribution for $\lambda$ (that is $[\lambda]$)  
++ For the likelihood profile, we have not defined a probability distribution for $\large \lambda$ (that is $\large [\lambda]$)  
 <br/>
 
 
 --
-As a result, we vary $\lambda$ but it is not a random variable and likelihood profiles do not define the probability or probability density of $\lambda$  
+As a result, we vary $\large \lambda$ but it is not a random variable and likelihood profiles do not define the probability or probability density of $\large \lambda$  
 
 ---
 ## Likelihood profile
 
 This distinction between likelihood profiles and probability distributions is one of the reasons that results of likelihood-based methods can be difficult to interpret  
 
-Many of the methods familiar to ecologists use the principle of maximum likelihood to determine the value of $\theta$ that is most supported by our data  
+Many of the methods familiar to ecologists use the principle of maximum likelihood to determine the value of $\large \theta$ that is most supported by our data  
 
 The maximum likelihood estimate is the peak of the likelihood curve $^6$:
 
@@ -327,13 +327,13 @@ $^6$ In a real study we would not base the MLE on a single observation
 ---
 ## Likelihood profile
 
-#### But the MLE does not tell us the probability of $\theta$ given our data!  
+#### But the MLE does not tell us the probability of $\large \theta$ given our data!  
 
 #### So although MLE does tell us the value of $\large \theta$ that is most consistent with our data, we can not say things like:
 
-+ "There is a 90% probability that $\theta > 0$" $^7$  
++ "There is a 90% probability that $\large \theta > 0$" $^7$  
 
-+ "There is a 96% probability that $a \geq \theta \geq b$" $^7$
++ "There is a 96% probability that $\large a \geq \theta \geq b$" $^7$
 
 ???
 
@@ -351,19 +351,19 @@ $^8$ Choosing prior distributions is a complex topic that is an area of active r
 ---
 ## The prior distribution
 
-As we just learned, $\theta$ is not a random variable in the likelihood function because it is not governed by a probability distribution  
+As we just learned, $\large \theta$ is not a random variable in the likelihood function because it is not governed by a probability distribution  
 
 --
 
 $$\Large \underbrace{[\theta|y]}_{posterior\; distribution} = \frac{\overbrace{[y|\theta]}^{likelihood} \;\;\;\;\overbrace{[\theta]}^{prior}}{\underbrace{[y]}_{marginal\; distribution}}$$
 
-In eq. 1, the **prior** distribution is what allows us to treat $\theta$ as a random variable  
+In eq. 1, the **prior** distribution is what allows us to treat $\large  \theta$ as a random variable  
 
 --
-+ The prior describes what we know about the probability of $\theta$ *before* we collect any data  
++ The prior describes what we know about the probability of $\large  \theta$ *before* we collect any data  
 
 --
-+ Priors can contain a lot of information about $\theta$ (*informative priors*) or very little (*uninformative priors*)  
++ Priors can contain a lot of information about $\large  \theta$ (*informative priors*) or very little (*uninformative priors*)  
 
 --
 + Well-constructed priors can also improve the behavior of our models  
@@ -373,7 +373,7 @@ In eq. 1, the **prior** distribution is what allows us to treat $\theta$ as a ra
 ---
 ## The prior distribution
 
-#### The prior distribution provides us with a principled method of incorporating information about $\theta$ into our analysis  
+#### The prior distribution provides us with a principled method of incorporating information about $\large  \theta$ into our analysis  
 
 --
 - This information could be results from a pilot study or results from previously published studies  
@@ -425,7 +425,7 @@ To start, we know that $\lambda$ has to be a positive real number (though not ne
 
 
 --
-In our discussion of likelihood functions, we assumed we know that $\lambda = 40$. Let's relax that assumption a bit
+In our discussion of likelihood functions, we assumed we know that $\large \lambda = 40$. Let's relax that assumption a bit
 
 + previous research has shown that the mean number of trees per plot is 40, with a variance of 6
 
@@ -435,7 +435,7 @@ In our discussion of likelihood functions, we assumed we know that $\lambda = 40
 
 #### **Example**
 
-We can use moment matching to turn $\mu = 40$ and $\sigma^2 = 6$ into the two parameters that govern the gamma distribution:  
+We can use moment matching to turn $\large \mu = 40$ and $\large \sigma^2 = 6$ into the two parameters that govern the gamma distribution:  
 
 $$\Large \alpha = \frac{\mu^2}{\sigma^2}$$
 $$\Large \beta = \frac{\mu}{\sigma^2}$$
@@ -482,7 +482,7 @@ class: inverse, center, middle
 ## The joint distribution
 
 
-The product of the likelihood $[y|\theta]$ and the prior $[\theta]$ (the numerator of Bayes theorem) is called the **joint distribution**  
+The product of the likelihood $\large [y|\theta]$ and the prior $\large [\theta]$ (the numerator of Bayes theorem) is called the **joint distribution**  
 
 It is important to note again that the joint distribution, like the likelihood profile, is not a probability distribution because the area under the curve does not sum to 1  
 
@@ -521,7 +521,7 @@ To convert the joint distribution into a true probability distribution, we have 
 <br/>
 
 --
-The denominator of eq. 1 $([y])$ is called the marginal distribution of the data - that is, the probability distribution of our data $y$ across all possible values of $\theta$  
+The denominator of eq. 1 $\large ([y])$ is called the marginal distribution of the data - that is, the probability distribution of our data $\large y$ across all possible values of $\large \theta$  
 <br/>
 
 --
@@ -565,14 +565,14 @@ class: inverse, center, middle
 ---
 ## The posterior distribution
 
-The LHS of equation, $[\theta|y]$, is known as the posterior distribution and it is what we want to know    
+The LHS of equation, $\large [\theta|y]$, is known as the posterior distribution and it is what we want to know    
 
-> What is the probability distribuiton of $\theta$ given our data?  
+> What is the probability distribution of $\large \theta$ given our data?  
 
 <br/>
 
 --
-The posterior distribution tells us everything we know about $\theta$ given our data (and possibly prior knowledge)  
+The posterior distribution tells us everything we know about $\large \theta$ given our data (and possibly prior knowledge)  
 
 
 ```{r, fig.width=5, fig.height=3}
@@ -591,11 +591,11 @@ post <- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
 
 The posterior allows to make statements like:  
 
-- The most probable value of $\theta$ is $x$  
+- The most probable value of $\large \theta$ is $\large x$  
 
-- There is a 95% probability that $y < \theta < z$  
+- There is a 95% probability that $\large a < \theta < b$  
 
-- There is a 96% probability that $\theta <0$  
+- There is a 98% probability that $\large \theta <0$  
 
 
 ---

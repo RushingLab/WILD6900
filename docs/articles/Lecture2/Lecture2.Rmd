@@ -34,9 +34,9 @@ class: inverse, center, middle
 
 #### In each level of our models, we differentiate between:  
 
-+ a *deterministic* model $g()$, and
++ a *deterministic* model $\large g()$, and
 
-+ a *stochastic* model $[a|b,c]$  
++ a *stochastic* model $\large [a|b,c]$  
 <br/>
 
 
@@ -100,9 +100,9 @@ For a random process to truly be a probability, the sum of the probabilities of 
 
 #### **Example**  
 
-##### Imagine an occupancy model in which we want to know if species $x$ is present at a given location  
+##### Imagine an occupancy model in which we want to know if species $\Large x$ is present at a given location  
 
-##### We will denote the occupancy status $z_x$ and the sample space includes just two possible values:  
+##### We will denote the occupancy status $\Large z_x$ and the sample space includes just two possible values:  
 
 $$\huge S_{z_x}=\{0, 1\}$$
 
@@ -114,7 +114,7 @@ class: inverse, middle, center
 ---
 ## Probability of single events
 
-#### The probability that $A$ will occur is the area of $A$ divided by the area of $S$ $^3$  
+#### The probability of $\large A$ is the area of $\large A$ divided by the area of $\large S$ $^3$  
 
 $$\Large Pr(A) = \frac{area\; of\; A}{area\; of \;S}$$
 
@@ -137,7 +137,7 @@ $$Pr(not \; A) = \frac{area\; of \;S - area\; of\; A}{area\; of \;S} = 1 - \frac
 
 #### **Example**  
 
-#### In our example, let's say that the probability of occupancy for species $x$ is:
+#### In our example, let's say that the probability of occupancy for species $\large x$ is:
 $$\LARGE Pr(z_x = 1) = 0.4$$  
 
 --
@@ -157,7 +157,7 @@ class: inverse, middle, center
 #### Often, we are not interested in the probability of a single event happening but instead of more than one events  
 
 --
-#### The *joint* probability refers to the probability that two or more events occur and is usually denoted $Pr(A,B)$ $^4$  
+#### The *joint* probability refers to the probability that two or more events occur and is usually denoted $\large Pr(A,B)$ $^4$  
 
 ```{r out.width=500}
 knitr::include_graphics("SAB.png")
@@ -172,7 +172,7 @@ $^4$ Estimating joint probabilities is more challenging than estimating the prob
 
 #### **Example**  
 
-To extend our simple example, let's imagine we are interested in the occupancy status of two species - $x$ and $y$. Our sample space is now:  
+To extend our simple example, let's imagine we are interested in the occupancy status of two species - $\large x$ and $\large y$. Our sample space is now:  
 
 $$\Large S_{z_x,z_y} = \{(0,0), (0,1), (1,0), (1,1)\}$$
 
@@ -182,7 +182,7 @@ The question we want to know now is: what is the probability that a site is occu
 $$\Large Pr(z_x = 1, z_y = 1) = Pr(z_x, z_y)$$  
 
 --
-The answer to that question depends on the relationship between $Pr(z_x)$ and $Pr(z_y)$
+The answer to that question depends on the relationship between $\large Pr(z_x)$ and $\large Pr(z_y)$
 
 ---
 class: inverse, center, middle
@@ -194,16 +194,16 @@ class: inverse, center, middle
 
 #### In some cases, knowing the status of one random variable tells us something about the status of another random variable  
 
-Let's say we know that species $x$ is present, that is $z_x=1$  
+Let's say we know that species $\large x$ is present, that is $\large z_x=1$  
 
-Knowing that $z_x=1$ does two things:  
+Knowing that $\large z_x=1$ does two things:  
 <br/>
 --
-1) It shrinks the possible range of sample space (if $z_x=1$ occurred, the remainder of our sample space (in this case $z_x=0$) did not occur)  
+1) It shrinks the possible range of sample space (if $\large z_x=1$ occurred, the remainder of our sample space (in this case $\large z_x=0$) did not occur)  
 <br/>
 
 --
-2) It effectively shrinks the area $z_y$ - we know that the area of $z_y$ outside of $z_x$ didn't occur  
+2) It effectively shrinks the area $\large z_y$ - we know that the area of $\large z_y$ outside of $\large z_x$ didn't occur  
 <br/> 
 
 --
@@ -212,7 +212,7 @@ You can see this very clearly in this [awesome visualization](http://setosa.io/c
 ---
 ## Conditional probability
 
-$Pr(z_y|z_x)$ is the area shared by the two events divided by the area of $z_x$ (not $S$!) $^5$
+$\large Pr(z_y|z_x)$ is the area shared by the two events divided by the area of $\large z_x$ (not $\large S$!) $^5$
 
 $$\large Pr(z_y|z_x) = \frac{area\; shared\; by\; z_x\; and\; z_y}{area\; of \;z_x} = \frac{Pr(z_x\; \cap\; z_y)}{Pr(z_x)}$$
 
@@ -245,7 +245,7 @@ In our example, the occupancy of the two species may be totally unrelated
 
 
 --
-In this case, knowing that $z_x=1$ gives us no new information about the probability of $z_y=1$  
+In this case, knowing that $\large z_x=1$ gives us no new information about the probability of $\large z_y=1$  
 
 Mathematically, this means that:
 
@@ -273,11 +273,11 @@ A special case of conditional probability occurs when events are *disjoint*
 <br/>
 
 --
-In our example, maybe species $x$ and species $y$ **never** occur together $^8$  
+In our example, maybe species $\large x$ and species $\large y$ **never** occur together $^8$  
 <br/>
 
 --
-In this case, knowing that $z_x = 1$ means that $z_y = 0$. In other words,
+In this case, knowing that $\large z_x = 1$ means that $\large z_y = 0$. In other words,
 
 $$\Large Pr(z_y|z_x) = Pr(z_x|z_y) = 0$$
 
@@ -296,18 +296,18 @@ $^8$Perhaps they are such fierce competitors that they will exclude each other f
 
 
 --
-#### For example, what is the probability that species $x$ or species $y$ is present but not both?  
+#### For example, what is the probability that species $\large x$ or species $\large y$ is present but not both?  
 
 
 --
-#### This is the area in $z_x$ and $z_y$ not including the area of overlap:
+#### This is the area in $\large z_x$ and $\large z_y$ not including the area of overlap:
 
 $$\Large Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y) - Pr(z_x,z_y)$$
 
 ---
 ## Probability of one event or the other
 
-When $z_x$ and $z_y$ are independent, 
+When $\large z_x$ and $\large z_y$ are independent, 
 
 $$\large Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y) - Pr(z_x)Pr(z_y)$$
 
@@ -327,20 +327,20 @@ $$\Large Pr(z_x \cup z_y) = Pr(z_x) + Pr(z_y)$$
 A critical concept in Bayesian models is **marginal probability**, that is the probability of one event happening regardless of the state of other events  
 
 --
-Imagine that our occupancy model includes the effect of 3 different habitats on the occupancy probability of species $x$, so:
+Imagine that our occupancy model includes the effect of 3 different habitats on the occupancy probability of species $\large x$, so:
 
 $$\Large Pr(z_x|H_i) = \frac{Pr(z_x \cap H_i)}{Pr(H_i)}$$
 
 --
-What is the overall probability that species $x$ occurs regardless of habitat type? That is, $Pr(z_x)$?  
+What is the overall probability that species $\large x$ occurs regardless of habitat type? That is, $P\large r(z_x)$?  
 
 --
-In this case, we *marginalize* over the different habitat types by summing the conditional probabilities weighted by probability of each $H_i$:
+In this case, we *marginalize* over the different habitat types by summing the conditional probabilities weighted by probability of each $\large H_i$:
 
 $$Pr(z_x) = \sum_{i=1}^3 Pr(z_x|H_i)Pr(H_i)$$
 
 --
-Think of this as a weighted average - the probability that $z_x=1$ in each habitat type weighted by the probability that each habitat type occurs.
+Think of this as a weighted average - the probability that $\large z_x=1$ in each habitat type weighted by the probability that each habitat type occurs.
 
 ---
 ## Marginal probability
@@ -555,10 +555,10 @@ $^{12}$We usually encounter discrete variables in the form of counts (the number
 ---
 ## Probability functions
 
-#### Very often we want to know the probability that a random variable will take a specific value $z$  
+#### Very often we want to know the probability that a random variable will take a specific value $\large z$  
 
 --
-#### Answering this question requires the use of probability functions, which we will denote $[z]^{13}$  
+#### Answering this question requires the use of probability functions, which we will denote $\large [z]^{13}$  
 
 --
 #### Probability functions differ between *continuous* and *discrete* distributions so we will discuss these separately  
@@ -569,36 +569,36 @@ $^{13}$Probability functions tell us $[z]=Pr(z)$
 ---
 ## Probability mass functions
 
-For *discrete* random variables, the probability that the variable will take a specific value $z$ is defined by the *probability mass function* (pmf)  
+For *discrete* random variables, the probability that the variable will take a specific value $\large z$ is defined by the *probability mass function* (pmf)  
 
 #### All pmf's share two properties:
 
 $$\Large 0 \leq [z] \leq 1$$
 $$\Large \sum_{z \in S}[z]=1$$
 
-where $S$ is the set of all $z$ for which $[z] > 0$ (the range of possible values of $z$). 
+where $\large S$ is the set of all $\large z$ for which $\large [z] > 0$ (the range of possible values of $\large z$). 
 
 ---
 ## Probability mass functions
 
 As an example, let's assume a random variable that follows a Poisson distribution  
 
-- Poisson random variables can take any integer value > 0 $(0, 1, 2,...)$  
+- Poisson random variables can take any integer value > 0 $\large (0, 1, 2,...)$  
 
 - e.g., the number of individuals at a site or the number of seeds produced by a flower  
 
 
 --
-The shape of the Poisson distribution is determined by 1 parameter called $\lambda$   
+The shape of the Poisson distribution is determined by 1 parameter called $\large \lambda$   
 
-- $\lambda$ is the expected value (the most likely value) of a random variable generated from the Poisson distribution  
+- $\large \lambda$ is the expected value (the most likely value) of a random variable generated from the Poisson distribution  
 
-- larger $\lambda$ means larger values of the variable  
+- larger $\large \lambda$ means larger values of the variable  
 
 ---
 ## Probability mass functions
 
-#### If $\lambda = 10$, what is the probability that $z$ will equal 10? Or 8? Or 15?  
+#### If $\large \lambda = 10$, what is the probability that $\large z$ will equal 10? Or 8? Or 15?  
 
 --
 In R, probability mass is estimating using the `dpois()` function (or the equivalent for other discrete distributions)
@@ -622,11 +622,11 @@ $^{14}$R will let us put in a vector of values so we can also do the following t
 ---
 ## Probability density functions
 
-Probability mass functions provide the probability that a discrete random variable takes on a specific value $z$  
+Probability mass functions provide the probability that a discrete random variable takes on a specific value $\large z$  
 
-For continuous variables, estimating probabilities is a little trickier because $Pr(z) = 0$ for any specific value $z$  
+For continuous variables, estimating probabilities is a little trickier because $\large Pr(z) = 0$ for any specific value $\large z$  
 
-Why? Let's look at the probability distribution for a normal random variable with mean $=0$ and standard deviation $=3$:
+Why? Let's look at the probability distribution for a normal random variable with mean $\large =0$ and standard deviation $\large =3$:
 
 ```{r, echo=FALSE, fig.align='center', fig.height=3.5, fig.width=6}
 norm_df <- data.frame(z = seq(from = -10, to = 10, by = 0.1),
@@ -640,9 +640,9 @@ ggplot(norm_df, aes(x = z, y = pr_z)) +
 ---
 ## Probability density functions
 
-The *probability density* is the area under the curve for an interval between $a$ and $b$, which we'll call $\Delta_z$ $=(a-b)$. 
+The *probability density* is the area under the curve for an interval between $\large a$ and $\large b$, which we'll call $\large \Delta_z$ $\large =(a-b)$. 
 
-For example, the shaded area below shows the probability density $Pr(-2 \leq z \leq -1)$:
+For example, the shaded area below shows the probability density $\large Pr(-2 \leq z \leq -1)$:
 
 ```{r, echo=FALSE, fig.align='center',  fig.height=3.5, fig.width=6}
 ggplot(norm_df, aes(x = z, y = pr_z)) + 
@@ -678,13 +678,13 @@ ggplot(norm_df, aes(x = z, y = pr_z)) +
 ---
 ## Probability density functions
 
-#### At $z$, $\Delta_z =0$, thus $[z] = 0$  
+#### At $\large z$, $\large \Delta_z =0$, thus $\large [z] = 0$  
 
 --
-#### However, we can use calculus to estimate the height of the line $([z])$ as $\Delta_z$ approaches 0  
+#### However, we can use calculus to estimate the height of the line $\large ([z])$ as $\large \Delta_z$ approaches 0  
 
 --
-#### So for continuous random variables, the *probability density* of $z$ as the area under the curve between $a \leq z \leq b$ as $\Delta_z$ approaches zero  
+#### So for continuous random variables, the *probability density* of $\large z$ as the area under the curve between $\large a \leq z \leq b$ as $\large \Delta_z$ approaches zero  
 
 --
 #### Estimating probability density in R is the same as for discrete variables: `dnorm()` $^{15}$
@@ -728,13 +728,13 @@ ggplot() +
 ---
 ## Expected value (i.e., the mean)
 
-#### The first moment of a distribution describes its central tendency (denoted $\mu$) or *expected value* (denoted $E(z)$)  
+#### The first moment of a distribution describes its central tendency (denoted $\large \mu$) or *expected value* (denoted $\large E(z)$)  
 
 --
-#### This is the most probable value of $z$  
+#### This is the most probable value of $\large z$  
 
 --
-#### Think of this as a weighted average - the mean of all possible values of $z$ weighted by the probability mass or density of each value $[z]$  
+#### Think of this as a weighted average - the mean of all possible values of $z$ weighted by the probability mass or density of each value $\large [z]$  
 
 --
 #### For discrete variables, the first moment can be calculated as
@@ -755,7 +755,7 @@ $$\Large \mu = E(z) = \int_{-\infty}^{\infty} z[z]dz$$
 #### On average how far is a random value drawn from the distribution from the mean of the distribution  
 
 --
-#### For discrete variables, variance can be estimated as the weighted average of the squared difference (squared to prevent negative values) between each value $z$ and the mean $\mu$ of the distribution:
+#### For discrete variables, variance can be estimated as the weighted average of the squared difference (squared to prevent negative values) between each value $\large z$ and the mean $\large \mu$ of the distribution:
 
 $$\Large \sigma^2 = E((z - \mu)^2) = \sum_{z \in S} (z - \mu)^2[z]$$
 --
@@ -784,7 +784,7 @@ Let's estimate the first and second moments of a gamma distribution $^{18}$
 <br/>
 
 --
-The shape of the gamma distribution is governed by two parameters, $\alpha$ (referred to as the shape) and $\beta$ (referred to as the rate or sometimes the scale) $^{19}$ 
+The shape of the gamma distribution is governed by two parameters, $\large \alpha$ (referred to as the shape) and $\large \beta$ (referred to as the rate or sometimes the scale) $^{19}$ 
 <br/>
 <br/>
 
@@ -822,7 +822,7 @@ sigma2 <- sum((samp - mu)^2)/n # variance of the sample
 How close are these values to the true moments? For the gamma distribution: 
 $$\Large \mu = \frac{\alpha}{\beta}$$
 
-$$\Large \sigma^2 = \frac{\alpha}{\beta}$$
+$$\Large \sigma^2 = \frac{\alpha}{\beta^2}$$
 
 For our samples: $^1$
 
@@ -842,7 +842,7 @@ Your answer won't exactly match the ones here but they should be pretty close
 How close are these values to the true moments? For the gamma distribution: 
 $$\Large \mu = \frac{\alpha}{\beta}$$
 
-$$\Large \sigma^2 = \frac{\alpha}{\beta^1}$$
+$$\Large \sigma^2 = \frac{\alpha}{\beta^2}$$
 
 For our distribution:
 
@@ -860,7 +860,7 @@ Try this on your own - simulate data from a Poisson distribution and see if the 
 <br/>
 
 --
-Change both $\lambda$ and $n$. *Does varying these values change how well your sample estimates the moments?*  $^{20}$  
+Change both $\large \lambda$ and $\large n$. *Does varying these values change how well your sample estimates the moments?*  $^{20}$  
 
 ???
 
@@ -941,7 +941,7 @@ $^{24}$The shape of the beta distribution is governed by two parameters $\alpha$
 ---
 ## Moment matching 
 
-#### What is you know the mean of a beta distribution is 0.3 and the variance is 0.025? What are $\alpha$ and $\beta$?  
+#### What is you know the mean of a beta distribution is 0.3 and the variance is 0.025? What are $\large \alpha$ and $\large \beta$?  
 
 --
 

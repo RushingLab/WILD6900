@@ -25,21 +25,21 @@ In this assignment, we will further practice developing informative priors. To c
 
 First, choose an ecological parameter that is relevant to your research (survival probability, population growth rate, litter size, etc.). The particular parameter doesn't matter but try to identify a parameter that has previously been studied and ideally has published estimates (note that the published estimates don't need to be the exact parameter in your model - they could come from different populations, different species, different age classes, etc. as long as you can provide a reasonable argument that they provide some useful information about your parameter)
 
-**1a) In the space below, describe the parameter your chose. Be sure to provide information about both the ecological interpretation of the parameter. For example, if the parameter is a survival probability, be specific about the age class/sex that the probability applies to as well as the time period.**
+> 1a) In the space below, describe the parameter your chose. Be sure to provide information about both the ecological interpretation of the parameter. For example, if the parameter is a survival probability, be specific about the age class/sex that the probability applies to as well as the time period.**
 
 
-**1b) Identify a reasonable probability distribution that you think could describe the parameter. Hint - think about the statistical properties of the parameter (is it bound by a certain interval (0-1)? Can it be positive or negative? Can it only take integer values or any real number?)**
+> 1b) Identify a reasonable probability distribution that you think could describe the parameter. Hint - think about the statistical properties of the parameter (is it bound by a certain interval (0-1)? Can it be positive or negative? Can it only take integer values or any real number?)**
 
 ## Uninformative prior
 
 Next, identify a reasonable uninformative prior for the parameter you chose. Feel free to use Google or a text book if you don't know off the top of your head what a good prior might be. 
 
-**2a) In the space below, write the equation for the uninformative prior you chose (refer to the R markdown tutorial for help with creating equations)**
+> 2a) In the space below, write the equation for the uninformative prior you chose (refer to the R markdown tutorial for help with creating equations)**
 
 
 $$place you equation here$$
 
-**2b) Plot the prior. You may use any plotting functions you prefer (e.g., base or ggplot2). Hint - first use the `ddist()` function (replace `dist` with the appropriate distribution for your prior) to calcuate the probability density or pobabiliy mass for a range of possible parameter values. You may also refer to ggplot2 code found in the lecture.** 
+> 2b) Plot the prior. You may use any plotting functions you prefer (e.g., base or ggplot2). Hint - first use the `ddist()` function (replace `dist` with the appropriate distribution for your prior) to calcuate the probability density or pobabiliy mass for a range of possible parameter values. You may also refer to ggplot2 code found in the lecture.** 
 
 
 ```{r fig.width = 6, fig.height = 6}
@@ -50,10 +50,10 @@ $$place you equation here$$
 
 Now you will use your domain expertise to improve upon the uninformative prior. 
 
-**3a) Briefly describe your knowledge of what parameter values are plausible given your domain expertise.** 
+> 3a) Briefly describe your knowledge of what parameter values are plausible given your domain expertise.** 
 
 
-**3b) Translate your domain expertise into an informative prior distribution. This distribution may contain very little information (a weakly informative prior) but it should contain more information than the uninformative prior you chose above. Provide the equation and any code you used to create this prior below. Also add the new prior to your previous plot and use an attribute (color, line type, etc.) to differientiate it from your uninformative prior.** 
+> 3b) Translate your domain expertise into an informative prior distribution. This distribution may contain very little information (a weakly informative prior) but it should contain more information than the uninformative prior you chose above. Provide the equation and any code you used to create this prior below. Also add the new prior to your previous plot and use an attribute (color, line type, etc.) to differientiate it from your uninformative prior.** 
 
 
 $$place your equation here$$
@@ -66,16 +66,16 @@ $$place your equation here$$
 
 Now see if you can find published estimates of the parameter in the literature. The number of studies you locate isn't important so if there's only 1 that's OK. But remember that the more you find the more informative your prior will be. 
 
-**4a) Briefly describe the studies you identified. In particular, provide a justification for why these studies provide relevant information about your parameter**
+> 4a) Briefly describe the studies you identified. In particular, provide a justification for why these studies provide relevant information about your parameter**
 
 
-**4b) Create a data frame containing information about the published estimates. This should contain, at a minimum, the point estimates, a measure of uncertainty, and a reference. It can also contain any other information you think is relevant to understanding your results.**
+> 4b) Create a data frame containing information about the published estimates. This should contain, at a minimum, the point estimates, a measure of uncertainty, and a reference. It can also contain any other information you think is relevant to understanding your results.**
 
 ```{r}
 # include code to create or read your data frame
 ```
 
-**4c) Use one of the techniques we learned in class to create an informative prior for your parameter based on the published studies. Provide the equation and any code you used to create this prior below. Also add the new prior to your previous plot and use an attribute (color, line type, etc.) to differientiate it from your uninformative prior.**
+> 4c) Use one of the techniques we learned in class to create an informative prior for your parameter based on the published studies. Provide the equation and any code you used to create this prior below. Also add the new prior to your previous plot and use an attribute (color, line type, etc.) to differientiate it from your uninformative prior.**
 
 $$place your equation here$$
 

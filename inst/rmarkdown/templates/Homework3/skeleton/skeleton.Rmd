@@ -15,7 +15,7 @@ library(WILD6900)
 
 ***
 
-**Due date: 13 February, 2019 before class**
+**Due date: 13 February, 2020 before class**
 
 After you have modified the code according to the instructions, change `eval = FALSE` to `eval = TRUE` in the `setup` chunk above (line 12). Once this option is changed, **do not** modify any of the chunk options below.  
 
@@ -39,24 +39,24 @@ data("falcons")
 
 The `Eyasses` column provides the total number of fledglings produced by the entire population in each year (i.e., the `Pairs` column). We can think of these values as the product of per capita fecundity $f$ times the number of individuals $N$, plus some random noise. In other words, the *expected* number of eyasses in a given year is $f_tN_t$ but the *observed* number will differ from this expectation due to random process variation. 
 
-**1) What distribution would be appropriate for linking the observed number of eyasses in each year (call that $E_t$) to the per capita fecundity $f_t$ and current population size $N_t$? Type the equation below inside of the double dollar signs (note - the command `\sim` will create the $\sim$ (tilda) symbol)**
+> 1) What distribution would be appropriate for linking the observed number of eyasses in each year (call that $E_t$) to the per capita fecundity $f_t$ and current population size $N_t$? Type the equation below inside of the double dollar signs (note - the command `\sim` will create the $\sim$ (tilda) symbol)**
 
 $$insert\; equation\; here$$
 
 In the previous lab, we modeled the counts as a non-linear function of year by including polynomial terms in the linear predictor. Given the non-linear changes in abundance, we might expect non-linear changes in fecundity over the same time period. 
 
-**2a) In the equation below, replace `?` with the appropriate link function for modeling per capita fecundity $f_t$ as a linear function of covariates.**  
+> 2a) In the equation below, replace `?` with the appropriate link function for modeling per capita fecundity $f_t$ as a linear function of covariates.**  
 
-**2b) On the right hand side of the equation, write the linear predictor assuming we want to model fecundity as a function of $year$ and $year^2$. Use whatever symbols you would like to represent intercept/slope parameters**
+> 2b) On the right hand side of the equation, write the linear predictor assuming we want to model fecundity as a function of $year$ and $year^2$. Use whatever symbols you would like to represent intercept/slope parameters**
 
 $$?(f_t) =$$
 
 
 Next you will need to covert the above model into functioning JAGS code. Complete the code statement below by filling in:
 
-**3a) The appropriate prior distributions for each parameter in the model**  
+> 3a) The appropriate prior distributions for each parameter in the model**  
 
-**3b) The correct likelihood for the model above**
+> 3b) The correct likelihood for the model above**
 
 ***
 **Important** - in order for the .Rmd file to knit properly, complete the model code below and then manually run the code to create the .jags file (highlighting the chunk below and clicking `Run` or `command + return`). Leave the `eval = FALSE` option set to false so that `knitr` does **not** try to run the code when you knit the document!
@@ -80,26 +80,26 @@ sink()
 
 Now create the objects that JAGS needs to fit the model:
 
-**4a) Complete the `jags_data <- list()` object to include all necessary input to run the model**
+> 4a) Complete the `jags_data <- list()` object to include all necessary input to run the model**
 
 ```{r}
 jags_data <- list()
 ```
 
-**4b) Complete the `jags_inits` function to include all necessary input to run the model**
+> 4b) Complete the `jags_inits` function to include all necessary input to run the model**
 
 ```{r}
 jags_inits <- function(){list()}
 ```
 
 
-**4c) Complete the `params <- c()` object to include parameters you would like to monitor**
+> 4c) Complete the `params <- c()` object to include parameters you would like to monitor**
 
 ```{r}
 params <- c()
 ```
 
-**4d) Complete the MCMC settings. Run 3 chains for 25,000 iterations, discarding the first 1000 samples as burn-in**
+> 4d) Complete the MCMC settings. Run 3 chains for 25,000 iterations, discarding the first 1000 samples as burn-in**
 
 ```{r}
 ni <- 
@@ -118,13 +118,13 @@ fecundity_mod <- jagsUI::jags(data = jags_data, inits = jags_inits,
 
 Check the model for convergence. 
 
-**5) Did the model coverge? Type your answer in __bold__ below, providing at least two sources of evidence for convergence. If the model did not converge, change your settings above and re-run. What did you change?**
+> 5) Did the model coverge? Type your answer in __bold__ below, providing at least two sources of evidence for convergence. If the model did not converge, change your settings above and re-run. What did you change?**
 
 
 
 Finally, plot the expected and predicted fecundity over time.  
 
-**6) Complete the following code to add the predicted fecundity for each year from the model, plus the upper and lower 95% credible intervals. Remember that the posterior mean and 2.5/97.5% quantiles for each monitored paramter is stored within the `fecundity_mod` object**
+> 6) Complete the following code to add the predicted fecundity for each year from the model, plus the upper and lower 95% credible intervals. Remember that the posterior mean and 2.5/97.5% quantiles for each monitored paramter is stored within the `fecundity_mod` object**
 
 ```{r}
 falcons <- dplyr::mutate(falcons, f = , 
@@ -142,4 +142,4 @@ ggplot(falcons) +
   scale_y_continuous("Fecundity")
 ```
 
-**7) From an ecological perspective, how do you interpret the changes in fecundity over time? For additional context, refer to the plot from the previous lab showing changes in the abundance of nesting pairs over this time period. Type your answer in __bold__ below**
+> 7) From an ecological perspective, how do you interpret the changes in fecundity over time? For additional context, refer to the plot from the previous lab showing changes in the abundance of nesting pairs over this time period. Type your answer in __bold__ below**

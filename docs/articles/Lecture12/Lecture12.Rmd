@@ -311,7 +311,7 @@ $$\Large N = \sum_{i=1}^M z_i$$
 
 ```{r eval = FALSE, echo = TRUE}
 model{
-  omega ~ dbeta(1, 1)
+  psi ~ dbeta(1, 1)
   p ~ dbeta(1, 1)
   
   for(i in 1:M){
@@ -375,7 +375,7 @@ However, $\large M_0$, $\large M_t$, $\large M_h$, $\large M_b$ are not single m
 
 ```{r eval = FALSE, echo = TRUE}
 model{
-  omega ~ dbeta(1, 1)
+  psi ~ dbeta(1, 1)
   for(t in 1:T){
     p[t] ~ dbeta(1, 1)
   }
@@ -397,7 +397,7 @@ model{
 
 ```{r eval = FALSE, echo = TRUE}
 model{
-  omega ~ dbeta(1, 1)
+  psi ~ dbeta(1, 1)
   for(t in 1:T){
     lp[t] ~ dnorm(mu.p, tau.p)
     logit(p[t]) <- lp[t]
@@ -438,7 +438,7 @@ model{
 
 ```{r eval = FALSE, echo = TRUE}
 model{
-  omega ~ dbeta(1, 1)
+  psi ~ dbeta(1, 1)
   p ~ dbeta(1, 1)
   c ~ dbeta(1, 1)
   
@@ -481,7 +481,7 @@ $$\large logit(p_i) \sim normal(logit(\mu_p), \tau_p)$$
 
 ```{r eval = FALSE, echo = TRUE}
 model{
-  omega ~ dbeta(1, 1)
+  psi ~ dbeta(1, 1)
   mean.p ~ dbeta(1, 1)
   mean.lp <- log(mean.p) - log(1 - mean.p)
   tau.p ~ dgamma(0.25, 0.25)

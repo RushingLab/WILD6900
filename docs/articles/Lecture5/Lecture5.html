@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html>
   <head>
     <title>Lecture 5</title>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
     <meta name="author" content="   WILD6900 (Spring 2020)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
@@ -190,7 +190,8 @@ norm_df &lt;- data.frame(samples = rnorm(5000))    # Generate samples from distr
 - A natural choice for this likelihood is the binomial distribution  
 
 
---
+---
+## Implementing a simple MCMC
 
 #### Simulate data, assuming the true survival probability is `\(\large 40\%\)`:
 
@@ -204,7 +205,7 @@ phi &lt;- 0.4   # True survival probability
 ```
 
 ```
-## [1]  9  8 10  7  8
+## [1] 6 7 6 9 5
 ```
 
 ---
@@ -219,7 +220,7 @@ phi &lt;- 0.4   # True survival probability
 
 --
 
-#### Still, let's assume we don't know much about the survival of our study organism other than that it's probably not less than ~20% and probably not more than ~50%  
+#### Assume we know survival is probably `\(\gt \sim 20\%\)` and `\(\lt \sim 50\%\)`  
 
 - A reasonable prior to represent this knowledge might be `\(beta(2,4)\)`
 
@@ -232,9 +233,9 @@ phi &lt;- 0.4   # True survival probability
 
 
 ```r
-joint &lt;- function(data, N, p, a, b){
-  ll &lt;- sum(dbinom(data, size = N, prob = p, log = TRUE)) + 
-        dbeta(x = p, shape1 = a, shape2 = b, log = TRUE)
+joint &lt;- function(data, N, phi, a, b){
+  ll &lt;- sum(dbinom(data, size = N, prob = phi, log = TRUE)) + 
+        dbeta(x = phi, shape1 = a, shape2 = b, log = TRUE)
   return(ll)
 }
 ```
@@ -267,11 +268,11 @@ class: inverse, class, middle
 
 --
 
-2) Compute probability of accepting `\(\theta^*\)` using the joint distributions evaluated at `\(\theta^*\)` and `\(\theta^{k-1}\)`  
+2) Compute probability of accepting `\(\theta^*\)` using the joint distributions evaluated at `\(\theta^*\)` and `\(\theta^1\)`  
 
 --
 
-3) Accept `\(\theta*\)` (i.e., `\(\theta^{k} = \theta^*\)`) with the probability estimated in step 2, otherwise retain the previous value (i.e., `\(\theta^{k} = \theta^{k-1}\)`)  
+3) Accept `\(\theta^*\)` (i.e., `\(\theta^{2} = \theta^*\)`) with the probability estimated in step 2, otherwise retain the previous value (i.e., `\(\theta^{2} = \theta^{1}\)`)  
 
 ???
 
@@ -352,7 +353,10 @@ set.seed(123456)
 
 `$$\Large [\theta^*|\theta^{k-1}]$$` 
 
---
+---
+## MCMC: basic steps
+
+### Step 1: Propose a new value
 
 #### For example, we could use a normal proposal distribution:
 
@@ -386,7 +390,7 @@ set.seed(123456)
 
 #### We could instead use a beta distribution and use moment matching to define `\(\large \alpha\)` and `\(\large \beta\)` in terms of `\(\large \theta^{k-1}\)` (the mean) and `\(\large \sigma^2\)`:
 
-`$$\large \theta^* \sim beta\Bigg(\theta^{k-1}\bigg(\frac{\theta^{k-1}(1-\theta^{k-1})}{\sigma^2}-1\bigg), (1-\theta^{k-1})\bigg(\frac{\theta^{k-1}(1-\theta^{k-1})}{\sigma^2}-1\bigg)\Bigg)$$`
+`$$\theta^* \sim beta\Bigg(\theta^{k-1}\bigg(\frac{\theta^{k-1}(1-\theta^{k-1})}{\sigma^2}-1\bigg), (1-\theta^{k-1})\bigg(\frac{\theta^{k-1}(1-\theta^{k-1})}{\sigma^2}-1\bigg)\Bigg)$$`
 
 ---
 ## MCMC: basic steps
@@ -397,9 +401,9 @@ set.seed(123456)
 
 
 ```r
-proposal &lt;- function(p, sigma2){
-  alpha &lt;- p * ((p * (1 - p) / sigma2) - 1)
-  beta &lt;- (1 - p) * ((p * (1 - p) / sigma2) - 1)
+proposal &lt;- function(phi, sigma2){
+  alpha &lt;- phi * ((phi * (1 - phi) / sigma2) - 1)
+  beta &lt;- (1 - phi) * ((phi * (1 - phi) / sigma2) - 1)
   
   proposal &lt;- rbeta(n = 1, shape1 = alpha, shape2 = beta)
   return(proposal)
@@ -467,7 +471,7 @@ These, of course, are the posterior probabilities of `\(\theta^*\)` and `\(\thet
 
 --
 
-#### At first blush, you might assume that we reject  `\(\large \theta^*\)` when `\(\large R \lt 1\)`  
+At first blush, you might assume that we reject  `\(\large \theta^*\)` when `\(\large R \lt 1\)`  
 
 - However, if we did this, we would rarely sample values of `\(\theta\)` in the tails `\(^1\)` 
 
@@ -496,7 +500,7 @@ posterior &lt;- data.frame(iteration = 1:n.samples,
                         phi = rep(NA, n.samples),
                         accept = rep(0, n.samples)) # Empty vector to store samples of phi
 
-p &lt;- init     # Initial value
+phi &lt;- init     # Initial value
 ```
 
 ---
@@ -509,19 +513,19 @@ Next, we run the sampler:
 
 ```r
 for(i in 1:n.samples){
-  p.cand &lt;- proposal(p = p, sigma2 = sigma2)   ## Proposal
+  phi.cand &lt;- proposal(phi = phi, sigma2 = sigma2)   ## Proposal
   
-  l.R &lt;- (joint(data = n, N = 20, p = p.cand, a = 2, b = 4) - ## log(R)
-            joint(data = n, N = 20, p = p, a = 2, b = 4))
+  l.R &lt;- (joint(data = n, N = 20, phi = phi.cand, a = 2, b = 4) - ## log(R)
+            joint(data = n, N = 20, phi = phi, a = 2, b = 4))
   
   R &lt;- min(1, exp(l.R))   ## R
   
   if(runif(1) &lt; R){
-    p &lt;- p.cand
+    phi &lt;- phi.cand
     posterior$accept[i] &lt;- 1
   }
   
-  posterior$phi[i] &lt;- p
+  posterior$phi[i] &lt;- phi
 }
 ```
 
@@ -576,7 +580,7 @@ mean(posterior$phi)
 ```
 
 ```
-## [1] 0.4139
+## [1] 0.3258
 ```
 
 Pretty close (that a good sign that our Metropolis sampler did what we wanted it to do!)
@@ -595,7 +599,7 @@ quantile(posterior$phi)
 
 ```
 ##     0%    25%    50%    75%   100% 
-## 0.2032 0.3814 0.4132 0.4456 0.6665
+## 0.1413 0.2941 0.3254 0.3554 0.6665
 ```
 
 Quantiles are useful for determining the 95% *credible intervals* of the posterior: `\(^1\)`
@@ -607,10 +611,10 @@ quantile(posterior$phi, probs = c(0.025, 0.975))
 
 ```
 ##   2.5%  97.5% 
-## 0.3188 0.5134
+## 0.2373 0.4210
 ```
 
-This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.32 and 0.51" `\(^2\)`
+This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.24 and 0.42" `\(^2\)`
 
 ???
 
@@ -740,7 +744,7 @@ class: inverse, middle, center
 ---
 ## Evaluating Markov chains
 
-#### The most important characteristic of MCMC chains is **convergence**  
+The most important characteristic of MCMC chains is **convergence**  
 
 --
 - Convergence occurs when the accumulated samples accurately characterize the posterior distribution of a parameter
@@ -748,7 +752,7 @@ class: inverse, middle, center
 
 --
 
-#### Once a chain has converged, adding more samples will not meaningfully change the shape or moments of the posterior distribution  
+Once a chain has converged, adding more samples will not meaningfully change the shape or moments of the posterior distribution  
 
 --
 - At this point, a chain is *stationary* because more samples will not cause it to "move" `\(^1\)`
@@ -867,7 +871,6 @@ Solving lack of identifiability is harder
 
 `\(^2\)` Most MCMC software (JAGS, Bugs, etc) use an adaptive phase,  during with the samplers used by the model may modify their behavior for increased efficiency. This is usually done behind the scenes but as highlighted in the linked post, being aware of what the software is doing can be useful for improving mixing
     </textarea>
-<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
@@ -877,74 +880,16 @@ Solving lack of identifiability is harder
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function(d) {
-  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})(document);
-
-(function(d) {
-  var el = d.getElementsByClassName("remark-slides-area");
-  if (!el) return;
-  var slide, slides = slideshow.getSlides(), els = el[0].children;
-  for (var i = 1; i < slides.length; i++) {
-    slide = slides[i];
-    if (slide.properties.continued === "true" || slide.properties.count === "false") {
-      els[i - 1].className += ' has-continuation';
-    }
-  }
-  var s = d.createElement("style");
-  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
-  d.head.appendChild(s);
-})(document);
-// delete the temporary CSS (for displaying all slides initially) when the user
-// starts to view slides
-(function() {
-  var deleted = false;
-  slideshow.on('beforeShowSlide', function(slide) {
-    if (deleted) return;
-    var sheets = document.styleSheets, node;
-    for (var i = 0; i < sheets.length; i++) {
-      node = sheets[i].ownerNode;
-      if (node.dataset["target"] !== "print-only") continue;
-      node.parentNode.removeChild(node);
-    }
-    deleted = true;
-  });
-})();
-// adds .remark-code-has-line-highlighted class to <pre> parent elements
-// of code chunks containing highlighted lines with class .remark-code-line-highlighted
-(function(d) {
-  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
-  const preParents = [];
-  const findPreParent = function(line, p = 0) {
-    if (p > 1) return null; // traverse up no further than grandparent
-    const el = line.parentElement;
-    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
-  };
-
-  for (let line of hlines) {
-    let pre = findPreParent(line);
-    if (pre && !preParents.includes(pre)) preParents.push(pre);
-  }
-  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
-})(document);</script>
+})();</script>
 
 <script>
 (function() {
-  var links = document.getElementsByTagName('a');
-  for (var i = 0; i < links.length; i++) {
-    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
-      links[i].target = '_blank';
-    }
-  }
-})();
-</script>
-
-<script>
-slideshow._releaseMath = function(el) {
-  var i, text, code, codes = el.getElementsByTagName('code');
+  var i, text, code, codes = document.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -958,8 +903,7 @@ slideshow._releaseMath = function(el) {
     }
     i++;
   }
-};
-slideshow._releaseMath(document);
+})();
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

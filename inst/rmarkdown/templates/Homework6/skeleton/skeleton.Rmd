@@ -1,0 +1,169 @@
+---
+title: "WILD6900"
+subtitle: "Homework 6: Closed capture-recapture models with individual covariates"
+author: "YOUR NAME HERE"
+date: "`r Sys.Date()`"
+output: html_document
+
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warning = FALSE, eval = FALSE)
+library(WILD6900)
+```
+
+***
+
+**Due date: 9 April, 2020 before class**
+
+After you have modified the code according to the instructions, change `eval = FALSE` to `eval = TRUE` in the `setup` chunk above (line 12). Once this option is changed, **do not** modify any of the chunk options below.  
+
+Refer to the [instructions for submitting homework assignments](https://rushinglab.github.io/WILD6900/articles/homework.html) prior to submission
+
+***
+
+In this homework assignment, you will learn about how to fit closed capture-recapture models in cases where detection probability is influenced by a covariate. This situation arises quite commonly because there are many individual-level characteristics that could influence the detection process - body size, vocalization rate, coloration, even location (e.g., home range center). 
+
+Including individual covariates in a closed capture-recapture model is difficult however because, by definition, we do not have covariate values for the individuals that we didn't see. JAGS will allow us to include `NA`'s in the response variable but doesn't like missing covariates. 
+
+> 1) Describe, briefly, why JAGS will allow missing values in the response variable but not covariates (hint - in the model likelihood, response variables are defined using `~` instead of `<-`). Include your answer in **bold** below. 
+
+## Modeling the covariate 
+
+The key to including individual covariates in this context is treating the covariate values themselves as random variables (just like we treat the response variables). To do so, we need to define a covariate model. There are many possible choices but one natural starting point is a normal distribution with mean $\mu_x$ and variance $\sigma^2_x$ (or precision $\tau_x$; this is a particularly natural model when you have scaled covariate values to have a mean of $0$ and standard deviation of $1$):
+
+$$x_i \sim normal(\mu_x, \tau_x)$$
+
+For individuals that we captured at least once, the $x_i$ values go into the model as data. For individuals that are not seen, we treat $x_i$ as missing data and the model estimates $x_i$ based on the above model. 
+
+By defining a model for $x_i$ and treating the missing $x_i$ as unobserved realizations from this model, we are now able to include $x_i$ as a predictor in our model. For this example, we'll assume that detection probability of each species $p_i$ is positively related to $x$ $-$ you're more likely to detect individuals with large values $x$ than individuals with small values:
+
+$$logit(p_i) = \alpha_0 + \alpha_1 \times x_i$$
+
+Of course, we don't know exactly how many individuals weren't observed so this formulation is generally used in combination with data augmentation to estimate $N$. 
+
+> 2) The JAGS model below provides code for the basic $M_0$ model. Modify this code to include: 1) the model for $x_i$ described above; 2) individual-level detection probability (i.e., p[i]); and 3) a linear model relating $p_i$ to $x_i$
+
+***
+**Important** - in order for the .Rmd file to knit properly, complete the model code below and then manually run the code to create the .jags file (highlighting the chunk below and clicking `Run` or `command + return`). Leave the `eval = FALSE` option set to false so that `knitr` does **not** try to run the code when you knit the document!
+
+***
+
+```{r eval = FALSE}
+sink("Mx.jags")
+cat("
+model{
+  omega ~ dbeta(1, 1)
+  p ~ dbeta(1, 1)
+
+  for(i in 1:M){
+    z[i] ~ dbern(psi)
+
+    for(t in 1:T){
+      y[i, t] ~ dbern(p * z[i])
+    } # end t
+  } # end i
+  N <- sum(z[1:M])
+}
+    ", fill = TRUE)
+sink()
+```
+
+## Setting up the simulation
+
+For this assignment, you will again simulate a data set so that we can judge whether the modeling approach works for not. Closed capture-recapture can be used not only to estimate abundance of one species but also to estimate species richness of a community (i.e., the total number of species. In this case, we don't worry about individual identify, only whether each species is observed or not during each survey. For this reason, we don't actually need to physically capture individuals $-$ species identity is like a "natural mark"). In both cases, we recognize that our observed sample (observed number of individuals or species) does not include every individual or species present and our objective is to estimate how many we missed. 
+
+Start turning the pseudo-code below into working code to simulate a data set:
+
+```{r sim1}
+## 1) Create an object called N and choose a value indicating the true number of species in the community
+
+```
+
+Next, you will simulate a covariate `x` with the body size of each species and calculate $p_i$:
+
+```{r sim2}
+## 2a) Simulate N realization of a uniform distribution with min = 5 and max = 1000. Call this object x
+
+## 2b) Scale x to have mean = 0 and sd = 1. Call this object x.stnd
+
+## 3a) Create an object called p0. This is the detection prob of a species with the average body size
+
+## 3b) Create an object called alpha0 which is the inverse logit of p0
+
+## 4) Create an object called alpha1 which is the relationship between body size and p
+
+## 5a) Calculate the (logit) detection probability for each species; call this object lp
+
+## 5b) Calculate the detection probability for each species from lp; call this object p
+
+```
+
+Next, simulate the observations. First, you'll need to choose the number of sampling occasions and an empty matrix to store the observations. Then loop over the elements of the matrix to simulate the $0$ or $1$ observations:
+
+```{r sim3}
+## 6) Choose the number of sampling occasions; call it K
+
+## 7) Create a N x K matrix with all 0 entries; call this matrix y
+
+## 8) Loop over the elements of the matrix and use rbinom() to simulate observations with probability p[i]
+
+```
+
+Finally, to make our simulated data consistent with what we would observe in the field, we need to remove the species with all 0 encounter histories:
+
+```{r sim4}
+## 9) Use the which() and apply() functions to create a vector indicating which species (i.e., rows) were seen; call this vector seen
+
+## 10) Create an object called N.obs indicated the number of species that were ever detected during the study
+
+## 11) Create an object call y.obs with only the rows of y that include species with at least one detection
+
+## 12) Subset x.stnd to include only the body size of the observed species; call this object x.obs
+
+```
+
+
+## Data augmentation
+
+As in the other examples of closed capture-recapture models we've seen, we'll use data augmentation to estimate $N$. In the next steps, you will augment the "observed" data with $M$ all zero encounter histories:
+
+```{r sim5}
+## 13) Create an object M indicating the number of augmented individuals
+
+## 14) Use `rbind` to add M all zero encounter histories to y.obs
+
+```
+
+You also need to augment `x.obs`. In this case, we don't know the size of the augmented species so we include the augmented sizes as missing values:
+
+```{r sim6}
+## 15) Add M `NA`'s to x.obs
+
+```
+
+## Fit the model
+
+In the chunk below, set up all objects needed to fit the $M_x$ model in JAGS (use the model code you created in question 2). **Be sure to include initial values for `z` or you will get an error message. The initial values should be $1$ for all observed species and $0$ for all unobserved species.** 
+
+```{r mcmcSetUp}
+
+```
+
+Now fit the model:
+
+```{r fit}
+
+```
+
+> 3) Did the model converge? Provide at least two forms of evidence of convergence. If it didn't, run the chains for longer and see if that helps. Include your answer in **bold** below (along with any plots)
+
+
+
+> 4) How close was the estimated $\hat{N}$ to the true $N$? Did you augment by a large enough number of individuals? How can you tell? Include your answer in **bold** below
+
+
+
+> 5) What does the model say about the size of individuals that were not detected? Do the estimates of $x_i$ for unobserved individuals depend on $alpha0$ and $alpha1$? If necessary, change those values and rerun to model to see if/how they change estimates of $x_i$. Include your answer in **bold** below
+
