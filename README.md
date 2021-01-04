@@ -1,8 +1,8 @@
 # Welcome to WILD6900: Applied Bayesian Analysis for Ecological Data
 
-This is the unofficial course website for the Spring 2019 offering of **WILD6900: Applied Bayesian Analysis for Ecological Data** at Utah State University. This website is built using the R package *pkgdown* and is a slightly experimental attempt to use pkgdown to create a course website. For that reason, the "official" course website (for students enrolled in the course) will remain on Canvas.  
+This is the unofficial course website for the Spring 2021 offering of **WILD6900: Applied Bayesian Analysis for Ecological Data** at Utah State University. This website is built using the R package *pkgdown* and is a slightly experimental attempt to use pkgdown to create a course website. For that reason, the "official" course website (for students enrolled in the course) will remain on Canvas.  
 
-The goal of using _pkgdown_ is to create a central repository for students to access all course materials - lecture slides, lab activities, assignment templates, code, data, etc. A secondary goal is to make those materials freely available to other students and instructors who may find them useful. As I mentioned, this is a bit of an experiment so please bear with me as the site comes together. If you encounter any issues or have any suggestions, feel free to contact me at clark.rushing [at] usu [dot] edu.     
+The goal of using _pkgdown_ is to create a central repository for students to access all course materials - lecture slides, lab activities, assignment templates, code, data, etc. A secondary goal is to make those materials freely available to other students and instructors who may find them useful. If you encounter any issues or have any suggestions, feel free to contact me at clark.rushing [at] usu [dot] edu.     
 
 General course information can be found by clicking on the `syllabus` and `schedule` links above. Throughout the semester, I will also post lecture notes and lab activities which can be accessed using the drop down menus. I will attempt to post these as far in advance as possible and no later than the day before class.  
 

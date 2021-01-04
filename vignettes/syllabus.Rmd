@@ -1,7 +1,7 @@
 ---
 title: "Syllabus"
 subtitle: "WILD 6900: Applied Bayesian Analysis of Ecological Data"
-author: "Spring 2020"
+author: "Spring 2021"
 output: 
   rmarkdown::html_vignette:
     keep_md: yes
@@ -21,13 +21,13 @@ knitr::opts_chunk$set(
 # LOGISTICS
 
 **Lecture**: Tuesday and Thursday 1:30-2:45  
-**Location**: ENLAB 248 (Engineering Laboratory Building)  
+~~**Location**: ENLAB 248 (Engineering Laboratory Building)~~ **Zoom**  
 **Credits**: 3  
 
 # INSTRUCTOR
 Dr. Clark Rushing  
 clark.rushing@usu.edu  
-Office: NR 146  
+Office: ~~NR 146~~ **Zoom**  
 Office hours: Monday and Wednesday 1:00-2:30
 
 
@@ -85,7 +85,9 @@ Weekly readings will be assigned from these books so I highly recommend all stud
 
 Although the two text books and lab materials are sufficient for mastering the material presented in this course, a number of other excellent books are available and students may find some/all of these books helpful. The following books are 100% optional for this course but I have found helpful for learning this material:
 
-> Kéry, M. & Royle, J.A. 2016. *Applied Hierarchical Modeling in Ecology: Analysis of distribution, abundance, and species richness in R and BUGS*. Academic Press.
+> Kéry, M. & Royle, J.A. 2020. *Applied Hierarchical Modeling in Ecology: Analysis of distribution, abundance, and species richness in R and BUGS, Vol. II*. Academic Press.
+
+> Kéry, M. & Royle, J.A. 2016. *Applied Hierarchical Modeling in Ecology: Analysis of distribution, abundance, and species richness in R and BUGS, Vol. I*. Academic Press.
 
 > Kéry, M., 2010. *Introduction to WinBUGS for ecologists: Bayesian approach to regression, ANOVA, mixed models and related analyses*. Academic Press.
 
