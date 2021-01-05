@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
 )
 ```
 
+> The COVID-19 pandemic has forced many changes to our lives, including to the ways we teach and learn. I have attempted to make changes to the format and materials for this course to make online learning more effective and inclusive. However, I have no doubt that unforeseen issues will arise throughout the semester. For this reason, the materials and policies outlined in the syllabus are subject to change at the discretion of the instructor. Feedback about what is working and what is not working is encouraged to assist with making necessary changes. Bottom line - we're all in this together, each doing their best. My goal is to help you learn and to that end, I promise to flexible with accommodating unique circumstances caused by the pandemic. In return, I ask the same of you. 
+
 # LOGISTICS
 
 **Lecture**: Tuesday and Thursday 1:30-2:45  
@@ -107,7 +109,7 @@ If you plan to use your own computer, **be sure you have the most recent version
 
 1) Launch RStudio
 
-2) Put the cursor in the window labelled `Console`. Type the following code followed by enter or return: `x <- 2 * 4`. Next type `x` followed by enter or return. You should see the value 8 print to screen. If yes, you’ve succeeded in installing R and RStudio.
+2) Put the cursor in the window labeled `Console`. Type the following code followed by enter or return: `x <- 2 * 4`. Next type `x` followed by enter or return. You should see the value 8 print to screen. If yes, you’ve succeeded in installing R and RStudio.
 
 If you encounter any problems with the previous steps, please contact me prior to the first class. We will diagnose issues running JAGS in class but for now, make sure you have the most up-to-date R packages installed by running the following:
 

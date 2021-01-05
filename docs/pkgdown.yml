@@ -1,6 +1,6 @@
-pandoc: 2.3.1
-pkgdown: 1.2.0.9000
-pkgdown_sha: c980e84a573614087c6e151d5e6e19a22748b761
+pandoc: 2.7.3
+pkgdown: 1.6.1
+pkgdown_sha: ~
 articles:
   cjs: cjs.html
   homework: homework.html
@@ -21,4 +21,5 @@ articles:
   state_space2: state_space2.html
   syllabus: syllabus.html
   wrangling_bbs: wrangling_bbs.html
+last_built: 2021-01-05T19:50Z
 

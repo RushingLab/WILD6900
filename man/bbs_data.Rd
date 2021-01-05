@@ -4,7 +4,8 @@
 \name{bbs_data}
 \alias{bbs_data}
 \title{Breeding Bird Survey data}
-\format{A list with 3 data frames:
+\format{
+A list with 3 data frames:
 \describe{
   \item{routes}{ROUTE ATTRIBUTES}
     \itemize{
@@ -43,7 +44,8 @@
       \item{`routeID`}{  Unique eight digit route ID}
       \item{`aou`}{  All remaining columns are the counts of specific species; column names refer to the aou code used by BBS to identify species; values indicate the total number of individuals counted at each route in each year}
    }
-}}
+}
+}
 \source{
 \url{https://www.mbr-pwrc.usgs.gov/bbs/}
 }

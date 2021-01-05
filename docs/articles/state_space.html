@@ -6,18 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fitting state-space abundance models in JAGS • WILD6900</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Fitting state-space abundance models in JAGS">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="WILD6900">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">WILD6900</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2020.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2021.1</span>
       </span>
     </div>
 
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
@@ -46,21 +47,21 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="../articles/syllabus.html">
-    <span class="fas fa fas fa-book"></span>
+    <span class="fas fa-book"></span>
      
     Syllabus
   </a>
 </li>
 <li>
   <a href="../articles/schedule.html">
-    <span class="fas fa fas fa-calendar"></span>
+    <span class="fas fa-calendar"></span>
      
     Schedule
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-file-pdf-o"></span>
+    <span class="fas fa-file-pdf-o"></span>
      
     Lectures
      
@@ -119,7 +120,7 @@
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa fas fa-desktop"></span>
+    <span class="fas fa-desktop"></span>
      
     Labs
      
@@ -175,7 +176,7 @@
 </li>
 <li>
   <a href="../articles/homework.html">
-    <span class="fas fa fas fa-pencil-square-o"></span>
+    <span class="fas fa-pencil-square-o"></span>
      
     Assignments
   </a>
@@ -189,13 +190,14 @@
 <!--/.navbar -->
 
       
-      </header><div class="row">
+
+      </header><script src="state_space_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Fitting state-space abundance models in JAGS</h1>
+      <h1 data-toc-skip>Fitting state-space abundance models in JAGS</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2020-03-28</h4>
+            <h4 class="date">2021-01-05</h4>
       
       
       <div class="hidden name"><code>state_space.Rmd</code></div>
@@ -237,70 +239,74 @@
 <li><span class="math inline">\(\Large N_1 \sim uniform(0, 500)\)</span></li>
 </ul>
 <p>With the likelihoods and priors defined, we can now write the model file for JAGS:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"inst/jags/ssm.jags"</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="st">model { </span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="st">    # Priors and constraints</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="st">    N.est[1] ~ dunif(0, 500)  # Initial population size</span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="st">    for (t in 1:(nYears-1)){</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="st">      lambda[t] ~ dnorm(mu.lambda, tau.lambda) </span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="st">    }</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="st">    mu.lambda ~ dnorm(0, 0.1)          # Mean growth rate</span></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="st">    sigma.lambda ~ dgamma(0.25, 0.25)  # SD of state process</span></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="st">    tau.lambda &lt;- pow(sigma.lambda, -2)</span></a>
-<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="st">    </span></a>
-<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="st">    sigma.obs ~ dgamma(0.25, 0.25)     # SD of observation process</span></a>
-<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="st">    tau.obs &lt;- pow(sigma.obs, -2)</span></a>
-<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="st">  </span></a>
-<a class="sourceLine" id="cb1-18" data-line-number="18"><span class="st">    # Likelihood</span></a>
-<a class="sourceLine" id="cb1-19" data-line-number="19"><span class="st">    # State process</span></a>
-<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="st">    for (t in 1:(nYears-1)){</span></a>
-<a class="sourceLine" id="cb1-21" data-line-number="21"><span class="st">      N.est[t+1] &lt;- N.est[t] * lambda[t] </span></a>
-<a class="sourceLine" id="cb1-22" data-line-number="22"><span class="st">    }</span></a>
-<a class="sourceLine" id="cb1-23" data-line-number="23"><span class="st">    # Observation process</span></a>
-<a class="sourceLine" id="cb1-24" data-line-number="24"><span class="st">    for (t in 1:nYears) {</span></a>
-<a class="sourceLine" id="cb1-25" data-line-number="25"><span class="st">      y[t] ~ dnorm(N.est[t], tau.obs)</span></a>
-<a class="sourceLine" id="cb1-26" data-line-number="26"><span class="st">    }</span></a>
-<a class="sourceLine" id="cb1-27" data-line-number="27"><span class="st">    }</span></a>
-<a class="sourceLine" id="cb1-28" data-line-number="28"><span class="st">    "</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb1-29" data-line-number="29"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sink.html">sink</a></span><span class="op">(</span><span class="st">"inst/jags/ssm.jags"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"
+model { 
+    # Priors and constraints
+    N.est[1] ~ dunif(0, 500)  # Initial population size
+
+    for (t in 1:(nYears-1)){
+      lambda[t] ~ dnorm(mu.lambda, tau.lambda) 
+    }
+
+    mu.lambda ~ dnorm(0, 0.1)          # Mean growth rate
+    sigma.lambda ~ dgamma(0.25, 0.25)  # SD of state process
+    tau.lambda &lt;- pow(sigma.lambda, -2)
+    
+    sigma.obs ~ dgamma(0.25, 0.25)     # SD of observation process
+    tau.obs &lt;- pow(sigma.obs, -2)
+  
+    # Likelihood
+    # State process
+    for (t in 1:(nYears-1)){
+      N.est[t+1] &lt;- N.est[t] * lambda[t] 
+    }
+    # Observation process
+    for (t in 1:nYears) {
+      y[t] ~ dnorm(N.est[t], tau.obs)
+    }
+    }
+    "</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/sink.html">sink</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>Be sure you go through this file and understand how each part of the code corresponds to the likelihoods and priors defined above.</p>
 <div id="simulating-the-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#simulating-the-data" class="anchor"></a>Simulating the data</h3>
 <p>Next we will simulate 25 years of abundances and counts from the model defined above. For the simulation, we will assume an initial abundance of 30 individuals, <span class="math inline">\(\mu_{\lambda} = 1.02\)</span>, <span class="math inline">\(\sigma_{\lambda} = 0.15\)</span>, and <span class="math inline">\(\sigma_{Obs} = 4.5\)</span>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">nYears &lt;-<span class="st"> </span><span class="dv">25</span>      <span class="co"># Number of years</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">N1 &lt;-<span class="st"> </span><span class="dv">30</span>           <span class="co"># Initial population size</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">mu.lambda &lt;-<span class="st"> </span><span class="fl">1.02</span>  <span class="co"># Mean annual population growth rate</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">sigma.lambda &lt;-<span class="st"> </span><span class="fl">0.15</span>   <span class="co"># Process (temporal) variation of the growth rate</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">sigma.obs &lt;-<span class="st"> </span><span class="dv">20</span>        <span class="co"># SD of the observation error</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">nYears</span> <span class="op">&lt;-</span> <span class="fl">25</span>      <span class="co"># Number of years</span>
+<span class="va">N1</span> <span class="op">&lt;-</span> <span class="fl">30</span>           <span class="co"># Initial population size</span>
+<span class="va">mu.lambda</span> <span class="op">&lt;-</span> <span class="fl">1.02</span>  <span class="co"># Mean annual population growth rate</span>
+<span class="va">sigma.lambda</span> <span class="op">&lt;-</span> <span class="fl">0.15</span>   <span class="co"># Process (temporal) variation of the growth rate</span>
+<span class="va">sigma.obs</span> <span class="op">&lt;-</span> <span class="fl">20</span>        <span class="co"># SD of the observation error</span></code></pre></div>
 <p>Next, we create an empty data frame to store the true abundances and the observed counts and we generate random values of <span class="math inline">\(\lambda_t\)</span>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co">## Empty vectors to store the data</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">ssm_sim1 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">Year =</span> <span class="dv">1</span><span class="op">:</span>nYears, </a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">                       <span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">numeric</a></span>(nYears),</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">                       <span class="dt">N =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">numeric</a></span>(nYears))</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">## Fill in initial abundance</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">ssm_sim1<span class="op">$</span>N[<span class="dv">1</span>] &lt;-<span class="st"> </span>N1</a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">## Randomly generate annual lambda values</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10">lambda &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(nYears<span class="dv">-1</span>, mu.lambda, sigma.lambda)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Empty vectors to store the data</span>
+<span class="va">ssm_sim1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Year <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">nYears</span>, 
+                       y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">numeric</a></span><span class="op">(</span><span class="va">nYears</span><span class="op">)</span>,
+                       N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">numeric</a></span><span class="op">(</span><span class="va">nYears</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co">## Fill in initial abundance</span>
+<span class="va">ssm_sim1</span><span class="op">$</span><span class="va">N</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">N1</span>
+
+<span class="co">## Randomly generate annual lambda values</span>
+<span class="va">lambda</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="va">nYears</span><span class="op">-</span><span class="fl">1</span>, <span class="va">mu.lambda</span>, <span class="va">sigma.lambda</span><span class="op">)</span></code></pre></div>
 <p>Finally, we use loops to generate the true abundances and counts. Note that, once we have <span class="math inline">\(N_1\)</span> and <span class="math inline">\(\lambda_t\)</span>, the <span class="math inline">\(N_t\)</span> values are <strong>not stochastic</strong>. This should hopefully make it clear why we need a prior for <span class="math inline">\(N_1\)</span> but not <span class="math inline">\(N_2,...,N_T\)</span>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co">## Loop over years 1:nYears - 1 to generate true abundance</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(nYears<span class="dv">-1</span>)){</a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">   ssm_sim1<span class="op">$</span>N[t<span class="op">+</span><span class="dv">1</span>] &lt;-<span class="st"> </span>ssm_sim1<span class="op">$</span>N[t] <span class="op">*</span><span class="st"> </span>lambda[t]</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">}</a>
-<a class="sourceLine" id="cb4-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">## Loop over all years to generate counts</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nYears){</a>
-<a class="sourceLine" id="cb4-8" data-line-number="8">   ssm_sim1<span class="op">$</span>y[t] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Normal">rnorm</a></span>(<span class="dv">1</span>, ssm_sim1<span class="op">$</span>N[t], sigma.obs)</a>
-<a class="sourceLine" id="cb4-9" data-line-number="9">}</a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="kw">ggplot</span>(ssm_sim1, <span class="kw">aes</span>(<span class="dt">x =</span> Year)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> N), <span class="dt">color =</span> <span class="st">"grey30"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> y), <span class="dt">color =</span> <span class="st">"red"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Loop over years 1:nYears - 1 to generate true abundance</span>
+<span class="kw">for</span> <span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">nYears</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
+   <span class="va">ssm_sim1</span><span class="op">$</span><span class="va">N</span><span class="op">[</span><span class="va">t</span><span class="op">+</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">ssm_sim1</span><span class="op">$</span><span class="va">N</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">*</span> <span class="va">lambda</span><span class="op">[</span><span class="va">t</span><span class="op">]</span>
+<span class="op">}</span>
+
+<span class="co">## Loop over all years to generate counts</span>
+<span class="kw">for</span> <span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nYears</span><span class="op">)</span><span class="op">{</span>
+   <span class="va">ssm_sim1</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">ssm_sim1</span><span class="op">$</span><span class="va">N</span><span class="op">[</span><span class="va">t</span><span class="op">]</span>, <span class="va">sigma.obs</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">ssm_sim1</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Year</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">N</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"grey30"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></code></pre></div>
 <p><img src="state_space_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Notice how much more variable the counts are compared to the true abundances. That additional variation is caused solely by observation error and if we ignored the distinction between process and observation error, we would greatly overestimate the process variance in our system.</p>
 </div>
@@ -309,41 +315,45 @@
 <h2 class="hasAnchor">
 <a href="#analysis-in-jags" class="anchor"></a>Analysis in JAGS</h2>
 <p>Now we’re ready to fit the model in JAGS. First bundle the data:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">## Bundle data</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">jags.data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">y =</span> ssm_sim1<span class="op">$</span>y, <span class="dt">nYears =</span> nYears)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Bundle data</span>
+<span class="va">jags.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">ssm_sim1</span><span class="op">$</span><span class="va">y</span>, nYears <span class="op">=</span> <span class="va">nYears</span><span class="op">)</span></code></pre></div>
 <p>Next, set initial values. Remember that we need to set initial values for <span class="math inline">\(N_1\)</span> but not the remainder of the <span class="math inline">\(N\)</span>’s. So we will randomly generate an initial value for <code>N[1]</code> and then fill in <code>NA</code> for all other other elements in the <code>N</code> vector:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Initial values</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">sigma.lambda =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">5</span>), </a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">                         <span class="dt">mu.lambda =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="fl">0.1</span>, <span class="dv">2</span>), </a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">                         <span class="dt">sigma.obs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">10</span>), </a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">                         <span class="dt">N.est =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">20</span>, <span class="dv">40</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="ot">NA</span>, (nYears<span class="dv">-1</span>))))} </a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Initial values</span>
+<span class="va">inits</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>sigma.lambda <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, 
+                         mu.lambda <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.1</span>, <span class="fl">2</span><span class="op">)</span>, 
+                         sigma.obs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>, 
+                         N.est <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">20</span>, <span class="fl">40</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="op">(</span><span class="va">nYears</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">}</span> </code></pre></div>
 <p>Finally, set the parameters to monitor and the MCMC settings:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># Parameters monitored</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"lambda"</span>, <span class="st">"mu.lambda"</span>, <span class="st">"sigma.obs"</span>, <span class="st">"sigma.lambda"</span>, <span class="st">"N.est"</span>)</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co"># MCMC settings</span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">ni &lt;-<span class="st"> </span><span class="dv">25000</span></a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">nt &lt;-<span class="st"> </span><span class="dv">3</span></a>
-<a class="sourceLine" id="cb7-7" data-line-number="7">nb &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb7-8" data-line-number="8">nc &lt;-<span class="st"> </span><span class="dv">3</span></a>
-<a class="sourceLine" id="cb7-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb7-10" data-line-number="10"><span class="co"># Call WinBUGS from R (BRT &lt;1 min)</span></a>
-<a class="sourceLine" id="cb7-11" data-line-number="11">ssm &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags.data, <span class="dt">inits =</span> inits, <span class="dt">parameters.to.save =</span> parameters, </a>
-<a class="sourceLine" id="cb7-12" data-line-number="12">                    <span class="dt">model.file =</span> <span class="st">"jags/ssm.jags"</span>, <span class="dt">n.chains =</span> nc, <span class="dt">n.thin =</span> nt, </a>
-<a class="sourceLine" id="cb7-13" data-line-number="13">                    <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb)</a>
-<a class="sourceLine" id="cb7-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(ssm)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Parameters monitored</span>
+<span class="va">parameters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lambda"</span>, <span class="st">"mu.lambda"</span>, <span class="st">"sigma.obs"</span>, <span class="st">"sigma.lambda"</span>, <span class="st">"N.est"</span><span class="op">)</span>
+
+<span class="co"># MCMC settings</span>
+<span class="va">ni</span> <span class="op">&lt;-</span> <span class="fl">25000</span>
+<span class="va">nt</span> <span class="op">&lt;-</span> <span class="fl">3</span>
+<span class="va">nb</span> <span class="op">&lt;-</span> <span class="fl">10000</span>
+<span class="va">nc</span> <span class="op">&lt;-</span> <span class="fl">3</span>
+
+<span class="co"># Call WinBUGS from R (BRT &lt;1 min)</span>
+<span class="va">ssm</span> <span class="op">&lt;-</span> <span class="fu">jagsUI</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jagsUI/man/jags.html">jags</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">jags.data</span>, inits <span class="op">=</span> <span class="va">inits</span>, parameters.to.save <span class="op">=</span> <span class="va">parameters</span>, 
+                    model.file <span class="op">=</span> <span class="st">"jags/ssm.jags"</span>, n.chains <span class="op">=</span> <span class="va">nc</span>, n.thin <span class="op">=</span> <span class="va">nt</span>, 
+                    n.iter <span class="op">=</span> <span class="va">ni</span>, n.burnin <span class="op">=</span> <span class="va">nb</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">ssm</span><span class="op">)</span></code></pre></div>
 <p>Now add the estimated <span class="math inline">\(N\)</span> values (plus uncertainty) to the original data frame and visualize the results:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">ssm_sim1 &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(ssm_sim1, </a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">                          <span class="dt">Estimated =</span> ssm<span class="op">$</span>mean<span class="op">$</span>N.est, </a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">                          <span class="dt">LCI =</span> ssm<span class="op">$</span>q2<span class="fl">.5</span><span class="op">$</span>N.est, </a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">                          <span class="dt">UCI =</span> ssm<span class="op">$</span>q97<span class="fl">.5</span><span class="op">$</span>N.est)</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="kw">ggplot</span>(ssm_sim1, <span class="kw">aes</span>(<span class="dt">x =</span> Year)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> LCI, <span class="dt">ymax =</span> UCI), <span class="dt">fill =</span> <span class="st">"grey80"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb8-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Estimated), <span class="dt">color =</span> <span class="st">"grey50"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb8-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> N), <span class="dt">color =</span> <span class="st">"grey20"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb8-10" data-line-number="10"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> y), <span class="dt">color =</span> <span class="st">"red"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ssm_sim1</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">ssm_sim1</span>, 
+                          Estimated <span class="op">=</span> <span class="va">ssm</span><span class="op">$</span><span class="va">mean</span><span class="op">$</span><span class="va">N.est</span>, 
+                          LCI <span class="op">=</span> <span class="va">ssm</span><span class="op">$</span><span class="va">q2.5</span><span class="op">$</span><span class="va">N.est</span>, 
+                          UCI <span class="op">=</span> <span class="va">ssm</span><span class="op">$</span><span class="va">q97.5</span><span class="op">$</span><span class="va">N.est</span><span class="op">)</span>
+
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">ssm_sim1</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Year</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_ribbon</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">LCI</span>, ymax <span class="op">=</span> <span class="va">UCI</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"grey80"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">Estimated</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">N</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"grey20"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></code></pre></div>
 <p><img src="state_space_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Notice how much smoother the estimates of <span class="math inline">\(N\)</span> (light grey line) are relative to the raw counts, a good indication that the model was able to separate the observation error from the process variation.</p>
 </div>
@@ -354,57 +364,60 @@
 <p>The state-space model described above assumes that, on average, false positive counts cancel out false negative counts. What happens when that’s not the case? Let’s now simulate data assuming:</p>
 <p><span class="math display">\[\Large y_t \sim binomial(N_t, p)\]</span></p>
 <p>where <span class="math inline">\(p\)</span> is the probability that an individual in the population is counted. In this case, <span class="math inline">\(y_t &lt; N_t\)</span>. We will simulate these data assuming <span class="math inline">\(N_t=50\)</span> in all years:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">ssm_sim2 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">Year =</span> <span class="dv">1</span><span class="op">:</span>nYears, </a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">                       <span class="dt">N =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="dv">50</span>, nYears),</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">                       <span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">numeric</a></span>(nYears))</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5">p &lt;-<span class="st"> </span><span class="fl">0.7</span></a>
-<a class="sourceLine" id="cb9-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nYears){</a>
-<a class="sourceLine" id="cb9-8" data-line-number="8">  ssm_sim2<span class="op">$</span>y[t] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(<span class="dv">1</span>, ssm_sim2<span class="op">$</span>N[t], p)</a>
-<a class="sourceLine" id="cb9-9" data-line-number="9">}</a>
-<a class="sourceLine" id="cb9-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb9-11" data-line-number="11"><span class="kw">ggplot</span>(ssm_sim2, <span class="kw">aes</span>(<span class="dt">x =</span> Year)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-12" data-line-number="12"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> N), <span class="dt">color =</span> <span class="st">"grey30"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb9-13" data-line-number="13"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> y), <span class="dt">color =</span> <span class="st">"red"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ssm_sim2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Year <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">nYears</span>, 
+                       N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">50</span>, <span class="va">nYears</span><span class="op">)</span>,
+                       y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">numeric</a></span><span class="op">(</span><span class="va">nYears</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">0.7</span>
+
+<span class="kw">for</span><span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nYears</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">ssm_sim2</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">ssm_sim2</span><span class="op">$</span><span class="va">N</span><span class="op">[</span><span class="va">t</span><span class="op">]</span>, <span class="va">p</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">ssm_sim2</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Year</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">N</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"grey30"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></code></pre></div>
 <p><img src="state_space_files/figure-html/unnamed-chunk-10-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>In this case. <em>all</em> of the variation in the counts is observation error <span class="math inline">\(-\)</span> the true counts are constant.</p>
 <p>Prepare the data for JAGS, create initial values, and then fit the model:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># Bundle data</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">jags.data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">y =</span> ssm_sim2<span class="op">$</span>y, <span class="dt">nYears =</span> nYears)</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co"># Initial values</span></a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">sigma.lambda =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">5</span>), </a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">                         <span class="dt">mu.lambda =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="fl">0.1</span>, <span class="dv">2</span>), </a>
-<a class="sourceLine" id="cb10-7" data-line-number="7">                         <span class="dt">sigma.obs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">10</span>), </a>
-<a class="sourceLine" id="cb10-8" data-line-number="8">                         <span class="dt">N.est =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">30</span>, <span class="dv">60</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="ot">NA</span>, (nYears<span class="dv">-1</span>))))}</a>
-<a class="sourceLine" id="cb10-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co"># Parameters monitored</span></a>
-<a class="sourceLine" id="cb10-11" data-line-number="11">parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"lambda"</span>, <span class="st">"mu.lambda"</span>, <span class="st">"sigma.obs"</span>, <span class="st">"sigma.lambda"</span>, <span class="st">"N.est"</span>)</a>
-<a class="sourceLine" id="cb10-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="co"># MCMC settings</span></a>
-<a class="sourceLine" id="cb10-14" data-line-number="14">ni &lt;-<span class="st"> </span><span class="dv">25000</span></a>
-<a class="sourceLine" id="cb10-15" data-line-number="15">nt &lt;-<span class="st"> </span><span class="dv">3</span></a>
-<a class="sourceLine" id="cb10-16" data-line-number="16">nb &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb10-17" data-line-number="17">nc &lt;-<span class="st"> </span><span class="dv">3</span></a>
-<a class="sourceLine" id="cb10-18" data-line-number="18"></a>
-<a class="sourceLine" id="cb10-19" data-line-number="19"><span class="co"># Call WinBUGS from R (BRT &lt;1 min)</span></a>
-<a class="sourceLine" id="cb10-20" data-line-number="20">ssm2 &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(jags.data, inits, </a>
-<a class="sourceLine" id="cb10-21" data-line-number="21">                     parameters, <span class="st">"jags/ssm.jags"</span>, </a>
-<a class="sourceLine" id="cb10-22" data-line-number="22">                     <span class="dt">n.chains =</span> nc, <span class="dt">n.thin =</span> nt, <span class="dt">n.iter =</span> ni, </a>
-<a class="sourceLine" id="cb10-23" data-line-number="23">                     <span class="dt">n.burnin =</span> nb)</a>
-<a class="sourceLine" id="cb10-24" data-line-number="24"></a>
-<a class="sourceLine" id="cb10-25" data-line-number="25"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(ssm2)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Bundle data</span>
+<span class="va">jags.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">ssm_sim2</span><span class="op">$</span><span class="va">y</span>, nYears <span class="op">=</span> <span class="va">nYears</span><span class="op">)</span>
+
+<span class="co"># Initial values</span>
+<span class="va">inits</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>sigma.lambda <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, 
+                         mu.lambda <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.1</span>, <span class="fl">2</span><span class="op">)</span>, 
+                         sigma.obs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>, 
+                         N.est <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">30</span>, <span class="fl">60</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="op">(</span><span class="va">nYears</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>
+
+<span class="co"># Parameters monitored</span>
+<span class="va">parameters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lambda"</span>, <span class="st">"mu.lambda"</span>, <span class="st">"sigma.obs"</span>, <span class="st">"sigma.lambda"</span>, <span class="st">"N.est"</span><span class="op">)</span>
+
+<span class="co"># MCMC settings</span>
+<span class="va">ni</span> <span class="op">&lt;-</span> <span class="fl">25000</span>
+<span class="va">nt</span> <span class="op">&lt;-</span> <span class="fl">3</span>
+<span class="va">nb</span> <span class="op">&lt;-</span> <span class="fl">10000</span>
+<span class="va">nc</span> <span class="op">&lt;-</span> <span class="fl">3</span>
+
+<span class="co"># Call WinBUGS from R (BRT &lt;1 min)</span>
+<span class="va">ssm2</span> <span class="op">&lt;-</span> <span class="fu">jagsUI</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jagsUI/man/jags.html">jags</a></span><span class="op">(</span><span class="va">jags.data</span>, <span class="va">inits</span>, 
+                     <span class="va">parameters</span>, <span class="st">"jags/ssm.jags"</span>, 
+                     n.chains <span class="op">=</span> <span class="va">nc</span>, n.thin <span class="op">=</span> <span class="va">nt</span>, n.iter <span class="op">=</span> <span class="va">ni</span>, 
+                     n.burnin <span class="op">=</span> <span class="va">nb</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">ssm2</span><span class="op">)</span></code></pre></div>
 <p>Plot the results:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">ssm_sim2 &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(ssm_sim2, <span class="dt">Estimated =</span> ssm2<span class="op">$</span>mean<span class="op">$</span>N.est, </a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">                          <span class="dt">LCI =</span> ssm2<span class="op">$</span>q2<span class="fl">.5</span><span class="op">$</span>N.est, </a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">                          <span class="dt">UCI =</span> ssm2<span class="op">$</span>q97<span class="fl">.5</span><span class="op">$</span>N.est)</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="kw">ggplot</span>(ssm_sim2, <span class="kw">aes</span>(<span class="dt">x =</span> Year)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> LCI, <span class="dt">ymax =</span> UCI), <span class="dt">fill =</span> <span class="st">"grey80"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Estimated), <span class="dt">color =</span> <span class="st">"grey50"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> N), <span class="dt">color =</span> <span class="st">"grey20"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> y), <span class="dt">color =</span> <span class="st">"red"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ssm_sim2</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">ssm_sim2</span>, Estimated <span class="op">=</span> <span class="va">ssm2</span><span class="op">$</span><span class="va">mean</span><span class="op">$</span><span class="va">N.est</span>, 
+                          LCI <span class="op">=</span> <span class="va">ssm2</span><span class="op">$</span><span class="va">q2.5</span><span class="op">$</span><span class="va">N.est</span>, 
+                          UCI <span class="op">=</span> <span class="va">ssm2</span><span class="op">$</span><span class="va">q97.5</span><span class="op">$</span><span class="va">N.est</span><span class="op">)</span>
+
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">ssm_sim2</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Year</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_ribbon</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">LCI</span>, ymax <span class="op">=</span> <span class="va">UCI</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"grey80"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">Estimated</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">N</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"grey20"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></code></pre></div>
 <p><img src="state_space_files/figure-html/unnamed-chunk-13-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Notice that <span class="math inline">\(N \times p = 50 \times 0.7 = 35\)</span>, which is about the average of the model estimates. Thus, in this case, the model does not provide unbiased estimates of <span class="math inline">\(N\)</span> but it does provide unbiased estimates of <span class="math inline">\(Np\)</span>. Although the model still estimates some process variance (it thinks <span class="math inline">\(\sigma_{\lambda}&gt;0\)</span>), we would correctly conclude from this analysis that the population is stable, so an index in this case isn’t completely useless.</p>
 </div>
@@ -415,60 +428,63 @@
 <p><span class="math display">\[\Large y_t \sim binomial(N_t, p_t)\]</span></p>
 <p><span class="math display">\[\Large logit(p_{t}) = \alpha + \beta \times year_t\]</span></p>
 <p>where <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> are the intercept and slope coefficients that describe annual variation in <span class="math inline">\(p\)</span>. Again, we’ll assume that <span class="math inline">\(y_t &lt; N_t\)</span> and <span class="math inline">\(N_t=50\)</span> in all years:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">ssm_sim3 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">Year =</span> <span class="dv">1</span><span class="op">:</span>nYears, </a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">                       <span class="dt">N =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="dv">50</span>, nYears),</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3">                       <span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/numeric">numeric</a></span>(nYears))</a>
-<a class="sourceLine" id="cb12-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="co"># Decreasing trend of logit(p)</span></a>
-<a class="sourceLine" id="cb12-6" data-line-number="6">lp &lt;-<span class="st"> </span><span class="fl">0.5</span> <span class="op">-</span><span class="st"> </span><span class="fl">0.1</span><span class="op">*</span>(<span class="dv">1</span><span class="op">:</span>nYears)  </a>
-<a class="sourceLine" id="cb12-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="co"># Transform lp to probability scale</span></a>
-<a class="sourceLine" id="cb12-9" data-line-number="9">p &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Logistic">plogis</a></span>(lp)</a>
-<a class="sourceLine" id="cb12-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb12-11" data-line-number="11"><span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nYears){</a>
-<a class="sourceLine" id="cb12-12" data-line-number="12">  ssm_sim3<span class="op">$</span>y[t] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Binomial">rbinom</a></span>(<span class="dv">1</span>, ssm_sim3<span class="op">$</span>N[t], p[t])</a>
-<a class="sourceLine" id="cb12-13" data-line-number="13">}</a>
-<a class="sourceLine" id="cb12-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb12-15" data-line-number="15"><span class="kw">ggplot</span>(ssm_sim3, <span class="kw">aes</span>(<span class="dt">x =</span> Year)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-16" data-line-number="16"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> N), <span class="dt">color =</span> <span class="st">"grey30"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb12-17" data-line-number="17"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> y), <span class="dt">color =</span> <span class="st">"red"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ssm_sim3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Year <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">nYears</span>, 
+                       N <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">50</span>, <span class="va">nYears</span><span class="op">)</span>,
+                       y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">numeric</a></span><span class="op">(</span><span class="va">nYears</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Decreasing trend of logit(p)</span>
+<span class="va">lp</span> <span class="op">&lt;-</span> <span class="fl">0.5</span> <span class="op">-</span> <span class="fl">0.1</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">nYears</span><span class="op">)</span>  
+
+<span class="co"># Transform lp to probability scale</span>
+<span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Logistic.html">plogis</a></span><span class="op">(</span><span class="va">lp</span><span class="op">)</span>
+
+<span class="kw">for</span><span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nYears</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">ssm_sim3</span><span class="op">$</span><span class="va">y</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Binomial.html">rbinom</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">ssm_sim3</span><span class="op">$</span><span class="va">N</span><span class="op">[</span><span class="va">t</span><span class="op">]</span>, <span class="va">p</span><span class="op">[</span><span class="va">t</span><span class="op">]</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">ssm_sim3</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Year</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">N</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"grey30"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></code></pre></div>
 <p><img src="state_space_files/figure-html/unnamed-chunk-14-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>Prepare the data for JAGS, create initial values, and then fit the model:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co"># Bundle data</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">jags.data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">y =</span> ssm_sim3<span class="op">$</span>y, <span class="dt">nYears =</span> nYears)</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="co"># Initial values</span></a>
-<a class="sourceLine" id="cb13-5" data-line-number="5">inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">sigma.lambda =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">5</span>), </a>
-<a class="sourceLine" id="cb13-6" data-line-number="6">                         <span class="dt">mu.lambda =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="fl">0.1</span>, <span class="dv">2</span>), </a>
-<a class="sourceLine" id="cb13-7" data-line-number="7">                         <span class="dt">sigma.obs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">10</span>), </a>
-<a class="sourceLine" id="cb13-8" data-line-number="8">                         <span class="dt">N.est =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">30</span>, <span class="dv">60</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="ot">NA</span>, (nYears<span class="dv">-1</span>))))}</a>
-<a class="sourceLine" id="cb13-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb13-10" data-line-number="10"><span class="co"># Parameters monitored</span></a>
-<a class="sourceLine" id="cb13-11" data-line-number="11">parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"lambda"</span>, <span class="st">"mu.lambda"</span>, <span class="st">"sigma.obs"</span>, <span class="st">"sigma.lambda"</span>, <span class="st">"N.est"</span>)</a>
-<a class="sourceLine" id="cb13-12" data-line-number="12"></a>
-<a class="sourceLine" id="cb13-13" data-line-number="13"><span class="co"># MCMC settings</span></a>
-<a class="sourceLine" id="cb13-14" data-line-number="14">ni &lt;-<span class="st"> </span><span class="dv">25000</span></a>
-<a class="sourceLine" id="cb13-15" data-line-number="15">nt &lt;-<span class="st"> </span><span class="dv">3</span></a>
-<a class="sourceLine" id="cb13-16" data-line-number="16">nb &lt;-<span class="st"> </span><span class="dv">10000</span></a>
-<a class="sourceLine" id="cb13-17" data-line-number="17">nc &lt;-<span class="st"> </span><span class="dv">3</span></a>
-<a class="sourceLine" id="cb13-18" data-line-number="18"></a>
-<a class="sourceLine" id="cb13-19" data-line-number="19"><span class="co"># Call WinBUGS from R (BRT &lt;1 min)</span></a>
-<a class="sourceLine" id="cb13-20" data-line-number="20">ssm3 &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(jags.data, inits, </a>
-<a class="sourceLine" id="cb13-21" data-line-number="21">                     parameters, <span class="st">"jags/ssm.jags"</span>, </a>
-<a class="sourceLine" id="cb13-22" data-line-number="22">                     <span class="dt">n.chains =</span> nc, <span class="dt">n.thin =</span> nt, <span class="dt">n.iter =</span> ni, </a>
-<a class="sourceLine" id="cb13-23" data-line-number="23">                     <span class="dt">n.burnin =</span> nb)</a>
-<a class="sourceLine" id="cb13-24" data-line-number="24"></a>
-<a class="sourceLine" id="cb13-25" data-line-number="25"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(ssm3)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Bundle data</span>
+<span class="va">jags.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">ssm_sim3</span><span class="op">$</span><span class="va">y</span>, nYears <span class="op">=</span> <span class="va">nYears</span><span class="op">)</span>
+
+<span class="co"># Initial values</span>
+<span class="va">inits</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>sigma.lambda <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span>, 
+                         mu.lambda <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.1</span>, <span class="fl">2</span><span class="op">)</span>, 
+                         sigma.obs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>, 
+                         N.est <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">30</span>, <span class="fl">60</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="op">(</span><span class="va">nYears</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>
+
+<span class="co"># Parameters monitored</span>
+<span class="va">parameters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"lambda"</span>, <span class="st">"mu.lambda"</span>, <span class="st">"sigma.obs"</span>, <span class="st">"sigma.lambda"</span>, <span class="st">"N.est"</span><span class="op">)</span>
+
+<span class="co"># MCMC settings</span>
+<span class="va">ni</span> <span class="op">&lt;-</span> <span class="fl">25000</span>
+<span class="va">nt</span> <span class="op">&lt;-</span> <span class="fl">3</span>
+<span class="va">nb</span> <span class="op">&lt;-</span> <span class="fl">10000</span>
+<span class="va">nc</span> <span class="op">&lt;-</span> <span class="fl">3</span>
+
+<span class="co"># Call WinBUGS from R (BRT &lt;1 min)</span>
+<span class="va">ssm3</span> <span class="op">&lt;-</span> <span class="fu">jagsUI</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jagsUI/man/jags.html">jags</a></span><span class="op">(</span><span class="va">jags.data</span>, <span class="va">inits</span>, 
+                     <span class="va">parameters</span>, <span class="st">"jags/ssm.jags"</span>, 
+                     n.chains <span class="op">=</span> <span class="va">nc</span>, n.thin <span class="op">=</span> <span class="va">nt</span>, n.iter <span class="op">=</span> <span class="va">ni</span>, 
+                     n.burnin <span class="op">=</span> <span class="va">nb</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">ssm3</span><span class="op">)</span></code></pre></div>
 <p>Plot the results:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">ssm_sim3 &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(ssm_sim3, <span class="dt">Estimated =</span> ssm3<span class="op">$</span>mean<span class="op">$</span>N.est, </a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">                          <span class="dt">LCI =</span> ssm3<span class="op">$</span>q2<span class="fl">.5</span><span class="op">$</span>N.est, </a>
-<a class="sourceLine" id="cb14-3" data-line-number="3">                          <span class="dt">UCI =</span> ssm3<span class="op">$</span>q97<span class="fl">.5</span><span class="op">$</span>N.est)</a>
-<a class="sourceLine" id="cb14-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb14-5" data-line-number="5"><span class="kw">ggplot</span>(ssm_sim3, <span class="kw">aes</span>(<span class="dt">x =</span> Year)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb14-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> LCI, <span class="dt">ymax =</span> UCI), <span class="dt">fill =</span> <span class="st">"grey80"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb14-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> Estimated), <span class="dt">color =</span> <span class="st">"grey50"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb14-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> N), <span class="dt">color =</span> <span class="st">"grey20"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb14-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> y), <span class="dt">color =</span> <span class="st">"red"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ssm_sim3</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">ssm_sim3</span>, Estimated <span class="op">=</span> <span class="va">ssm3</span><span class="op">$</span><span class="va">mean</span><span class="op">$</span><span class="va">N.est</span>, 
+                          LCI <span class="op">=</span> <span class="va">ssm3</span><span class="op">$</span><span class="va">q2.5</span><span class="op">$</span><span class="va">N.est</span>, 
+                          UCI <span class="op">=</span> <span class="va">ssm3</span><span class="op">$</span><span class="va">q97.5</span><span class="op">$</span><span class="va">N.est</span><span class="op">)</span>
+
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">ssm_sim3</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">Year</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_ribbon</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">LCI</span>, ymax <span class="op">=</span> <span class="va">UCI</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"grey80"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">Estimated</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"grey50"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">N</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"grey20"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">y</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></code></pre></div>
 <p><img src="state_space_files/figure-html/unnamed-chunk-17-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>As you can see, in this case the model thinks that abundance is decreasing when in fact it is <span class="math inline">\(p\)</span> that is changing. This example shows one of the weaknesses of state-space models <span class="math inline">\(-\)</span> without additional information, the model cannot fully distinguish between changes in the process model vs. changes in the observation process (we saw this above when the model assumed some of the noise in the counts was assumed to be process variation even though <span class="math inline">\(\sigma_{\lambda}=0\)</span>). Nonetheless, state-space models provide an intuitive way to model time series data that is subject to observation error when the assumptions of the model are met.</p>
 </div>
@@ -482,12 +498,13 @@ American White Pelican. Image courtesy of Frank Schulenburg via WikiCommons
 </p>
 </div>
 <p>Colony counts have been conducted almost annual since the early 1960’s, with brief gaps in the late ’60s and again in the late ’70s. These counts indicate that the colony grew considerably in the ’70s and ’80s but has since leveled off near its carrying capacity.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"pelicans"</span>)</a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/head">head</a></span>(pelicans)</a>
-<a class="sourceLine" id="cb15-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb15-5" data-line-number="5"><span class="kw">ggplot</span>(pelicans, <span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> count)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb15-6" data-line-number="6"><span class="st">  </span><span class="kw">geom_point</span>(<span class="dt">color =</span> <span class="st">"red"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"pelicans"</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">pelicans</span><span class="op">)</span>
+
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">pelicans</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">year</span>, y <span class="op">=</span> <span class="va">count</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span>color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="right">year</th>
@@ -526,113 +543,120 @@ American White Pelican. Image courtesy of Frank Schulenburg via WikiCommons
 <p>and therefore:</p>
 <p><span class="math display">\[\Large log(N_{t+1}) = log(N_t) + r_t\]</span></p>
 <p>Working on the log scale often helps with parameter estimation and as we will see in the next lab, this formulation makes it easy to expand this model to include density dependence. Aside from this change, the pelican model is very similar to the model we analyzed above:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"jags/AWPE_ssm.jags"</span>)</a>
-<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span></a>
-<a class="sourceLine" id="cb16-3" data-line-number="3"><span class="st">    model{</span></a>
-<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="st">    # Priors</span></a>
-<a class="sourceLine" id="cb16-5" data-line-number="5"><span class="st">    logN.est[1] ~ dnorm(0, 0.01)      # Log initial population size</span></a>
-<a class="sourceLine" id="cb16-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb16-7" data-line-number="7"><span class="st">    for (t in 1:(nYears - 1)){</span></a>
-<a class="sourceLine" id="cb16-8" data-line-number="8"><span class="st">      r[t] ~ dnorm(mean.r, tau.r)</span></a>
-<a class="sourceLine" id="cb16-9" data-line-number="9"><span class="st">    }</span></a>
-<a class="sourceLine" id="cb16-10" data-line-number="10"><span class="st">    mean.r ~ dnorm(1, 0.001)          # Mean growth rate</span></a>
-<a class="sourceLine" id="cb16-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb16-12" data-line-number="12"><span class="st">    sigma.r ~ dunif(0, 10)            # SD of state processes</span></a>
-<a class="sourceLine" id="cb16-13" data-line-number="13"><span class="st">    tau.r &lt;- pow(sigma.r, -2)</span></a>
-<a class="sourceLine" id="cb16-14" data-line-number="14"></a>
-<a class="sourceLine" id="cb16-15" data-line-number="15"><span class="st">    sigma.obs ~ dunif(0, 10)          # SD of observation processes</span></a>
-<a class="sourceLine" id="cb16-16" data-line-number="16"><span class="st">    tau.obs &lt;- pow(sigma.obs, -2)</span></a>
-<a class="sourceLine" id="cb16-17" data-line-number="17"></a>
-<a class="sourceLine" id="cb16-18" data-line-number="18"><span class="st">    # Likelihood</span></a>
-<a class="sourceLine" id="cb16-19" data-line-number="19"><span class="st">    # State process</span></a>
-<a class="sourceLine" id="cb16-20" data-line-number="20"><span class="st">    for (t in 1:(nYears-1)){</span></a>
-<a class="sourceLine" id="cb16-21" data-line-number="21"><span class="st">      logN.est[t+1] &lt;- logN.est[t] + r[t]</span></a>
-<a class="sourceLine" id="cb16-22" data-line-number="22"><span class="st">    }</span></a>
-<a class="sourceLine" id="cb16-23" data-line-number="23"></a>
-<a class="sourceLine" id="cb16-24" data-line-number="24"><span class="st">    # Observation process</span></a>
-<a class="sourceLine" id="cb16-25" data-line-number="25"><span class="st">    for (t in 1:nYears){</span></a>
-<a class="sourceLine" id="cb16-26" data-line-number="26"><span class="st">      y[t] ~ dnorm(logN.est[t], tau.obs)</span></a>
-<a class="sourceLine" id="cb16-27" data-line-number="27"><span class="st">    }</span></a>
-<a class="sourceLine" id="cb16-28" data-line-number="28"></a>
-<a class="sourceLine" id="cb16-29" data-line-number="29"><span class="st">    # Population sizes on real scale</span></a>
-<a class="sourceLine" id="cb16-30" data-line-number="30"><span class="st">    for (t in 1:nYears){</span></a>
-<a class="sourceLine" id="cb16-31" data-line-number="31"><span class="st">     N.est[t] &lt;- exp(logN.est[t])</span></a>
-<a class="sourceLine" id="cb16-32" data-line-number="32"><span class="st">    }</span></a>
-<a class="sourceLine" id="cb16-33" data-line-number="33"><span class="st">    }</span></a>
-<a class="sourceLine" id="cb16-34" data-line-number="34"><span class="st">    "</span>, <span class="dt">fill =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb16-35" data-line-number="35"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sink.html">sink</a></span><span class="op">(</span><span class="st">"jags/AWPE_ssm.jags"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">"
+    model{
+    # Priors
+    logN.est[1] ~ dnorm(0, 0.01)      # Log initial population size
+
+    for (t in 1:(nYears - 1)){
+      r[t] ~ dnorm(mean.r, tau.r)
+    }
+    mean.r ~ dnorm(1, 0.001)          # Mean growth rate
+
+    sigma.r ~ dunif(0, 10)            # SD of state processes
+    tau.r &lt;- pow(sigma.r, -2)
+
+    sigma.obs ~ dunif(0, 10)          # SD of observation processes
+    tau.obs &lt;- pow(sigma.obs, -2)
+
+    # Likelihood
+    # State process
+    for (t in 1:(nYears-1)){
+      logN.est[t+1] &lt;- logN.est[t] + r[t]
+    }
+
+    # Observation process
+    for (t in 1:nYears){
+      y[t] ~ dnorm(logN.est[t], tau.obs)
+    }
+
+    # Population sizes on real scale
+    for (t in 1:nYears){
+     N.est[t] &lt;- exp(logN.est[t])
+    }
+    }
+    "</span>, fill <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/sink.html">sink</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>Again, be sure you understand how this model code translates into the model description above.</p>
 <p>Next, we’ll bundle the data. Remember that because we are modeling <span class="math inline">\(log(N_t)\)</span>, we need to enter our counts as <span class="math inline">\(log(y_t)\)</span>:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="co">## Bundle data</span></a>
-<a class="sourceLine" id="cb17-2" data-line-number="2">jags.data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(pelicans<span class="op">$</span>count), <span class="dt">nYears =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(pelicans))</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Bundle data</span>
+<span class="va">jags.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">pelicans</span><span class="op">$</span><span class="va">count</span><span class="op">)</span>, nYears <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">pelicans</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Note that JAGS can not only handle the <code>NA</code> counts, it will still estimate <span class="math inline">\(N_t\)</span> in those years. This is a major benefit of modeling parameters as random variables <span class="math inline">\(-\)</span> by providing a process model and a probability distribution for each <span class="math inline">\(N_t\)</span>, the model will estimate a posterior distribution for each annual abundance even if we don’t provide any data!</p>
 <p>Next, create the initial values function and set the MCMC settings:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">sigma.r =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">                         <span class="dt">mean.r =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb18-3" data-line-number="3">                         <span class="dt">sigma.obs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb18-4" data-line-number="4">                         <span class="dt">logN.est =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">10</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="ot">NA</span>, (<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(pelicans)<span class="op">-</span><span class="dv">1</span>))))}</a>
-<a class="sourceLine" id="cb18-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb18-6" data-line-number="6">params &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"mean.r"</span>, <span class="st">"sigma.obs"</span>, <span class="st">"sigma.r"</span>, <span class="st">"N.est"</span>, <span class="st">"r"</span>)</a>
-<a class="sourceLine" id="cb18-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb18-8" data-line-number="8">ni &lt;-<span class="st"> </span><span class="dv">30000</span></a>
-<a class="sourceLine" id="cb18-9" data-line-number="9">nt &lt;-<span class="st"> </span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb18-10" data-line-number="10">nb &lt;-<span class="st"> </span><span class="dv">5000</span></a>
-<a class="sourceLine" id="cb18-11" data-line-number="11">nc &lt;-<span class="st"> </span><span class="dv">3</span></a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">inits</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>sigma.r <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,
+                         mean.r <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,
+                         sigma.obs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,
+                         logN.est <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">pelicans</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>
+
+<span class="va">params</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"mean.r"</span>, <span class="st">"sigma.obs"</span>, <span class="st">"sigma.r"</span>, <span class="st">"N.est"</span>, <span class="st">"r"</span><span class="op">)</span>
+
+<span class="va">ni</span> <span class="op">&lt;-</span> <span class="fl">30000</span>
+<span class="va">nt</span> <span class="op">&lt;-</span> <span class="fl">1</span>
+<span class="va">nb</span> <span class="op">&lt;-</span> <span class="fl">5000</span>
+<span class="va">nc</span> <span class="op">&lt;-</span> <span class="fl">3</span></code></pre></div>
 <p>Finally, fit the model. Note that we will now set <code>parallel = TRUE</code> in the <code>jags</code> function to speed up model fitting. Unfortunately, this means we won’t get a progress bar:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">awpe_ssm &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags.data,</a>
-<a class="sourceLine" id="cb19-2" data-line-number="2">                 <span class="dt">model.file =</span> <span class="st">"jags/AWPE_ssm.jags"</span>,</a>
-<a class="sourceLine" id="cb19-3" data-line-number="3">                 <span class="dt">parameters.to.save =</span> params,</a>
-<a class="sourceLine" id="cb19-4" data-line-number="4">                 <span class="dt">inits =</span> inits,</a>
-<a class="sourceLine" id="cb19-5" data-line-number="5">                 <span class="dt">n.chains =</span> nc,</a>
-<a class="sourceLine" id="cb19-6" data-line-number="6">                 <span class="dt">n.iter =</span> ni,</a>
-<a class="sourceLine" id="cb19-7" data-line-number="7">                 <span class="dt">n.thin =</span> nt,</a>
-<a class="sourceLine" id="cb19-8" data-line-number="8">                 <span class="dt">n.burnin =</span> nb, <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb19-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb19-10" data-line-number="10"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(awpe_ssm)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">awpe_ssm</span> <span class="op">&lt;-</span> <span class="fu">jagsUI</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jagsUI/man/jags.html">jags</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">jags.data</span>,
+                 model.file <span class="op">=</span> <span class="st">"jags/AWPE_ssm.jags"</span>,
+                 parameters.to.save <span class="op">=</span> <span class="va">params</span>,
+                 inits <span class="op">=</span> <span class="va">inits</span>,
+                 n.chains <span class="op">=</span> <span class="va">nc</span>,
+                 n.iter <span class="op">=</span> <span class="va">ni</span>,
+                 n.thin <span class="op">=</span> <span class="va">nt</span>,
+                 n.burnin <span class="op">=</span> <span class="va">nb</span>, parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">awpe_ssm</span><span class="op">)</span></code></pre></div>
 <p>Now plot the estimated abundance vs. the counts:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">pelicans &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(pelicans, </a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">                          <span class="dt">N.est =</span> awpe_ssm<span class="op">$</span>mean<span class="op">$</span>N.est, </a>
-<a class="sourceLine" id="cb20-3" data-line-number="3">                          <span class="dt">LCI =</span> awpe_ssm<span class="op">$</span>q2<span class="fl">.5</span><span class="op">$</span>N.est, </a>
-<a class="sourceLine" id="cb20-4" data-line-number="4">                          <span class="dt">UCI =</span> awpe_ssm<span class="op">$</span>q97<span class="fl">.5</span><span class="op">$</span>N.est)</a>
-<a class="sourceLine" id="cb20-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb20-6" data-line-number="6"><span class="kw">ggplot</span>(pelicans, <span class="kw">aes</span>(<span class="dt">x =</span> year)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb20-7" data-line-number="7"><span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> LCI, <span class="dt">ymax =</span> UCI)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb20-8" data-line-number="8"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> N.est), <span class="dt">color =</span> <span class="st">"white"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb20-9" data-line-number="9"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> N.est), <span class="dt">color =</span> <span class="st">"white"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb20-10" data-line-number="10"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> count), <span class="dt">color =</span> <span class="st">"red"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pelicans</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span><span class="va">pelicans</span>, 
+                          N.est <span class="op">=</span> <span class="va">awpe_ssm</span><span class="op">$</span><span class="va">mean</span><span class="op">$</span><span class="va">N.est</span>, 
+                          LCI <span class="op">=</span> <span class="va">awpe_ssm</span><span class="op">$</span><span class="va">q2.5</span><span class="op">$</span><span class="va">N.est</span>, 
+                          UCI <span class="op">=</span> <span class="va">awpe_ssm</span><span class="op">$</span><span class="va">q97.5</span><span class="op">$</span><span class="va">N.est</span><span class="op">)</span>
+
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">pelicans</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">year</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_ribbon</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">LCI</span>, ymax <span class="op">=</span> <span class="va">UCI</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">N.est</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">N.est</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">count</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></code></pre></div>
 <p><img src="state_space_files/figure-html/unnamed-chunk-26-1.png" width="576" style="display: block; margin: auto;"></p>
 <p>As for the simulated data, notice how the estimated abundances are “smoothed” relative to the observed counts.</p>
 <p>Also note that the model returns estimates of <span class="math inline">\(N_t\)</span> even in the years with no counts. This is a powerful advantage of Bayesian methods. For example, what if we want to project counts into the future? All we have to do is add <code>NA</code> counts to the data frame and adjust the number of years and we get these predictions (and associated uncertainty) for free:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="co">## Bundle data with additional years</span></a>
-<a class="sourceLine" id="cb21-2" data-line-number="2">jags.data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">y =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Log">log</a></span>(pelicans<span class="op">$</span>count), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="ot">NA</span>, <span class="dv">20</span>)), </a>
-<a class="sourceLine" id="cb21-3" data-line-number="3">                  <span class="dt">nYears =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(pelicans) <span class="op">+</span><span class="st"> </span><span class="dv">20</span>)</a>
-<a class="sourceLine" id="cb21-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb21-5" data-line-number="5">inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">sigma.r =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb21-6" data-line-number="6">                         <span class="dt">mean.r =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb21-7" data-line-number="7">                         <span class="dt">sigma.obs =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>),</a>
-<a class="sourceLine" id="cb21-8" data-line-number="8">                         <span class="dt">logN.est =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">10</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="ot">NA</span>, (<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/nrow">nrow</a></span>(pelicans)<span class="op">-</span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span><span class="dv">20</span>))))}</a>
-<a class="sourceLine" id="cb21-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb21-10" data-line-number="10">awpe_ssm2 &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags.data,</a>
-<a class="sourceLine" id="cb21-11" data-line-number="11">                 <span class="dt">model.file =</span> <span class="st">"jags/AWPE_ssm.jags"</span>,</a>
-<a class="sourceLine" id="cb21-12" data-line-number="12">                 <span class="dt">parameters.to.save =</span> params,</a>
-<a class="sourceLine" id="cb21-13" data-line-number="13">                 <span class="dt">inits =</span> inits,</a>
-<a class="sourceLine" id="cb21-14" data-line-number="14">                 <span class="dt">n.chains =</span> nc,</a>
-<a class="sourceLine" id="cb21-15" data-line-number="15">                 <span class="dt">n.iter =</span> ni,</a>
-<a class="sourceLine" id="cb21-16" data-line-number="16">                 <span class="dt">n.thin =</span> nt,</a>
-<a class="sourceLine" id="cb21-17" data-line-number="17">                 <span class="dt">n.burnin =</span> nb, <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">pelicans2 &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/data.frame">data.frame</a></span>(<span class="dt">year =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(pelicans<span class="op">$</span>year, </a>
-<a class="sourceLine" id="cb22-2" data-line-number="2">                                 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/seq">seq</a></span>(<span class="dt">from =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(pelicans<span class="op">$</span>year) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, </a>
-<a class="sourceLine" id="cb22-3" data-line-number="3">                                     <span class="dt">to =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(pelicans<span class="op">$</span>year) <span class="op">+</span><span class="st"> </span><span class="dv">20</span>)),</a>
-<a class="sourceLine" id="cb22-4" data-line-number="4">                        <span class="dt">count =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(pelicans<span class="op">$</span>count, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/rep">rep</a></span>(<span class="ot">NA</span>, <span class="dv">20</span>)),</a>
-<a class="sourceLine" id="cb22-5" data-line-number="5">                        <span class="dt">N.est =</span> awpe_ssm2<span class="op">$</span>mean<span class="op">$</span>N.est, </a>
-<a class="sourceLine" id="cb22-6" data-line-number="6">                        <span class="dt">LCI =</span> awpe_ssm2<span class="op">$</span>q2<span class="fl">.5</span><span class="op">$</span>N.est, </a>
-<a class="sourceLine" id="cb22-7" data-line-number="7">                        <span class="dt">UCI =</span> awpe_ssm2<span class="op">$</span>q97<span class="fl">.5</span><span class="op">$</span>N.est)</a>
-<a class="sourceLine" id="cb22-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb22-9" data-line-number="9"><span class="kw">ggplot</span>(pelicans2, <span class="kw">aes</span>(<span class="dt">x =</span> year)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb22-10" data-line-number="10"><span class="st">  </span><span class="kw">geom_ribbon</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> LCI, <span class="dt">ymax =</span> UCI)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb22-11" data-line-number="11"><span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">y =</span> N.est), <span class="dt">color =</span> <span class="st">"white"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb22-12" data-line-number="12"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> N.est), <span class="dt">color =</span> <span class="st">"white"</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb22-13" data-line-number="13"><span class="st">  </span><span class="kw">geom_point</span>(<span class="kw">aes</span>(<span class="dt">y =</span> count), <span class="dt">color =</span> <span class="st">"red"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">## Bundle data with additional years</span>
+<span class="va">jags.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">pelicans</span><span class="op">$</span><span class="va">count</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span>, 
+                  nYears <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">pelicans</span><span class="op">)</span> <span class="op">+</span> <span class="fl">20</span><span class="op">)</span>
+
+<span class="va">inits</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>sigma.r <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,
+                         mean.r <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>,
+                         sigma.obs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>,
+                         logN.est <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">10</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">pelicans</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span> <span class="op">+</span> <span class="fl">20</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>
+
+<span class="va">awpe_ssm2</span> <span class="op">&lt;-</span> <span class="fu">jagsUI</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jagsUI/man/jags.html">jags</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">jags.data</span>,
+                 model.file <span class="op">=</span> <span class="st">"jags/AWPE_ssm.jags"</span>,
+                 parameters.to.save <span class="op">=</span> <span class="va">params</span>,
+                 inits <span class="op">=</span> <span class="va">inits</span>,
+                 n.chains <span class="op">=</span> <span class="va">nc</span>,
+                 n.iter <span class="op">=</span> <span class="va">ni</span>,
+                 n.thin <span class="op">=</span> <span class="va">nt</span>,
+                 n.burnin <span class="op">=</span> <span class="va">nb</span>, parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pelicans2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">pelicans</span><span class="op">$</span><span class="va">year</span>, 
+                                 <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span>from <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">pelicans</span><span class="op">$</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span>, 
+                                     to <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">pelicans</span><span class="op">$</span><span class="va">year</span><span class="op">)</span> <span class="op">+</span> <span class="fl">20</span><span class="op">)</span><span class="op">)</span>,
+                        count <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">pelicans</span><span class="op">$</span><span class="va">count</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="fl">20</span><span class="op">)</span><span class="op">)</span>,
+                        N.est <span class="op">=</span> <span class="va">awpe_ssm2</span><span class="op">$</span><span class="va">mean</span><span class="op">$</span><span class="va">N.est</span>, 
+                        LCI <span class="op">=</span> <span class="va">awpe_ssm2</span><span class="op">$</span><span class="va">q2.5</span><span class="op">$</span><span class="va">N.est</span>, 
+                        UCI <span class="op">=</span> <span class="va">awpe_ssm2</span><span class="op">$</span><span class="va">q97.5</span><span class="op">$</span><span class="va">N.est</span><span class="op">)</span>
+
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">pelicans2</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">year</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_ribbon</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>ymin <span class="op">=</span> <span class="va">LCI</span>, ymax <span class="op">=</span> <span class="va">UCI</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">N.est</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">N.est</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"white"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">count</span><span class="op">)</span>, color <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></code></pre></div>
 <p><img src="state_space_files/figure-html/unnamed-chunk-29-1.png" width="576" style="display: block; margin: auto;"></p>
 </div>
 <div id="expanding-the-state-space-model" class="section level2">
@@ -642,22 +666,14 @@ American White Pelican. Image courtesy of Frank Schulenburg via WikiCommons
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#fitting-state-space-models-to-simulated-data">Fitting state-space models to simulated data</a></li>
-      <li><a href="#analysis-in-jags">Analysis in JAGS</a></li>
-      <li><a href="#unbiased-indices-of-n">Unbiased <em>indices</em> of <span class="math inline">\(N\)</span></a></li>
-      <li><a href="#systematic-bias-in-the-state-space-model">Systematic bias in the state-space model</a></li>
-      <li><a href="#estimating-population-dynamics-of-the-gunnison-island-pelican-colony">Estimating population dynamics of the Gunnison Island pelican colony</a></li>
-      <li><a href="#expanding-the-state-space-model">Expanding the state-space model</a></li>
-      </ul>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
+
 
 
       <footer><div class="copyright">
@@ -665,12 +681,14 @@ American White Pelican. Image courtesy of Frank Schulenburg via WikiCommons
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>

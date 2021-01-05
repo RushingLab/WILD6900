@@ -6,18 +6,19 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Estimating survival and stage-transitions of a perennial plant using multi-state capture-recapture models • WILD6900</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js" integrity="sha256-FiZwavyI2V6+EXO1U+xzLG3IKldpiTFf3153ea9zikQ=" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
+<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Estimating survival and stage-transitions of a perennial plant using multi-state capture-recapture models">
-<meta property="og:description" content="">
-<meta name="twitter:card" content="summary">
+<meta property="og:description" content="WILD6900">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 <![endif]-->
 </head>
-<body>
+<body data-spy="scroll" data-target="#toc">
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -30,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">WILD6900</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2020.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">2021.1</span>
       </span>
     </div>
 
@@ -38,7 +39,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="../index.html">
-    <span class="fa fa-home"></span>
+    <span class="fas fa-home"></span>
      
   </a>
 </li>
@@ -46,21 +47,21 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="../articles/syllabus.html">
-    <span class="fas fa fas fa-book"></span>
+    <span class="fas fa-book"></span>
      
     Syllabus
   </a>
 </li>
 <li>
   <a href="../articles/schedule.html">
-    <span class="fas fa fas fa-calendar"></span>
+    <span class="fas fa-calendar"></span>
      
     Schedule
   </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fa fa-file-pdf-o"></span>
+    <span class="fas fa-file-pdf-o"></span>
      
     Lectures
      
@@ -119,7 +120,7 @@
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    <span class="fas fa fas fa-desktop"></span>
+    <span class="fas fa-desktop"></span>
      
     Labs
      
@@ -175,7 +176,7 @@
 </li>
 <li>
   <a href="../articles/homework.html">
-    <span class="fas fa fas fa-pencil-square-o"></span>
+    <span class="fas fa-pencil-square-o"></span>
      
     Assignments
   </a>
@@ -189,13 +190,15 @@
 <!--/.navbar -->
 
       
-      </header><script src="multi-state2_files/kePrint-0.0.1/kePrint.js"></script><div class="row">
+
+      </header><script src="multi-state2_files/accessible-code-block-0.0.1/empty-anchor.js"></script><script src="multi-state2_files/kePrint-0.0.1/kePrint.js"></script><link href="multi-state2_files/lightable-0.0.1/lightable.css" rel="stylesheet">
+<div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1>Estimating survival and stage-transitions of a perennial plant using multi-state capture-recapture models</h1>
+      <h1 data-toc-skip>Estimating survival and stage-transitions of a perennial plant using multi-state capture-recapture models</h1>
                         <h4 class="author">WILD6900</h4>
             
-            <h4 class="date">2020-03-28</h4>
+            <h4 class="date">2021-01-05</h4>
       
       
       <div class="hidden name"><code>multi-state2.Rmd</code></div>
@@ -394,172 +397,92 @@ Dead
 <li><p>observed flowering is coded as 2</p></li>
 <li><p>not observed is coded as 0</p></li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"ladyslipper"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"ladyslipper"</span><span class="op">)</span></code></pre></div>
 <p>Next, determine the first capture occasion of each individual and recode “not seen” as <code>3</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="co"># First capture occasion</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">f &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/apply">apply</a></span>(ladyslipper, <span class="dv">1</span>, <span class="cf">function</span>(x) <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">min</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(x <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)))</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co"># Recode "not seen" as 3</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">rCH &lt;-<span class="st"> </span>ladyslipper</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">rCH[rCH <span class="op">==</span><span class="st"> </span><span class="dv">0</span>] &lt;-<span class="st"> </span><span class="dv">3</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># First capture occasion</span>
+<span class="va">f</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">ladyslipper</span>, <span class="fl">1</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">x</span> <span class="op">!=</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Recode "not seen" as 3</span>
+<span class="va">rCH</span> <span class="op">&lt;-</span> <span class="va">ladyslipper</span>
+<span class="va">rCH</span><span class="op">[</span><span class="va">rCH</span> <span class="op">==</span> <span class="fl">0</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">3</span></code></pre></div>
 </div>
 <div id="the-model" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-model" class="anchor"></a>The model</h2>
 <p>Here’s the JAGS code to fit this model. In this case, we will assume that survival probability <span class="math inline">\(s\)</span> can vary across occasions and treat it as a random effect.</p>
 <p>Priors for the transition probabilities require a distribution we haven’t seen yet: the Dirichlet. The Dirichlet prior is used when we need to put priors on a vector of probabilities that must sum to 1. To implement the Dirichlet prior in JAGS, we define a set of hyperpriors, one for each element in the vector of probabilities, call these <span class="math inline">\(a_j\)</span>. We put a vague gamma prior on each hyperprior and then estimate the transition probabilities as <span class="math inline">\(\psi_{ij} = \frac{a_j}{\sum_{j = 1}^n a_j}\)</span>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>(<span class="st">"jags/ladyslipper.jags"</span>)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/cat">cat</a></span>(<span class="st">"</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="st">model {</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="st"># -------------------------------------------------</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="st"># Parameters:</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="st"># s: survival probability</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="st"># psiV: transitions from vegetative</span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="st"># psiF: transitions from flowering</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="st"># psiD: transitions from dormant</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="st"># -------------------------------------------------</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="st"># States (S):</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="st"># 1 vegetative</span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="st"># 2 flowering</span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="st"># 3 dormant</span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="st"># 4 dead</span></a>
-<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="st"># Observations (O):  </span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="st"># 1 seen vegetative </span></a>
-<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="st"># 2 seen flowering</span></a>
-<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="st"># 3 not seen</span></a>
-<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="st"># -------------------------------------------------</span></a>
-<a class="sourceLine" id="cb3-22" data-line-number="22"></a>
-<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="st"># Priors and constraints</span></a>
-<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="st">   # Survival: uniform</span></a>
-<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="st">   for (t in 1:(n.occasions-1)){  </span></a>
-<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="st">      s[t] ~ dunif(0, 1)</span></a>
-<a class="sourceLine" id="cb3-27" data-line-number="27"><span class="st">      }</span></a>
-<a class="sourceLine" id="cb3-28" data-line-number="28"><span class="st">   # Transitions: gamma priors</span></a>
-<a class="sourceLine" id="cb3-29" data-line-number="29"><span class="st">   for (i in 1:3){</span></a>
-<a class="sourceLine" id="cb3-30" data-line-number="30"><span class="st">      a[i] ~ dgamma(1, 1)</span></a>
-<a class="sourceLine" id="cb3-31" data-line-number="31"><span class="st">      psiD[i] &lt;- a[i]/sum(a[])</span></a>
-<a class="sourceLine" id="cb3-32" data-line-number="32"><span class="st">      b[i] ~ dgamma(1, 1)</span></a>
-<a class="sourceLine" id="cb3-33" data-line-number="33"><span class="st">      psiV[i] &lt;- b[i]/sum(b[])</span></a>
-<a class="sourceLine" id="cb3-34" data-line-number="34"><span class="st">      c[i] ~ dgamma(1, 1)</span></a>
-<a class="sourceLine" id="cb3-35" data-line-number="35"><span class="st">      psiF[i] &lt;- c[i]/sum(c[])</span></a>
-<a class="sourceLine" id="cb3-36" data-line-number="36"><span class="st">      }</span></a>
-<a class="sourceLine" id="cb3-37" data-line-number="37"></a>
-<a class="sourceLine" id="cb3-38" data-line-number="38"><span class="st"># Define state-transition and observation matrices  </span></a>
-<a class="sourceLine" id="cb3-39" data-line-number="39"><span class="st">   # Define probabilities of state S(t+1) given S(t)</span></a>
-<a class="sourceLine" id="cb3-40" data-line-number="40"><span class="st">   for (t in 1:(n.occasions-1)){</span></a>
-<a class="sourceLine" id="cb3-41" data-line-number="41"><span class="st">      ps[1,t,1] &lt;- s[t] * psiV[1]</span></a>
-<a class="sourceLine" id="cb3-42" data-line-number="42"><span class="st">      ps[1,t,2] &lt;- s[t] * psiV[2]</span></a>
-<a class="sourceLine" id="cb3-43" data-line-number="43"><span class="st">      ps[1,t,3] &lt;- s[t] * psiV[3]</span></a>
-<a class="sourceLine" id="cb3-44" data-line-number="44"><span class="st">      ps[1,t,4] &lt;- 1-s[t]</span></a>
-<a class="sourceLine" id="cb3-45" data-line-number="45"><span class="st">      ps[2,t,1] &lt;- s[t] * psiF[1]</span></a>
-<a class="sourceLine" id="cb3-46" data-line-number="46"><span class="st">      ps[2,t,2] &lt;- s[t] * psiF[2]</span></a>
-<a class="sourceLine" id="cb3-47" data-line-number="47"><span class="st">      ps[2,t,3] &lt;- s[t] * psiF[3]</span></a>
-<a class="sourceLine" id="cb3-48" data-line-number="48"><span class="st">      ps[2,t,4] &lt;- 1-s[t]</span></a>
-<a class="sourceLine" id="cb3-49" data-line-number="49"><span class="st">      ps[3,t,1] &lt;- s[t] * psiD[1]</span></a>
-<a class="sourceLine" id="cb3-50" data-line-number="50"><span class="st">      ps[3,t,2] &lt;- s[t] * psiD[2]</span></a>
-<a class="sourceLine" id="cb3-51" data-line-number="51"><span class="st">      ps[3,t,3] &lt;- s[t] * psiD[3]</span></a>
-<a class="sourceLine" id="cb3-52" data-line-number="52"><span class="st">      ps[3,t,4] &lt;- 1-s[t]</span></a>
-<a class="sourceLine" id="cb3-53" data-line-number="53"><span class="st">      ps[4,t,1] &lt;- 0</span></a>
-<a class="sourceLine" id="cb3-54" data-line-number="54"><span class="st">      ps[4,t,2] &lt;- 0</span></a>
-<a class="sourceLine" id="cb3-55" data-line-number="55"><span class="st">      ps[4,t,3] &lt;- 0</span></a>
-<a class="sourceLine" id="cb3-56" data-line-number="56"><span class="st">      ps[4,t,4] &lt;- 1</span></a>
-<a class="sourceLine" id="cb3-57" data-line-number="57"></a>
-<a class="sourceLine" id="cb3-58" data-line-number="58"><span class="st">      # Define probabilities of O(t) given S(t)</span></a>
-<a class="sourceLine" id="cb3-59" data-line-number="59"><span class="st">      po[1,t,1] &lt;- 1</span></a>
-<a class="sourceLine" id="cb3-60" data-line-number="60"><span class="st">      po[1,t,2] &lt;- 0</span></a>
-<a class="sourceLine" id="cb3-61" data-line-number="61"><span class="st">      po[1,t,3] &lt;- 0</span></a>
-<a class="sourceLine" id="cb3-62" data-line-number="62"><span class="st">      po[2,t,1] &lt;- 0</span></a>
-<a class="sourceLine" id="cb3-63" data-line-number="63"><span class="st">      po[2,t,2] &lt;- 1</span></a>
-<a class="sourceLine" id="cb3-64" data-line-number="64"><span class="st">      po[2,t,3] &lt;- 0</span></a>
-<a class="sourceLine" id="cb3-65" data-line-number="65"><span class="st">      po[3,t,1] &lt;- 0</span></a>
-<a class="sourceLine" id="cb3-66" data-line-number="66"><span class="st">      po[3,t,2] &lt;- 0</span></a>
-<a class="sourceLine" id="cb3-67" data-line-number="67"><span class="st">      po[3,t,3] &lt;- 1</span></a>
-<a class="sourceLine" id="cb3-68" data-line-number="68"><span class="st">      po[4,t,1] &lt;- 0</span></a>
-<a class="sourceLine" id="cb3-69" data-line-number="69"><span class="st">      po[4,t,2] &lt;- 0</span></a>
-<a class="sourceLine" id="cb3-70" data-line-number="70"><span class="st">      po[4,t,3] &lt;- 1</span></a>
-<a class="sourceLine" id="cb3-71" data-line-number="71"><span class="st">   } #t</span></a>
-<a class="sourceLine" id="cb3-72" data-line-number="72"></a>
-<a class="sourceLine" id="cb3-73" data-line-number="73"><span class="st"># Likelihood </span></a>
-<a class="sourceLine" id="cb3-74" data-line-number="74"><span class="st">for (i in 1:nind){</span></a>
-<a class="sourceLine" id="cb3-75" data-line-number="75"><span class="st">   # Define latent state at first capture</span></a>
-<a class="sourceLine" id="cb3-76" data-line-number="76"><span class="st">   z[i,f[i]] &lt;- y[i,f[i]]</span></a>
-<a class="sourceLine" id="cb3-77" data-line-number="77"><span class="st">   for (t in (f[i]+1):n.occasions){</span></a>
-<a class="sourceLine" id="cb3-78" data-line-number="78"><span class="st">      # State process: draw S(t) given S(t-1)</span></a>
-<a class="sourceLine" id="cb3-79" data-line-number="79"><span class="st">      z[i,t] ~ dcat(ps[z[i,t-1], t-1,])</span></a>
-<a class="sourceLine" id="cb3-80" data-line-number="80"><span class="st">      # Observation process: draw O(t) given S(t)</span></a>
-<a class="sourceLine" id="cb3-81" data-line-number="81"><span class="st">      y[i,t] ~ dcat(po[z[i,t], t-1,])</span></a>
-<a class="sourceLine" id="cb3-82" data-line-number="82"><span class="st">      } #t</span></a>
-<a class="sourceLine" id="cb3-83" data-line-number="83"><span class="st">   } #i</span></a>
-<a class="sourceLine" id="cb3-84" data-line-number="84"><span class="st">}</span></a>
-<a class="sourceLine" id="cb3-85" data-line-number="85"><span class="st">"</span>,<span class="dt">fill=</span><span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb3-86" data-line-number="86"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sink">sink</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/sink.html">sink</a></span><span class="op">(</span><span class="st">"jags/ladyslipper.jags"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span><span class="op">(</span><span class="st">[2045 chars quoted with '"']</span>,fill<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/sink.html">sink</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div id="fitting-the-model" class="section level3">
 <h3 class="hasAnchor">
 <a href="#fitting-the-model" class="anchor"></a>Fitting the model</h3>
 <p>Multi-state models can be very computationally expensive. One way to speed them up is the provide the latent matrix <code>z</code> as partially-observed data. When the individual is seen, we know <span class="math inline">\(z\)</span>. When the individual is not seen, we don’t know the state so we code that as <code>z = NA</code>. The following function will take the observed capture history and create a matrix <code>z</code> with the partially-known states:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">known.state.ms &lt;-<span class="st"> </span><span class="cf">function</span>(ms, notseen){</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">  <span class="co"># notseen: label for not seen</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">  state &lt;-<span class="st"> </span>ms</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">  state[state<span class="op">==</span>notseen] &lt;-<span class="st"> </span><span class="ot">NA</span></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(ms)[<span class="dv">1</span>]){</a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">    m &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">min</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(<span class="op">!</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(state[i,])))</a>
-<a class="sourceLine" id="cb4-7" data-line-number="7">    state[i,m] &lt;-<span class="st"> </span><span class="ot">NA</span></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8">  }</a>
-<a class="sourceLine" id="cb4-9" data-line-number="9">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/function">return</a></span>(state)</a>
-<a class="sourceLine" id="cb4-10" data-line-number="10">}</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">known.state.ms</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ms</span>, <span class="va">notseen</span><span class="op">)</span><span class="op">{</span>
+  <span class="co"># notseen: label for not seen</span>
+  <span class="va">state</span> <span class="op">&lt;-</span> <span class="va">ms</span>
+  <span class="va">state</span><span class="op">[</span><span class="va">state</span><span class="op">==</span><span class="va">notseen</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
+  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">ms</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">{</span>
+    <span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">state</span><span class="op">[</span><span class="va">i</span>,<span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+    <span class="va">state</span><span class="op">[</span><span class="va">i</span>,<span class="va">m</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
+  <span class="op">}</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">state</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
 <p>We can also define a function to create initial values for <code>z</code> and thereby avoid the dreaded <code>Invalid parent node</code> error:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># Function to create initial values for unknown z</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">ms.init.z &lt;-<span class="st"> </span><span class="cf">function</span>(ch, f){</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(ch)[<span class="dv">1</span>]){ch[i,<span class="dv">1</span><span class="op">:</span>f[i]] &lt;-<span class="st"> </span><span class="ot">NA</span>}</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">  states &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Extremes">max</a></span>(ch, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">  known.states &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span>(states<span class="dv">-1</span>)</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">  v &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/which">which</a></span>(ch<span class="op">==</span>states)</a>
-<a class="sourceLine" id="cb5-7" data-line-number="7">  ch[<span class="op">-</span>v] &lt;-<span class="st"> </span><span class="ot">NA</span></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">  ch[v] &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/sample">sample</a></span>(known.states, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(v), <span class="dt">replace =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb5-9" data-line-number="9">  <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/function">return</a></span>(ch)</a>
-<a class="sourceLine" id="cb5-10" data-line-number="10">}</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Function to create initial values for unknown z</span>
+<span class="va">ms.init.z</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">ch</span>, <span class="va">f</span><span class="op">)</span><span class="op">{</span>
+  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">ch</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span><span class="op">{</span><span class="va">ch</span><span class="op">[</span><span class="va">i</span>,<span class="fl">1</span><span class="op">:</span><span class="va">f</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span><span class="op">}</span>
+  <span class="va">states</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">ch</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+  <span class="va">known.states</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="va">states</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>
+  <span class="va">v</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">ch</span><span class="op">==</span><span class="va">states</span><span class="op">)</span>
+  <span class="va">ch</span><span class="op">[</span><span class="op">-</span><span class="va">v</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="cn">NA</span>
+  <span class="va">ch</span><span class="op">[</span><span class="va">v</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">known.states</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">ch</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
 <p>Now bundle the data and set the MCMC settings. Currently, <code>ni</code> and <code>nb</code> are set very low. This model takes a long time to run so these settings will allow us to work out any bugs without having to wait a long time to see the error message. Once you have the model running, increase these values to, say, 50,000 and 10,000:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="co"># Bundle data</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">jags.data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">y =</span> rCH, <span class="dt">f =</span> f, <span class="dt">n.occasions =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(rCH)[<span class="dv">2</span>], <span class="dt">nind =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(rCH)[<span class="dv">1</span>], <span class="dt">z =</span> <span class="kw">known.state.ms</span>(rCH, <span class="dv">3</span>))</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="co"># Initial values</span></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co"># Need 1 value of s for each occasion</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">inits &lt;-<span class="st"> </span><span class="cf">function</span>(){<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/list">list</a></span>(<span class="dt">s =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/stats/topics/Uniform">runif</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/dim">dim</a></span>(rCH)[<span class="dv">2</span>] <span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>), <span class="dt">z =</span> <span class="kw">ms.init.z</span>(rCH, f))}  </a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co"># Parameters monitored</span></a>
-<a class="sourceLine" id="cb6-9" data-line-number="9">parameters &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"s"</span>, <span class="st">"psiV"</span>, <span class="st">"psiF"</span>, <span class="st">"psiD"</span>)</a>
-<a class="sourceLine" id="cb6-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co"># MCMC settings (change these once you know the model is running)</span></a>
-<a class="sourceLine" id="cb6-12" data-line-number="12">ni &lt;-<span class="st"> </span><span class="dv">500</span></a>
-<a class="sourceLine" id="cb6-13" data-line-number="13">nt &lt;-<span class="st"> </span><span class="dv">10</span></a>
-<a class="sourceLine" id="cb6-14" data-line-number="14">nb &lt;-<span class="st"> </span><span class="dv">100</span></a>
-<a class="sourceLine" id="cb6-15" data-line-number="15">nc &lt;-<span class="st"> </span><span class="dv">3</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Bundle data</span>
+<span class="va">jags.data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">rCH</span>, f <span class="op">=</span> <span class="va">f</span>, n.occasions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">rCH</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, nind <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">rCH</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, z <span class="op">=</span> <span class="fu">known.state.ms</span><span class="op">(</span><span class="va">rCH</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># Initial values</span>
+<span class="co"># Need 1 value of s for each occasion</span>
+<span class="va">inits</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>s <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">rCH</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">-</span> <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, z <span class="op">=</span> <span class="fu">ms.init.z</span><span class="op">(</span><span class="va">rCH</span>, <span class="va">f</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>  
+
+<span class="co"># Parameters monitored</span>
+<span class="va">parameters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"s"</span>, <span class="st">"psiV"</span>, <span class="st">"psiF"</span>, <span class="st">"psiD"</span><span class="op">)</span>
+
+<span class="co"># MCMC settings (change these once you know the model is running)</span>
+<span class="va">ni</span> <span class="op">&lt;-</span> <span class="fl">500</span>
+<span class="va">nt</span> <span class="op">&lt;-</span> <span class="fl">10</span>
+<span class="va">nb</span> <span class="op">&lt;-</span> <span class="fl">100</span>
+<span class="va">nc</span> <span class="op">&lt;-</span> <span class="fl">3</span></code></pre></div>
 <p>Finally, fit the model:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># Call JAGS from R</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">fit &lt;-<span class="st"> </span>jagsUI<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jagsUI/topics/jags">jags</a></span>(<span class="dt">data =</span> jags.data, <span class="dt">inits =</span> inits, <span class="dt">parameters.to.save =</span> parameters, </a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">                        <span class="dt">model.file =</span> here<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/here/topics/here">here</a></span>(<span class="st">"jags/ladyslipper.jags"</span>), </a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">                        <span class="dt">n.chains =</span> nc, <span class="dt">n.thin =</span> nt, <span class="dt">n.iter =</span> ni, <span class="dt">n.burnin =</span> nb, </a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">                        <span class="dt">parallel =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/print">print</a></span>(fit, <span class="dt">digits =</span> <span class="dv">3</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Call JAGS from R</span>
+<span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">jagsUI</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jagsUI/man/jags.html">jags</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">jags.data</span>, inits <span class="op">=</span> <span class="va">inits</span>, parameters.to.save <span class="op">=</span> <span class="va">parameters</span>, 
+                        model.file <span class="op">=</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html">here</a></span><span class="op">(</span><span class="st">"jags/ladyslipper.jags"</span><span class="op">)</span>, 
+                        n.chains <span class="op">=</span> <span class="va">nc</span>, n.thin <span class="op">=</span> <span class="va">nt</span>, n.iter <span class="op">=</span> <span class="va">ni</span>, n.burnin <span class="op">=</span> <span class="va">nb</span>, 
+                        parallel <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit</span>, digits <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p>Be sure to check the model for convergence and to determine whether the parameter estimates are consistent with the data generating values.</p>
 </div>
 </div>
   </div>
 
-  <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-        <div id="tocnav">
-      <h2 class="hasAnchor">
-<a href="#tocnav" class="anchor"></a>Contents</h2>
-      <ul class="nav nav-pills nav-stacked">
-<li><a href="#reading-in-the-data">Reading in the data</a></li>
-      <li><a href="#the-model">The model</a></li>
-      </ul>
+  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
+
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
 </div>
-      </div>
 
 </div>
+
 
 
       <footer><div class="copyright">
@@ -567,12 +490,14 @@ Dead
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.2.0.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
+
       </footer>
 </div>
 
   
+
 
   </body>
 </html>
