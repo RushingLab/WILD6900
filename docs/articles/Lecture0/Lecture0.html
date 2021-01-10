@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="" xml:lang="">
   <head>
     <title>Lecture 0</title>
-    <meta charset="utf-8">
-    <meta name="author" content="   WILD6900 (Spring 2020)" />
+    <meta charset="utf-8" />
+    <meta name="author" content="   WILD6900 (Spring 2021)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
     <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
@@ -14,7 +14,7 @@ class: center, middle, inverse, title-slide
 
 # Lecture 0
 ## Course overview
-### <br/><br/><br/>WILD6900 (Spring 2020)
+### <br/><br/><br/>WILD6900 (Spring 2021)
 
 ---
 
@@ -23,7 +23,7 @@ class: center, middle, inverse, title-slide
 
 # LOGISTICS
 
-**Lecture**: Tuesday and Thursday 1:30-2:45 ENLAB 248  
+**Lecture**: Tuesday and Thursday 1:30-2:45 ~~ENLAB 248~~ **Zoom**  
 **Credits**: 3  
 
 ---
@@ -31,7 +31,7 @@ class: center, middle, inverse, title-slide
 
 #### Dr. Clark Rushing  
 [clark.rushing@usu.edu](clark.rushing@usu.edu)   
-**Office**: NR 146   
+**Office**: ~~NR 146~~ **Zoom**   
 **Office hours**: Monday and Wednesday 1:00-2:30 (or by appointment)
 
 
@@ -59,7 +59,7 @@ class: inverse, center, middle
 &lt;br/&gt;
 
 --
-3) Proper accouting of uncertainty  
+3) Proper accounting of uncertainty  
 &lt;br/&gt;
 
 --
@@ -100,7 +100,7 @@ class: inverse, center, middle
 &lt;br/&gt;
 
 --
-2) Few (no?) "canned" software
+2) Few "canned" software
 
 ---
 ## Bayesian methods in ecology
@@ -115,7 +115,7 @@ The use of Bayesian methods is growing rapidly in ecology, largely due to:
 
 --
 
-These developments have led to many people adopting Bayesian methods even if they don't fully understand what they're doing. They also led to some ecologists becoming full-on Bayesians and then a preditable backlash from those that view these methods as needlessly complex and overly trendy (i.e., statistical machismo)    
+These developments have led to many people adopting Bayesian methods even if they don't fully understand what they're doing. They also led to some ecologists becoming full-on Bayesians and then a predictable backlash from those that view these methods as needlessly complex and overly trendy (i.e., statistical machismo)    
 
 The methods you'll learn about in this class, just like all statistical methods, are *tools* to help you answer questions  
 
@@ -205,7 +205,10 @@ class: inverse, center, middle
 ### Additional resources
 
 * Cooper, N. &amp; Hsing, P. (2017) [*A guide to reproducible code*](https://www.britishecologicalsociety.org/wp-content/uploads/2017/12/guide-to-reproducible-code.pdf) British Ecological Society
+
+* WILD6900: Computational Tools for Reproducible Science (Dr. Simona Picardi)
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
@@ -215,16 +218,89 @@ class: inverse, center, middle
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
-(function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -238,7 +314,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

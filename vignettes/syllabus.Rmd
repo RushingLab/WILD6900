@@ -23,7 +23,7 @@ knitr::opts_chunk$set(
 # LOGISTICS
 
 **Lecture**: Tuesday and Thursday 1:30-2:45  
-~~**Location**: ENLAB 248 (Engineering Laboratory Building)~~ **Zoom**  
+**Location**: ~~ENLAB 248 (Engineering Laboratory Building)~~ **Zoom**  
 **Credits**: 3  
 
 # INSTRUCTOR

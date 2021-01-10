@@ -1,7 +1,7 @@
 ---
 title: "Lecture 2"
 subtitle: "Probability refresher (or introduction)"
-author: "<br/><br/><br/>WILD6900 (Spring 2020)"
+author: "<br/><br/><br/>WILD6900 (Spring 2021)"
 output:
   xaringan::moon_reader:
     css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
@@ -14,7 +14,7 @@ output:
 
 ```{r setup, include = FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE,fig.retina = 2)
 library(WILD6900)
 # library(gganimate)
 ```
@@ -63,7 +63,7 @@ $^1$ Given a certain input, the deterministic model will always return the same 
 
 ##### In Bayesian models, all unobserved quantities are treated as a **random variables**, that is they can take on different values due to chance (i.e., stochastic)  
 
-##### Each random variable in our model is governed by a **probabilty distribution** $^2$  
+##### Each random variable in our model is governed by a **probability distribution** $^2$  
 
 --
 #### Our goal is to *use our data to learn about those distributions*
@@ -380,7 +380,7 @@ marg_df %>%
 
 ???
 
-This is the reason random or stratified sampling is so important if you want to know $Pr(z)$ - you do not sample habitats in proportion to $Pr(H_i)$, you will get biased estimates of $Pr(z)$!
+This is the reason random or stratified sampling is so important if you want to know $Pr(z)$ - if you do not sample habitats in proportion to $Pr(H_i)$, you will get biased estimates of $Pr(z)$!
 
 ---
 class: inverse, middle, center
@@ -401,7 +401,7 @@ The rules of probability allow us to express the complex *joint* probabilities a
 
 
 --
-Determining the dependences between parameters in the models is aided by **Bayesian network models**
+Determining the dependencies between parameters in the models is aided by **Bayesian network models**
 
 ---
 ## Bayesian networks
@@ -770,12 +770,12 @@ $$\Large \sigma^2 = E((z - \mu)^2) = \int_{-\infty}^{\infty} (z - \mu)^2[z]dz$$
 One way to estimate moments is by simulating a large number of values from a probability distribution and then using these samples to calculate the first and second moments $^{17}$  
 
 This approach is very easy to do in `R` using the `r` class of functions (e.g., `rnorm()`, `rpois()`, etc.)
-- These functions generate specified number of random draws (`r` for random) from a given probability distribution. 
+- These functions generate specified number of random draws (`r` for random) from a given probability distribution 
 
 ???
 $^{16}$ Monte Carlo integration is a form of simulation where we draw many random samples from a probability distribution and then use those samples to learn about properties of the distribution
 
-$^{17}$This is a useful approach to understand because it is very similar to how we learn about parameter distributions in Bayesian analyses.
+$^{17}$This is a useful approach to understand because it is very similar to how we learn about parameter distributions in Bayesian analyses
 
 ---
 ## Exercise: Estimating moments using *Monte Carlo integration*

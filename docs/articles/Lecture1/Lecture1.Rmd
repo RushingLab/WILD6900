@@ -1,7 +1,7 @@
 ---
 title: "Lecture 1"
 subtitle: "Introduction to statistical inference in ecology"
-author: "<br/><br/><br/>WILD6900 (Spring 2020)"
+author: "<br/><br/><br/>WILD6900 (Spring 2021)"
 output:
   xaringan::moon_reader:
     css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
@@ -14,7 +14,7 @@ output:
 
 ```{r setup, echo = FALSE, warning=FALSE, message=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE,fig.retina = 2)
 library(WILD6900)
 # library(gganimate)
 ```
@@ -225,15 +225,15 @@ $^3$ Process models are abstractions - they inherently leave out a lot of detail
 
 **Example**  
 
-We are interested in predicting the population growth on species $a$ as a function of abundance in the previous year $^4$  
+We are interested in predicting the population growth of species $a$ as a function of abundance in the previous year $^4$  
 
 We hypothesize that population growth rate will be highest at low densities and lowest (maybe even negative) at high density  
 
 This leads us to believe that the *discrete logistic equation* is a good descriptor of our system:
 
-$$\LARGE N_{t+1} = g(\theta_p, x) = N_te^{r_0[1-(N_t/K)]}$$
+$$\large N_{t+1} = g(\theta_p, x) = N_te^{r_0[1-(N_t/K)]}$$
 
-```{r, fig.height=3.25, fig.width = 5.25}
+```{r, fig.height=2.5, fig.width = 4.75}
 r0 <- 0.18
 K <- 500
 
@@ -367,6 +367,7 @@ If we used the $n_{t,i}$ as our observations, we would have to make the assumpti
 --
 Another way to say this is that $n_{t,i}$ is the *true* number of individuals in our sampling area but usually cannot count every individual $^7$  
 
+</br>
 --
 In our count model, we might define a parameter $\psi$ that is the probability that individual that is present in our sample is counted by the observer (we could further use a generalized linear model to account for the effects of, e.g., weather or observer skill, on $\psi$): 
 
