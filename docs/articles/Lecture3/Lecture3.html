@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="" xml:lang="">
   <head>
     <title>Lecture 3</title>
-    <meta charset="utf-8">
-    <meta name="author" content="   WILD6900 (Spring 20290)" />
+    <meta charset="utf-8" />
+    <meta name="author" content="   WILD6900 (Spring 2021)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
     <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
@@ -14,7 +14,7 @@ class: center, middle, inverse, title-slide
 
 # Lecture 3
 ## Principles of Bayesian inference
-### <br/><br/><br/>WILD6900 (Spring 20290)
+### <br/><br/><br/>WILD6900 (Spring 2021)
 
 ---
 
@@ -230,7 +230,7 @@ y_probs &lt;- data.frame(y = 15:65,
 ggplot(data = y_probs, aes(x = y, y = pr_y)) + geom_point() 
 ```
 
-&lt;img src="Lecture3_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture3_files/figure-html/unnamed-chunk-3-1.png" width="432" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -252,7 +252,7 @@ y_probs &lt;- data.frame(lambda = 15:65,
 (lik_profile &lt;- ggplot(data = y_probs, aes(x = lambda, y = pr_y)) + geom_path())
 ```
 
-&lt;img src="Lecture3_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture3_files/figure-html/unnamed-chunk-5-1.png" width="432" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Likelihood profile
@@ -261,7 +261,7 @@ y_probs &lt;- data.frame(lambda = 15:65,
 
 - the likelihood profile is *not* a probability distribution   
 
-&lt;img src="Lecture3_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture3_files/figure-html/unnamed-chunk-6-1.png" width="720" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -290,7 +290,7 @@ Many of the methods familiar to ecologists use the principle of maximum likeliho
 
 The maximum likelihood estimate is the peak of the likelihood curve `\(^6\)`:
 
-&lt;img src="Lecture3_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture3_files/figure-html/unnamed-chunk-7-1.png" width="468" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -434,7 +434,7 @@ prior &lt;- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
 
 **Example**
 
-&lt;img src="Lecture3_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture3_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 class: inverse, center, middle
@@ -461,7 +461,7 @@ joint &lt;- data.frame(lambda = seq(from = 15, to = 65, by = 0.25),
 ---
 ## The joint distribution
 
-&lt;img src="Lecture3_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture3_files/figure-html/unnamed-chunk-11-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 class: inverse, center, middle
@@ -483,7 +483,7 @@ Remember from our previous lecture that:
 
 `$$\Large [y] = \int [y|\theta][\theta]d\theta$$`
 
-&lt;img src="Lecture3_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture3_files/figure-html/unnamed-chunk-12-1.png" width="360" style="display: block; margin: auto;" /&gt;
 
 ---
 ## The marginal distribution
@@ -521,7 +521,7 @@ The LHS of equation, `\(\large [\theta|y]\)`, is known as the posterior distribu
 The posterior distribution tells us everything we know about `\(\large \theta\)` given our data (and possibly prior knowledge)  
 
 
-&lt;img src="Lecture3_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture3_files/figure-html/unnamed-chunk-13-1.png" width="360" style="display: block; margin: auto;" /&gt;
 
 ---
 ## The posterior distribution
@@ -612,6 +612,7 @@ The posterior allows to make statements like:
 --
 #### If nothing else turns you into a Bayesian, it's probably this point.
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
@@ -621,16 +622,89 @@ The posterior allows to make statements like:
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
-(function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -644,7 +718,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
