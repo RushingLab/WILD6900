@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="" xml:lang="">
   <head>
     <title>Lecture 5</title>
-    <meta charset="utf-8">
-    <meta name="author" content="   WILD6900 (Spring 2020)" />
+    <meta charset="utf-8" />
+    <meta name="author" content="   WILD6900 (Spring 2021)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
     <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
@@ -14,7 +14,7 @@ class: center, middle, inverse, title-slide
 
 # Lecture 5
 ## Implementing Bayesian models: Introduction to MCMC samplers
-### <br/><br/><br/>WILD6900 (Spring 2020)
+### <br/><br/><br/>WILD6900 (Spring 2021)
 
 ---
 
@@ -79,7 +79,7 @@ class: inverse, center, middle
 
 #### Remember that the marginal distribution `\(\large [y]\)` is what normalizes the joint distribution to ensure the posterior is a proper probability distribution `\(^1\)`  
 
-&lt;img src="Lecture5_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## From the joint distribution to the posterior
@@ -130,7 +130,7 @@ Progress was only made once statisticians started developing methods to learn ab
 norm_df &lt;- data.frame(samples = rnorm(5000))    # Generate samples from distribution
 ```
 
-&lt;img src="Lecture5_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-3-1.png" width="360" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -205,7 +205,7 @@ phi &lt;- 0.4   # True survival probability
 ```
 
 ```
-## [1] 6 7 6 9 5
+## [1]  8  6 11  9  7
 ```
 
 ---
@@ -224,7 +224,7 @@ phi &lt;- 0.4   # True survival probability
 
 - A reasonable prior to represent this knowledge might be `\(beta(2,4)\)`
 
-&lt;img src="Lecture5_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-5-1.png" width="432" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Implementing a simple MCMC
@@ -546,7 +546,7 @@ ggplot(posterior, aes(x = phi)) + geom_density(size = 1.5) +
   scale_x_continuous(expression(phi))
 ```
 
-&lt;img src="Lecture5_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-11-1.png" width="360" style="display: block; margin: auto;" /&gt;
 
 ---
 ## MCMC: basic steps
@@ -561,7 +561,7 @@ ggplot(posterior, aes(x = iteration, y = phi)) + geom_path() +
   scale_y_continuous(expression(phi))
 ```
 
-&lt;img src="Lecture5_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-12-1.png" width="360" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -580,7 +580,7 @@ mean(posterior$phi)
 ```
 
 ```
-## [1] 0.3258
+## [1] 0.4032
 ```
 
 Pretty close (that a good sign that our Metropolis sampler did what we wanted it to do!)
@@ -599,7 +599,7 @@ quantile(posterior$phi)
 
 ```
 ##     0%    25%    50%    75%   100% 
-## 0.1413 0.2941 0.3254 0.3554 0.6665
+## 0.2060 0.3709 0.4025 0.4345 0.6665
 ```
 
 Quantiles are useful for determining the 95% *credible intervals* of the posterior: `\(^1\)`
@@ -611,10 +611,10 @@ quantile(posterior$phi, probs = c(0.025, 0.975))
 
 ```
 ##   2.5%  97.5% 
-## 0.2373 0.4210
+## 0.3105 0.5002
 ```
 
-This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.24 and 0.42" `\(^2\)`
+This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.31 and 0.5" `\(^2\)`
 
 ???
 
@@ -629,7 +629,7 @@ This allows us to make statements like "there is a 95% chance that `\(\phi\)` is
 
 #### In most applications, we run multiple chains for each parameter `\(^1\)`
 
-&lt;img src="Lecture5_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-16-1.png" width="432" style="display: block; margin: auto;" /&gt;
 ???
 
 `\(^1\)` In principle, there is nothing wrong with just having a single chain if the samples from that chain accurately characterize the posterior. However, with only a single chain, it can be difficult to determine whether the sample *do* accurately characterize the posterior. As we will see shortly, running multiple chains aides diagnosing whether the model is well-behaved. 
@@ -757,7 +757,7 @@ Once a chain has converged, adding more samples will not meaningfully change the
 --
 - At this point, a chain is *stationary* because more samples will not cause it to "move" `\(^1\)`
 
-&lt;img src="Lecture5_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-20-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -824,7 +824,7 @@ Two issues can cause chains to not converge:
 If too few samples have been accumulated, the chain will not accurately represent the full posterior  
 &lt;br/&gt;
 
-&lt;img src="Lecture5_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-22-1.png" width="360" style="display: block; margin: auto;" /&gt;
 
 --
 **Solution** - continuing sampling! 
@@ -838,7 +838,7 @@ If too few samples have been accumulated, the chain will not accurately represen
 
 **Solution** - continuing sampling! 
 
-&lt;img src="Lecture5_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture5_files/figure-html/unnamed-chunk-23-1.png" width="360" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Improving convergence 
@@ -871,6 +871,7 @@ Solving lack of identifiability is harder
 
 `\(^2\)` Most MCMC software (JAGS, Bugs, etc) use an adaptive phase,  during with the samplers used by the model may modify their behavior for increased efficiency. This is usually done behind the scenes but as highlighted in the linked post, being aware of what the software is doing can be useful for improving mixing
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
@@ -880,16 +881,89 @@ Solving lack of identifiability is harder
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
-(function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -903,7 +977,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="" xml:lang="">
   <head>
     <title>Lecture 4</title>
-    <meta charset="utf-8">
-    <meta name="author" content="   WILD6900 (Spring 2020)" />
+    <meta charset="utf-8" />
+    <meta name="author" content="   WILD6900 (Spring 2021)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
     <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
@@ -14,7 +14,7 @@ class: center, middle, inverse, title-slide
 
 # Lecture 4
 ## More about prior distributions
-### <br/><br/><br/>WILD6900 (Spring 2020)
+### <br/><br/><br/>WILD6900 (Spring 2021)
 
 ---
 
@@ -29,7 +29,7 @@ class: center, middle, inverse, title-slide
 ---
 class: inverse, center, middle
 
-&gt; As scientists, we should always prefer to use appropriate, well-constructed, informative priors on `\(\theta\)` - Hobbs &amp; Hooten
+&gt; As scientists, we should always prefer to use appropriate, well-constructed, informative priors - Hobbs &amp; Hooten
 
 ---
 # More about prior distributions
@@ -95,24 +95,24 @@ In much of the ecological literature the standard method of selecting priors is 
 --
 For example, if `\(\theta\)` is a probability, `\(Uniform(0,1)\)` gives equal prior probability to all possible values `\(^2\)`:
 
-&lt;img src="Lecture4_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture4_files/figure-html/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ???
 
-`\(^2\)` The `\(Uniform(0,1)\)` is a special case of the beta distribution with `\(\alpha = \beta = 1\)`
+`\(^2\)` The `\(uniform(0,1)\)` is a special case of the beta distribution with `\(\alpha = \beta = 1\)`
 
 ---
 ## Non-informative priors
 
-For a parameter that could be any real number, a common choice is a normal prior with very large variance:
+For a parameter that could be any real number, a common choice is a normal prior with very large standard deviation:
 
-&lt;img src="Lecture4_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture4_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;" /&gt;
 ---
 ## Non-informative priors
 
 Over realistic values of `\(\theta\)`, this distribution appears relatively flat:
 
-&lt;img src="Lecture4_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture4_files/figure-html/unnamed-chunk-3-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Non-informative priors
@@ -121,7 +121,7 @@ Often ecological models have parameters that can take real values `\(&gt;0\)` (v
 
 In these cases, uniform priors from 0 to some large number (e.g., 100) are often used or sometimes very diffuse gamma priors, e.g. `\(gamma(0.01, 0.01)\)`
 
-&lt;img src="Lecture4_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture4_files/figure-html/unnamed-chunk-4-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -158,13 +158,13 @@ For example, let's say we track 10 individuals over a period of time using GPS c
 --
 A natural model for these data is  
 
-`$$\LARGE Binomial(p, N = 10)$$`  
+`$$\LARGE binomial(p, N = 10)$$`  
 
 
 --
 Because `\(p\)` is a parameter, it needs a prior:
 
-- `\(Beta(1,1)\)` gives equal prior probability to all values of `\(p\)` between 0 and 1  
+- `\(beta(1,1)\)` gives equal prior probability to all values of `\(p\)` between 0 and 1  
 
 ???
 
@@ -191,19 +191,19 @@ This scenario, when the prior and the posterior have the same distribution, occu
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:center;"&gt; `\(y_i \sim binomial(n, p)\)` &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; `\(p \sim beta(\alpha, \beta)\)` &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; `\(p \sim beta(\sum y_i + \alpha, n -\sum y_i + \beta)\)` &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(y_i \sim binomial(n, p)\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(p \sim beta(\alpha, \beta)\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(p \sim beta(\sum y_i + \alpha, n -\sum y_i + \beta)\) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:center;"&gt; `\(y_i \sim Bernoulli(p)\)` &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; `\(p \sim beta(\alpha, \beta)\)` &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; `\(p \sim beta(\sum_{i=1}^n y_i + \alpha, \sum_{i=1}^n (1-y_i) + \beta)\)` &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(y_i \sim Bernoulli(p)\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(p \sim beta(\alpha, \beta)\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(p \sim beta(\sum_{i=1}^n y_i + \alpha, \sum_{i=1}^n (1-y_i) + \beta)\) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:center;"&gt; `\(y_i \sim Poisson(\lambda)\)` &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; `\(\lambda \sim gamma(\alpha, \beta)\)` &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; `\(\lambda \sim gamma(\alpha \sum_{i=1}^n y_i, \beta + n)\)` &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(y_i \sim Poisson(\lambda)\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\lambda \sim gamma(\alpha, \beta)\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\lambda \sim gamma(\alpha \sum_{i=1}^n y_i, \beta + n)\) &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -232,7 +232,7 @@ This scenario, when the prior and the posterior have the same distribution, occu
 --
 #### With a sample size that big, we could use a pretty informative prior (e.g., `\(\large beta(4,1)\)`) and it doesn't matter too much:
 
-&lt;img src="Lecture4_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture4_files/figure-html/unnamed-chunk-6-1.png" width="720" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Practical issues with non-informative priors
@@ -249,7 +249,7 @@ For example, let's say instead of modeling `\(p\)` on the probability scale (0-1
 --
 The logit scale transforms the probability to a real number:
 
-&lt;img src="Lecture4_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture4_files/figure-html/unnamed-chunk-7-1.png" width="288" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -262,7 +262,7 @@ We saw that for real numbers, a "flat" normal prior is often chosen as a non-inf
 
 But what happens when we transform those values back into probabilities?
 
-&lt;img src="Lecture4_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture4_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Philosophical issues with non-informative priors 
@@ -322,7 +322,7 @@ Bayesian analysis is powerful because it provides a formal mathematical framewor
 
 - If we don't know much, this prior could contain less information `\(^2\)`  
 
-&lt;img src="Lecture4_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture4_files/figure-html/unnamed-chunk-9-1.png" width="360" style="display: block; margin: auto;" /&gt;
 
 ???
 
@@ -395,7 +395,7 @@ This is how it should be - if we're really confident in our knowledge of the sys
 
 **Example**  
 
-If `\(y \sim Binomial(N, p)\)` and the only data we have in `\(y\)` (we don't know `\(N\)`), we cannot estimate `\(N\)` and `\(p\)` no matter how much data we have `\(^1\)`  
+If `\(y \sim Binomial(N, p)\)` and the only data we have is `\(y\)` (we don't know `\(N\)`), we cannot estimate `\(N\)` and `\(p\)` no matter how much data we have `\(^1\)`  
 
 Including information about either `\(N\)` or `\(p\)` via an informative prior can help estimate the other other parameter `\(^2\)`  
 
@@ -478,6 +478,7 @@ Including information about either `\(N\)` or `\(p\)` via an informative prior c
 
 &gt; Does changing the prior change your posterior inference? If not, don't sweat it. If it does, you'll need to return to point 2 and justify your prior choice
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
@@ -487,16 +488,89 @@ Including information about either `\(N\)` or `\(p\)` via an informative prior c
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
-(function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -510,7 +584,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
