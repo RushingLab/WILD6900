@@ -22,7 +22,7 @@ This material borrows heavily from the [Learning R](learnr.usu.edu) course devel
 
 Before we discuss what R Markdown is, we need to discuss what Markdown is. What is Markdown? Let's start with what it's not.  
 
-Many of you have probably created a report or a paper using a word processor like Microsoft Word or Google Docs. Word processors are referred to as "what you see is what you get" (*wysiwyg*) text editors. This means that when you hightlight text and click the `boldface` icon in Word, the text appears bold on your screen. All sorts of other formatting options, incluing making headers, inserting figures, adding page numbers, etc., are possible by clicking on buttons. There is code behind the scenes that creates these changes but users don't see the code, only the formatting output. This makes *wysiwyg* editors relatively easy to use for beginners. But for more advanced users, it can actually be problematic. Have you ever had Word act in ways that you don't fully understand? Of course! We all have. Have you ever tried opening a `.docx` file using an older version of Word, only to find that it doesn't look the way thought it would? Have you ever inserted a figure only to have it jump to another page or get 'anchored' to the bottom of a page? These are just a few of the problems that occur when your document has a bunch of hidden formatting code that you cannot see or understand.  
+Many of you have probably created a report or a paper using a word processor like Microsoft Word or Google Docs. Word processors are referred to as "what you see is what you get" (*wysiwyg*) text editors. This means that when you highlight text and click the `boldface` icon in Word, the text appears bold on your screen. All sorts of other formatting options, including making headers, inserting figures, adding page numbers, etc., are possible by clicking on buttons. There is code behind the scenes that creates these changes but users don't see the code, only the formatting output. This makes *wysiwyg* editors relatively easy to use for beginners. But for more advanced users, it can actually be problematic. Have you ever had Word act in ways that you don't fully understand? Of course! We all have. Have you ever tried opening a `.docx` file using an older version of Word, only to find that it doesn't look the way thought it would? Have you ever inserted a figure only to have it jump to another page or get 'anchored' to the bottom of a page? These are just a few of the problems that occur when your document has a bunch of hidden formatting code that you cannot see or understand.  
 
 Markdown is different. Markdown files are plain text files, meaning that they be created and edited using text editors (like NotePad on Windows or TextEdit on Mac). The biggest difference between Markdown files and Word documents is that formatting Markdown documents occurs in the document itself rather than behind the scenes. So to make something **boldface** you have to tell Markdown to do that by putting two `**asterisks**` on either side of the word or phrase. *Italics* is done by putting one `*asterisk*` around the text. [Hyperlinks](https://en.wikipedia.org/wiki/Markdown) are written like this: `[Hyperlinks](https://en.wikipedia.org/wiki/Markdown)`. These are just a few of the many formatting options you can include in a Markdown document. We'll learn about options like headers, lists, mathematical symbols and equations, and figures later in this tutorial and throughout the semester.
 
@@ -36,15 +36,15 @@ In this course, we will use a specific 'flavor' of Markdown called 'R Markdown'.
 
 R Markdown has many advantages compared to creating reports in Word or GoogleDocs. These advantages include:
 
-1) **Versatility**- Want to convert a Word document into pdf? That's not too hard. But pdf to Word? That's a pain. PDF to HTML? Maybe you know how to do that but I don't. With R Markdown, we can change between these formats with a single click (or a single line of code). You can even convert them into pretty nice slideshows.  
+1) **Versatility**- Want to convert a Word document into pdf? That's not too hard. But pdf to Word? That's a pain. PDF to HTML? Maybe you know how to do that but I don't. With R Markdown, we can change between these formats with a single click (or a single line of code). You can even convert them into pretty nice slide shows.  
 
 2) **Embed code in text** - After running an analysis, how do you get your results into Word? Type them by hand? Copy-and-paste? Both are a pain and error prone. Rerun your analysis using new data? Oops, now you have to copy and paste those new results and figures. With R Markdown, we embed code directly into the text so results and figures get added to our reports automatically. That means no copying and pasting and updating reports as new results come in is pain free.  
 
-3) **Annotate your code** - Using the `#` is great for adding small annotations to your R scripts and you should defitinely get in the habitat of doing that. But sometimes you need to add a lot of details to help other users (or your future self) make sense of complex code. R Markdown allows you to create documents with as much text and formatting as you need, along with the code.  
+3) **Annotate your code** - Using the `#` is great for adding small annotations to your R scripts and you should definitely get in the habitat of doing that. But sometimes you need to add a lot of details to help other users (or your future self) make sense of complex code. R Markdown allows you to create documents with as much text and formatting as you need, along with the code.  
 
-4) **Version control** - Tired of saving `manuscript_v1.doc`, `manuscript_v2.doc`, `manuscript_final.doc`, `manuscript_final_v2.doc`? Then version control is for you. We won't go into the specfics here but R Markdown allows you to seamlessly use version control systems like git and Github to document changes to your reports.  
+4) **Version control** - Tired of saving `manuscript_v1.doc`, `manuscript_v2.doc`, `manuscript_final.doc`, `manuscript_final_v2.doc`? Then version control is for you. We won't go into the specifics here but R Markdown allows you to seamlessly use version control systems like git and Github to document changes to your reports.  
 
-5) **Edit as text files** - R Markdown files are most easily created and editted within RStudio but you don't have to do it that way. They can be opened and edited in base R and even using text editors. This means you can create and edit them on any platform (Windows, Mac, Linux) using free software that is already installed on the computer
+5) **Edit as text files** - R Markdown files are most easily created and edited within RStudio but you don't have to do it that way. They can be opened and edited in base R and even using text editors. This means you can create and edit them on any platform (Windows, Mac, Linux) using free software that is already installed on the computer
 
 6) **Stability** - How many of us have had Word crash while we're working on a paper? Did you save as you were working? Hope so. Because R Markdown files are smaller and more lightweight, they tend not to cause your computer to crash as you're working on them. 
 
@@ -54,13 +54,13 @@ R Markdown has many advantages compared to creating reports in Word or GoogleDoc
 
 There are a few disadvantages to R Markdown.
 
-1) **Your advisor doesn't use it** - Try sending a `.Rmd` file to your advisor to get feedback. I'll wait... Like it or not, most folks still use word processors, so if you adopt R Markdown you will still have to create and edit Word documents for some collaborators who are stuck in their ways
+1) **Your adviser doesn't use it** - Try sending a `.Rmd` file to your adviser to get feedback. I'll wait... Like it or not, most folks still use word processors, so if you adopt R Markdown you will still have to create and edit Word documents for some collaborators who are stuck in their ways
 
-2) **No track changes** - Even if you're lucky to have an advisor who will review a `.Rmd` file, you won't get nice track changes like in Word. There are alternative to this (version control helps) but not are quite as easy as track changes. 
+2) **No track changes** - Even if you're lucky to have an adviser who will review a `.Rmd` file, you won't get nice track changes like in Word. There are alternative to this (version control helps) but not are quite as easy as track changes. 
 
 3) **Fewer formatting options** - For better or worse, you have a more limited set of formatting options with R Markdown. That can be constraining (but often it's actually freeing!)
 
-4) **There's a learning curve** - You already know how to use Word. R Markdown is new. How do you make something bold? How do you insert equations? How do you get figures to go at the end of your document? At first, you will almost certaintly have to google almost every thing you need to do in R Markdown (this is why number 1 is a problem). Most of it is pretty simple but it still means the going can be slow at first. 
+4) **There's a learning curve** - You already know how to use Word. R Markdown is new. How do you make something bold? How do you insert equations? How do you get figures to go at the end of your document? At first, you will almost certainly have to google almost every thing you need to do in R Markdown (this is why number 1 is a problem). Most of it is pretty simple but it still means the going can be slow at first. 
 
 # Creating a new R Markdown file
 
@@ -98,7 +98,7 @@ fontsize: 12pt
 ```
 Check to see that the font size changed by clicking `Knit`. 
 
-Changing font type is a little trickier. Behind the scenes, R Markdown turns your document into Latex code (another), which is then converted into a pdf. You don't need to know much about Latex (though a little knowledge is helpful) but this conversion does mean that our formatting options have to passed to the Latex convertor in specific ways. To tell Latex that we want to use `Arial` font, we have to modify the `output:` argument as follows:
+Changing font type is a little trickier. Behind the scenes, R Markdown turns your document into Latex code (another), which is then converted into a pdf. You don't need to know much about Latex (though a little knowledge is helpful) but this conversion does mean that our formatting options have to passed to the Latex converter in specific ways. To tell Latex that we want to use `Arial` font, we have to modify the `output:` argument as follows:
 
 ```
 title: "WILD6900"
@@ -157,7 +157,7 @@ As mentioned earlier, create **boldface** by surrounding text with two asterisks
 
 To highlight code (note, this does not actually insert functioning code, just formats text to show that it is code rather than plain text), surround the text with back ticks ": `mean()`
 
-You can include muliple lines of code by including three back ticks on the line before the code and then three back ticks on the line after the code:
+You can include multiple lines of code by including three back ticks on the line before the code and then three back ticks on the line after the code:
 
 ```
 Multiple lines of code
@@ -195,7 +195,7 @@ Insert hyperlinks by putting the text you want displayed in square brackets foll
 
 ## Equations
 
-Inserting equations in R Markdown is where knowing some Latex really comes in handy becuase eqations are written using Latex code. For the most part, this is not too difficult but if you need to insert complex equations you will probably need to look up the code for some symbols. There are many good resources for if you google "latex equations" or something similear.
+Inserting equations in R Markdown is where knowing some Latex really comes in handy because equations are written using Latex code. For the most part, this is not too difficult but if you need to insert complex equations you will probably need to look up the code for some symbols. There are many good resources for if you google "latex equations" or something similar.
 
 ### Inline vs. block equations
 
@@ -215,7 +215,7 @@ Statistical models include a lot of Greek letters ($\alpha, \beta, \gamma$, etc.
 
 You can add superscripts using the `^` ($\pi r^2$=`$\pi r^2$`) symbol and subscripts using an underscore `_` ($N_t$ = `$N_t$`). 
 
-If the superscript or subscript includes more than one characeter, put the entire script within curly brackets `{}`: $N_t-1 \neq N_{t-1}$ is `$N_t-1 \neq N_{t-1}$`
+If the superscript or subscript includes more than one character, put the entire script within curly brackets `{}`: $N_t-1 \neq N_{t-1}$ is `$N_t-1 \neq N_{t-1}$`
 
 ## Brackets and parentheses
 
@@ -225,7 +225,7 @@ If you need bigger sizes, using `$\big($`, `$\bigg($`, and `$\Bigg($` produces $
 
 ## Fractions
 
-Fractions can either be inline ($1/n$ = `$1/n$`) or stacked ($\frac{1}{n}$ = `$\frac{1}{n}$`). For stacked equations, the terms in the first curly brackets are the numerator and the terms in the second curly brackets are the demoninator. 
+Fractions can either be inline ($1/n$ = `$1/n$`) or stacked ($\frac{1}{n}$ = `$\frac{1}{n}$`). For stacked equations, the terms in the first curly brackets are the numerator and the terms in the second curly brackets are the denominator. 
 
 
 ## Operators
@@ -282,7 +282,7 @@ Often it is useful to set the default behavior for all chunks rather that includ
 `` `r "\u0060\u0060\u0060"` ``
 
 
-Any options can be inluded in this chuck to set the default behaviors. You can over-ride these defaults within chunks as needed. You can also load common packages in this chunk to streamline chunks later in the document. 
+Any options can be included in this chuck to set the default behaviors. You can over-ride these defaults within chunks as needed. You can also load common packages in this chunk to streamline chunks later in the document. 
 
 ### Tables
 

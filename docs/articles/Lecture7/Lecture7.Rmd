@@ -1,7 +1,7 @@
 ---
 title: "Lecture 7"
 subtitle: "Generalized linear model review"
-author: "<br/><br/><br/>WILD6900 (Spring 2020)"
+author: "<br/><br/><br/>WILD6900 (Spring 2021)"
 output:
   xaringan::moon_reader:
     css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
@@ -18,7 +18,7 @@ header-includes:
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE, fig.retina = 2)
 library(WILD6900)
 library(gganimate)
 ```
@@ -159,10 +159,10 @@ model.matrix(lm(mpg ~ am - 1, data = mtcars2))[c(3,1,5),]
 ```
 
 --
-### $\LARGE \beta_0$ is the mean mpg for automatic transmissions
+### $\large \beta_0$ is the mean mpg for automatic transmissions
 
 --
-### $\LARGE \beta_1$ is the mean mpg for manual transmissions
+### $\large \beta_1$ is the mean mpg for manual transmissions
 
 ???
 
@@ -210,13 +210,13 @@ model.matrix(lm(mpg ~ cyl, data = mtcars2))[c(3,1,5),]
 ```
 
 --
-### $\LARGE \beta_0$ is the mean mpg for 4-cylinders
+### $\large \beta_0$ is the mean mpg for 4-cylinders
 
 --
-### $\LARGE \beta_{1[6-cyl]}$ is the *difference* between 4-cyl & 6-cyl
+### $\large \beta_{1[6-cyl]}$ is the *difference* between 4-cyl & 6-cyl
 
 --
-### $\LARGE \beta_{1[8-cyl]}$ is the *difference* between 4-cyl & 8-cyl
+### $\large \beta_{1[8-cyl]}$ is the *difference* between 4-cyl & 8-cyl
 
 ---
 ## Under the hood: ANOVA

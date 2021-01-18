@@ -13,8 +13,6 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = 'center', message = FALSE, warnin
 
 ***
 
-**Due date: 30 January, 2020 before class**
-
 Refer to the [instructions for submitted homework assignments](https://rushinglab.github.io/WILD6900/articles/homework.html) prior to submission
 
 ***

@@ -43,7 +43,7 @@ Remember from lecture 3 that the posterior distribution of random variable `\(\t
 
 ???
 
-`\(^1\)` This is for good reason. For all but the most simple problems (where we can use conjugate distributions or simple integrations to estimate the posterior distribution), estimating the marginal distribution is not analytically possible. A model with four parameters will require solving a four-dimensional integral  
+`\(^1\)` This is for good reason. For all but the most simple problems (where we can use conjugate distributions or simple integration to estimate the posterior distribution), estimating the marginal distribution is not analytically possible. A model with four parameters will require solving a four-dimensional integral  
 
 ---
 class: inverse, center, middle
@@ -139,11 +139,11 @@ norm_df &lt;- data.frame(samples = rnorm(5000))    # Generate samples from distr
 ---
 ## Learning about the posterior by sampling from it
 
-#### In modern Bayesian analysis, estimating posterior distributions is done using *Markov chain Monte Carlo* (MCMC) methods  
+#### In most modern Bayesian analysis, estimating posterior distributions is done using *Markov chain Monte Carlo* (MCMC) methods  
 
 --
 
-#### MCMC is an algorithm that uses the joint distribution to to sample values of each random variable in proportion to their to their probability  
+#### MCMC is an algorithm that uses the joint distribution to sample values of each random variable in proportion to their to their probability  
 
 --
 
@@ -205,7 +205,7 @@ phi &lt;- 0.4   # True survival probability
 ```
 
 ```
-## [1]  8  6 11  9  7
+## [1]  9 12  9  6 12
 ```
 
 ---
@@ -434,6 +434,7 @@ proposal &lt;- function(phi, sigma2){
 #### Remember that the support for the proposal conditional on the data is:
 
 `$$\Large [\theta^*|y] = \frac{[y|\theta^*][\theta^*]}{[y]}$$`
+
 #### The support for the current value is:
 
 `$$\Large [\theta^{k-1}|y] = \frac{[y|\theta^{k-1}][\theta^{k-1}]}{[y]}$$`
@@ -463,7 +464,7 @@ These, of course, are the posterior probabilities of `\(\theta^*\)` and `\(\thet
 
 ### Step 2: Estimate acceptance probability
 
-#### Equation 1 tells us the *relative* probability of the proposal (relative to the current value), i.e., which value is more probable `\(^1\)`  
+#### Equation 1 tells us the *relative* probability of the proposed value (relative to the current value), i.e., which value is more probable `\(^1\)`  
 
 --
 
@@ -497,8 +498,8 @@ n.samples &lt;- 10000    # Number of samples to draw
 sigma2 &lt;- 0.015       # Tuning parameter
 
 posterior &lt;- data.frame(iteration = 1:n.samples, 
-                        phi = rep(NA, n.samples),
-                        accept = rep(0, n.samples)) # Empty vector to store samples of phi
+                        phi = rep(NA, n.samples),    # Empty vector to store samples of phi
+                        accept = rep(0, n.samples))  # Empty vector to keep track of acceptance 
 
 phi &lt;- init     # Initial value
 ```
@@ -580,7 +581,7 @@ mean(posterior$phi)
 ```
 
 ```
-## [1] 0.4032
+## [1] 0.4699
 ```
 
 Pretty close (that a good sign that our Metropolis sampler did what we wanted it to do!)
@@ -599,7 +600,7 @@ quantile(posterior$phi)
 
 ```
 ##     0%    25%    50%    75%   100% 
-## 0.2060 0.3709 0.4025 0.4345 0.6665
+## 0.2748 0.4374 0.4693 0.5020 0.6665
 ```
 
 Quantiles are useful for determining the 95% *credible intervals* of the posterior: `\(^1\)`
@@ -611,10 +612,10 @@ quantile(posterior$phi, probs = c(0.025, 0.975))
 
 ```
 ##   2.5%  97.5% 
-## 0.3105 0.5002
+## 0.3756 0.5652
 ```
 
-This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.31 and 0.5" `\(^2\)`
+This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.38 and 0.57" `\(^2\)`
 
 ???
 
@@ -708,6 +709,7 @@ The full-conditionals gives us a set of univariate distributions for sampling ea
 `$$\Large [\sigma^2|.] \propto \underbrace{[z|g(\alpha, x), \sigma^2]}_b \underbrace{[\sigma^2]}_d$$`
 
 `$$\Large [\xi^2|.] \propto \underbrace{[y|z, \xi^2]}_a \underbrace{[\xi^2]}_e$$`
+
 ---
 ## Multiple parameters
 

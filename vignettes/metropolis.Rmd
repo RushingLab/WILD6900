@@ -13,7 +13,7 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(fig.align = 'center', message = FALSE,
+knitr::opts_chunk$set(fig.align = 'center', message = FALSE, fig.retina = 2,
   collapse = TRUE,
   comment = "#>"
 )

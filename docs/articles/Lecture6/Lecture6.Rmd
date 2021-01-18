@@ -1,7 +1,7 @@
 ---
 title: "Lecture 6"
 subtitle: "Introduction of Bayesian analysis using JAGS"
-author: "<br/><br/><br/>WILD6900 (Spring 2020)"
+author: "<br/><br/><br/>WILD6900 (Spring 2021)"
 output:
   xaringan::moon_reader:
     css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
@@ -14,7 +14,7 @@ output:
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE, fig.retina = 2)
 library(WILD6900)
 # library(gganimate)
 ```
@@ -136,7 +136,7 @@ $^1$ remember, just because you *can* fit it doesn't mean it will return robust 
 --
 ### If you can write your model on the whiteboard, you can write it in JAGS
 
-- Stochasitic relationships represented by `~`
+- Stochastic relationships represented by `~`
 
 - Deterministic relationships represented by `<-`
 
@@ -190,7 +190,7 @@ Remember that these equations define the *likelihood* of our data given values o
 
 ### Linear regression model
 
-To specificy a fully Bayesian model, we also need to define the priors:
+To specify a fully Bayesian model, we also need to define the priors:
 <br/>
 <br/>
 <br/>

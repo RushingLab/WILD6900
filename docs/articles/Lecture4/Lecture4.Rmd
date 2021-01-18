@@ -14,7 +14,11 @@ output:
 
 ```{r setup, include = FALSE}
 options(htmltools.dir.version = FALSE)
+<<<<<<< HEAD
 knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE,fig.retina = 2)
+=======
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE, fig.retina = 2)
+>>>>>>> f038edf9d6933062c76bbe8cfa8fbb54703c8a0b
 library(WILD6900)
 library(gganimate)
 ```

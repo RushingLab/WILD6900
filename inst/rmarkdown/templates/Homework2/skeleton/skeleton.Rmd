@@ -15,8 +15,6 @@ library(WILD6900)
 
 ***
 
-**Due date: 6 February, 2020 before class**
-
 After you have modified the code according to the instructions, change `eval = FALSE` to `eval = TRUE` in the `setup` chunk above (line 12). Once this option is changed, **do not** modify any of the chunk options below.  
 
 Refer to the [instructions for submitted homework assignments](https://rushinglab.github.io/WILD6900/articles/homework.html) prior to submission
