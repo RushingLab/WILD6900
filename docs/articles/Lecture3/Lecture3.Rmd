@@ -386,7 +386,7 @@ In this way, priors allow us to weigh conclusions drawn from our data against wh
 
 
 --
-In the words of Mark Kéry:
+In the words of Marc Kéry:
 
 >I find it hard not to be impressed by the application of Bayes rule to statistical inference since it so perfectly mimics the way of how we learn in everyday life ! In our guts, we always weigh any observation we make, or new information we get, with what we know to be the case or believe to know.
 
