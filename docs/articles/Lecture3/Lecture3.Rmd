@@ -440,7 +440,7 @@ We can use moment matching to turn $\large \mu = 40$ and $\large \sigma^2 = 6$ i
 $$\Large \alpha = \frac{\mu^2}{\sigma^2}$$
 $$\Large \beta = \frac{\mu}{\sigma^2}$$
 
-which in our sample gives $\alpha=$ `r round(40^2/6, 0)` and $\beta =$ `r round(40/6, 0)`  
+which in our example gives $\alpha=$ `r round(40^2/6, 0)` and $\beta =$ `r round(40/6, 0)`  
 
 ---
 ## The prior distribution
@@ -604,7 +604,7 @@ The posterior allows to make statements like:
 #### It's important to realize that before we collect data, $\large y$ is a random variable governed by the marginal distribution  
 
 --
-#### However, *after* we collect data, it is not longer random and $\large [y]$ becomes a *fixed* quantity  
+#### However, *after* we collect data, it is no longer random and $\large [y]$ becomes a *fixed* quantity  
 
 --
 #### That means that:
