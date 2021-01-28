@@ -653,7 +653,7 @@ $^{12}$ Although this may seem like a minor point right now, it has some really 
 
 
 --
-#### Answering the question of whether $\large \Delta_n > 0$ requires knowing not only the magnitude of this difference but also how certain we are in the value  
+#### Answering the question of whether $\large \Delta_N > 0$ requires knowing not only the magnitude of this difference but also how certain we are in the value  
 
 - How do we estimate the uncertainty of our new derived variable?  
 
