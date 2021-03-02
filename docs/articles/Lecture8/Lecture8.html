@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="" xml:lang="">
   <head>
     <title>Lecture 8</title>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <meta name="author" content="   WILD6900 (Spring 2020)" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
@@ -122,7 +122,7 @@ This should look familiar - it's the means parameterization of the ANOVA model
 `$$\Large \epsilon_i \sim normal(0, \tau)$$`
 
 --
-- If `\(\beta_{[j]} \sim normal(\mu_{\beta0}, \tau_{\beta0})\)`
+- If `\(\beta_{[j]} \sim normal(\mu_{\beta}, \tau_{\beta})\)`
 
 &lt;img src="Lecture8_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
 
@@ -134,7 +134,7 @@ This should look familiar - it's the means parameterization of the ANOVA model
 `$$\Large \epsilon_i \sim normal(0, \tau)$$`
 
 --
-- If `\(\beta_{[j]} \sim normal(\mu_{\beta0}, \tau_{\beta0})\)`
+- If `\(\beta_{[j]} \sim normal(\mu_{\beta}, \tau_{\beta})\)`
 
 --
 ```
@@ -176,7 +176,7 @@ model {
 &lt;br/&gt;
 
 --
-- Represent a compromise between total pooling `\((\beta_{0[1]}=\beta_{0[2]}=...=\beta_{0[J]})\)` and no pooling `\((\beta_{[1]} \perp \beta_{[2]} \perp ...\perp \beta_{[J]})\)`  
+- Represent a compromise between total pooling `\((\beta_{[1]}=\beta_{[2]}=...=\beta_{[J]})\)` and no pooling `\((\beta_{[1]} \perp \beta_{[2]} \perp ...\perp \beta_{[J]})\)`  
 &lt;br/&gt;
 
 --
@@ -189,7 +189,7 @@ model {
 &lt;br/&gt;
 
 
-`$$\Large [\beta_{0[j]}, \mu_{\beta0}, \tau_{\beta0}, \tau|y_{ij}] = [y_{ij}|\beta_{0[j]}, \tau][\beta_{0[j]}|\mu_{\beta0}, \tau_{\beta0}][\tau][\mu_{\beta0}][\tau_{\beta0}]$$`
+`$$\Large [\beta_{[j]}, \mu_{\beta}, \tau_{\beta}, \tau|y_{ij}] = [y_{ij}|\beta_{[j]}, \tau][\beta_{[j]}|\mu_{\beta}, \tau_{\beta}][\tau][\mu_{\beta}][\tau_{\beta}]$$`
 &lt;br/&gt;
 
 --
@@ -204,7 +204,7 @@ model {
 
 1) Scope of inference  
 
-- learn about `\(\beta_{0[j]}\)` **and** `\(\mu_{beta_0}\)`, `\(\tau_{beta_0}\)`  
+- learn about `\(\beta_{[j]}\)` **and** `\(\mu_{\beta}\)`, `\(\tau_{\beta}\)`  
 
 - prediction to unsampled groups (in space or time)  
 
@@ -227,7 +227,7 @@ model {
 
 3) Accounting for uncertainty  
 
-- modeling `\(\tau_{beta_0}\)` recognizes uncertainty from sampling groups
+- modeling `\(\tau_{\beta}\)` recognizes uncertainty from sampling groups
 
 ---
 ## Why use random effects?
@@ -255,7 +255,7 @@ model {
 
 5) Borrowing strength  
 
-- `\(\beta_{0[j]}\)` estimating from group `\(j\)` observations + all other groups  
+- `\(\beta_{[j]}\)` estimating from group `\(j\)` observations + all other groups  
 
 - "shrinkage"" towards mean  
 
@@ -283,6 +283,7 @@ model {
 --
 - Harder to interpret
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
@@ -292,16 +293,89 @@ model {
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
-(function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -315,7 +389,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
