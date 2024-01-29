@@ -15,8 +15,6 @@ library(WILD6900)
 
 ***
 
-**Due date: 23 April, 2020**
-
 Refer to the [instructions for submitting homework assignments](https://rushinglab.github.io/WILD6900/articles/homework.html) prior to submission
 
 ***

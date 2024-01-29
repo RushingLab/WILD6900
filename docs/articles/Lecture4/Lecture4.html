@@ -29,7 +29,7 @@ class: center, middle, inverse, title-slide
 ---
 class: inverse, center, middle
 
-&gt; As scientists, we should always prefer to use appropriate, well-constructed, informative priors on `\(\theta\)` - Hobbs &amp; Hooten
+&gt; As scientists, we should always prefer to use appropriate, well-constructed, informative priors - Hobbs &amp; Hooten
 
 ---
 # More about prior distributions
@@ -99,12 +99,12 @@ For example, if `\(\theta\)` is a probability, `\(Uniform(0,1)\)` gives equal pr
 
 ???
 
-`\(^2\)` The `\(Uniform(0,1)\)` is a special case of the beta distribution with `\(\alpha = \beta = 1\)`
+`\(^2\)` The `\(uniform(0,1)\)` is a special case of the beta distribution with `\(\alpha = \beta = 1\)`
 
 ---
 ## Non-informative priors
 
-For a parameter that could be any real number, a common choice is a normal prior with very large variance:
+For a parameter that could be any real number, a common choice is a normal prior with very large standard deviation:
 
 &lt;img src="Lecture4_files/figure-html/unnamed-chunk-2-1.png" width="576" style="display: block; margin: auto;" /&gt;
 ---
@@ -158,13 +158,13 @@ For example, let's say we track 10 individuals over a period of time using GPS c
 --
 A natural model for these data is  
 
-`$$\LARGE Binomial(p, N = 10)$$`  
+`$$\LARGE binomial(p, N = 10)$$`  
 
 
 --
 Because `\(p\)` is a parameter, it needs a prior:
 
-- `\(Beta(1,1)\)` gives equal prior probability to all values of `\(p\)` between 0 and 1  
+- `\(beta(1,1)\)` gives equal prior probability to all values of `\(p\)` between 0 and 1  
 
 ???
 
@@ -191,19 +191,19 @@ This scenario, when the prior and the posterior have the same distribution, occu
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:center;"&gt; `\(y_i \sim binomial(n, p)\)` &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; `\(p \sim beta(\alpha, \beta)\)` &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; `\(p \sim beta(\sum y_i + \alpha, n -\sum y_i + \beta)\)` &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(y_i \sim binomial(n, p)\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(p \sim beta(\alpha, \beta)\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(p \sim beta(\sum y_i + \alpha, n -\sum y_i + \beta)\) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:center;"&gt; `\(y_i \sim Bernoulli(p)\)` &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; `\(p \sim beta(\alpha, \beta)\)` &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; `\(p \sim beta(\sum_{i=1}^n y_i + \alpha, \sum_{i=1}^n (1-y_i) + \beta)\)` &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(y_i \sim Bernoulli(p)\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(p \sim beta(\alpha, \beta)\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(p \sim beta(\sum_{i=1}^n y_i + \alpha, \sum_{i=1}^n (1-y_i) + \beta)\) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:center;"&gt; `\(y_i \sim Poisson(\lambda)\)` &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; `\(\lambda \sim gamma(\alpha, \beta)\)` &lt;/td&gt;
-   &lt;td style="text-align:center;"&gt; `\(\lambda \sim gamma(\alpha \sum_{i=1}^n y_i, \beta + n)\)` &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(y_i \sim Poisson(\lambda)\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\lambda \sim gamma(\alpha, \beta)\) &lt;/td&gt;
+   &lt;td style="text-align:center;"&gt; \(\lambda \sim gamma(\alpha \sum_{i=1}^n y_i, \beta + n)\) &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -232,7 +232,7 @@ This scenario, when the prior and the posterior have the same distribution, occu
 --
 #### With a sample size that big, we could use a pretty informative prior (e.g., `\(\large beta(4,1)\)`) and it doesn't matter too much:
 
-&lt;img src="Lecture4_files/figure-html/unnamed-chunk-6-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="Lecture4_files/figure-html/unnamed-chunk-6-1.png" width="720" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Practical issues with non-informative priors
@@ -395,7 +395,7 @@ This is how it should be - if we're really confident in our knowledge of the sys
 
 **Example**  
 
-If `\(y \sim Binomial(N, p)\)` and the only data we have in `\(y\)` (we don't know `\(N\)`), we cannot estimate `\(N\)` and `\(p\)` no matter how much data we have `\(^1\)`  
+If `\(y \sim Binomial(N, p)\)` and the only data we have is `\(y\)` (we don't know `\(N\)`), we cannot estimate `\(N\)` and `\(p\)` no matter how much data we have `\(^1\)`  
 
 Including information about either `\(N\)` or `\(p\)` via an informative prior can help estimate the other other parameter `\(^2\)`  
 

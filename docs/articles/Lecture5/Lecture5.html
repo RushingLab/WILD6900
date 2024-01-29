@@ -205,7 +205,7 @@ phi &lt;- 0.4   # True survival probability
 ```
 
 ```
-## [1] 11  3 11  5 10
+## [1]  9 12  9  6 12
 ```
 
 ---
@@ -581,7 +581,7 @@ mean(posterior$phi)
 ```
 
 ```
-## [1] 0.3937
+## [1] 0.4699
 ```
 
 Pretty close (that a good sign that our Metropolis sampler did what we wanted it to do!)
@@ -600,7 +600,7 @@ quantile(posterior$phi)
 
 ```
 ##     0%    25%    50%    75%   100% 
-## 0.1962 0.3606 0.3940 0.4246 0.6665
+## 0.2748 0.4374 0.4693 0.5020 0.6665
 ```
 
 Quantiles are useful for determining the 95% *credible intervals* of the posterior: `\(^1\)`
@@ -612,10 +612,10 @@ quantile(posterior$phi, probs = c(0.025, 0.975))
 
 ```
 ##   2.5%  97.5% 
-## 0.3013 0.4890
+## 0.3756 0.5652
 ```
 
-This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.3 and 0.49" `\(^2\)`
+This allows us to make statements like "there is a 95% chance that `\(\phi\)` is between 0.38 and 0.57" `\(^2\)`
 
 ???
 

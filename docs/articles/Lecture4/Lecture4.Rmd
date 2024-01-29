@@ -14,7 +14,7 @@ output:
 
 ```{r setup, include = FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE, fig.retina = 2)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE,fig.retina = 2)
 library(WILD6900)
 library(gganimate)
 ```
@@ -27,7 +27,7 @@ library(gganimate)
 ---
 class: inverse, center, middle
 
-> As scientists, we should always prefer to use appropriate, well-constructed, informative priors on $\theta$ - Hobbs & Hooten
+> As scientists, we should always prefer to use appropriate, well-constructed, informative priors - Hobbs & Hooten
 
 ---
 # More about prior distributions
@@ -106,12 +106,12 @@ ggplot(beta_df, aes(x, y)) + geom_area(fill = WILD6900_colors$value[WILD6900_col
 
 ???
 
-$^2$ The $Uniform(0,1)$ is a special case of the beta distribution with $\alpha = \beta = 1$
+$^2$ The $uniform(0,1)$ is a special case of the beta distribution with $\alpha = \beta = 1$
 
 ---
 ## Non-informative priors
 
-For a parameter that could be any real number, a common choice is a normal prior with very large variance:
+For a parameter that could be any real number, a common choice is a normal prior with very large standard deviation:
 
 ```{r fig.width=8, fig.height=5}
 norm_df <- data.frame(x = seq(-1000,1000,1),
@@ -192,13 +192,13 @@ For example, let's say we track 10 individuals over a period of time using GPS c
 --
 A natural model for these data is  
 
-$$\LARGE Binomial(p, N = 10)$$  
+$$\LARGE binomial(p, N = 10)$$  
 
 
 --
 Because $p$ is a parameter, it needs a prior:
 
-- $Beta(1,1)$ gives equal prior probability to all values of $p$ between 0 and 1  
+- $beta(1,1)$ gives equal prior probability to all values of $p$ between 0 and 1  
 
 ???
 
@@ -215,17 +215,17 @@ This scenario, when the prior and the posterior have the same distribution, occu
 
 --
 ```{r}
-conjugates <- data.frame(Likelihood = c('$y_i \\sim binomial(n, p)$',
-                                        '$y_i \\sim Bernoulli(p)$',
-                                        '$y_i \\sim Poisson(\\lambda)$'),
-                         Prior = c(c('$p \\sim beta(\\alpha, \\beta)$',
-                                        '$p \\sim beta(\\alpha, \\beta)$',
-                                        '$\\lambda \\sim gamma(\\alpha, \\beta)$')),
-                         Posterior = c('$p \\sim beta(\\sum y_i + \\alpha, n -\\sum y_i + \\beta)$',
-                                        '$p \\sim beta(\\sum_{i=1}^n y_i + \\alpha, \\sum_{i=1}^n (1-y_i) + \\beta)$',
-                                        '$\\lambda \\sim gamma(\\alpha \\sum_{i=1}^n y_i, \\beta + n)$'))
+conjugates <- data.frame(Likelihood = c('\\(y_i \\sim binomial(n, p)\\)',
+                                        '\\(y_i \\sim Bernoulli(p)\\)',
+                                        '\\(y_i \\sim Poisson(\\lambda)\\)'),
+                         Prior = c(c('\\(p \\sim beta(\\alpha, \\beta)\\)',
+                                        '\\(p \\sim beta(\\alpha, \\beta)\\)',
+                                        '\\(\\lambda \\sim gamma(\\alpha, \\beta)\\)')),
+                         Posterior = c('\\(p \\sim beta(\\sum y_i + \\alpha, n -\\sum y_i + \\beta)\\)',
+                                        '\\(p \\sim beta(\\sum_{i=1}^n y_i + \\alpha, \\sum_{i=1}^n (1-y_i) + \\beta)\\)',
+                                        '\\(\\lambda \\sim gamma(\\alpha \\sum_{i=1}^n y_i, \\beta + n)\\)'))
 
-kableExtra::kable(conjugates, "latex", align="c", booktabs=TRUE, escape = F, caption = 'A few conjugate distributions', format = "html")
+kableExtra::kable(conjugates, align="c", booktabs=TRUE, escape = F, caption = 'A few conjugate distributions', format = "html")
 ```
 
 ---
@@ -252,7 +252,7 @@ $$\Large beta(2 + 1, 8 + 1) = beta(3, 9)$$
 --
 #### With a sample size that big, we could use a pretty informative prior (e.g., $\large beta(4,1)$) and it doesn't matter too much:
 
-```{r fig.width=8, fig.height=3}
+```{r fig.width=10, fig.height=3}
 
 beta_df <- data.frame(p = seq(0, 1, 0.01),
                       value = c(dbeta(seq(0, 1, 0.01), 4, 1), dbinom(2, 10, prob = seq(0, 1, 0.01)), dbeta(seq(0, 1, 0.01), 6, 9)),
@@ -271,7 +271,7 @@ p <- ggplot() + geom_path(data = beta_df, aes(x = p, y = value, group = dist, li
 q <- ggplot() + geom_path(data = beta_df2, aes(x = p, y = value, group = dist, linetype = dist)) +
   scale_y_continuous("") +
   scale_linetype_manual(values = c("longdash", "solid", "dotted")) +
-  theme(legend.position = "none") +
+  #theme(legend.position = "none") +
   labs(title = "n = 100")
 
 gridExtra::grid.arrange(p, q, nrow = 1)
@@ -469,7 +469,7 @@ $^1$ Basically, even with large sample sizes, the model cannot estimate all the 
 
 **Example**  
 
-If $y \sim Binomial(N, p)$ and the only data we have in $y$ (we don't know $N$), we cannot estimate $N$ and $p$ no matter how much data we have $^1$  
+If $y \sim Binomial(N, p)$ and the only data we have is $y$ (we don't know $N$), we cannot estimate $N$ and $p$ no matter how much data we have $^1$  
 
 Including information about either $N$ or $p$ via an informative prior can help estimate the other other parameter $^2$  
 

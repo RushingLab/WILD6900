@@ -3,7 +3,11 @@
   <head>
     <title>Lecture 8</title>
     <meta charset="utf-8" />
+<<<<<<< HEAD
     <meta name="author" content="   WILD6900 (Spring 2021)" />
+=======
+    <meta name="author" content="   WILD6900 (Spring 2020)" />
+>>>>>>> 6543c0c4e4108becf65f6577b8d4b862afdadf49
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link rel="stylesheet" href="WILD6900.css" type="text/css" />
     <link rel="stylesheet" href="WILD6900-fonts.css" type="text/css" />
@@ -122,7 +126,7 @@ This should look familiar - it's the means parameterization of the ANOVA model
 `$$\Large \epsilon_i \sim normal(0, \tau)$$`
 
 --
-- If `\(\beta_{[j]} \sim normal(\mu_{\beta0}, \tau_{\beta0})\)`
+- If `\(\beta_{[j]} \sim normal(\mu_{\beta}, \tau_{\beta})\)`
 
 &lt;img src="Lecture8_files/figure-html/unnamed-chunk-1-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
@@ -134,7 +138,7 @@ This should look familiar - it's the means parameterization of the ANOVA model
 `$$\Large \epsilon_i \sim normal(0, \tau)$$`
 
 --
-- If `\(\beta_{[j]} \sim normal(\mu_{\beta0}, \tau_{\beta0})\)`
+- If `\(\beta_{[j]} \sim normal(\mu_{\beta}, \tau_{\beta})\)`
 
 --
 ```
@@ -176,7 +180,7 @@ model {
 &lt;br/&gt;
 
 --
-- Represent a compromise between total pooling `\((\beta_{0[1]}=\beta_{0[2]}=...=\beta_{0[J]})\)` and no pooling `\((\beta_{[1]} \perp \beta_{[2]} \perp ...\perp \beta_{[J]})\)`  
+- Represent a compromise between total pooling `\((\beta_{[1]}=\beta_{[2]}=...=\beta_{[J]})\)` and no pooling `\((\beta_{[1]} \perp \beta_{[2]} \perp ...\perp \beta_{[J]})\)`  
 &lt;br/&gt;
 
 --
@@ -189,7 +193,7 @@ model {
 &lt;br/&gt;
 
 
-`$$\Large [\beta_{0[j]}, \mu_{\beta0}, \tau_{\beta0}, \tau|y_{ij}] = [y_{ij}|\beta_{0[j]}, \tau][\beta_{0[j]}|\mu_{\beta0}, \tau_{\beta0}][\tau][\mu_{\beta0}][\tau_{\beta0}]$$`
+`$$\Large [\beta_{[j]}, \mu_{\beta}, \tau_{\beta}, \tau|y_{ij}] = [y_{ij}|\beta_{[j]}, \tau][\beta_{[j]}|\mu_{\beta}, \tau_{\beta}][\tau][\mu_{\beta}][\tau_{\beta}]$$`
 &lt;br/&gt;
 
 --
@@ -204,7 +208,7 @@ model {
 
 1) Scope of inference  
 
-- learn about `\(\beta_{0[j]}\)` **and** `\(\mu_{beta_0}\)`, `\(\tau_{beta_0}\)`  
+- learn about `\(\beta_{[j]}\)` **and** `\(\mu_{\beta}\)`, `\(\tau_{\beta}\)`  
 
 - prediction to unsampled groups (in space or time)  
 
@@ -227,7 +231,7 @@ model {
 
 3) Accounting for uncertainty  
 
-- modeling `\(\tau_{beta_0}\)` recognizes uncertainty from sampling groups
+- modeling `\(\tau_{\beta}\)` recognizes uncertainty from sampling groups
 
 ---
 ## Why use random effects?
@@ -255,7 +259,7 @@ model {
 
 5) Borrowing strength  
 
-- `\(\beta_{0[j]}\)` estimating from group `\(j\)` observations + all other groups  
+- `\(\beta_{[j]}\)` estimating from group `\(j\)` observations + all other groups  
 
 - "shrinkage"" towards mean  
 
