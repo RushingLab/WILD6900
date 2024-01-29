@@ -1,7 +1,7 @@
 ---
 title: "Lecture 9"
 subtitle: "State-space models"
-author: "<br/><br/><br/>WILD6900 (Spring 2020)"
+author: "<br/><br/><br/>WILD6900 (Spring 2021)"
 output:
   xaringan::moon_reader:
     css: ["default", "WILD6900.css", "WILD6900-fonts.css"]
@@ -14,7 +14,7 @@ output:
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
-knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE)
+knitr::opts_chunk$set(echo = FALSE, fig.align = 'center', warning=FALSE, message=FALSE, fig.retina = 2)
 library(WILD6900)
 # library(gganimate)
 ```

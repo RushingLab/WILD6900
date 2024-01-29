@@ -30,7 +30,7 @@ knitr::opts_chunk$set(
 Dr. Clark Rushing  
 clark.rushing@usu.edu  
 Office: ~~NR 146~~ **Zoom**  
-Office hours: Monday and Wednesday 1:00-2:30
+Office hours: By appointment
 
 
 # COURSE DESCRIPTION
