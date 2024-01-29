@@ -17,7 +17,6 @@ Imports:
     tidyr,
     ggplot2,
     jagsUI,
-    maptools,
     sf,
     maps,
     mapproj,
@@ -25,4 +24,4 @@ Imports:
     abind,
     ggforce,
     glue
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
